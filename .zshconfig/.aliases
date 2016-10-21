@@ -1,0 +1,8 @@
+#!/bin/zsh
+
+### Aliases
+alias zshconfig="vim ~/.zshrc"
+alias envconfig="cd $ZSHCONFIG"
+alias tmuxconfig="vim ~/.tmux.conf.local"
+alias ..="cd .."
+alias dotf="cd $DOTFILES"
