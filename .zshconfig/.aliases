@@ -1,9 +1,17 @@
 #!/bin/zsh
 
-### Aliases
-alias zshconfig="vim ~/.zshrc"
+### Aliases for directories
 alias envconfig="cd $ZSHCONFIG"
+### Aliases for dotfiles
+alias zshconfig="vim ~/.zshrc"
 alias tmuxconfig="vim ~/.tmux.conf.local"
+alias vimrc="vim ~/.vimrc"
+alias vimpconfig="vim ~/.vimperatorrc"
+alias vimprc="vim ~/.vimperatorrc.local"
+alias zshaliases="vim $ZSHCONFIG/.aliases"
+alias zshkeybindings="vim $ZSHCONFIG/.keybindings"
+
+### other aliases
 alias ..="cd .."
 alias dotf="cd $DOTFILES"
 alias readme="vim README.md"

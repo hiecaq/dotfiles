@@ -13,6 +13,8 @@ Plugin 'vim-airline/vim-airline-themes'
 Plugin 'nathanaelkane/vim-indent-guides'
 " other functions
 Bundle 'christoomey/vim-tmux-navigator'
+" syntax
+Plugin 'vimperator/vimperator.vim'
 " All of your Plugins must be added before the following line
 call vundle#end()   " ### plugin list ends here
 filetype plugin on    " required
@@ -89,6 +91,7 @@ if has("autocmd")
                     \ endif
     augroup END
 endif " has("autocmd")
+
 " #####################################################
 " ### PLUGINS SETTING ###
 " Airline
@@ -109,40 +112,42 @@ let g:indent_guides_guide_size=1
 let g:indent_guides_auto_colors = 0
 autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=darkgrey   ctermbg=011
 autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=darkgrey   ctermbg=000
+
 " #####################################################
 " ### KEYMAP ###
-" 定义快捷键的前缀，即<Leader>
+" set <Leader>
 let mapleader=";"
 " alternative esc
-map jk <esc>
-imap jk <esc>
+"imap <D-space> <esc>   "using the function provided by iterm2 instead
+vnoremap <esc> <esc><esc><esc>
 "Fast reloading of the .vimrc
 nmap <silent> <leader>ss :source $MYVIMRC<cr>
 "Fast editing of .vimrc
 nmap <silent> <leader>ee :e $MYVIMRC<cr>
-" clear searching pattern
-nmap <silent> <Leader>qs :let @/ = ""<cr>
-" 设置快捷键将选中文本块复制至系统剪贴板
+" clear search pattern
+nmap <silent> <leader>qs :let @/ = ""<cr>
+
+" alternative :
+nnoremap <Leader>; :
+vnoremap <Leader>; :
+" copy selected block to the clipboard
 vnoremap <Leader>y "+y
-" 设置快捷键将系统剪贴板内容粘贴至 vim
-nmap <Leader>p "+p
-" 定义快捷键关闭当前分割窗口
+" copy to clipboard
+noremap <Leader>y "+y
+" copy a whole line to the clipboard
+noremap <Leader>Y "+Y
+" put the text from clipboard after the cursor
+noremap <Leader>p "+p
+" put the text from clipboard before the cursor
+noremap <Leader>P "+P
+
+" close the current window
 nmap <Leader>q :q<CR>
-" 定义快捷键保存当前窗口内容
+" save the current window
 nmap <Leader>w :w<CR>
 " 定义快捷键保存所有窗口内容并退出 vim
 nmap <Leader>WQ :wa<CR>:q<CR>
 " 不做任何保存，直接退出 vim
 nmap <Leader>Q :qa!<CR>
-" 依次遍历子窗口
-nnoremap nw <C-W><C-W>
-" 跳转至右方的窗口
-nnoremap <Leader>lw <C-W>l
-" 跳转至左方的窗口
-nnoremap <Leader>hw <C-W>h
-" 跳转至上方的子窗口
-nnoremap <Leader>kw <C-W>k
-" 跳转至下方的子窗口
-nnoremap <Leader>jw <C-W>j
 " 定义快捷键在结对符之间跳转
 nmap <Leader>M %
