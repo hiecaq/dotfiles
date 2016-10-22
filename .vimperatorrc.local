@@ -1,0 +1,33 @@
+" ###GUI SETTING
+set gui=none
+set gui=tabs
+
+" ###FUNCTION SETTING
+" vimperator
+
+" smooziee-plugin
+let g:smooziee_scroll_amount="256"
+let g:smooziee_scroll_interval="10"
+
+" ### KEYBINDINGS
+" leader
+nnoremap \' ;
+map ; <Nop>
+let mapleader=";"
+nnoremap <Leader>; :
+vnoremap <Leader>; :
+" alternative esc
+map <M-space> <esc>
+imap <M-space> <esc>
+cmap <M-space> <esc>
+vnoremap <M-space> <esc><esc><esc>
+" enter caret mode
+vnoremap v c
+" go to previous tab
+nnoremap <C-H> <C-P>
+" go to next tab
+nnoremap <C-L> <C-N>
+" restart
+nnoremap <Leader>re :restart<cr>
+" clear search pattern
+nmap <silent> <leader>qs :noh<cr>

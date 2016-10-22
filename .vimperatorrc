@@ -1,0 +1,41 @@
+"3.15.0 (created: 2016/10/05 01:11:26)
+" theme
+highlight Boolean color: Orchid;
+highlight CmdLine color: #d0d0d0; background: #0c0c0c; font-size: 14px; -moz-transition: all 0.25s;
+highlight CompDesc color: #a0a0d0; width: 50%;
+highlight CompGroup background: rgba(28,28,28,0.25);
+highlight CompItem[selected] color: #dddddd; background: rgba(88,88,96,0.5); box-shadow: 0px 0px 1px white;
+highlight CompResult color: #dddddd; width: 45%; overflow: hidden;
+highlight CompTitle font-weight: bold; background: -moz-linear-gradient(19% 75% 90deg, #0c0c0c, #0a0a0a, #1c1c1c 100%);
+highlight CompTitle>* color: #a0a0d0; padding: 0 0.5ex;
+highlight ErrorMsg color: #ffffff; background: #440000; font-size: 12px;
+highlight Filter color: #7090d0; font-weight: bold;
+highlight FrameIndicator background-color: #5566bb; opacity: 0.5; z-index: 999; position: fixed; top: 0; bottom: 0; left: 0; right: 0;
+highlight Function color: SkyBlue;
+highlight Hint font-family: monospace; font-size: 14px; font-weight: normal; color: #dddddd; background-color: #1c1c1c; border-color: #1c1c1c; border-width: 0px; border-style: solid; padding: 0px 5px 0px 5px;
+highlight HintActive background-color: #5566bb; color: #dddded;
+highlight HintElem background-color: #d0d0f0; color: #1c1c1c;
+highlight Indicator color: DodgerBlue;
+highlight InfoMsg color: #d0d0d0; background: #1c1c1c; font-size: 12px;
+highlight LineNr color: #ffd0d0; background: #1c1c1c; font-size: 12px;
+highlight ModeMsg color: #d0d0d0; background: #1c1c1c; font-size: 12px;
+highlight MoreMsg color: #d0ffd0; background: #1c1c1c; font-size: 12px;
+highlight NonText color: #a0a0d0; min-height: 16px; padding-left: 2px;
+highlight Normal color: #d0d0d0; background: #1c1c1c; font-size: 12px;
+highlight Null color: CornflowerBlue;
+highlight Number color: Orchid;
+highlight Object color: Khaki;
+highlight PromptText background: #5566bb; color: #dddded;
+highlight Question color: #a0a0d0; background: #1c1c1c; font-size: 12px;
+highlight StatusLine color: #7090d0; background: #0c0c0c; font-weight: normal; font-size: 12px;
+highlight String color: Orchid;
+highlight TabNumber font-weight: bold; color: white; text-align: center;
+highlight Tag color: #a0a0d0; background: #1c1c1c; font-size: 12px;
+highlight Title color: #d0d0ff;
+highlight URL color: LightGreen;
+highlight WarningMsg color: #ff0000; background: #1c1c1c; font-size: 12px;
+
+source! ~/.vimperatorrc.local
+
+" vim: set ft=vimperator:
+
