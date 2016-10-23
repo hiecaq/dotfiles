@@ -6,7 +6,7 @@ set statuslinevisibility=visible
 
 " ###Vimperator SETTING
 " editor
-set editor=~/.dotfiles/.zshconfig/script/runVim.sh
+set editor="/usr/local/bin/mvim -f"
 " disable bells
 set visualbell
 hi Bell display: none;

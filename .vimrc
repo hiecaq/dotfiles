@@ -12,9 +12,11 @@ Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'nathanaelkane/vim-indent-guides'
 " other functions
-Bundle 'christoomey/vim-tmux-navigator'
+Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'godlygeek/tabular'
 " syntax
 Plugin 'vimperator/vimperator.vim'
+Plugin 'plasticboy/vim-markdown'
 " All of your Plugins must be added before the following line
 call vundle#end()   " ### plugin list ends here
 filetype plugin on    " required
@@ -49,37 +51,39 @@ colorscheme solarized
 " set background type
 set background=dark
 
-" 总是显示状态栏
+" always show status line
 set laststatus=2
 " disable default mode indicator(have airline already)
 set noshowmode
-" 显示光标当前位置
+" show position of cursor
 set ruler
-" 开启行号显示
+" show line numbers
 set number
-" 高亮显示当前行/列
+" highlight the current line/column
 "set cursorline
 "set cursorcolumn
-" 高亮显示搜索结果
+" highlight search results
 set hlsearch
-" 禁止折行
+" no line wrap
 set nowrap
 
-" 开启语法高亮功能
+" enable syntax highlights
 syntax enable
-" 允许用指定语法高亮配色方案替换默认方案
+" allow to replace default syntax highlights with intended ones
 syntax on
-" 自适应不同语言的智能缩进
+" auto indent of file
 filetype indent on
-" 将制表符扩展为空格
+" disable fold
+set nofoldenable
+" replace tab with space
 set expandtab
-" 设置编辑时制表符占用空格数
+" numbers of space standed by tab while editing
 set tabstop=4
-" 设置格式化时制表符占用空格数
+" numbers of space standed by tab while formatting
 set shiftwidth=4
-" 让 vim 把连续数量的空格视为一个制表符
+" let vim consider contious spaces as tab
 set softtabstop=4
-" 允许退格键的使用
+" allow backspace
 set backspace=indent,eol,start whichwrap+=<,>,[,]
 " automatically go to the last line last time
 if has("autocmd")
@@ -102,17 +106,18 @@ let g:airline_theme='solarized'
 " hide empty sections
 let g:airline_skip_empty_sections = 1
 " Indent Guides
-" 随 vim 自启动
+" start with vim
 let g:indent_guides_enable_on_vim_startup=1
-" 从第二层开始可视化显示缩进
+" show indent starts from 2 level
 let g:indent_guides_start_level=2
-" 色块宽度
+" size
 let g:indent_guides_guide_size=1
 " manually set colors
 let g:indent_guides_auto_colors = 0
 autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=darkgrey   ctermbg=011
 autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=darkgrey   ctermbg=000
-
+" set markdown for *.tmp called by vimperator
+autocmd VimEnter *.tmp :set ft=markdown
 " #####################################################
 " ### KEYMAP ###
 " set <Leader>
@@ -125,7 +130,7 @@ nmap <silent> <leader>ss :source $MYVIMRC<cr>
 "Fast editing of .vimrc
 nmap <silent> <leader>ee :e $MYVIMRC<cr>
 " clear search pattern
-nmap <silent> <leader>qs :let @/ = ""<cr>
+nmap <silent> <leader>cs :let @/ = ""<cr>
 
 " alternative :
 nnoremap <Leader>; :
@@ -145,9 +150,7 @@ noremap <Leader>P "+P
 nmap <Leader>q :q<CR>
 " save the current window
 nmap <Leader>w :w<CR>
-" 定义快捷键保存所有窗口内容并退出 vim
-nmap <Leader>WQ :wa<CR>:q<CR>
-" 不做任何保存，直接退出 vim
-nmap <Leader>Q :qa!<CR>
+" write & quit the current window
+nmap <Leader>Q :wq<CR>
 " 定义快捷键在结对符之间跳转
 nmap <Leader>M %
