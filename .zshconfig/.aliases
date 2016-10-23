@@ -2,6 +2,8 @@
 
 ### Aliases for directories
 alias envconfig="cd $ZSHCONFIG"
+alias wp="cd $WORKPATH"
+
 ### Aliases for dotfiles
 alias zshconfig="vim ~/.zshrc"
 alias tmuxconfig="vim ~/.tmux.conf.local"

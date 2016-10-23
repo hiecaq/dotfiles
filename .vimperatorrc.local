@@ -1,18 +1,20 @@
 " ###GUI SETTING
+set fullscreen
 set gui=none
 set gui=tabs
+set statuslinevisibility=visible
 
-" ###FUNCTION SETTING
-" vimperator
-
-" smooziee-plugin
-let g:smooziee_scroll_amount="256"
-let g:smooziee_scroll_interval="10"
+" ###Vimperator SETTING
+" editor
+set editor=~/.dotfiles/.zshconfig/script/runVim.sh
+" disable bells
+set visualbell
+hi Bell display: none;
 
 " ### KEYBINDINGS
 " leader
-nnoremap \' ;
-map ; <Nop>
+" nnoremap \' ;
+" map ; <Nop>
 let mapleader=";"
 nnoremap <Leader>; :
 vnoremap <Leader>; :
@@ -34,7 +36,7 @@ vnoremap <Leader>; :
 " cmap <M-space> <esc>
 vnoremap <M-space> <esc><esc><esc>
 " enter caret mode
-vnoremap v c
+nnoremap v c
 " go to previous tab
 nnoremap <C-H> <C-P>
 " go to next tab
@@ -43,3 +45,14 @@ nnoremap <C-L> <C-N>
 nnoremap <Leader>re :restart<cr>
 " clear search pattern
 nmap <silent> <leader>qs :noh<cr>
+" quick source vimprc
+nmap <silent> <leader>ss :source ~/.vimperatorrc.local<cr>
+" disable keybindings for marks and macros: never work on my firefox.
+nnoremap q <Nop>
+nnoremap @ <Nop>
+nnoremap m <Nop>
+" plugins
+" smooziee-plugin
+let g:smooziee_scroll_amount="256"
+let g:smooziee_scroll_interval="10"
+
