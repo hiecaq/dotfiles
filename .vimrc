@@ -14,6 +14,8 @@ Plugin 'nathanaelkane/vim-indent-guides'
 " other functions
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'godlygeek/tabular'
+" productivity
+Plugin 'junegunn/goyo.vim'
 " syntax
 Plugin 'vimperator/vimperator.vim'
 Plugin 'plasticboy/vim-markdown'
@@ -114,10 +116,44 @@ let g:indent_guides_start_level=2
 let g:indent_guides_guide_size=1
 " manually set colors
 let g:indent_guides_auto_colors = 0
-autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=darkgrey   ctermbg=011
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=darkgrey   ctermbg=000
+augroup Indent_Guides_Initial
+    au!
+    autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=darkgrey   ctermbg=011
+    autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=darkgrey   ctermbg=000
+augroup END
 " set markdown for *.tmp called by vimperator
-autocmd VimEnter *.tmp :set ft=markdown
+augroup Markdown_Initial
+    au!
+    autocmd VimEnter *.tmp :set ft=markdown
+    autocmd FileType markdown :setlocal wrap
+    autocmd FileType markdown :setlocal linebreak
+    autocmd FileType markdown :setlocal nonumber
+augroup END
+" Goyo setting
+
+
+function! s:goyo_enter()
+  if has('gui_running')
+    set fullscreen
+    "set background=light
+    set linespace=7
+  elseif exists('$TMUX')
+    silent !tmux set status off
+  endif
+endfunction
+
+function! s:goyo_leave()
+  if has('gui_running')
+    set nofullscreen
+    "set background=dark
+    set linespace=0
+  elseif exists('$TMUX')
+    silent !tmux set status on
+  endif
+endfunction
+
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
 " #####################################################
 " ### KEYMAP ###
 " set <Leader>
