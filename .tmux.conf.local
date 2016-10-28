@@ -115,3 +115,4 @@ tmux_conf_new_session_prompt=false
 # this is the place to further customize tmux's configuration
 
 set -g history-limit 1000
+set -g default-terminal "tmux-256color"

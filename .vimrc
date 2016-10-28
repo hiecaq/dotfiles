@@ -16,6 +16,7 @@ Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'godlygeek/tabular'
 " productivity
 Plugin 'junegunn/goyo.vim'
+Plugin 'reedes/vim-pencil'
 " syntax
 Plugin 'vimperator/vimperator.vim'
 Plugin 'plasticboy/vim-markdown'
@@ -121,6 +122,7 @@ augroup Indent_Guides_Initial
     autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=darkgrey   ctermbg=011
     autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=darkgrey   ctermbg=000
 augroup END
+
 " set markdown for *.tmp called by vimperator
 augroup Markdown_Initial
     au!
@@ -128,10 +130,14 @@ augroup Markdown_Initial
     autocmd FileType markdown :setlocal wrap
     autocmd FileType markdown :setlocal linebreak
     autocmd FileType markdown :setlocal nonumber
+    autocmd FileType markdown :SoftPencil
 augroup END
+
+" vim-markdown & pencil
+let g:vim_markdown_conceal = 0 " disable the conceal since it's tooooo ugly
+let g:airline_section_x = '%{PencilMode()}'
+
 " Goyo setting
-
-
 function! s:goyo_enter()
   if has('gui_running')
     set fullscreen
@@ -190,3 +196,5 @@ nmap <Leader>w :w<CR>
 nmap <Leader>Q :wq<CR>
 " 定义快捷键在结对符之间跳转
 nmap <Leader>M %
+" Goyo
+nmap <Leader>G :Goyo<CR>

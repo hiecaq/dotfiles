@@ -15,7 +15,6 @@ alias zshaliases="vim $ZSHCONFIG/.aliases"
 alias zshkeybindings="vim $ZSHCONFIG/.keybindings"
 
 ### other aliases
-alias ..="cd .."
 alias dotf="cd $DOTFILES"
 alias readme="vim README.md"
 alias v="vim"
