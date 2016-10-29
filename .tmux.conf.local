@@ -116,3 +116,8 @@ tmux_conf_new_session_prompt=false
 
 set -g history-limit 1000
 set -g default-terminal "tmux-256color"
+
+unbind C-a
+unbind C-b
+set -g prefix C-z
+bind C-z send-prefix

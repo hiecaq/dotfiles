@@ -11,12 +11,16 @@ Plugin 'altercation/vim-colors-solarized'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'scrooloose/nerdtree'
 " other functions
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'godlygeek/tabular'
 " productivity
 Plugin 'junegunn/goyo.vim'
 Plugin 'reedes/vim-pencil'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'SirVer/ultisnips'
+Plugin 'quinoa42/vim-snippets'
 " syntax
 Plugin 'vimperator/vimperator.vim'
 Plugin 'plasticboy/vim-markdown'
@@ -108,6 +112,7 @@ let g:airline_powerline_fonts = 1
 let g:airline_theme='solarized'
 " hide empty sections
 let g:airline_skip_empty_sections = 1
+
 " Indent Guides
 " start with vim
 let g:indent_guides_enable_on_vim_startup=1
@@ -123,6 +128,30 @@ augroup Indent_Guides_Initial
     autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=darkgrey   ctermbg=000
 augroup END
 
+" NerdTree
+" auto close NERDTree after open something
+let NERDTreeQuitOnOpen=1
+let NERDTreeMinimalUI=1
+augroup NERD_TREE_SETTING
+    au!
+    autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+augroup END
+
+" NERD_Comment
+let NERDCommentEmptyLines=1 " also comment empty line
+let NERDDefaultAlign='both' " align on left&right
+let NERDCommentWholeLinesInVMode=1 "comment whole line in V-mode
+let NERDSpaceDelims=1 " add extra space
+let NERDCreateDefaultMappings=0 " disable default mapping
+
+" YAML
+augroup YAML_INITIAL
+    au!
+    autocmd FileType yaml :setlocal tabstop=2
+    autocmd FileType yaml :setlocal shiftwidth=2
+    autocmd FileType yaml :setlocal softtabstop=2
+augroup END
+
 " set markdown for *.tmp called by vimperator
 augroup Markdown_Initial
     au!
@@ -134,7 +163,8 @@ augroup Markdown_Initial
 augroup END
 
 " vim-markdown & pencil
-let g:vim_markdown_conceal = 0 " disable the conceal since it's tooooo ugly
+let g:vim_markdown_frontmatter = 1 " YAML frontmatter for Jekyl
+"let g:vim_markdown_conceal = 0 " disable the conceal since it's tooooo ugly
 let g:airline_section_x = '%{PencilMode()}'
 
 " Goyo setting
@@ -160,6 +190,14 @@ endfunction
 
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
+" UlitSnip
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<c-a><c-a>"
+let g:UltiSnipsListSnippets="<c-a>l"
+let g:UltiSnipsJumpForwardTrigger="<c-a><c-a>"
+let g:UltiSnipsJumpBackwardTrigger="<c-a>k"
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
 " #####################################################
 " ### KEYMAP ###
 " set <Leader>
@@ -172,9 +210,11 @@ nmap <silent> <leader>ss :source $MYVIMRC<cr>
 "Fast editing of .vimrc
 nmap <silent> <leader>ee :e $MYVIMRC<cr>
 " clear search pattern
-nmap <silent> <leader>cs :let @/ = ""<cr>
+" nmap <silent> <leader>CS :let @/ = ""<cr>
+" nohlsearch
+nmap <leader>// :nohlsearch<cr>
 
-" alternative :
+" alias
 nnoremap <Leader>; :
 vnoremap <Leader>; :
 " copy selected block to the clipboard
@@ -198,3 +238,20 @@ nmap <Leader>Q :wq<CR>
 nmap <Leader>M %
 " Goyo
 nmap <Leader>G :Goyo<CR>
+" NERD_TREE
+nmap <Leader>N :NERDTreeToggle<CR>
+" NERD_Comment
+" ;cb --> comment toggle
+map <Leader>cb <plug>NERDCommenterToggle
+" ;cc --> comment at the end of this line
+map <Leader>cc <plug>NERDCommenterAppend
+" ;cy --> comment this line and copy
+map <Leader>cy <plug>NERDCommenterYank
+" ;cl --> comment from this position to end of the line
+map <Leader>cl <plug>NERDCommenterToEOL
+" ;cu --> uncomment
+map <Leader>cu <plug>NERDCommenterUncomment
+" ;cs --> commentSexy
+map <Leader>cs <plug>NERDCommenterSexy
+" ;ci --> invert comments
+map <Leader>ci <plug>NERDCommenterInvert
