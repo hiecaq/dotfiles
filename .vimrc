@@ -16,14 +16,19 @@ Plugin 'vim-airline/vim-airline-themes'
 Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'scrooloose/nerdtree'
 " other functions
+Plugin 'tpope/vim-repeat'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'godlygeek/tabular'
+Plugin 'rhysd/clever-f.vim'
+Plugin 'justinmk/vim-sneak'
 " productivity
+Plugin 'ap/vim-css-color'
 Plugin 'junegunn/goyo.vim'
 Plugin 'reedes/vim-pencil'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'SirVer/ultisnips'
 Plugin 'quinoa42/vim-snippets'
+Plugin 'tpope/vim-surround'
 " syntax
 Plugin 'vimperator/vimperator.vim'
 Plugin 'plasticboy/vim-markdown'
@@ -263,6 +268,26 @@ nmap <Leader>G :Goyo<CR>
 
 let g:airline_section_x = '%{PencilMode()}'
 
+"""""""""""
+"  sneak  "
+"""""""""""
+
+let g:sneak#s_next=1 " clever-f-like s/S support
+let g:sneak#streak=1 " eazymotion-like s/S enhance
+let g:sneak#f_reset=0 " continue to use ;, for sneak
+let g:sneak#t_reset=0 " ^
+let g:sneak#absolute_dir=1 " s; forwards only and S, backwards only
+" explicit repeat (as opposed to implicit 'clever-s' repeat)
+map ' <Plug>SneakNext
+map , <Plug>SneakPrevious
+
+""""""""""""""
+"  clever-f  "
+""""""""""""""
+let g:clever_f_across_no_line=1 " only match the current line
+let g:clever_f_fix_key_direction=1 " fix f to forward and F backword, tT etc.
+let g:clever_f_chars_match_any_signs=";" " use ; to match all signs
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              SYNTAX SETTINGS                               "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -278,7 +303,7 @@ augroup Markdown_Initial
     autocmd VimEnter *.tmp :set ft=markdown " set markdown for *.tmp called by vimperator
     autocmd FileType markdown :setlocal wrap
     autocmd FileType markdown :setlocal linebreak
-    autocmd FileType markdown :setlocal nonumber 
+    autocmd FileType markdown :setlocal nonumber
     autocmd FileType markdown :SoftPencil
 augroup END
 
