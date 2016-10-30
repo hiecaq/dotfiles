@@ -26,7 +26,10 @@ TODO
 ----
 
 - [ ] Read [Learning Vimscript the Hard Way](http://learnvimscriptthehardway.stevelosh.com/)
-- [ ] make vim more favorable to use as a editor app for writing
+- [x] Make vim more favorable to use as a editor app for writing
+- [ ] Add auto-completion for vim
+- [ ] improve the default movement of vim
+- [ ] memorize default key mappings for tmux
 
 Credits
 -------
