@@ -1,4 +1,7 @@
-" ### VUNDLE SETTINGS ###
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                              VUNDLE SETTINGS                               "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 set nocompatible              " be iMproved, required
 filetype off                  " required
 " set the runtime path to include Vundle and initialize
@@ -39,16 +42,17 @@ filetype plugin on    " required
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
 
-" ####################################################
-" ### VIM SETINGS ###
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                VIM SETTINGS                                "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " encodings setting
 set enc=utf-8
 set fileencodings=utf-8,gbk,big5
-" 开启实时搜索功能
+" search while typing patterns
 set incsearch
-" 搜索时大小写不敏感
+" ignore cases in search
 set ignorecase
-" vim 自身命令行模式智能补全
+" vim's default wild completion for commands
 set wildmenu
 
 " enable 256 colors
@@ -103,9 +107,52 @@ if has("autocmd")
     augroup END
 endif " has("autocmd")
 
-" #####################################################
-" ### PLUGINS SETTING ###
-" Airline
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                KEY MAPPINGS                                "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" set <Leader>
+let mapleader=";"
+" alternative esc
+"imap <D-space> <esc>   "using the function provided by iterm2 instead
+vnoremap <esc> <esc><esc><esc>
+"Fast reloading of the .vimrc
+nmap <silent> <leader>ss :source $MYVIMRC<cr>
+"Fast editing of .vimrc
+nmap <silent> <leader>ee :e $MYVIMRC<cr>
+" clear search pattern
+" nmap <silent> <leader>CS :let @/ = ""<cr>
+" nohlsearch
+nmap <leader>// :nohlsearch<cr>
+" alias
+nnoremap <Leader>; :
+vnoremap <Leader>; :
+" copy selected block to the clipboard
+vnoremap <Leader>y "+y
+" copy to clipboard
+noremap <Leader>y "+y
+" copy a whole line to the clipboard
+noremap <Leader>Y "+Y
+" put the text from clipboard after the cursor
+noremap <Leader>p "+p
+" put the text from clipboard before the cursor
+noremap <Leader>P "+P
+
+" close the current window
+nmap <Leader>q :q<CR>
+" save the current window
+nmap <Leader>w :w<CR>
+" write & quit the current window
+nmap <Leader>Q :wq<CR>
+" quick match ()[]{}
+nmap <Leader>M %
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                              PLUGINS SETTINGS                              "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"""""""""""""
+"  Airline  "
+"""""""""""""
 " use Powerline symbols(special fonts requried)
 let g:airline_powerline_fonts = 1
 " theme
@@ -113,7 +160,10 @@ let g:airline_theme='solarized'
 " hide empty sections
 let g:airline_skip_empty_sections = 1
 
-" Indent Guides
+"""""""""""""""""""
+"  Indent Guides  "
+"""""""""""""""""""
+
 " start with vim
 let g:indent_guides_enable_on_vim_startup=1
 " show indent starts from 2 level
@@ -128,7 +178,10 @@ augroup Indent_Guides_Initial
     autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=darkgrey   ctermbg=000
 augroup END
 
-" NerdTree
+""""""""""""""
+"  NERDTree  "
+""""""""""""""
+
 " auto close NERDTree after open something
 let NERDTreeQuitOnOpen=1
 let NERDTreeMinimalUI=1
@@ -136,38 +189,49 @@ augroup NERD_TREE_SETTING
     au!
     autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 augroup END
+" toggle NERDTree
+nmap <Leader>N :NERDTreeToggle<CR>
 
-" NERD_Comment
+""""""""""""""""""
+"  NERD_Comment  "
+""""""""""""""""""
+
 let NERDCommentEmptyLines=1 " also comment empty line
 let NERDDefaultAlign='both' " align on left&right
 let NERDCommentWholeLinesInVMode=1 "comment whole line in V-mode
 let NERDSpaceDelims=1 " add extra space
 let NERDCreateDefaultMappings=0 " disable default mapping
+" ;cb --> comment toggle
+map <Leader>cb <plug>NERDCommenterToggle
+" ;cc --> comment at the end of this line
+map <Leader>cc <plug>NERDCommenterAppend
+" ;cy --> comment this line and copy
+map <Leader>cy <plug>NERDCommenterYank
+" ;cl --> comment from this position to end of the line
+map <Leader>cl <plug>NERDCommenterToEOL
+" ;cu --> uncomment
+map <Leader>cu <plug>NERDCommenterUncomment
+" ;cs --> commentSexy
+map <Leader>cs <plug>NERDCommenterSexy
+" ;ci --> invert comments
+map <Leader>ci <plug>NERDCommenterInvert
 
-" YAML
-augroup YAML_INITIAL
-    au!
-    autocmd FileType yaml :setlocal tabstop=2
-    autocmd FileType yaml :setlocal shiftwidth=2
-    autocmd FileType yaml :setlocal softtabstop=2
-augroup END
+"""""""""""""""
+"  UltiSnips  "
+"""""""""""""""
 
-" set markdown for *.tmp called by vimperator
-augroup Markdown_Initial
-    au!
-    autocmd VimEnter *.tmp :set ft=markdown
-    autocmd FileType markdown :setlocal wrap
-    autocmd FileType markdown :setlocal linebreak
-    autocmd FileType markdown :setlocal nonumber
-    autocmd FileType markdown :SoftPencil
-augroup END
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<c-a><c-a>"
+let g:UltiSnipsListSnippets="<c-a>l"
+let g:UltiSnipsJumpForwardTrigger="<c-a><c-a>"
+let g:UltiSnipsJumpBackwardTrigger="<c-a>k"
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
 
-" vim-markdown & pencil
-let g:vim_markdown_frontmatter = 1 " YAML frontmatter for Jekyl
-"let g:vim_markdown_conceal = 0 " disable the conceal since it's tooooo ugly
-let g:airline_section_x = '%{PencilMode()}'
+""""""""""
+"  Goyo  "
+""""""""""
 
-" Goyo setting
 function! s:goyo_enter()
   if has('gui_running')
     set fullscreen
@@ -190,68 +254,41 @@ endfunction
 
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
-" UlitSnip
-" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<c-a><c-a>"
-let g:UltiSnipsListSnippets="<c-a>l"
-let g:UltiSnipsJumpForwardTrigger="<c-a><c-a>"
-let g:UltiSnipsJumpBackwardTrigger="<c-a>k"
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
-" #####################################################
-" ### KEYMAP ###
-" set <Leader>
-let mapleader=";"
-" alternative esc
-"imap <D-space> <esc>   "using the function provided by iterm2 instead
-vnoremap <esc> <esc><esc><esc>
-"Fast reloading of the .vimrc
-nmap <silent> <leader>ss :source $MYVIMRC<cr>
-"Fast editing of .vimrc
-nmap <silent> <leader>ee :e $MYVIMRC<cr>
-" clear search pattern
-" nmap <silent> <leader>CS :let @/ = ""<cr>
-" nohlsearch
-nmap <leader>// :nohlsearch<cr>
-
-" alias
-nnoremap <Leader>; :
-vnoremap <Leader>; :
-" copy selected block to the clipboard
-vnoremap <Leader>y "+y
-" copy to clipboard
-noremap <Leader>y "+y
-" copy a whole line to the clipboard
-noremap <Leader>Y "+Y
-" put the text from clipboard after the cursor
-noremap <Leader>p "+p
-" put the text from clipboard before the cursor
-noremap <Leader>P "+P
-
-" close the current window
-nmap <Leader>q :q<CR>
-" save the current window
-nmap <Leader>w :w<CR>
-" write & quit the current window
-nmap <Leader>Q :wq<CR>
-" 定义快捷键在结对符之间跳转
-nmap <Leader>M %
-" Goyo
+" Goyo toggle
 nmap <Leader>G :Goyo<CR>
-" NERD_TREE
-nmap <Leader>N :NERDTreeToggle<CR>
-" NERD_Comment
-" ;cb --> comment toggle
-map <Leader>cb <plug>NERDCommenterToggle
-" ;cc --> comment at the end of this line
-map <Leader>cc <plug>NERDCommenterAppend
-" ;cy --> comment this line and copy
-map <Leader>cy <plug>NERDCommenterYank
-" ;cl --> comment from this position to end of the line
-map <Leader>cl <plug>NERDCommenterToEOL
-" ;cu --> uncomment
-map <Leader>cu <plug>NERDCommenterUncomment
-" ;cs --> commentSexy
-map <Leader>cs <plug>NERDCommenterSexy
-" ;ci --> invert comments
-map <Leader>ci <plug>NERDCommenterInvert
+
+""""""""""""
+"  Pencil  "
+""""""""""""
+
+let g:airline_section_x = '%{PencilMode()}'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                              SYNTAX SETTINGS                               "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+""""""""""""""
+"  Markdown  "
+""""""""""""""
+
+let g:vim_markdown_frontmatter = 1 " YAML frontmatter for Jekyl
+let g:vim_markdown_conceal = 0 " disable the conceal since it's tooooo ugly
+augroup Markdown_Initial
+    au!
+    autocmd VimEnter *.tmp :set ft=markdown " set markdown for *.tmp called by vimperator
+    autocmd FileType markdown :setlocal wrap
+    autocmd FileType markdown :setlocal linebreak
+    autocmd FileType markdown :setlocal nonumber 
+    autocmd FileType markdown :SoftPencil
+augroup END
+
+""""""""""
+"  YAML  "
+""""""""""
+
+augroup YAML_Tabs_Speical
+    au!
+    autocmd FileType yaml :setlocal tabstop=2
+    autocmd FileType yaml :setlocal shiftwidth=2
+    autocmd FileType yaml :setlocal softtabstop=2
+augroup END
