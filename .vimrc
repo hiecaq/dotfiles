@@ -28,6 +28,7 @@ Plugin 'reedes/vim-pencil'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'SirVer/ultisnips'
 Plugin 'quinoa42/vim-snippets'
+Plugin 'Valloric/YouCompleteMe'
 Plugin 'tpope/vim-surround'
 " syntax
 Plugin 'vimperator/vimperator.vim'
@@ -226,10 +227,11 @@ map <Leader>ci <plug>NERDCommenterInvert
 """""""""""""""
 
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<c-a><c-a>"
+let g:UltiSnipsExpandTrigger="<c-f>"
 let g:UltiSnipsListSnippets="<c-a>l"
-let g:UltiSnipsJumpForwardTrigger="<c-a><c-a>"
-let g:UltiSnipsJumpBackwardTrigger="<c-a>k"
+let g:UltiSnipsJumpForwardTrigger="<c-f>"
+let g:UltiSnipsJumpBackwardTrigger="<c-a><c-a>"
+let g:UltiSnipsSnippetsDir="~/.vim/bundle/vim-snippets/UltiSnips"
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
 
@@ -287,6 +289,7 @@ map , <Plug>SneakPrevious
 let g:clever_f_across_no_line=1 " only match the current line
 let g:clever_f_fix_key_direction=1 " fix f to forward and F backword, tT etc.
 let g:clever_f_chars_match_any_signs=";" " use ; to match all signs
+let g:clever_f_use_migemo=1 " enable migemo support
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              SYNTAX SETTINGS                               "
