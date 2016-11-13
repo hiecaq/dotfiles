@@ -18,6 +18,10 @@ hi Bell display: none;
 let mapleader=";"
 nnoremap <Leader>; :
 vnoremap <Leader>; :
+noremap ' ;
+nnoremap ' ;
+vnoremap ' ;
+inoremap ' ;
 " alternative esc
 " solved this by editing events.js before compiling:
 "       if (liberator.has("MacUnix") && event.metaKey) {
@@ -31,9 +35,9 @@ vnoremap <Leader>; :
 "           }
 "       }
 
-" map <M-space> <esc>
-" imap <M-space> <esc>
-" cmap <M-space> <esc>
+map <M-space> <esc>
+imap <M-space> <esc>
+cmap <M-space> <esc>
 vnoremap <M-space> <esc><esc><esc>
 " enter caret mode
 nnoremap v c
@@ -48,10 +52,6 @@ nmap <silent> <leader>qs :noh<cr>
 " quick source vimprc
 nmap <silent> <leader>ss :source ~/.vimperatorrc.local<cr>
 " disable keybindings for marks and macros: never work on my firefox.
-nnoremap q <Nop>
-nnoremap @ <Nop>
-nnoremap m <Nop>
-nnoremap ` <Nop>
 " plugins
 " smooziee-plugin
 let g:smooziee_scroll_amount="256"

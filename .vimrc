@@ -16,6 +16,7 @@ Plugin 'vim-airline/vim-airline-themes'
 Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'scrooloose/nerdtree'
 " other functions
+Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'godlygeek/tabular'
@@ -24,14 +25,15 @@ Plugin 'justinmk/vim-sneak'
 " productivity
 Plugin 'ap/vim-css-color'
 Plugin 'junegunn/goyo.vim'
+Plugin 'junegunn/limelight.vim'
 Plugin 'reedes/vim-pencil'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'SirVer/ultisnips'
 Plugin 'quinoa42/vim-snippets'
 Plugin 'Valloric/YouCompleteMe'
-Plugin 'tpope/vim-surround'
 " syntax
 Plugin 'vimperator/vimperator.vim'
+Bundle 'dogrover/vim-pentadactyl'
 Plugin 'plasticboy/vim-markdown'
 " All of your Plugins must be added before the following line
 call vundle#end()   " ### plugin list ends here
@@ -150,7 +152,10 @@ nmap <Leader>w :w<CR>
 " write & quit the current window
 nmap <Leader>Q :wq<CR>
 " quick match ()[]{}
-nmap <Leader>M %
+nmap <Leader>m %
+" spell-check toggle
+nmap <Leader>SL :setlocal invspell spelllang=en_us<CR>
+nmap <Leader>SA :spellr<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              PLUGINS SETTINGS                              "
@@ -207,10 +212,10 @@ let NERDDefaultAlign='both' " align on left&right
 let NERDCommentWholeLinesInVMode=1 "comment whole line in V-mode
 let NERDSpaceDelims=1 " add extra space
 let NERDCreateDefaultMappings=0 " disable default mapping
-" ;cb --> comment toggle
-map <Leader>cb <plug>NERDCommenterToggle
-" ;cc --> comment at the end of this line
-map <Leader>cc <plug>NERDCommenterAppend
+" ;cc --> comment toggle
+map <Leader>cc <plug>NERDCommenterToggle
+" ;c; --> comment at the end of this line
+map <Leader>c; <plug>NERDCommenterAppend
 " ;cy --> comment this line and copy
 map <Leader>cy <plug>NERDCommenterYank
 " ;cl --> comment from this position to end of the line
@@ -235,9 +240,9 @@ let g:UltiSnipsSnippetsDir="~/.vim/bundle/vim-snippets/UltiSnips"
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
 
-""""""""""
-"  Goyo  "
-""""""""""
+""""""""""""""""""""""
+"  Goyo & Limelight  "
+""""""""""""""""""""""
 
 function! s:goyo_enter()
   if has('gui_running')
@@ -259,8 +264,17 @@ function! s:goyo_leave()
   endif
 endfunction
 
-autocmd! User GoyoEnter nested call <SID>goyo_enter()
-autocmd! User GoyoLeave nested call <SID>goyo_leave()
+augroup Goyo_initialize
+    au!
+    autocmd User GoyoEnter nested call <SID>goyo_enter()
+    autocmd User GoyoEnter Limelight
+    autocmd User GoyoLeave nested call <SID>goyo_leave()
+    autocmd User GoyoLeave Limelight!
+augroup END
+
+" Limelight solarized setting
+let g:limelight_conceal_ctermfg = 030
+
 " Goyo toggle
 nmap <Leader>G :Goyo<CR>
 
@@ -320,3 +334,4 @@ augroup YAML_Tabs_Speical
     autocmd FileType yaml :setlocal shiftwidth=2
     autocmd FileType yaml :setlocal softtabstop=2
 augroup END
+

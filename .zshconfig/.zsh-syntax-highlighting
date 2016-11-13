@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 
 # Declare the variable
 typeset -A ZSH_HIGHLIGHT_STYLES
