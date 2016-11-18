@@ -1,34 +1,29 @@
 dotfiles
 ========
 
-My dotfiles for vim, macVim, vimperator, zsh, and others.
+My dotfiles that configures the world I live in.
 
 Usage
 -----
 
-Copy these files to `$HOME` or make symlinks.
+A lot thanks to `dotbot`, which makes everything much easier:
 
-For example,
 ```bash
-    ln -s /%YOUR_PATH_HERE%/.vimrc ~/.vimrc
+./install
 ```
 
 Description
 -----------
 
-### iterm2 + zsh + tmux + vim ###
-
-Add key mappings for `Meta-space` as an alternative key for `esc`:
-
-Open iterm2 and navigate to `Preferences/Profiles/Keys/Key Mappings/`, add `0x1b` for `Meta-space`.
+TBD
 
 TODO
 ----
 
+- [ ] Add my tmux environment setup
+- [ ] Move to pvenv
+- [ ] adjust `init.vim` to let neoVim be not limited to original vim
 - [ ] Read [Learning Vimscript the Hard Way](http://learnvimscriptthehardway.stevelosh.com/)
-- [x] Make vim more favorable to use as a editor app for writing
-- [ ] Add auto-completion for vim
-- [ ] improve the default movement of vim
 - [ ] memorize default key mappings for tmux
 
 Credits
