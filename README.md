@@ -20,8 +20,9 @@ TBD
 TODO
 ----
 
-- [ ] Add my tmux environment setup
-- [ ] Move to pvenv
+- [ ] Move to use `plug` instead of `vundle`
+- [x] Add my tmux environment setup
+- [x] Move to pvenv
 - [ ] adjust `init.vim` to let neoVim be not limited to original vim
 - [ ] Read [Learning Vimscript the Hard Way](http://learnvimscriptthehardway.stevelosh.com/)
 - [ ] memorize default key mappings for tmux

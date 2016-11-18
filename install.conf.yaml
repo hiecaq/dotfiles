@@ -11,19 +11,24 @@
 - link:
     ~/.dotfiles: ''
 
-# zsh setup
+# zsh
 
 - link:
     ~/.zshrc: zshrc
     ~/.zsh: zsh
 
-# nvim setup
+# tmux
+
+# nvim
 
 - link:
     ~/.config/nvim: nvim
 
-# tmux setup
+# tmux
 
+- link:
+    ~/.tmux.conf: tmux/.tmux.conf
+    ~/.tmux.conf.local: tmux.conf
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]

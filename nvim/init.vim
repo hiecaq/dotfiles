@@ -67,6 +67,9 @@ set wildmenu
 " enable 256 colors
 set t_Co=256
 set termguicolors
+set t_8f=[38;2;%lu;%lu;%lum
+set t_8b=[48;2;%lu;%lu;%lum
+
 " color theme
 colorscheme NeoSolarized
 " set background type
@@ -116,6 +119,14 @@ if has("autocmd")
                     \ endif
     augroup END
 endif " has("autocmd")
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                  Provider                                  "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let g:python_host_prog = '/Users/Quinoa/.pyenv/versions/neovim2/bin/python'
+let g:python3_host_prog = '/Users/Quinoa/.pyenv/versions/neovim3/bin/python'
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                KEY MAPPINGS                                "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -184,13 +195,14 @@ let g:indent_guides_exclude_filetypes = ['help', 'man']
 let g:indent_guides_start_level=2
 " size
 let g:indent_guides_guide_size=1
-" manually set colors
-let g:indent_guides_auto_colors = 0
-augroup Indent_Guides_Initial
-    au!
-    autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=darkgrey   ctermbg=011
-    autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=darkgrey   ctermbg=000
-augroup END
+
+" manually set colors ( no longer needed thanks to nvim)
+" let g:indent_guides_auto_colors = 0
+" augroup Indent_Guides_Initial
+"     au!
+"     autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=darkgrey   ctermbg=011
+"     autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=darkgrey   ctermbg=000
+" augroup END
 
 """"""""""""""
 "  NERDTree  "
@@ -239,7 +251,7 @@ let g:UltiSnipsExpandTrigger="<c-f>"
 let g:UltiSnipsListSnippets="<c-a>l"
 let g:UltiSnipsJumpForwardTrigger="<c-f>"
 let g:UltiSnipsJumpBackwardTrigger="<c-a><c-a>"
-let g:UltiSnipsSnippetsDir="~/.vim/bundle/vim-snippets/UltiSnips"
+let g:UltiSnipsSnippetsDir="~/.config/nvim/bundle/vim-snippets/UltiSnips"
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
 

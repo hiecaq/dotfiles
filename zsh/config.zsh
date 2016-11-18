@@ -1,7 +1,5 @@
 #!/usr/bin/env zsh
 
-source $ZSHCONFIG/aliases.zsh
-source $ZSHCONFIG/keybindings.zsh
 #######################################################################
 #                              Oh-My-Zsh                              #
 #######################################################################
@@ -9,6 +7,8 @@ source $ZSHCONFIG/keybindings.zsh
 ZSH_THEME="pygmalion"
 plugins=(git colored-man colorize github jira vagrant virtualenv pip python brew osx tmux zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
+
+unalias pip
 
 #######################################################################
 #                      Zsh-syntax-hightlighting                       #
@@ -35,3 +35,11 @@ vman() {
 }
 
 compdef vman="man"
+
+#######################################################################
+#                               source                                #
+#######################################################################
+
+source $ZSHCONFIG/aliases.zsh
+source $ZSHCONFIG/keybindings.zsh
+
