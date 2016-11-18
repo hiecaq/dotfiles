@@ -23,6 +23,7 @@ Plugin 'godlygeek/tabular'
 Plugin 'rhysd/clever-f.vim'
 Plugin 'justinmk/vim-sneak'
 " productivity
+Plugin 'jez/vim-superman'
 Plugin 'ap/vim-css-color'
 Plugin 'junegunn/goyo.vim'
 Plugin 'junegunn/limelight.vim'
@@ -65,6 +66,7 @@ set wildmenu
 
 " enable 256 colors
 set t_Co=256
+set termguicolors
 " color theme
 colorscheme solarized
 " set background type
@@ -114,7 +116,6 @@ if has("autocmd")
                     \ endif
     augroup END
 endif " has("autocmd")
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                KEY MAPPINGS                                "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -177,6 +178,8 @@ let g:airline_skip_empty_sections = 1
 
 " start with vim
 let g:indent_guides_enable_on_vim_startup=1
+" exclude filetypes
+let g:indent_guides_exclude_filetypes = ['help', 'man']
 " show indent starts from 2 level
 let g:indent_guides_start_level=2
 " size

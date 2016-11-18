@@ -6,8 +6,9 @@ export ZSH=/Users/Quinoa/.oh-my-zsh
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 export VISUAL=vim
 export EDITOR=$VISUAL
-### fpath=(/usr/local/share/zsh-completions $fpath)
 eval "$(rbenv init -)"
+
+PATH="$HOME/bin:$PATH"
 
 ### config
 source $ZSHCONFIG/.env
