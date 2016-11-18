@@ -3,21 +3,14 @@
 ### Aliases for directories
 alias envconfig="cd $ZSHCONFIG"
 alias wp="cd $WORKPATH"
+alias dotf="cd $DOTFILES"
 
 ### Aliases for dotfiles
 alias zshconfig="vim ~/.zshrc"
-alias tmuxconfig="vim ~/.tmux.conf.local"
-alias vimrc="vim ~/.vimrc"
-alias vimpconfig="vim ~/.vimperatorrc"
-alias vimprc="vim ~/.vimperatorrc.local"
-alias gvimrc="vim ~/.gvimrc"
-alias zshaliases="vim $ZSHCONFIG/.aliases"
-alias zshkeybindings="vim $ZSHCONFIG/.keybindings"
 
 ### other aliases
-alias dotf="cd $DOTFILES"
 alias readme="vim README.md"
-alias v="vim"
+alias v="nvim"
 alias g="git"
 alias buildPage="cd $WORKPATH/user-pages; bundle exec jekyll build; cd -"
 alias servePage="cd $WORKPATH/user-pages; bundle exec jekyll serve; cd -"

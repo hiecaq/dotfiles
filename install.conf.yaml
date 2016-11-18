@@ -1,19 +1,32 @@
 # my dotbot configuration
 
-
 - defaults:
     link:
       create: true
       relink: true
 
 - shell:
-  - [git submodule update --init --recursive, Installing submodules]
+  - [mkdir -p ~/.config]
 
 - link:
     ~/.dotfiles: ''
-    ~/.vimrc: .vimrc
-    ~/.zshrc: .zshrc
-    ~/.zshconfig: .zshconfig
+
+# zsh setup
+
+- link:
+    ~/.zshrc: zshrc
+    ~/.zsh: zsh
+
+# nvim setup
+
+- link:
+    ~/.config/nvim: nvim
+
+# tmux setup
+
+
+- shell:
+  - [git submodule update --init --recursive, Installing submodules]
 
 # Clean symlinks which have moved
-- clean: ['~', '~/.zshconfig/']
+- clean: ['~', '~/.config/']

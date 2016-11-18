@@ -1,7 +1,7 @@
 ### PATH
 export DOTFILES=~/.dotfiles
 export WORKPATH=~/Workspace/
-export ZSHCONFIG=$DOTFILES/.zshconfig
+export ZSHCONFIG=~/.zsh
 export ZSH=/Users/Quinoa/.oh-my-zsh
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 export VISUAL=vim
@@ -11,6 +11,4 @@ eval "$(rbenv init -)"
 PATH="$HOME/bin:$PATH"
 
 ### config
-source $ZSHCONFIG/.env
-source $ZSHCONFIG/.aliases
-source $ZSHCONFIG/.keybindings
+source $ZSHCONFIG/config.zsh

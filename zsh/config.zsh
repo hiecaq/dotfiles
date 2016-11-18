@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+source $ZSHCONFIG/aliases.zsh
+source $ZSHCONFIG/keybindings.zsh
 #######################################################################
 #                              Oh-My-Zsh                              #
 #######################################################################
@@ -12,7 +14,7 @@ source $ZSH/oh-my-zsh.sh
 #                      Zsh-syntax-hightlighting                       #
 #######################################################################
 
-source $ZSHCONFIG/.zsh-syntax-highlighting
+source $ZSHCONFIG/zsh-syntax-highlighting.zsh
 
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 
