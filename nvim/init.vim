@@ -1,55 +1,43 @@
+set nocompatible              " be iMproved
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              VUNDLE SETTINGS                               "
+"                               Plug Settings                                "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-set nocompatible              " be iMproved, required
-filetype off                  " required
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.config/nvim/bundle/Vundle.vim
-call vundle#begin('~/.config/nvim/bundle') " ### plugin list begins here
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
+if empty(glob('~/.config/nvim/autoload/plug.vim'))
+  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall | source $MYVIMRC
+endif
+
+let g:plug_timeout = 300
+
+call plug#begin('~/.config/nvim/plugged') " ### plugin list begins here
 " User Interface
-Plugin 'icymind/NeoSolarized'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'nathanaelkane/vim-indent-guides'
-Plugin 'scrooloose/nerdtree'
+Plug 'icymind/NeoSolarized'
+Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 " other functions
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-repeat'
-Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'godlygeek/tabular'
-Plugin 'rhysd/clever-f.vim'
-Plugin 'justinmk/vim-sneak'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'godlygeek/tabular'
+Plug 'rhysd/clever-f.vim'
+Plug 'justinmk/vim-sneak'
 " productivity
-Plugin 'jez/vim-superman'
-Plugin 'ap/vim-css-color'
-Plugin 'junegunn/goyo.vim'
-Plugin 'junegunn/limelight.vim'
-Plugin 'reedes/vim-pencil'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'SirVer/ultisnips'
-Plugin 'quinoa42/vim-snippets'
-Plugin 'Valloric/YouCompleteMe'
+Plug 'jez/vim-superman'
+Plug 'ap/vim-css-color'
+Plug 'junegunn/goyo.vim', { 'for': 'markdown' }
+Plug 'junegunn/limelight.vim', { 'for': 'markdown' }
+Plug 'reedes/vim-pencil', { 'for': 'markdown' }
+Plug 'scrooloose/nerdcommenter'
+Plug 'SirVer/ultisnips' | Plug 'quinoa42/vim-snippets'
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer' }
 " syntax
-Plugin 'vimperator/vimperator.vim'
-Bundle 'dogrover/vim-pentadactyl'
-Plugin 'plasticboy/vim-markdown'
-" All of your Plugins must be added before the following line
-call vundle#end()   " ### plugin list ends here
-filetype plugin on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
+Plug 'vimperator/vimperator.vim'
+Plug 'dogrover/vim-pentadactyl'
+Plug 'plasticboy/vim-markdown'
+call plug#end()   " ### Plug list ends here
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                VIM SETTINGS                                "
@@ -81,8 +69,16 @@ set laststatus=2
 set noshowmode
 " show position of cursor
 set ruler
+" show relative line numbers
+set relativenumber
 " show line numbers
 set number
+
+augroup number_highlights
+    au!
+    autocmd VimEnter,Colorscheme * :hi CursorLineNr  gui=bold guifg=#586e75 guibg=#073642
+augroup END
+
 " highlight the current line/column
 "set cursorline
 "set cursorcolumn
@@ -90,11 +86,12 @@ set number
 set hlsearch
 " no line wrap
 set nowrap
-
 " enable syntax highlights
 syntax enable
 " allow to replace default syntax highlights with intended ones
 syntax on
+"" auto load plugin files for specific file types
+filetype plugin on
 " auto indent of file
 filetype indent on
 " disable fold
@@ -292,12 +289,6 @@ let g:limelight_conceal_ctermfg = 030
 
 " Goyo toggle
 nmap <Leader>G :Goyo<CR>
-
-""""""""""""
-"  Pencil  "
-""""""""""""
-
-let g:airline_section_x = '%{PencilMode()}'
 
 """""""""""
 "  sneak  "

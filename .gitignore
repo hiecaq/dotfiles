@@ -1,2 +1,3 @@
 drafts/
-nvim/bundle/
+nvim/
+!nvim/init.vim

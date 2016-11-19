@@ -1,5 +1,8 @@
 #!/usr/bin/env zsh
 
+### Setting
+export KEYTIMEOUT=10
+
 #######################################################################
 #                              Oh-My-Zsh                              #
 #######################################################################
@@ -18,16 +21,12 @@ source $ZSHCONFIG/zsh-syntax-highlighting.zsh
 
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 
-### Setting
-export KEYTIMEOUT=10
-
-
 #######################################################################
 #                            Vim SuperMan                             #
 #######################################################################
 
 vman() {
-    vim -c "SuperMan $*"
+    nvim -c "SuperMan $*"
 
     if [ "$?" != "0" ]; then
         echo "No manual entry for $*"
