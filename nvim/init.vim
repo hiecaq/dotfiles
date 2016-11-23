@@ -1,4 +1,4 @@
-set nocompatible              " be iMproved
+" set nocompatible              " be iMproved -- not needed for nvim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                               Plug Settings                                "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -24,8 +24,10 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'godlygeek/tabular'
 Plug 'rhysd/clever-f.vim'
 Plug 'justinmk/vim-sneak'
+Plug '/usr/local/opt/fzf', { 'do' : './install --all' } | Plug 'junegunn/fzf.vim'
 " productivity
 Plug 'jez/vim-superman'
+" Plug 'nhooyr/neoman.vim'
 Plug 'ap/vim-css-color'
 Plug 'junegunn/goyo.vim', { 'for': 'markdown' }
 Plug 'junegunn/limelight.vim', { 'for': 'markdown' }
@@ -43,14 +45,12 @@ call plug#end()   " ### Plug list ends here
 "                                VIM SETTINGS                                "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " encodings setting
-set enc=utf-8
+" set enc=utf-8  "done by neovim already
 set fileencodings=utf-8,gbk,big5
-" search while typing patterns
-set incsearch
 " ignore cases in search
 set ignorecase
 " vim's default wild completion for commands
-set wildmenu
+" set wildmenu
 
 " enable 256 colors
 set t_Co=256
@@ -64,7 +64,7 @@ colorscheme NeoSolarized
 set background=dark
 
 " always show status line
-set laststatus=2
+" set laststatus=2
 " disable default mode indicator(have airline already)
 set noshowmode
 " show position of cursor
@@ -82,8 +82,10 @@ augroup END
 " highlight the current line/column
 "set cursorline
 "set cursorcolumn
+" search while typing patterns
+" set incsearch
 " highlight search results
-set hlsearch
+" set hlsearch
 " no line wrap
 set nowrap
 " enable syntax highlights
@@ -128,7 +130,9 @@ let g:python3_host_prog = '/Users/Quinoa/.pyenv/versions/neovim3/bin/python'
 "                                KEY MAPPINGS                                "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " set <Leader>
-let mapleader=";"
+nnoremap <space> <Nop>
+vnoremap <space> <Nop>
+let mapleader="\<space>"
 " alternative esc
 "imap <D-space> <esc>   "using the function provided by iterm2 instead
 vnoremap <esc> <esc><esc><esc>
@@ -299,9 +303,6 @@ let g:sneak#streak=1 " eazymotion-like s/S enhance
 let g:sneak#f_reset=0 " continue to use ;, for sneak
 let g:sneak#t_reset=0 " ^
 let g:sneak#absolute_dir=1 " s; forwards only and S, backwards only
-" explicit repeat (as opposed to implicit 'clever-s' repeat)
-map ' <Plug>SneakNext
-map , <Plug>SneakPrevious
 
 """"""""""""""
 "  clever-f  "

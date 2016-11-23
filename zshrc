@@ -13,3 +13,6 @@ PATH="$HOME/bin:$PATH"
 
 ### config
 source $ZSHCONFIG/config.zsh
+
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

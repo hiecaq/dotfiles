@@ -24,9 +24,12 @@ TODO
 - [x] Move to use `plug` instead of `vundle`
 - [x] Add my tmux environment setup
 - [x] Move to pvenv
-- [ ] adjust `init.vim` to let neoVim be not limited to original vim
+- [x] change to use `space` as my leader in Vim
+- [ ] use `universal-ctags`
+- [ ] adjust `init.vim` to release neoVim from the limit of classic vim
 - [ ] Read [Learning Vimscript the Hard Way](http://learnvimscriptthehardway.stevelosh.com/)
 - [ ] memorize default key mappings for tmux
+- [ ] optional: use `deoplete` instead of `YCM`
 
 Credits
 -------
