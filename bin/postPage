@@ -1,0 +1,4 @@
+#!/usr/bin/env zsh
+now=$(date +"%Y-%m-%d")
+file=$1
+mv $file $WORKPATH/user-pages/_posts/$now-${file##*/}

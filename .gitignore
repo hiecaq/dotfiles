@@ -1,3 +1,4 @@
 drafts/
 nvim/
 !nvim/init.vim
+karabiner.d/log

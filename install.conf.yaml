@@ -31,6 +31,21 @@
     ~/.tmux.conf: tmux/.tmux.conf
     ~/.tmux.conf.local: tmux.conf
 
+# karabiner
+
+- link:
+    ~/.karabiner.d: karabiner.d
+
+# hammerspoon
+
+- link:
+    ~/.hammerspoon: hammerspoon
+
+# my scripts
+
+- link:
+    ~/bin: bin
+
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
 

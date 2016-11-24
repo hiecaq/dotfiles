@@ -22,12 +22,11 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'godlygeek/tabular'
+Plug 'junegunn/vim-slash'
 Plug 'rhysd/clever-f.vim'
 Plug 'justinmk/vim-sneak'
 Plug '/usr/local/opt/fzf', { 'do' : './install --all' } | Plug 'junegunn/fzf.vim'
 " productivity
-Plug 'jez/vim-superman'
-" Plug 'nhooyr/neoman.vim'
 Plug 'ap/vim-css-color'
 Plug 'junegunn/goyo.vim', { 'for': 'markdown' }
 Plug 'junegunn/limelight.vim', { 'for': 'markdown' }
@@ -311,6 +310,12 @@ let g:clever_f_across_no_line=1 " only match the current line
 let g:clever_f_fix_key_direction=1 " fix f to forward and F backword, tT etc.
 let g:clever_f_chars_match_any_signs=";" " use ; to match all signs
 let g:clever_f_use_migemo=1 " enable migemo support
+
+"""""""""""""""
+"  vim-slash  "
+"""""""""""""""
+
+noremap <plug>(slash-after) zz
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              SYNTAX SETTINGS                               "

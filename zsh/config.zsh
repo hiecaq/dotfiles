@@ -26,7 +26,7 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 #######################################################################
 
 vman() {
-    nvim -c "SuperMan $*"
+    nvim -c "Man $*"
 
     if [ "$?" != "0" ]; then
         echo "No manual entry for $*"
