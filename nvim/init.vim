@@ -38,6 +38,7 @@ Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer' }
 Plug 'vimperator/vimperator.vim'
 Plug 'dogrover/vim-pentadactyl'
 Plug 'plasticboy/vim-markdown'
+Plug 'freitass/todo.txt-vim'
 call plug#end()   " ### Plug list ends here
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -132,6 +133,7 @@ let g:python3_host_prog = '/Users/Quinoa/.pyenv/versions/neovim3/bin/python'
 nnoremap <space> <Nop>
 vnoremap <space> <Nop>
 let mapleader="\<space>"
+let maplocalleader="\<F16>"
 " alternative esc
 "imap <D-space> <esc>   "using the function provided by iterm2 instead
 vnoremap <esc> <esc><esc><esc>
@@ -347,3 +349,7 @@ augroup YAML_Tabs_Speical
     autocmd FileType yaml :setlocal softtabstop=2
 augroup END
 
+""""""""""""""
+"  Todo.txt  "
+""""""""""""""
+highlight link TodoContext type

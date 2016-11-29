@@ -21,7 +21,8 @@
             "simple_modifications": {
                 "caps_lock": "left_control",
                 "escape": "caps_lock",
-                "right_command": "escape"
+                "right_command": "f18",
+                "right_option": "f16"
             }
         }
     ]
