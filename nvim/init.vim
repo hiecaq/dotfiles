@@ -133,7 +133,6 @@ let g:python3_host_prog = '/Users/Quinoa/.pyenv/versions/neovim3/bin/python'
 nnoremap <space> <Nop>
 vnoremap <space> <Nop>
 let mapleader="\<space>"
-let maplocalleader="\<F16>"
 " alternative esc
 "imap <D-space> <esc>   "using the function provided by iterm2 instead
 vnoremap <esc> <esc><esc><esc>
@@ -192,7 +191,7 @@ let g:airline_skip_empty_sections = 1
 " start with vim
 let g:indent_guides_enable_on_vim_startup=1
 " exclude filetypes
-let g:indent_guides_exclude_filetypes = ['help', 'man']
+let g:indent_guides_exclude_filetypes = ['help', 'man', 'fzf']
 " show indent starts from 2 level
 let g:indent_guides_start_level=2
 " size
@@ -300,7 +299,7 @@ nmap <Leader>G :Goyo<CR>
 """""""""""
 
 let g:sneak#s_next=1 " clever-f-like s/S support
-let g:sneak#streak=1 " eazymotion-like s/S enhance
+let g:sneak#label=1 " eazymotion-like s/S enhance
 let g:sneak#f_reset=0 " continue to use ;, for sneak
 let g:sneak#t_reset=0 " ^
 let g:sneak#absolute_dir=1 " s; forwards only and S, backwards only
@@ -332,9 +331,9 @@ let g:vim_markdown_conceal = 0 " disable the conceal since it's tooooo ugly
 augroup Markdown_Initial
     au!
     autocmd VimEnter *.tmp :set ft=markdown " set markdown for *.tmp called by vimperator
-    autocmd FileType markdown :setlocal wrap
-    autocmd FileType markdown :setlocal linebreak
-    autocmd FileType markdown :setlocal nonumber
+    " autocmd FileType markdown :setlocal wrap
+    " autocmd FileType markdown :setlocal linebreak
+    " autocmd FileType markdown :setlocal nonumber
     autocmd FileType markdown :SoftPencil
 augroup END
 
