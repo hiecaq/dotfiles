@@ -33,7 +33,7 @@ Plug 'junegunn/limelight.vim', { 'for': 'markdown' }
 Plug 'reedes/vim-pencil', { 'for': 'markdown' }
 Plug 'scrooloose/nerdcommenter'
 Plug 'SirVer/ultisnips' | Plug 'quinoa42/vim-snippets'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer' }
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 " syntax
 Plug 'vimperator/vimperator.vim'
 Plug 'dogrover/vim-pentadactyl'
@@ -255,6 +255,14 @@ let g:UltiSnipsJumpBackwardTrigger="<c-a><c-a>"
 let g:UltiSnipsSnippetsDir="~/.config/nvim/bundle/vim-snippets/UltiSnips"
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
+
+""""""""""""""
+"  deoplete  "
+""""""""""""""
+" enable deoplete
+let g:deoplete#enable_at_startup=1
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 """"""""""""""""""""""
 "  Goyo & Limelight  "

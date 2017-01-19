@@ -23,6 +23,10 @@
                 "escape": "caps_lock",
                 "right_command": "f18",
                 "right_option": "backslash"
+            },
+            "virtual_hid_keyboard": {
+                "caps_lock_delay_milliseconds": 0,
+                "keyboard_type": "ansi"
             }
         }
     ]

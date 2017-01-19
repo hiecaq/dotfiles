@@ -34,7 +34,7 @@
 # karabiner
 
 - link:
-    ~/.karabiner.d: karabiner.d
+    ~/.config/karabiner: karabiner
 
 # hammerspoon
 
