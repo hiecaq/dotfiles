@@ -29,12 +29,6 @@
     # vim-plug
     ~/.vim/autoload: nvim/autoload
 
-# tmux
-
-- link:
-    ~/.tmux.conf: tmux/.tmux.conf
-    ~/.tmux.conf.local: tmux.conf
-
 # karabiner
 
 - link:
@@ -52,6 +46,13 @@
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
+
+# tmux
+
+- link:
+    ~/.tmux.conf: tmux/.tmux.conf
+    ~/.tmux.conf.local: tmux.conf
+
 
 # Clean symlinks which have moved
 - clean: ['~', '~/.config/']
