@@ -11,6 +11,9 @@ eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 PATH="$HOME/bin:$PATH"
 
+### TeX
+PATH="$PATH:/Library/TeX/texbin"
+
 ### config
 source $ZSHCONFIG/config.zsh
 

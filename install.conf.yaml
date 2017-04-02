@@ -9,6 +9,7 @@
   - [mkdir -p ~/.config]
   - [tic xterm-256color-italic.terminfo]
   - [tic -x tmux.terminfo]
+  - [mkdir -p ~/.vim]
 
 - link:
     ~/.dotfiles: ''
@@ -24,6 +25,9 @@
 
 - link:
     ~/.config/nvim: nvim
+    ~/.vimrc: nvim/init.vim
+    # vim-plug
+    ~/.vim/autoload: nvim/autoload
 
 # tmux
 

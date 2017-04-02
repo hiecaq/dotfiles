@@ -1,4 +1,6 @@
-" set nocompatible              " be iMproved -- not needed for nvim
+if !has("nvim")
+    " set nocompatible              " be iMproved -- not needed for nvim
+endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                               Plug Settings                                "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -10,7 +12,6 @@ if empty(glob('~/.config/nvim/autoload/plug.vim'))
 endif
 
 let g:plug_timeout = 300
-
 call plug#begin('~/.config/nvim/plugged') " ### plugin list begins here
 " User Interface
 Plug 'icymind/NeoSolarized'
@@ -25,20 +26,32 @@ Plug 'godlygeek/tabular'
 Plug 'junegunn/vim-slash'
 Plug 'rhysd/clever-f.vim'
 Plug 'justinmk/vim-sneak'
-Plug '/usr/local/opt/fzf', { 'do' : './install --all' } | Plug 'junegunn/fzf.vim'
+if has("nvim")
+    Plug '/usr/local/opt/fzf', { 'do' : './install --all' } | Plug 'junegunn/fzf.vim'
+endif
 " productivity
 Plug 'ap/vim-css-color'
 Plug 'junegunn/goyo.vim', { 'for': 'markdown' }
 Plug 'junegunn/limelight.vim', { 'for': 'markdown' }
 Plug 'reedes/vim-pencil', { 'for': 'markdown' }
 Plug 'scrooloose/nerdcommenter'
-Plug 'SirVer/ultisnips' | Plug 'quinoa42/vim-snippets'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets' | Plug 'Quinoa42/MyUltiSnips'
+if has("nvim")
+    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+endif
+" C# setup
+if has("nvim")
+Plug 'OmniSharp/omnisharp-vim', { 'do': 'cd server && xbuild', 'for' : 'cs' }
+            \ | Plug 'tpope/vim-dispatch', { 'for' : 'cs' }
+            \ | Plug 'Robzz/deoplete-omnisharp', { 'for' : 'cs' }
+            " \ | Plug 'https://gitlab.com/mixedCase/deoplete-omnisharp.git', { 'for' : 'cs' }
+endif
 " syntax
 Plug 'vimperator/vimperator.vim'
 Plug 'dogrover/vim-pentadactyl'
 Plug 'plasticboy/vim-markdown'
 Plug 'freitass/todo.txt-vim'
+Plug 'lervag/vimtex'
 call plug#end()   " ### Plug list ends here
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -54,7 +67,9 @@ set ignorecase
 
 " enable 256 colors
 set t_Co=256
-set termguicolors
+if has("nvim")
+    set termguicolors
+endif
 set t_8f=[38;2;%lu;%lu;%lum
 set t_8b=[48;2;%lu;%lu;%lum
 
@@ -122,10 +137,10 @@ endif " has("autocmd")
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                  Provider                                  "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-let g:python_host_prog = '/Users/Quinoa/.pyenv/versions/neovim2/bin/python'
-let g:python3_host_prog = '/Users/Quinoa/.pyenv/versions/neovim3/bin/python'
-
+if has("nvim")
+    let g:python_host_prog = '/Users/Quinoa/.pyenv/versions/neovim2/bin/python'
+    let g:python3_host_prog = '/Users/Quinoa/.pyenv/versions/neovim3/bin/python'
+endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                KEY MAPPINGS                                "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -198,13 +213,14 @@ let g:indent_guides_start_level=2
 let g:indent_guides_guide_size=1
 
 " manually set colors ( no longer needed thanks to nvim)
-" let g:indent_guides_auto_colors = 0
-" augroup Indent_Guides_Initial
-"     au!
-"     autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=darkgrey   ctermbg=011
-"     autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=darkgrey   ctermbg=000
-" augroup END
-
+if !has("nvim")
+    let g:indent_guides_auto_colors = 0
+    augroup Indent_Guides_Initial
+        au!
+        autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=darkgrey   ctermbg=011
+        autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=darkgrey   ctermbg=000
+    augroup END
+endif
 """"""""""""""
 "  NERDTree  "
 """"""""""""""
@@ -259,10 +275,24 @@ let g:UltiSnipsEditSplit="vertical"
 """"""""""""""
 "  deoplete  "
 """"""""""""""
-" enable deoplete
-let g:deoplete#enable_at_startup=1
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+if has("nvim")
+    " enable deoplete
+    let g:deoplete#enable_at_startup=1
+    " <TAB>: completion.
+    inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+    " even show when there is only one result
+    set completeopt=longest,menuone
+    " <C-h>, <BS>: close popup and delete backword char.
+    inoremap <expr><C-h> deoplete#smart_close_popup()."\<C-h>"
+    inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
+endif
+
+"""""""""""""""
+"  OmniSharp  "
+"""""""""""""""
+if has("nvim")
+    let g:OmniSharp_selector_ui = 'fzf'    " Use fzf.vim
+endif
 
 """"""""""""""""""""""
 "  Goyo & Limelight  "
