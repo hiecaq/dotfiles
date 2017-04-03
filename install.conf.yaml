@@ -20,6 +20,9 @@
     ~/.zshrc: zshrc
     ~/.zsh: zsh
 
+# bash
+- link:
+    ~/.bashrc: bashrc
 
 # nvim
 
