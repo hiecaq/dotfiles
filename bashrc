@@ -3,6 +3,7 @@ set -o vi
 export PATH="$HOME/local/bin:$PATH"
 export PATH="$HOME/.rbenv/bin:$PATH"
 export PATH="~/.pyenv/bin:$PATH"
+eval "$(rbenv init -)"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
