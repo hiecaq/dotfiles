@@ -1,0 +1,26 @@
+#!/bin/bash
+
+#######################################################################
+#                    neovim automatic installation                    #
+#######################################################################
+
+# based on https://gist.github.com/elfosardo/b23058f9d609fcb0878fc42f5b6c935d
+
+
+# exit on error
+set -e
+
+# rbenv setup
+if [ ! -f "$HOME/.rbenv/" ]
+then
+    git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+    cd ~/.rbenv && src/configure && make -C src
+    git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+fi
+
+cd -
+
+if [ ! -f "$HOME/.pyenv/" ]
+then
+    git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+fi
