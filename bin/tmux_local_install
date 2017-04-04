@@ -1,0 +1,78 @@
+#!/bin/bash
+
+# from https://gist.github.com/elfosardo/b23058f9d609fcb0878fc42f5b6c935d
+
+# Script for installing tmux on systems where you don't have root access or you want a different version.
+# tmux will be installed in $HOME/local/bin.
+# It's assumed that wget and a C/C++ compiler are installed.
+# To install in a box with no external connection donwload the source files and put them in the temp_dir.
+# TODO:
+# manage local source files better
+
+# exit on error
+set -e
+
+temp_dir=$HOME/tmux_tmp
+
+TMUX_VERSION=2.3
+LIBEVENT_VERSION=2.1.8
+NCURSES_VERSION=6.0
+
+function remove_temp_dir {
+  echo "removing building dir"
+  rm -rf ${temp_dir}
+}
+trap remove_temp_dir EXIT
+
+# create our directories
+mkdir -p $HOME/local ${temp_dir}
+cd ${temp_dir}
+
+# if we don't have local source files in the temp_dir, download them
+if [ ! -f tmux-${TMUX_VERSION}.tar.gz ]
+  then
+    wget https://github.com/tmux/tmux/releases/download/${TMUX_VERSION}/tmux-${TMUX_VERSION}.tar.gz
+fi
+if [ ! -f libevent-${LIBEVENT_VERSION}-stable.tar.gz ]
+  then
+    wget https://github.com/libevent/libevent/releases/download/release-${LIBEVENT_VERSION}-stable/libevent-${LIBEVENT_VERSION}-stable.tar.gz
+fi
+if [ ! -f ncurses-${NCURSES_VERSION}.tar.gz ]
+  then
+    wget https://ftp.gnu.org/pub/gnu/ncurses/ncurses-${NCURSES_VERSION}.tar.gz
+fi
+
+# extract files, configure, and compile
+
+############
+# libevent #
+############
+tar xvzf libevent-${LIBEVENT_VERSION}-stable.tar.gz
+cd libevent-${LIBEVENT_VERSION}-stable
+./configure --prefix=$HOME/local --disable-shared
+make
+make install
+cd ..
+
+############
+# ncurses  #
+############
+tar xvzf ncurses-${NCURSES_VERSION}.tar.gz
+cd ncurses-${NCURSES_VERSION}
+# the CPPFLAGS is necessary because of a bug in mawk
+CPPFLAGS=-P ./configure --prefix=$HOME/local
+make
+make install
+cd ..
+
+############
+# tmux     #
+############
+tar xvzf tmux-${TMUX_VERSION}.tar.gz
+cd tmux-${TMUX_VERSION}
+./configure CFLAGS="-I$HOME/local/include -I$HOME/local/include/ncurses" LDFLAGS="-L$HOME/local/lib -L$HOME/local/include/ncurses -L$HOME/local/include"
+CPPFLAGS="-I$HOME/local/include -I$HOME/local/include/ncurses" LDFLAGS="-static -L$HOME/local/include -L$HOME/local/include/ncurses -L$HOME/local/lib" make
+cp tmux $HOME/local/bin
+cd ..
+
+echo "$HOME/local/bin/tmux is now available. You can optionally add $HOME/local/bin to your PATH."

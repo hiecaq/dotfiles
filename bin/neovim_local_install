@@ -1,0 +1,48 @@
+#!/bin/bash
+
+#######################################################################
+#                    neovim automatic installation                    #
+#######################################################################
+
+# based on https://gist.github.com/elfosardo/b23058f9d609fcb0878fc42f5b6c935d
+
+
+# exit on error
+set -e
+
+temp_dir=$HOME/neovim_temp
+
+NEOVIM_VERSION=nightly
+
+function remove_temp_dir {
+  echo "removing building dir"
+  rm -rf ${temp_dir}
+}
+trap remove_temp_dir EXIT
+
+# create our directories
+mkdir -p $HOME/local ${temp_dir}
+cd ${temp_dir}
+
+
+# if we don't have local source files in the temp_dir, download them
+if [ ! -f neovim-${NEOVIM_VERSION}.tar.gz ]
+  then
+    wget -O neovim-${NEOVIM_VERSION}.tar.gz https://github.com/neovim/neovim/archive/${NEOVIM_VERSION}.tar.gz
+fi
+
+tar xvzf neovim-${NEOVIM_VERSION}.tar.gz
+cd neovim-{NEOVIM_VERSION}
+
+if [ -f "build/" ]
+then
+    rm -r build/
+fi
+
+make clean
+make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/local/" CMAKE_BUILD_TYPE=Release
+make install
+
+cd ..
+
+echo "$HOME/local/bin/nvim is now available. You can optionally add $HOME/local/bin to your PATH."
