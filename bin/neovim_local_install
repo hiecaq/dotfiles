@@ -32,7 +32,7 @@ if [ ! -f neovim-${NEOVIM_VERSION}.tar.gz ]
 fi
 
 tar xvzf neovim-${NEOVIM_VERSION}.tar.gz
-cd neovim-{NEOVIM_VERSION}
+cd neovim-${NEOVIM_VERSION}
 
 if [ -f "build/" ]
 then
