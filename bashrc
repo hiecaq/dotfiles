@@ -1,5 +1,8 @@
 set -o vi
 
+export VISUAL=nvim
+export EDITOR=$VISUAL
+
 export PATH="$HOME/local/bin:$PATH"
 export PATH="$HOME/.rbenv/bin:$PATH"
 export PATH="~/.pyenv/bin:$PATH"
