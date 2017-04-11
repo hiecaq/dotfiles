@@ -1,6 +1,5 @@
 set -o vi
 # fix spelling errors for cd, only in interactive shell
-shopt -s cdspell
 
 if [ -f /etc/bashrc ]; then
       . /etc/bashrc   # --> Read /etc/bashrc, if present.
