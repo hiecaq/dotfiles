@@ -86,6 +86,6 @@ export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden --bin
 #                               source                                #
 #######################################################################
 
-source $ZSHCONFIG/aliases.zsh
+source $ZSHCONFIG/aliases
 source $ZSHCONFIG/keybindings.zsh
 

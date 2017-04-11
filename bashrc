@@ -1,4 +1,10 @@
 set -o vi
+# fix spelling errors for cd, only in interactive shell
+shopt -s cdspell
+
+if [ -f /etc/bashrc ]; then
+      . /etc/bashrc   # --> Read /etc/bashrc, if present.
+fi
 
 export VISUAL=nvim
 export EDITOR=$VISUAL
@@ -17,4 +23,5 @@ export PS1="\[\e[35m\]\u\[\e[m\]\[\e[36m\]@\[\e[m\]\[\e[33m\]\h\[\e[m\]\[\e[31m\
 
 # ls setting
 
+source ~/.zsh/aliases
 alias ls="ls --color=auto"

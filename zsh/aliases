@@ -1,5 +1,3 @@
-#!/usr/bin/env zsh
-
 ### Aliases for directories
 alias envconfig="cd $ZSHCONFIG"
 alias wp="cd $WORKPATH"
