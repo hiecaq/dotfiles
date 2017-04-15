@@ -26,10 +26,11 @@ TODO
 - [x] Move to pvenv
 - [x] change to use `space` as my leader in Vim
 - [ ] use `universal-ctags`
-- [ ] adjust `init.vim` to release neoVim from the limit of classic vim
+- [x] adjust `init.vim` to release neoVim from the limit of classic vim
 - [ ] Read [Learning Vimscript the Hard Way](http://learnvimscriptthehardway.stevelosh.com/)
 - [ ] memorize default key mappings for tmux
-- [ ] optional: use `deoplete` instead of `YCM`
+- [x] optional: use `deoplete` instead of `YCM`
+- [ ] set up tmux with plugins and my own setting
 
 Credits
 -------
