@@ -1,5 +1,5 @@
 if !has("nvim")
-    " set nocompatible              " be iMproved -- not needed for nvim
+    set nocompatible              " be iMproved -- not needed for nvim
 endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                               Plug Settings                                "
@@ -30,22 +30,29 @@ if has("nvim")
     Plug '/usr/local/opt/fzf', { 'do' : './install --all' } | Plug 'junegunn/fzf.vim'
 endif
 " productivity
+Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'ap/vim-css-color'
 Plug 'junegunn/goyo.vim', { 'for': 'markdown' }
 Plug 'junegunn/limelight.vim', { 'for': 'markdown' }
 Plug 'reedes/vim-pencil', { 'for': 'markdown' }
 Plug 'scrooloose/nerdcommenter'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets' | Plug 'Quinoa42/MyUltiSnips'
+Plug 'w0rp/ale'
 if has("nvim")
-    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+    Plug 'Shougo/deoplete.nvim', { 'do' : ':UpdateRemotePlugins' }
+    Plug 'Shougo/echodoc.vim'
+    " Plug 'tweekmonster/deoplete-clang2'
 endif
 " C# setup
 if has("nvim")
 Plug 'OmniSharp/omnisharp-vim', { 'do': 'cd server && xbuild', 'for' : 'cs' }
             \ | Plug 'tpope/vim-dispatch', { 'for' : 'cs' }
             \ | Plug 'Robzz/deoplete-omnisharp', { 'for' : 'cs' }
+            " \ | Plug 'dimixar/deoplete-omnisharp', { 'for' : 'cs' }
             " \ | Plug 'https://gitlab.com/mixedCase/deoplete-omnisharp.git', { 'for' : 'cs' }
 endif
+" java
+Plug 'artur-shaik/vim-javacomplete2', { 'for' : 'java' }
 " syntax
 Plug 'vimperator/vimperator.vim'
 Plug 'dogrover/vim-pentadactyl'
@@ -134,6 +141,8 @@ if has("autocmd")
     augroup END
 endif " has("autocmd")
 
+
+set previewheight=1
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                  Provider                                  "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -198,6 +207,11 @@ let g:airline_powerline_fonts = 1
 let g:airline_theme='solarized'
 " hide empty sections
 let g:airline_skip_empty_sections = 1
+" extension: Smarter tabline
+let g:airline#extensions#tabline#enabled = 1
+" extension for ale
+let g:airline#extensions#ale#enabled = 0
+
 
 """""""""""""""""""
 "  Indent Guides  "
@@ -279,14 +293,30 @@ if has("nvim")
     " enable deoplete
     let g:deoplete#enable_at_startup=1
     " <TAB>: completion.
-    inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+    " inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
     " even show when there is only one result
     set completeopt=longest,menuone
     " <C-h>, <BS>: close popup and delete backword char.
     inoremap <expr><C-h> deoplete#smart_close_popup()."\<C-h>"
     inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
+    " let g:deoplete#omni#input_patterns = get(g:,'deoplete#omni#input_patterns',{})
+    " let g:deoplete#omni#input_patterns.java = [
+    "     \'[^. \t0-9]\.\w*',
+    "     \'[^. \t0-9]\->\w*',
+    "     \'[^. \t0-9]\::\w*',
+    "     \]
+    " let g:deoplete#omni#input_patterns.jsp = ['[^. \t0-9]\.\w*']
+    " let g:deoplete#ignore_sources = {}
+    " let g:deoplete#ignore_sources._ = ['javacomplete2']
+    " let g:deoplete#omni#functions = {}
+    " let g:deoplete#omni#functions.java = [
+    "   \ 'javacomplete#Complete'
+    " \]
 endif
-
+if has("patch-7.4.314")
+      set shortmess+=c
+endif
+let g:echodoc_enable_at_startup=1
 """""""""""""""
 "  OmniSharp  "
 """""""""""""""
@@ -355,6 +385,17 @@ let g:clever_f_use_migemo=1 " enable migemo support
 """""""""""""""
 
 noremap <plug>(slash-after) zz
+
+"""""""""
+"  ale  "
+"""""""""
+let g:ale_lint_on_text_changed = 'never'
+
+" Display Ale status in Airline
+call airline#parts#define_function('ALE', 'ALEGetStatusLine')
+call airline#parts#define_condition('ALE', 'exists("*ALEGetStatusLine")')
+let g:airline_section_error = airline#section#create_right(['ALE'])
+let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥']
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              SYNTAX SETTINGS                               "
