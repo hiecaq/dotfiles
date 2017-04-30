@@ -1,16 +1,17 @@
 set -o vi
-# fix spelling errors for cd, only in interactive shell
 
 if [ -f /etc/bashrc ]; then
-      . /etc/bashrc   # --> Read /etc/bashrc, if present.
+    . /etc/bashrc   # --> Read /etc/bashrc, if present.
 fi
 
 export VISUAL=nvim
 export EDITOR=$VISUAL
 
-export PATH="$HOME/local/bin:$PATH"
-export PATH="$HOME/.rbenv/bin:$PATH"
-export PATH="~/.pyenv/bin:$PATH"
+PATH="$HOME/local/bin:$PATH"
+PATH="$HOME/.rbenv/bin:$PATH"
+PATH="~/.pyenv/bin:$PATH"
+export PATH
+
 eval "$(rbenv init -)"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
@@ -20,7 +21,7 @@ eval "$(pyenv virtualenv-init -)"
 # prompt setting
 export PS1="\[\e[35m\]\u\[\e[m\]\[\e[36m\]@\[\e[m\]\[\e[33m\]\h\[\e[m\]\[\e[31m\]:\[\e[m\]\[\e[36m\]\w\[\e[m\] \[\e[31m\]\\$\[\e[m\]  "
 
-# ls setting
+# aliases
 
 source ~/.zsh/aliases
 alias ls="ls --color=auto"

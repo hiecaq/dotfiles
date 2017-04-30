@@ -42,6 +42,11 @@
 - link:
     ~/.hammerspoon: hammerspoon
 
+# mpv
+
+- link:
+    ~/.config/mpv: mpv
+
 # my scripts
 
 - link:

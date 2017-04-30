@@ -193,7 +193,6 @@ nmap <Leader>m %
 " spell-check toggle
 nmap <Leader>SL :setlocal invspell spelllang=en_us<CR>
 nmap <Leader>SA :spellr<CR>
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              PLUGINS SETTINGS                              "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -211,8 +210,6 @@ let g:airline_skip_empty_sections = 1
 let g:airline#extensions#tabline#enabled = 1
 " extension for ale
 let g:airline#extensions#ale#enabled = 0
-
-
 """""""""""""""""""
 "  Indent Guides  "
 """""""""""""""""""
@@ -312,6 +309,23 @@ if has("nvim")
     " let g:deoplete#omni#functions.java = [
     "   \ 'javacomplete#Complete'
     " \]
+    "
+    "
+    if !exists('g:deoplete#omni#input_patterns')
+        let g:deoplete#omni#input_patterns = {}
+    endif
+    let g:deoplete#omni#input_patterns.tex = '\\(?:'
+                \ .  '\w*cite\w*(?:\s*\[[^]]*\]){0,2}\s*{[^}]*'
+                \ . '|\w*ref(?:\s*\{[^}]*|range\s*\{[^,}]*(?:}{)?)'
+                \ . '|hyperref\s*\[[^]]*'
+                \ . '|includegraphics\*?(?:\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+                \ . '|(?:include(?:only)?|input)\s*\{[^}]*'
+                \ . '|\w*(gls|Gls|GLS)(pl)?\w*(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+                \ . '|includepdf(\s*\[[^]]*\])?\s*\{[^}]*'
+                \ . '|includestandalone(\s*\[[^]]*\])?\s*\{[^}]*'
+                \ . '|usepackage(\s*\[[^]]*\])?\s*\{[^}]*'
+                \ . '|documentclass(\s*\[[^]]*\])?\s*\{[^}]*'
+                \ .')'
 endif
 if has("patch-7.4.314")
       set shortmess+=c
@@ -396,6 +410,23 @@ call airline#parts#define_function('ALE', 'ALEGetStatusLine')
 call airline#parts#define_condition('ALE', 'exists("*ALEGetStatusLine")')
 let g:airline_section_error = airline#section#create_right(['ALE'])
 let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥']
+let g:ale_warn_about_trailing_whitespace = 0
+let g:ale_sign_column_always = 1
+nmap <silent> <Leader>ek <Plug>(ale_previous_wrap)
+nmap <silent> <Leader>ej <Plug>(ale_next_wrap)
+let g:ale_linters = {
+            \ 'tex': ['chktex'],
+            \ 'c' : ['gcc']}
+let g:ale_c_gcc_options = '-std=gnu99 -Wall'
+
+""""""""""""
+"  vimtex  "
+""""""""""""
+" neovim 0.18 bug; should got fix after 0.2.0 comes out
+let g:vimtex_quickfix_latexlog = {'fix_paths':0}
+let g:vimtex_view_method = 'skim'
+let g:vimtex_compiler_progname = 'nvr'
+let g:vimtex_view_use_temp_files = 1
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              SYNTAX SETTINGS                               "
