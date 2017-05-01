@@ -91,8 +91,8 @@ set background=dark
 set noshowmode
 " show position of cursor
 set ruler
-" show relative line numbers
-set relativenumber
+" show relative line numbers (give up because of performance)
+" set relativenumber
 " show line numbers
 set number
 
