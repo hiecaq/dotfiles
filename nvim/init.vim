@@ -47,8 +47,8 @@ endif
 if has("nvim")
 Plug 'OmniSharp/omnisharp-vim', { 'do': 'cd server && xbuild', 'for' : 'cs' }
             \ | Plug 'tpope/vim-dispatch', { 'for' : 'cs' }
-            \ | Plug 'Robzz/deoplete-omnisharp', { 'for' : 'cs' }
-            " \ | Plug 'dimixar/deoplete-omnisharp', { 'for' : 'cs' }
+            \ | Plug 'dimixar/deoplete-omnisharp', { 'for' : 'cs' }
+            " \ | Plug 'Robzz/deoplete-omnisharp', { 'for' : 'cs' }
             " \ | Plug 'https://gitlab.com/mixedCase/deoplete-omnisharp.git', { 'for' : 'cs' }
 endif
 " java
@@ -70,8 +70,9 @@ set fileencodings=utf-8,gbk,big5
 " ignore cases in search
 set ignorecase
 " vim's default wild completion for commands
-" set wildmenu
-
+if !has("nvim")
+    set wildmenu
+endif
 " enable 256 colors
 set t_Co=256
 if has("nvim")
@@ -296,24 +297,12 @@ if has("nvim")
     " <C-h>, <BS>: close popup and delete backword char.
     inoremap <expr><C-h> deoplete#smart_close_popup()."\<C-h>"
     inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
-    " let g:deoplete#omni#input_patterns = get(g:,'deoplete#omni#input_patterns',{})
-    " let g:deoplete#omni#input_patterns.java = [
-    "     \'[^. \t0-9]\.\w*',
-    "     \'[^. \t0-9]\->\w*',
-    "     \'[^. \t0-9]\::\w*',
-    "     \]
-    " let g:deoplete#omni#input_patterns.jsp = ['[^. \t0-9]\.\w*']
-    " let g:deoplete#ignore_sources = {}
-    " let g:deoplete#ignore_sources._ = ['javacomplete2']
-    " let g:deoplete#omni#functions = {}
-    " let g:deoplete#omni#functions.java = [
-    "   \ 'javacomplete#Complete'
-    " \]
-    "
-    "
     if !exists('g:deoplete#omni#input_patterns')
         let g:deoplete#omni#input_patterns = {}
     endif
+    let g:deoplete#ignore_sources = {}
+    let g:deoplete#omni#functions = {}
+    " LaTeX
     let g:deoplete#omni#input_patterns.tex = '\\(?:'
                 \ .  '\w*cite\w*(?:\s*\[[^]]*\]){0,2}\s*{[^}]*'
                 \ . '|\w*ref(?:\s*\{[^}]*|range\s*\{[^,}]*(?:}{)?)'
@@ -326,10 +315,23 @@ if has("nvim")
                 \ . '|usepackage(\s*\[[^]]*\])?\s*\{[^}]*'
                 \ . '|documentclass(\s*\[[^]]*\])?\s*\{[^}]*'
                 \ .')'
+    " java
+    let g:deoplete#omni#input_patterns.java = [
+        \'[^. \t0-9]\.\w*',
+        \'[^. \t0-9]\->\w*',
+        \'[^. \t0-9]\::\w*',
+        \]
+    let g:deoplete#omni#input_patterns.jsp = ['[^. \t0-9]\.\w*']
+    let g:deoplete#ignore_sources._ = ['javacomplete2']
+    let g:deoplete#omni#functions.java = [
+      \ 'javacomplete#Complete'
+    \]
 endif
+
 if has("patch-7.4.314")
       set shortmess+=c
 endif
+
 let g:echodoc_enable_at_startup=1
 """""""""""""""
 "  OmniSharp  "

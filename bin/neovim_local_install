@@ -12,7 +12,7 @@ set -e
 
 temp_dir=$HOME/neovim_temp
 
-NEOVIM_VERSION=nightly
+NEOVIM_VERSION=v0.2.0
 
 function remove_temp_dir {
   echo "removing building dir"
