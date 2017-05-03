@@ -1,0 +1,6 @@
+- link:
+    ~/.config/nvim: nvim
+    ~/.vimrc: nvim/init.vim
+    # vim-plug
+    ~/.vim/autoload: nvim/autoload
+

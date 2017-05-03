@@ -1,0 +1,3 @@
+- shell:
+  - [tic xterm-256color-italic.terminfo]
+  - [tic -x tmux.terminfo]

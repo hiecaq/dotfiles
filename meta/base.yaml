@@ -1,66 +1,22 @@
-# my dotbot configuration
-
+# my dotbot base configuration
 - defaults:
     link:
       create: true
       relink: true
 
 - shell:
-  - [mkdir -p ~/.config]
-  - [tic xterm-256color-italic.terminfo]
-  - [tic -x tmux.terminfo]
-  - [mkdir -p ~/.vim]
+    - [mkdir -p ~/.config]
+    - [mkdir -p ~/.vim]
 
 - link:
     ~/.dotfiles: ''
 
-# zsh
-
-- link:
-    ~/.zshrc: zshrc
-    ~/.zsh: zsh
-
-# bash
-- link:
-    ~/.bashrc: bashrc
-
-# nvim
-
-- link:
-    ~/.config/nvim: nvim
-    ~/.vimrc: nvim/init.vim
-    # vim-plug
-    ~/.vim/autoload: nvim/autoload
-
-# karabiner
-
-- link:
-    ~/.config/karabiner: karabiner
-
-# hammerspoon
-
-- link:
-    ~/.hammerspoon: hammerspoon
-
-# mpv
-
-- link:
-    ~/.config/mpv: mpv
-
 # my scripts
-
 - link:
     ~/bin: bin
 
 - shell:
-  - [git submodule update --init --recursive, Installing submodules]
-
-# tmux
-
-- link:
-    ~/.tmux.conf: tmux/.tmux.conf
-    ~/.tmux.conf.local: tmux.conf
-
+    - [git submodule update --init --recursive, Installing submodules]
 
 # Clean symlinks which have moved
 - clean: ['~', '~/.config/']
