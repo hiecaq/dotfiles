@@ -1,3 +1,3 @@
 - link:
-    ~/.tmux.conf: tmux/.tmux.conf
-    ~/.tmux.conf.local: tmux.conf
+    ~/.tmux.conf: terminals/tmux/.tmux.conf
+    ~/.tmux.conf.local: terminals/tmux.conf
