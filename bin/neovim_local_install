@@ -12,7 +12,7 @@ set -e
 
 temp_dir=$HOME/neovim_temp
 
-NEOVIM_VERSION=v0.2.0
+NEOVIM_VERSION=0.2.0
 
 function remove_temp_dir {
   echo "removing building dir"
@@ -28,7 +28,7 @@ cd ${temp_dir}
 # if we don't have local source files in the temp_dir, download them
 if [ ! -f neovim-${NEOVIM_VERSION}.tar.gz ]
   then
-    wget -O neovim-${NEOVIM_VERSION}.tar.gz https://github.com/neovim/neovim/archive/${NEOVIM_VERSION}.tar.gz
+    wget -O neovim-${NEOVIM_VERSION}.tar.gz https://github.com/neovim/neovim/archive/v${NEOVIM_VERSION}.tar.gz
 fi
 
 tar xvzf neovim-${NEOVIM_VERSION}.tar.gz
