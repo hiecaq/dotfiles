@@ -8,7 +8,7 @@ export KEYTIMEOUT=10
 #######################################################################
 
 ZSH_THEME="pygmalion"
-plugins=(git colored-man colorize github jira vagrant virtualenv pip python brew osx tmux zsh-syntax-highlighting)
+plugins=(git colored-man colorize github jira vagrant virtualenv pip python brew osx tmux zsh-syntax-highlighting vi-mode)
 source $ZSH/oh-my-zsh.sh
 
 unalias pip

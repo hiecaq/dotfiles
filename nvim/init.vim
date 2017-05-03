@@ -424,8 +424,6 @@ let g:ale_c_gcc_options = '-std=gnu99 -Wall'
 """"""""""""
 "  vimtex  "
 """"""""""""
-" neovim 0.18 bug; should got fix after 0.2.0 comes out
-let g:vimtex_quickfix_latexlog = {'fix_paths':0}
 let g:vimtex_view_method = 'skim'
 let g:vimtex_compiler_progname = 'nvr'
 let g:vimtex_view_use_temp_files = 1
