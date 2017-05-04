@@ -2,6 +2,7 @@
 
 ### Setting
 export KEYTIMEOUT=10
+export CLICOLOR_FORCE=1
 
 #######################################################################
 #                              Oh-My-Zsh                              #
