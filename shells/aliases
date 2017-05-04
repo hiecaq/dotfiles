@@ -1,5 +1,4 @@
 ### Aliases for directories
-alias envconfig="cd $ZSHCONFIG"
 alias wp="cd $WORKPATH"
 alias dotf="cd $DOTFILES"
 
