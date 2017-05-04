@@ -1,0 +1,3 @@
+- link:
+    ~/.tmux.conf: terminals/tmux/.tmux.conf
+    ~/.tmux.conf.local: terminals/tmux.conf

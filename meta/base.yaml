@@ -1,0 +1,22 @@
+# my dotbot base configuration
+- defaults:
+    link:
+      create: true
+      relink: true
+
+- shell:
+    - [mkdir -p ~/.config]
+    - [mkdir -p ~/.vim]
+
+- link:
+    ~/.dotfiles: ''
+
+# my scripts
+- link:
+    ~/bin: bin
+
+- shell:
+    - [git submodule update --init --recursive, Installing submodules]
+
+# Clean symlinks which have moved
+- clean: ['~', '~/.config/']

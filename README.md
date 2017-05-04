@@ -6,8 +6,13 @@ My dotfiles that configures the world I live in.
 Description
 -----------
 
-TBD
-
+```bash
+dotfiles/
+├── applications  # GUI or TUI applications
+├── tools         # CLI tools
+├── shells        # shell configurations
+└── terminals     # terminal configurations
+```
 
 Usage
 -----
@@ -15,7 +20,13 @@ Usage
 A lot thanks to `dotbot`, which makes everything much easier:
 
 ```bash
-./install
+./install-profile <profile> [<configs...>]
+```
+
+or,
+
+```bash
+./install-standalone <configs...>
 ```
 
 TODO
@@ -26,7 +37,7 @@ TODO
 - [ ] memorize default key mappings for tmux
 - [x] optional: use `deoplete` instead of `YCM`
 - [ ] set up tmux with plugins and my own setting
-- [ ] learn pythone
+- [ ] learn python
 - [ ] learn lua
 
 Credits
