@@ -1,4 +1,5 @@
 drafts/
-applications/nvim/
-!applications/nvim/init.vim
+applications/nvim/autoload
+applications/nvim/plugged
+applications/nvim/.netrwhist
 karabiner.d/log
