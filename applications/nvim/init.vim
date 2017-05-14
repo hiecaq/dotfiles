@@ -53,6 +53,8 @@ Plug 'OmniSharp/omnisharp-vim', { 'do': 'cd server && xbuild', 'for' : 'cs' }
 endif
 " java
 Plug 'artur-shaik/vim-javacomplete2', { 'for' : 'java' }
+" python-jedi
+Plug 'zchee/deoplete-jedi'
 " syntax
 Plug 'vimperator/vimperator.vim'
 Plug 'dogrover/vim-pentadactyl'
@@ -280,7 +282,7 @@ let g:UltiSnipsExpandTrigger="<c-f>"
 let g:UltiSnipsListSnippets="<c-a>l"
 let g:UltiSnipsJumpForwardTrigger="<c-f>"
 let g:UltiSnipsJumpBackwardTrigger="<c-a><c-a>"
-let g:UltiSnipsSnippetsDir="~/.config/nvim/bundle/vim-snippets/UltiSnips"
+let g:UltiSnipsSnippetsDir="~/.config/nvim/plugged/vim-snippets/UltiSnips"
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
 
@@ -427,6 +429,7 @@ let g:ale_c_gcc_options = '-std=gnu99 -Wall'
 let g:vimtex_view_method = 'skim'
 let g:vimtex_compiler_progname = 'nvr'
 let g:vimtex_view_use_temp_files = 1
+let g:vimtex_quickfix_open_on_warning = 0
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              SYNTAX SETTINGS                               "
@@ -435,7 +438,7 @@ let g:vimtex_view_use_temp_files = 1
 """"""""""""""
 "  Markdown  "
 """"""""""""""
-
+let g:vim_markdown_math = 1 " LaTeX support
 let g:vim_markdown_frontmatter = 1 " YAML frontmatter for Jekyl
 let g:vim_markdown_conceal = 0 " disable the conceal since it's tooooo ugly
 augroup Markdown_Initial

@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+##########################################################
+#  mtodo - a simple script for personal use of todo.txt  #
+##########################################################
+
+function _input_error() {
+    echo "Usage: $0 [local] [TODO-ENTRY]"
+    exit 1
+}
+
+if [ $# -eq 0 ]; then
+    $EDITOR ~/Documents/todo.txt/todo.txt
+elif [[ $1 = "local" ]]; then
+    while [[ ! -f todo.txt ]]; do
+        if [[ $PWD = $HOME ]]; then
+            echo "todo.txt not found"
+            exit 1
+        fi
+        cd ..
+    done
+
+    if [[ $# -eq 2 ]]; then
+        echo "$2" >> todo.txt
+    else
+        $EDITOR todo.txt
+    fi
+else
+    if [[ $# -eq 1 ]]; then
+        echo "$1" >> ~/Documents/todo.txt/todo.txt
+    fi
+    _input_error
+fi

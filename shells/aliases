@@ -2,7 +2,6 @@
 alias wp="cd $WORKPATH"
 alias dotf="cd $DOTFILES"
 
-
 ### other aliases
 alias readme="nvim README.md"
 alias v="nvim"
