@@ -48,19 +48,17 @@ if has("nvim")
 Plug 'OmniSharp/omnisharp-vim', { 'do': 'cd server && xbuild', 'for' : 'cs' }
             \ | Plug 'tpope/vim-dispatch', { 'for' : 'cs' }
             \ | Plug 'dimixar/deoplete-omnisharp', { 'for' : 'cs' }
-            " \ | Plug 'Robzz/deoplete-omnisharp', { 'for' : 'cs' }
-            " \ | Plug 'https://gitlab.com/mixedCase/deoplete-omnisharp.git', { 'for' : 'cs' }
 endif
 " java
 Plug 'artur-shaik/vim-javacomplete2', { 'for' : 'java' }
 " python-jedi
-Plug 'zchee/deoplete-jedi'
+Plug 'zchee/deoplete-jedi', { 'for' : 'python' }
 " syntax
 Plug 'vimperator/vimperator.vim'
 Plug 'dogrover/vim-pentadactyl'
-Plug 'plasticboy/vim-markdown'
-Plug 'freitass/todo.txt-vim'
-Plug 'lervag/vimtex'
+Plug 'plasticboy/vim-markdown', { 'for' : 'markdown' }
+Plug 'freitass/todo.txt-vim', { 'for' : 'todo' }
+Plug 'lervag/vimtex', { 'for' : 'tex' }
 call plug#end()   " ### Plug list ends here
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
