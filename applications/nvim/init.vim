@@ -314,6 +314,7 @@ if has("nvim")
                 \ . '|includestandalone(\s*\[[^]]*\])?\s*\{[^}]*'
                 \ . '|usepackage(\s*\[[^]]*\])?\s*\{[^}]*'
                 \ . '|documentclass(\s*\[[^]]*\])?\s*\{[^}]*'
+                \ . '|\w*'
                 \ .')'
     " java
     let g:deoplete#omni#input_patterns.java = [

@@ -28,6 +28,7 @@ elif [[ $1 = "local" ]]; then
 else
     if [[ $# -eq 1 ]]; then
         echo "$1" >> ~/Documents/todo.txt/todo.txt
+    else
+        _input_error
     fi
-    _input_error
 fi
