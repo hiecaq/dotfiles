@@ -418,10 +418,27 @@ let g:ale_sign_column_always = 1
 nmap <silent> <Leader>ek <Plug>(ale_previous_wrap)
 nmap <silent> <Leader>ej <Plug>(ale_next_wrap)
 let g:ale_linters = {
-            \ 'tex': ['chktex'],
-            \ 'c' : ['gcc']}
-let g:ale_c_gcc_options = '-std=gnu99 -Wall'
+            \   'tex': ['chktex'],
+            \   'c' : ['gcc'],
+            \   'python' : ['flake8'],
+            \}
 
+let g:ale_fixers = {
+            \   'python': [
+            \       'isort',
+            \       'yapf',
+            \   ],
+            \}
+let g:ale_c_gcc_options = '-std=gnu99 -Wall'
+" use flake8 installed at the virtualenv for neovim
+let g:ale_python_flake8_executable = $HOME . "/.pyenv/versions/neovim3/bin/flake8"
+let g:ale_python_flake8_use_global = 1
+" use yapf installed at the virtualenv for neovim
+let g:ale_python_yapf_executable = $HOME . "/.pyenv/versions/neovim3/bin/yapf"
+let g:ale_python_yapf_use_global = 1
+" use isort installed at the virtualenv for neovim
+let g:ale_python_isort_executable = $HOME . "/.pyenv/versions/neovim3/bin/isort"
+let g:ale_python_isort_use_global = 1
 """"""""""""
 "  vimtex  "
 """"""""""""
