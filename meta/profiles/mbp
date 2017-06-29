@@ -7,3 +7,5 @@ hammerspoon
 karabiner
 mpv
 youtube-dl
+isort
+yapf

@@ -425,10 +425,12 @@ let g:ale_linters = {
 
 let g:ale_fixers = {
             \   'python': [
-            \       'isort',
             \       'yapf',
+            \       'isort',
             \   ],
             \}
+
+
 let g:ale_c_gcc_options = '-std=gnu99 -Wall'
 " use flake8 installed at the virtualenv for neovim
 let g:ale_python_flake8_executable = $HOME . "/.pyenv/versions/neovim3/bin/flake8"
