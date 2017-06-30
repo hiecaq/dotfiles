@@ -37,8 +37,8 @@ Plug 'junegunn/limelight.vim', { 'for': 'markdown' }
 Plug 'reedes/vim-pencil', { 'for': 'markdown' }
 Plug 'scrooloose/nerdcommenter'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets' | Plug 'Quinoa42/MyUltiSnips'
-Plug 'w0rp/ale'
 if has("nvim")
+    Plug 'w0rp/ale'
     Plug 'Shougo/deoplete.nvim', { 'do' : ':UpdateRemotePlugins' }
     Plug 'Shougo/echodoc.vim'
     " Plug 'tweekmonster/deoplete-clang2'
