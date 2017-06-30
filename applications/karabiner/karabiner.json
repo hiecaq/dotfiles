@@ -14,9 +14,9 @@
                     {
                         "manipulators": [
                             {
-                                "description": "Change right_command to command+control+option+shift.",
+                                "description": "Change caps_lock to control.",
                                 "from": {
-                                    "key_code": "right_command",
+                                    "key_code": "caps_lock",
                                     "modifiers": {
                                         "optional": [
                                             "any"
@@ -25,62 +25,20 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "left_shift",
+                                        "key_code": "left_control",
                                         "modifiers": [
-                                            "left_command",
-                                            "left_control",
-                                            "left_option"
+                                            "any"
                                         ]
                                     }
                                 ],
                                 "to_if_alone": [
                                     {
-                                        "key_code": "escape",
+                                        "key_code": "caps_lock",
                                         "modifiers": {
                                             "optional": [
                                                 "any"
                                             ]
                                         }
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "description": "Disable command+control+option+shift+period.",
-                                "from": {
-                                    "key_code": "period",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_command",
-                                            "left_control",
-                                            "left_option",
-                                            "left_shift"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "vk_none"
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "description": "Disable command+control+option+shift+comma.",
-                                "from": {
-                                    "key_code": "comma",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_command",
-                                            "left_control",
-                                            "left_option",
-                                            "left_shift"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "vk_none"
                                     }
                                 ],
                                 "type": "basic"
@@ -107,9 +65,8 @@
             "name": "Default profile",
             "selected": true,
             "simple_modifications": {
-                "caps_lock": "left_control",
-                "escape": "caps_lock",
-                "right_option": "backslash"
+                "right_option": "backslash",
+                "right_command": "f18"
             },
             "virtual_hid_keyboard": {
                 "caps_lock_delay_milliseconds": 0,
