@@ -10,7 +10,6 @@ local MHyper = {} -- module
 
 local HyperKey = {}
 
-
 function HyperKey:new(key)
     local this = {
         _triggered = false,
@@ -44,22 +43,45 @@ function HyperKey:setPressedAlone(targetKey)
     end
 end
 
-
--- TODO: more generic solution needed
 function HyperKey:bind(mod, key)
-    return function (work)
-        workWrapper = function ()
-            work()
-            self._triggered = true
-        end
-        self._hyperMod:bind(mod, key, nil, workWrapper)
-    end
+    return BindKey:new(self, mod, key)
 end
 
--------------------------------------
---  HyperKey class definition end  --
--------------------------------------
+--------------------------------
+--  BindKey class definition  --
+--------------------------------
 
+BindKey = {}
+
+function BindKey:new(hyper, mod, key)
+    local this = {
+        _hyper = hyper, -- father HyperKey
+        _mod = mod,
+        _key = key
+    }
+    self.__index = self
+    return setmetatable(this, self)
+end
+
+function BindKey:stroke(event)
+    wrappedEvent = function ()
+        event()
+        self._hyper._triggered = true
+    end
+    self._hyper._hyperMod:bind(self._mod, self._key, nil, wrappedEvent)
+end
+
+function BindKey:press(event)
+    wrappedEvent = function ()
+        event()
+        self._hyper._triggered = true
+    end
+    self._hyper._hyperMod:bind(self._mod, self._key, wrappedEvent, nil, wrappedEvent)
+end
+
+-----------------------------
+--  end class definitions  --
+-----------------------------
 
 function MHyper.new(key)
     return HyperKey:new(key)
