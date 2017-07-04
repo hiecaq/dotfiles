@@ -19,9 +19,11 @@ I've only read [Learn Lua in Y minutes][lliym], so any feedback/advice is apprec
 
 `yahyper.lua`:
 
+This module is supposed to be used with [Karabiner-Elements][ke]. I recommend to set one modifier key (e.g., right command) to some "remote" key (e.g. `F18`) via this tool and use this "remote" key as the `YOUR_FAVORITE_KEY` below.
+
 ```lua
 -- import
-local yahyper = require `yahyper.lua`
+local yahyper = require "yahyper.lua"
 -- construct a hyper key, using YOUR_FAVORITE_KEY
 hyper = yahyper.new("YOUR_FAVORITE_KEY")
 -- set what key is invoked when hyper key is pressed alone
@@ -34,11 +36,16 @@ hyper:bind({"Ctrl"}, "v"):stroke(func)
 hyper:bind({"Ctrl"}, "v"):press(func)
 ```
 
+[ke]:https://github.com/tekezo/Karabiner-Elements "Karabiner-Elements"
+
 ## Reference ##
 
 Adopted some ideas from:
 - [gwww's configuration][gc]
 - [hyperex][hr]
+- [hyper-hacks][hh]
+
+[hh]:https://github.com/lodestone/hyper-hacks "hyper-hacks"
 
 [hr]:https://github.com/hetima/hammerspoon-hyperex "Hammerspoon-hyperex"
 
