@@ -1,2 +1,2 @@
 - link:
-    ~/.isort.cfg: shells/python/isort.cfg
+    ~/.isort.cfg: tools/python/isort.cfg

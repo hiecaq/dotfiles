@@ -1,2 +1,2 @@
 - link:
-    ~/.style.yapf: shells/python/yapf.cfg
+    ~/.style.yapf: tools/python/yapf.cfg
