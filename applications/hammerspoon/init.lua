@@ -21,9 +21,21 @@ hyper:setPressedAlone("ESCAPE")
 --  window  --
 --------------
 
-hyper:bind({"Ctrl"}, "L"):stroke(window.Clfun)
-hyper:bind({"Ctrl"}, "H"):stroke(window.Chfun)
-hyper:bind({"Ctrl"}, "M"):stroke(window.Cmfun)
+hyper:bind({"Option"}, "L"):stroke(window.setToRight)
+hyper:bind({"Option"}, "H"):stroke(window.setToLeft)
+hyper:bind({"Option"}, "J"):stroke(window.setToBottom)
+hyper:bind({"Option"}, "K"):stroke(window.setToTop)
+hyper:bind({"Option"}, "M"):stroke(window.maximize)
+hyper:bind({"Option"}, "Q"):stroke(window.setToUpperLeft)
+hyper:bind({"Option"}, "E"):stroke(window.setToUpperRight)
+hyper:bind({"Option"}, "Z"):stroke(window.setToLowerLeft)
+hyper:bind({"Option"}, "C"):stroke(window.setToLowerRight)
+
+hyper:bind({"Ctrl"}, "L"):stroke(window.focusEast)
+hyper:bind({"Ctrl"}, "H"):stroke(window.focusWest)
+hyper:bind({"Ctrl"}, "J"):stroke(window.focusSouth)
+hyper:bind({"Ctrl"}, "K"):stroke(window.focusNorth)
+hyper:bind({"Ctrl"}, "F"):stroke(window.hint)
 
 ----------------
 --  movement  --
