@@ -1,0 +1,3 @@
+#!/bin/sh
+# a workaround for pyenv virtualenv
+python -m pydoc "$@"
