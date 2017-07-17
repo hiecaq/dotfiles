@@ -14,9 +14,9 @@
                     {
                         "manipulators": [
                             {
-                                "description": "Change caps_lock to control.",
+                                "description": "Change left_shift to caps_lock.",
                                 "from": {
-                                    "key_code": "caps_lock",
+                                    "key_code": "left_shift",
                                     "modifiers": {
                                         "optional": [
                                             "any"
@@ -25,7 +25,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "left_control",
+                                        "key_code": "left_shift",
                                         "modifiers": [
                                             "any"
                                         ]
@@ -66,7 +66,8 @@
             "selected": true,
             "simple_modifications": {
                 "right_option": "backslash",
-                "right_command": "f18"
+                "right_command": "f18",
+                "caps_lock": "left_control"
             },
             "virtual_hid_keyboard": {
                 "caps_lock_delay_milliseconds": 0,
