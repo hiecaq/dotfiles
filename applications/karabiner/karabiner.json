@@ -65,9 +65,9 @@
             "name": "Default profile",
             "selected": true,
             "simple_modifications": {
-                "right_option": "backslash",
+                "caps_lock": "left_control",
                 "right_command": "f18",
-                "caps_lock": "left_control"
+                "right_option": "backslash"
             },
             "virtual_hid_keyboard": {
                 "caps_lock_delay_milliseconds": 0,
