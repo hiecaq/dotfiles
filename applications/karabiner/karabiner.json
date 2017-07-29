@@ -33,12 +33,7 @@
                                 ],
                                 "to_if_alone": [
                                     {
-                                        "key_code": "caps_lock",
-                                        "modifiers": {
-                                            "optional": [
-                                                "any"
-                                            ]
-                                        }
+                                        "key_code": "caps_lock"
                                     }
                                 ],
                                 "type": "basic"
