@@ -53,6 +53,7 @@ endif
 Plug 'artur-shaik/vim-javacomplete2', { 'for' : 'java' }
 " python-jedi
 Plug 'zchee/deoplete-jedi', { 'for' : 'python' }
+Plug 'Vimjas/vim-python-pep8-indent', { 'for' : 'python' }
 " syntax
 Plug 'vimperator/vimperator.vim'
 Plug 'dogrover/vim-pentadactyl'
@@ -429,7 +430,6 @@ let g:ale_fixers = {
             \       'isort',
             \   ],
             \}
-
 
 let g:ale_c_gcc_options = '-std=gnu99 -Wall'
 " use flake8 installed at the virtualenv for neovim
