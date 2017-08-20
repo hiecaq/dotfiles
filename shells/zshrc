@@ -13,6 +13,8 @@ PATH="$HOME/bin:$PATH"
 
 ### TeX
 PATH="$PATH:/Library/TeX/texbin"
+### gpg
+export GPG_TTY=$(tty)
 
 ### config
 source $ZSHCONFIG/config.zsh
