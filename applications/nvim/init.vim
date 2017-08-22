@@ -54,12 +54,14 @@ Plug 'artur-shaik/vim-javacomplete2', { 'for' : 'java' }
 " python-jedi
 Plug 'zchee/deoplete-jedi', { 'for' : 'python' }
 Plug 'Vimjas/vim-python-pep8-indent', { 'for' : 'python' }
+"vimscript
+Plug 'Shougo/neco-vim', { 'for' : 'vim' }
 " syntax
 Plug 'vimperator/vimperator.vim'
 Plug 'dogrover/vim-pentadactyl'
 Plug 'plasticboy/vim-markdown', { 'for' : 'markdown' }
 Plug 'freitass/todo.txt-vim', { 'for' : 'todo' }
-Plug 'lervag/vimtex', { 'for' : 'tex' }
+Plug 'lervag/vimtex'
 call plug#end()   " ### Plug list ends here
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -70,6 +72,8 @@ call plug#end()   " ### Plug list ends here
 set fileencodings=utf-8,gbk,big5
 " ignore cases in search
 set ignorecase
+" ignore cases in commandline for files
+set wildignorecase
 " vim's default wild completion for commands
 if !has("nvim")
     set wildmenu
@@ -190,11 +194,12 @@ nmap <Leader>q :q<CR>
 nmap <Leader>w :w<CR>
 " write & quit the current window
 nmap <Leader>Q :wq<CR>
-" quick match ()[]{}
-nmap <Leader>m %
 " spell-check toggle
 nmap <Leader>SL :setlocal invspell spelllang=en_us<CR>
 nmap <Leader>SA :spellr<CR>
+" quick add empty lines
+nnoremap <Leader>O  :<c-u>put! =repeat(nr2char(10), v:count1)<cr>'[
+nnoremap <Leader>o  :<c-u>put =repeat(nr2char(10), v:count1)<cr>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              PLUGINS SETTINGS                              "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -257,6 +262,7 @@ let NERDDefaultAlign='both' " align on left&right
 let NERDCommentWholeLinesInVMode=1 "comment whole line in V-mode
 let NERDSpaceDelims=1 " add extra space
 let NERDCreateDefaultMappings=0 " disable default mapping
+let NERDTrimTrailingWhitespace=1
 " ;cc --> comment toggle
 map <Leader>cc <plug>NERDCommenterToggle
 " ;c; --> comment at the end of this line
@@ -302,21 +308,10 @@ if has("nvim")
         let g:deoplete#omni#input_patterns = {}
     endif
     let g:deoplete#ignore_sources = {}
+    let g:deoplete#ignore_sources._ = ['buffer', 'javacomplete2']
     let g:deoplete#omni#functions = {}
     " LaTeX
-    let g:deoplete#omni#input_patterns.tex = '\\(?:'
-                \ .  '\w*cite\w*(?:\s*\[[^]]*\]){0,2}\s*{[^}]*'
-                \ . '|\w*ref(?:\s*\{[^}]*|range\s*\{[^,}]*(?:}{)?)'
-                \ . '|hyperref\s*\[[^]]*'
-                \ . '|includegraphics\*?(?:\s*\[[^]]*\]){0,2}\s*\{[^}]*'
-                \ . '|(?:include(?:only)?|input)\s*\{[^}]*'
-                \ . '|\w*(gls|Gls|GLS)(pl)?\w*(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
-                \ . '|includepdf(\s*\[[^]]*\])?\s*\{[^}]*'
-                \ . '|includestandalone(\s*\[[^]]*\])?\s*\{[^}]*'
-                \ . '|usepackage(\s*\[[^]]*\])?\s*\{[^}]*'
-                \ . '|documentclass(\s*\[[^]]*\])?\s*\{[^}]*'
-                \ . '|\w*'
-                \ .')'
+    let g:deoplete#omni#input_patterns.tex = g:vimtex#re#deoplete
     " java
     let g:deoplete#omni#input_patterns.java = [
         \'[^. \t0-9]\.\w*',
@@ -324,7 +319,6 @@ if has("nvim")
         \'[^. \t0-9]\::\w*',
         \]
     let g:deoplete#omni#input_patterns.jsp = ['[^. \t0-9]\.\w*']
-    let g:deoplete#ignore_sources._ = ['javacomplete2']
     let g:deoplete#omni#functions.java = [
       \ 'javacomplete#Complete'
     \]
