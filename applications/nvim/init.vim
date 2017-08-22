@@ -13,55 +13,63 @@ endif
 
 let g:plug_timeout = 300
 call plug#begin('~/.config/nvim/plugged') " ### plugin list begins here
-" User Interface
+""""""""""""""""""""
+"  User Interface  "
+""""""""""""""""""""
 Plug 'icymind/NeoSolarized'
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-" other functions
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-repeat'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'godlygeek/tabular'
-Plug 'junegunn/vim-slash'
-Plug 'rhysd/clever-f.vim'
-Plug 'justinmk/vim-sneak'
 if has("nvim")
     Plug '/usr/local/opt/fzf', { 'do' : './install --all' } | Plug 'junegunn/fzf.vim'
 endif
-" productivity
 " Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
+""""""""""""""""""""""""""""""""
+"  text objects and operators  "
+""""""""""""""""""""""""""""""""
+Plug 'tpope/vim-surround'
+"""""""""""""""""""""""""
+"  functions and tools  "
+"""""""""""""""""""""""""
+Plug 'tpope/vim-repeat'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'godlygeek/tabular'
+Plug 'rhysd/clever-f.vim'
+Plug 'justinmk/vim-sneak'
 Plug 'ap/vim-css-color'
 Plug 'junegunn/goyo.vim', { 'for': 'markdown' }
 Plug 'junegunn/limelight.vim', { 'for': 'markdown' }
 Plug 'reedes/vim-pencil', { 'for': 'markdown' }
 Plug 'scrooloose/nerdcommenter'
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets' | Plug 'Quinoa42/MyUltiSnips'
-if has("nvim")
-    Plug 'w0rp/ale'
-    Plug 'Shougo/deoplete.nvim', { 'do' : ':UpdateRemotePlugins' }
-    Plug 'Shougo/echodoc.vim'
-    " Plug 'tweekmonster/deoplete-clang2'
-endif
-" C# setup
-if has("nvim")
+"""""""""""""""""
+"  enhancement  "
+"""""""""""""""""
+Plug 'junegunn/vim-slash'
+Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets' | Plug 'quinoa42/MyUltiSnips'
+Plug 'w0rp/ale'
+Plug 'Shougo/deoplete.nvim', { 'do' : ':UpdateRemotePlugins' }
+Plug 'Shougo/echodoc.vim'
+" Plug 'tweekmonster/deoplete-clang2'
+" C#
 Plug 'OmniSharp/omnisharp-vim', { 'do': 'cd server && xbuild', 'for' : 'cs' }
             \ | Plug 'tpope/vim-dispatch', { 'for' : 'cs' }
             \ | Plug 'dimixar/deoplete-omnisharp', { 'for' : 'cs' }
-endif
 " java
 Plug 'artur-shaik/vim-javacomplete2', { 'for' : 'java' }
 " python-jedi
 Plug 'zchee/deoplete-jedi', { 'for' : 'python' }
-Plug 'Vimjas/vim-python-pep8-indent', { 'for' : 'python' }
-"vimscript
+" vimscript
 Plug 'Shougo/neco-vim', { 'for' : 'vim' }
-" syntax
+""""""""""""""""""""""""
+"  language specifics  "
+""""""""""""""""""""""""
 Plug 'vimperator/vimperator.vim'
 Plug 'dogrover/vim-pentadactyl'
 Plug 'plasticboy/vim-markdown', { 'for' : 'markdown' }
 Plug 'freitass/todo.txt-vim', { 'for' : 'todo' }
 Plug 'lervag/vimtex'
+Plug 'Vimjas/vim-python-pep8-indent', { 'for' : 'python' }
+
 call plug#end()   " ### Plug list ends here
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -217,10 +225,10 @@ let g:airline_skip_empty_sections = 1
 let g:airline#extensions#tabline#enabled = 1
 " extension for ale
 let g:airline#extensions#ale#enabled = 0
+
 """""""""""""""""""
 "  Indent Guides  "
 """""""""""""""""""
-
 " start with vim
 let g:indent_guides_enable_on_vim_startup=1
 " exclude filetypes
@@ -239,10 +247,10 @@ if !has("nvim")
         autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=darkgrey   ctermbg=000
     augroup END
 endif
+
 """"""""""""""
 "  NERDTree  "
 """"""""""""""
-
 " auto close NERDTree after open something
 let NERDTreeQuitOnOpen=1
 let NERDTreeMinimalUI=1
@@ -256,7 +264,6 @@ nmap <Leader>N :NERDTreeToggle<CR>
 """"""""""""""""""
 "  NERD_Comment  "
 """"""""""""""""""
-
 let NERDCommentEmptyLines=1 " also comment empty line
 let NERDDefaultAlign='both' " align on left&right
 let NERDCommentWholeLinesInVMode=1 "comment whole line in V-mode
@@ -281,7 +288,6 @@ map <Leader>ci <plug>NERDCommenterInvert
 """""""""""""""
 "  UltiSnips  "
 """""""""""""""
-
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
 let g:UltiSnipsExpandTrigger="<c-f>"
 let g:UltiSnipsListSnippets="<c-a>l"
@@ -329,6 +335,7 @@ if has("patch-7.4.314")
 endif
 
 let g:echodoc_enable_at_startup=1
+
 """""""""""""""
 "  OmniSharp  "
 """""""""""""""
@@ -339,7 +346,6 @@ endif
 """"""""""""""""""""""
 "  Goyo & Limelight  "
 """"""""""""""""""""""
-
 function! s:goyo_enter()
   if has('gui_running')
     set fullscreen
@@ -377,7 +383,6 @@ nmap <Leader>G :Goyo<CR>
 """""""""""
 "  sneak  "
 """""""""""
-
 let g:sneak#s_next=1 " clever-f-like s/S support
 let g:sneak#label=1 " eazymotion-like s/S enhance
 let g:sneak#f_reset=0 " continue to use ;, for sneak
@@ -435,6 +440,7 @@ let g:ale_python_yapf_use_global = 1
 " use isort installed at the virtualenv for neovim
 let g:ale_python_isort_executable = $HOME . "/.pyenv/versions/neovim3/bin/isort"
 let g:ale_python_isort_use_global = 1
+
 """"""""""""
 "  vimtex  "
 """"""""""""
