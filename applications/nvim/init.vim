@@ -4,7 +4,6 @@ endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                               Plug Settings                                "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
   silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -20,19 +19,31 @@ Plug 'icymind/NeoSolarized'
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'majutsushi/tagbar', { 'on' : 'TagbarToggle' }
 if has("nvim")
     Plug '/usr/local/opt/fzf', { 'do' : './install --all' } | Plug 'junegunn/fzf.vim'
 endif
-" Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
 """"""""""""""""""""""""""""""""
 "  text objects and operators  "
 """"""""""""""""""""""""""""""""
 Plug 'tpope/vim-surround'
+Plug 'tommcdo/vim-exchange'
+Plug 'kana/vim-textobj-user'
+            \ | Plug 'Julian/vim-textobj-variable-segment'
+            \ | Plug 'sgur/vim-textobj-parameter'
+            \ | Plug 'bps/vim-textobj-python'
 """""""""""""""""""""""""
 "  functions and tools  "
 """""""""""""""""""""""""
+if executable('tmux')
+    Plug 'christoomey/vim-tmux-navigator'
+    Plug 'wellle/tmux-complete.vim'
+endif
+if executable('ctags')
+    Plug 'ludovicchabant/vim-gutentags'
+endif
 Plug 'tpope/vim-repeat'
-Plug 'christoomey/vim-tmux-navigator'
 Plug 'godlygeek/tabular'
 Plug 'rhysd/clever-f.vim'
 Plug 'justinmk/vim-sneak'
@@ -41,6 +52,7 @@ Plug 'junegunn/goyo.vim', { 'for': 'markdown' }
 Plug 'junegunn/limelight.vim', { 'for': 'markdown' }
 Plug 'reedes/vim-pencil', { 'for': 'markdown' }
 Plug 'scrooloose/nerdcommenter'
+Plug 'rhysd/vim-grammarous'
 """""""""""""""""
 "  enhancement  "
 """""""""""""""""
@@ -50,15 +62,11 @@ Plug 'w0rp/ale'
 Plug 'Shougo/deoplete.nvim', { 'do' : ':UpdateRemotePlugins' }
 Plug 'Shougo/echodoc.vim'
 " Plug 'tweekmonster/deoplete-clang2'
-" C#
 Plug 'OmniSharp/omnisharp-vim', { 'do': 'cd server && xbuild', 'for' : 'cs' }
             \ | Plug 'tpope/vim-dispatch', { 'for' : 'cs' }
             \ | Plug 'dimixar/deoplete-omnisharp', { 'for' : 'cs' }
-" java
 Plug 'artur-shaik/vim-javacomplete2', { 'for' : 'java' }
-" python-jedi
 Plug 'zchee/deoplete-jedi', { 'for' : 'python' }
-" vimscript
 Plug 'Shougo/neco-vim', { 'for' : 'vim' }
 """"""""""""""""""""""""
 "  language specifics  "
@@ -203,15 +211,15 @@ nmap <Leader>w :w<CR>
 " write & quit the current window
 nmap <Leader>Q :wq<CR>
 " spell-check toggle
-nmap <Leader>SL :setlocal invspell spelllang=en_us<CR>
-nmap <Leader>SA :spellr<CR>
+" nmap <Leader>SL :setlocal invspell spelllang=en_us<CR>
+" nmap <Leader>SA :spellr<CR>
 " quick add empty lines
-nnoremap <Leader>O  :<c-u>put! =repeat(nr2char(10), v:count1)<cr>'[
-nnoremap <Leader>o  :<c-u>put =repeat(nr2char(10), v:count1)<cr>
+nnoremap <silent> <Leader>O  :<c-u>put! =repeat(nr2char(10), v:count1)<cr>'[
+nnoremap <silent> <Leader>o  :<c-u>put =repeat(nr2char(10), v:count1)<cr>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              PLUGINS SETTINGS                              "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
+let g:loaded_matchit = 1
 """""""""""""
 "  Airline  "
 """""""""""""
@@ -225,6 +233,10 @@ let g:airline_skip_empty_sections = 1
 let g:airline#extensions#tabline#enabled = 1
 " extension for ale
 let g:airline#extensions#ale#enabled = 0
+" let airline#extensions#ale#error_symbol = 'E:'
+" let airline#extensions#ale#warning_symbol = 'W:'
+" extension for tagbar
+let g:airline#extensions#tagbar#enabled = 0
 
 """""""""""""""""""
 "  Indent Guides  "
@@ -248,6 +260,13 @@ if !has("nvim")
     augroup END
 endif
 
+""""""""""""
+"  tagbar  "
+""""""""""""
+let g:tagbar_compact = 1
+" toggle tagbar
+nnoremap <silent> <Leader>T :<C-u>TagbarToggle<CR>
+
 """"""""""""""
 "  NERDTree  "
 """"""""""""""
@@ -259,14 +278,68 @@ augroup NERD_TREE_SETTING
     autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 augroup END
 " toggle NERDTree
-nmap <Leader>N :NERDTreeToggle<CR>
+nmap <silent> <Leader>N :<C-u>NERDTreeToggle<CR>
+
+""""""""""""
+"  Denite  "
+""""""""""""
+
+" Change mappings.
+call denite#custom#map(
+            \ 'insert',
+            \ '<C-n>',
+            \ '<denite:move_to_next_line>',
+            \ 'noremap'
+            \)
+call denite#custom#map(
+            \ 'insert',
+            \ '<C-p>',
+            \ '<denite:move_to_previous_line>',
+            \ 'noremap'
+            \)
+
+" Change sorters.
+call denite#custom#source(
+            \ '_', 'sorters', ['sorter_sublime'])
+
+" Change file_rec command.
+call denite#custom#var('file_rec', 'command',
+            \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
+" Ag command on grep source
+call denite#custom#var('grep', 'command', ['ag'])
+call denite#custom#var('grep', 'default_opts',
+            \ ['--smart-case', '--vimgrep', '-U'])
+call denite#custom#var('grep', 'recursive_opts', [])
+call denite#custom#var('grep', 'pattern_opt', [])
+call denite#custom#var('grep', 'separator', ['--'])
+call denite#custom#var('grep', 'final_opts', [])
+
+" Change default prompt
+call denite#custom#option('_', {
+            \ 'prompt': '>',
+            \ 'winheight': 16,
+            \ 'vertical_preview': 1
+            \ })
+
+nnoremap <silent> <Leader><space>  :<C-u>Denite -resume<CR>
+nnoremap <silent> <Leader>j :call execute('Denite -resume -select=+'.v:count1.' -immediately')<CR>
+nnoremap <silent> <Leader>k :call execute('Denite -resume -select=-'.v:count1.' -immediately')<CR>
+nnoremap <silent> <Leader>df :<C-u>Denite file_rec<CR>
+nnoremap <silent> <Leader>dj :<C-u>Denite jump<CR>
+nnoremap <silent> <Leader>dt :<C-u>Denite tag<CR>
+nnoremap <silent> <Leader>dg :<C-u>Denite grep<CR>
+nnoremap <silent> <Leader>dl :<C-u>Denite line<CR>
+nnoremap <silent> <Leader>db :<C-u>Denite buffer<CR>
+nnoremap <silent> <Leader>dc :<C-u>Denite command<CR>
+nnoremap <silent> <Leader>dh :<C-u>Denite help<CR>
+nnoremap <silent> <Leader>do :<C-u>Denite outline<CR>
 
 """"""""""""""""""
 "  NERD_Comment  "
 """"""""""""""""""
 let NERDCommentEmptyLines=1 " also comment empty line
 let NERDDefaultAlign='both' " align on left&right
-let NERDCommentWholeLinesInVMode=1 "comment whole line in V-mode
+let NERDCommentWholeLinesInVMode=1 " comment whole line in V-mode
 let NERDSpaceDelims=1 " add extra space
 let NERDCreateDefaultMappings=0 " disable default mapping
 let NERDTrimTrailingWhitespace=1
@@ -380,6 +453,16 @@ let g:limelight_conceal_ctermfg = 030
 " Goyo toggle
 nmap <Leader>G :Goyo<CR>
 
+""""""""""""""""""""
+"  vim-grammarous  "
+""""""""""""""""""""
+let g:grammarous#default_comments_only_filetypes = {
+            \ '*' : 1, 'help' : 0, 'markdown' : 0, 'text' : 0,
+            \ }
+if executable('languagetool')
+    let g:grammarous#languagetool_cmd = 'languagetool'
+endif
+let g:grammarous#show_first_error=1
 """""""""""
 "  sneak  "
 """""""""""
@@ -402,6 +485,12 @@ let g:clever_f_use_migemo=1 " enable migemo support
 """""""""""""""
 
 noremap <plug>(slash-after) zz
+
+"""""""""""""""
+"  gutentags  "
+"""""""""""""""
+let g:gutentags_resolve_symlinks = 1
+let g:gutentags_ctags_exclude=['*.txt', '*.md', '*.rst']
 
 """""""""
 "  ale  "
@@ -440,6 +529,8 @@ let g:ale_python_yapf_use_global = 1
 " use isort installed at the virtualenv for neovim
 let g:ale_python_isort_executable = $HOME . "/.pyenv/versions/neovim3/bin/isort"
 let g:ale_python_isort_use_global = 1
+
+noremap <Leader>A :ALEFix<CR>
 
 """"""""""""
 "  vimtex  "
