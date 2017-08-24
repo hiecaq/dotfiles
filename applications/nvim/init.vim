@@ -24,6 +24,7 @@ if has("nvim")
     Plug '/usr/local/opt/fzf', { 'do' : './install --all' } | Plug 'junegunn/fzf.vim'
 endif
 Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
+            \ | Plug 'chemzqm/unite-location'
 """"""""""""""""""""""""""""""""
 "  text objects and operators  "
 """"""""""""""""""""""""""""""""
@@ -328,11 +329,13 @@ nnoremap <silent> <Leader>df :<C-u>Denite file_rec<CR>
 nnoremap <silent> <Leader>dj :<C-u>Denite jump<CR>
 nnoremap <silent> <Leader>dt :<C-u>Denite tag<CR>
 nnoremap <silent> <Leader>dg :<C-u>Denite grep<CR>
-nnoremap <silent> <Leader>dl :<C-u>Denite line<CR>
+nnoremap <silent> <Leader>dd :<C-u>Denite line<CR>
 nnoremap <silent> <Leader>db :<C-u>Denite buffer<CR>
 nnoremap <silent> <Leader>dc :<C-u>Denite command<CR>
 nnoremap <silent> <Leader>dh :<C-u>Denite help<CR>
 nnoremap <silent> <Leader>do :<C-u>Denite outline<CR>
+nnoremap <silent> <Leader>dl :<C-u>Denite location_list<CR>
+nnoremap <silent> <Leader>dq :<C-u>Denite quickfix<CR>
 
 """"""""""""""""""
 "  NERD_Comment  "
