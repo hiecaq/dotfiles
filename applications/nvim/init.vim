@@ -23,6 +23,7 @@ Plug 'majutsushi/tagbar', { 'on' : 'TagbarToggle' }
 if has("nvim")
     Plug '/usr/local/opt/fzf', { 'do' : './install --all' } | Plug 'junegunn/fzf.vim'
 endif
+" Plug 'Shougo/unite.vim'
 Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
             \ | Plug 'chemzqm/unite-location'
 """"""""""""""""""""""""""""""""
@@ -53,7 +54,7 @@ Plug 'junegunn/goyo.vim', { 'for': 'markdown' }
 Plug 'junegunn/limelight.vim', { 'for': 'markdown' }
 Plug 'reedes/vim-pencil', { 'for': 'markdown' }
 Plug 'scrooloose/nerdcommenter'
-Plug 'rhysd/vim-grammarous'
+Plug 'rhysd/vim-grammarous', { 'on': 'GrammarousCheck' }
 """""""""""""""""
 "  enhancement  "
 """""""""""""""""
@@ -78,6 +79,9 @@ Plug 'plasticboy/vim-markdown', { 'for' : 'markdown' }
 Plug 'freitass/todo.txt-vim', { 'for' : 'todo' }
 Plug 'lervag/vimtex'
 Plug 'Vimjas/vim-python-pep8-indent', { 'for' : 'python' }
+Plug 'raimon49/requirements.txt.vim', { 'for' : 'requirements'}
+Plug 'tmux-plugins/vim-tmux', { 'for' : 'tmux' }
+Plug 'andreshazard/vim-logreview', { 'for' : 'logreview' }
 
 call plug#end()   " ### Plug list ends here
 
@@ -465,7 +469,7 @@ let g:grammarous#default_comments_only_filetypes = {
 if executable('languagetool')
     let g:grammarous#languagetool_cmd = 'languagetool'
 endif
-let g:grammarous#show_first_error=1
+" let g:grammarous#show_first_error=1
 """""""""""
 "  sneak  "
 """""""""""
@@ -493,7 +497,7 @@ noremap <plug>(slash-after) zz
 "  gutentags  "
 """""""""""""""
 let g:gutentags_resolve_symlinks = 1
-let g:gutentags_ctags_exclude=['*.txt', '*.md', '*.rst']
+let g:gutentags_ctags_exclude=['*.txt', '*.md', '*.rst', '.*']
 
 """""""""
 "  ale  "
