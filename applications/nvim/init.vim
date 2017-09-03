@@ -5,9 +5,9 @@ endif
 "                               Plug Settings                                "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
-  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall | source $MYVIMRC
+    silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    autocmd VimEnter * PlugInstall | source $MYVIMRC
 endif
 
 let g:plug_timeout = 300
@@ -16,7 +16,8 @@ call plug#begin('~/.config/nvim/plugged') " ### plugin list begins here
 "  User Interface  "
 """"""""""""""""""""
 Plug 'icymind/NeoSolarized'
-Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
+Plug 'vim-airline/vim-airline'
+            \| Plug 'vim-airline/vim-airline-themes'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'majutsushi/tagbar', { 'on' : 'TagbarToggle' }
@@ -34,7 +35,12 @@ Plug 'tommcdo/vim-exchange'
 Plug 'kana/vim-textobj-user'
             \ | Plug 'Julian/vim-textobj-variable-segment'
             \ | Plug 'sgur/vim-textobj-parameter'
-            \ | Plug 'bps/vim-textobj-python'
+            \ | Plug 'kana/vim-textobj-entire'
+            \ | Plug 'glts/vim-textobj-comment'
+            \ | Plug 'kana/vim-textobj-function', { 'for' : ['C', 'java', 'vimscript'] }
+            \ | Plug 'bps/vim-textobj-python', { 'for' : 'python' }
+Plug 'kana/vim-operator-user'
+            \ | Plug 'kana/vim-operator-replace'
 """""""""""""""""""""""""
 "  functions and tools  "
 """""""""""""""""""""""""
@@ -79,7 +85,7 @@ Plug 'plasticboy/vim-markdown', { 'for' : 'markdown' }
 Plug 'freitass/todo.txt-vim', { 'for' : 'todo' }
 Plug 'lervag/vimtex'
 Plug 'Vimjas/vim-python-pep8-indent', { 'for' : 'python' }
-Plug 'raimon49/requirements.txt.vim', { 'for' : 'requirements'}
+Plug 'raimon49/requirements.txt.vim', { 'for' : 'requirements' }
 Plug 'tmux-plugins/vim-tmux', { 'for' : 'tmux' }
 Plug 'andreshazard/vim-logreview', { 'for' : 'logreview' }
 
@@ -101,11 +107,14 @@ if !has("nvim")
 endif
 " enable 256 colors
 set t_Co=256
-if has("nvim")
+if has("termguicolors")
     set termguicolors
 endif
-set t_8f=[38;2;%lu;%lu;%lum
-set t_8b=[48;2;%lu;%lu;%lum
+
+if !has("nvim")
+    set t_8f=[38;2;%lu;%lu;%lum
+    set t_8b=[48;2;%lu;%lu;%lum
+endif
 
 " color theme
 colorscheme NeoSolarized
@@ -157,7 +166,7 @@ set shiftwidth=4
 set softtabstop=4
 " allow backspace
 set backspace=indent,eol,start whichwrap+=<,>,[,]
-" automatically go to the last line last time
+" automatically go to the line last time
 if has("autocmd")
     augroup vimrcEx
         au!
@@ -169,7 +178,6 @@ if has("autocmd")
 endif " has("autocmd")
 
 
-set previewheight=1
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                  Provider                                  "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -195,11 +203,11 @@ nmap <silent> <leader>ee :e $MYVIMRC<cr>
 " nmap <silent> <leader>CS :let @/ = ""<cr>
 " nohlsearch
 nmap <leader>// :nohlsearch<cr>
+" prevent normal mode operator x from polluting the registers
+nnoremap x "_x
 " alias
-nnoremap <Leader>; :
 vnoremap <Leader>; :
-" copy selected block to the clipboard
-vnoremap <Leader>y "+y
+nnoremap <Leader>; :
 " copy to clipboard
 noremap <Leader>y "+y
 " copy a whole line to the clipboard
@@ -338,6 +346,7 @@ nnoremap <silent> <Leader>db :<C-u>Denite buffer<CR>
 nnoremap <silent> <Leader>dc :<C-u>Denite command<CR>
 nnoremap <silent> <Leader>dh :<C-u>Denite help<CR>
 nnoremap <silent> <Leader>do :<C-u>Denite outline<CR>
+nnoremap <silent> <Leader>dr :<C-u>Denite register<CR>
 nnoremap <silent> <Leader>dl :<C-u>Denite location_list<CR>
 nnoremap <silent> <Leader>dq :<C-u>Denite quickfix<CR>
 
@@ -400,18 +409,18 @@ if has("nvim")
     let g:deoplete#omni#input_patterns.tex = g:vimtex#re#deoplete
     " java
     let g:deoplete#omni#input_patterns.java = [
-        \'[^. \t0-9]\.\w*',
-        \'[^. \t0-9]\->\w*',
-        \'[^. \t0-9]\::\w*',
-        \]
+                \'[^. \t0-9]\.\w*',
+                \'[^. \t0-9]\->\w*',
+                \'[^. \t0-9]\::\w*',
+                \]
     let g:deoplete#omni#input_patterns.jsp = ['[^. \t0-9]\.\w*']
     let g:deoplete#omni#functions.java = [
-      \ 'javacomplete#Complete'
-    \]
+                \ 'javacomplete#Complete'
+                \]
 endif
 
 if has("patch-7.4.314")
-      set shortmess+=c
+    set shortmess+=c
 endif
 
 let g:echodoc_enable_at_startup=1
@@ -427,23 +436,23 @@ endif
 "  Goyo & Limelight  "
 """"""""""""""""""""""
 function! s:goyo_enter()
-  if has('gui_running')
-    set fullscreen
-    "set background=light
-    set linespace=7
-  elseif exists('$TMUX')
-    silent !tmux set status off
-  endif
+    if has('gui_running')
+        set fullscreen
+        "set background=light
+        set linespace=7
+    elseif exists('$TMUX')
+        silent !tmux set status off
+    endif
 endfunction
 
 function! s:goyo_leave()
-  if has('gui_running')
-    set nofullscreen
-    "set background=dark
-    set linespace=0
-  elseif exists('$TMUX')
-    silent !tmux set status on
-  endif
+    if has('gui_running')
+        set nofullscreen
+        "set background=dark
+        set linespace=0
+    elseif exists('$TMUX')
+        silent !tmux set status on
+    endif
 endfunction
 
 augroup Goyo_initialize
@@ -466,10 +475,12 @@ nmap <Leader>G :Goyo<CR>
 let g:grammarous#default_comments_only_filetypes = {
             \ '*' : 1, 'help' : 0, 'markdown' : 0, 'text' : 0,
             \ }
+
 if executable('languagetool')
     let g:grammarous#languagetool_cmd = 'languagetool'
 endif
 " let g:grammarous#show_first_error=1
+
 """""""""""
 "  sneak  "
 """""""""""
@@ -490,7 +501,6 @@ let g:clever_f_use_migemo=1 " enable migemo support
 """""""""""""""
 "  vim-slash  "
 """""""""""""""
-
 noremap <plug>(slash-after) zz
 
 """""""""""""""
@@ -538,6 +548,24 @@ let g:ale_python_isort_executable = $HOME . "/.pyenv/versions/neovim3/bin/isort"
 let g:ale_python_isort_use_global = 1
 
 noremap <Leader>A :ALEFix<CR>
+
+""""""""""""""""""""""
+"  operator-replace  "
+""""""""""""""""""""""
+
+map _ <Plug>(operator-replace)
+
+"""""""""""""""""""""
+"  textobj-comment  "
+"""""""""""""""""""""
+let g:textobj_comment_no_default_key_mappings = 1
+
+xmap a? <Plug>(textobj-comment-a)
+omap a? <Plug>(textobj-comment-a)
+xmap a/ <Plug>(textobj-comment-big-a)
+omap a/ <Plug>(textobj-comment-big-a)
+xmap i/ <Plug>(textobj-comment-i)
+omap i/ <Plug>(textobj-comment-i)
 
 """"""""""""
 "  vimtex  "
