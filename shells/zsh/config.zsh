@@ -9,7 +9,7 @@ export CLICOLOR_FORCE=1
 #######################################################################
 
 ZSH_THEME="pygmalion"
-plugins=(git colored-man colorize github jira vagrant virtualenv pip python brew osx tmux zsh-syntax-highlighting vi-mode)
+plugins=(git colorize pip python brew osx tmux zsh-syntax-highlighting vi-mode)
 source $ZSH/oh-my-zsh.sh
 
 unalias pip
