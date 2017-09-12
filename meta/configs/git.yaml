@@ -1,0 +1,2 @@
+- shell:
+    - [source ~/.dotfiles/tools/git/gitinit]

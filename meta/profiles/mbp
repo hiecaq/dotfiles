@@ -1,6 +1,7 @@
 terminfo
 bash
 zsh
+git
 nvim
 tmux
 hammerspoon
