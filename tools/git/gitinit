@@ -4,3 +4,4 @@ git config --global push.followTags true
 git config --global alias.ignore '!gi() { curl -L -s https://www.gitignore.io/api/$@ ;}; gi'
 git config --global alias.s 'status --short'
 git config --global alias.l 'log --graph --pretty=oneline --abbrev-commit'
+git config --global alias.gpg 'config commit.gpgsign true'
