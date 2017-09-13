@@ -1,2 +1,6 @@
 - shell:
-    - [source ~/.dotfiles/tools/git/gitinit]
+    -
+      command: bash ~/.dotfiles/tools/git/gitinit
+      stdin: true
+      stdout: true
+      description: Add git configs

@@ -1,0 +1,6 @@
+- shell:
+    -
+      command: bash ~/.dotfiles/tools/homebrew/get_brew
+      stdin: true
+      stdout: true
+      description: Install homebrew and brews
