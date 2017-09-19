@@ -166,6 +166,8 @@ set shiftwidth=4
 set softtabstop=4
 " allow backspace
 set backspace=indent,eol,start whichwrap+=<,>,[,]
+" no annoying message when editing via scp
+let g:netrw_silent=1
 " automatically go to the line last time
 if has("autocmd")
     augroup vimrcEx
@@ -507,7 +509,13 @@ noremap <plug>(slash-after) zz
 "  gutentags  "
 """""""""""""""
 let g:gutentags_resolve_symlinks = 1
-let g:gutentags_ctags_exclude=['*.txt', '*.md', '*.rst', '.*']
+let g:gutentags_ctags_exclude=['*.txt', '*.md', '*.rst']
+let g:gutentags_file_list_command = {
+            \ 'markers': {
+            \ '.git': 'git ls-files',
+            \ '.hg': 'hg files',
+            \ },
+            \ }
 
 """""""""
 "  ale  "
@@ -547,7 +555,7 @@ let g:ale_python_yapf_use_global = 1
 let g:ale_python_isort_executable = $HOME . "/.pyenv/versions/neovim3/bin/isort"
 let g:ale_python_isort_use_global = 1
 
-noremap <Leader>A :ALEFix<CR>
+noremap <Leader>A :<C-u>ALEFix<CR>
 
 """"""""""""""""""""""
 "  operator-replace  "
