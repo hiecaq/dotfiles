@@ -7,6 +7,7 @@ local reload = require "reload"
 local yahyper = require "yahyper"
 local window = require "window"
 local movement = require "movement"
+local input = require "input"
 
 hs.window.animationDuration = 0
 
@@ -15,6 +16,7 @@ hs.window.animationDuration = 0
 -----------------
 
 hyper = yahyper.new("F18")
+hyper:setPressedAloneEvent(input.setEng)
 hyper:setPressedAlone("ESCAPE")
 
 --------------
@@ -46,3 +48,11 @@ hyper:bind({}, 'k'):press(movement.kfun)
 hyper:bind({}, 'l'):press(movement.lfun)
 hyper:bind({}, 'b'):press(movement.bfun)
 hyper:bind({}, 'f'):press(movement.ffun)
+
+--------------------
+--  input method  --
+--------------------
+
+hyper:bind({}, '1'):stroke(input.setEng)
+hyper:bind({}, '2'):stroke(input.setChn)
+hyper:bind({}, '3'):stroke(input.setJpn)
