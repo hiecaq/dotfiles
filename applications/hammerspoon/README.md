@@ -10,6 +10,7 @@ I've only read [Learn Lua in Y minutes][lliym], so any feedback/advice is apprec
 ## Description ##
 
 - `init.lua` module requirements, settings, key bindings
+- `input.lua` input source setting
 - `movement.lua` cursor movement
 - `reload.lua` auto reload config files
 - `window.lua` window resizing
