@@ -22,6 +22,7 @@ function HyperKey:new(key)
         _triggered = false,
         _hyperMod = nil,
         _alone = function () return nil end,
+        _aloneEvent = nil
     }
     self.__index = self
     setmetatable(this, self)
@@ -34,6 +35,7 @@ function HyperKey:new(key)
     this._released = function()
         this._hyperMod:exit()
         if not this._triggered then
+            if this._aloneEvent then this._aloneEvent() end
             this._alone()
         end
     end
@@ -48,6 +50,10 @@ function HyperKey:setPressedAlone(targetKey)
     self._alone = function()
         hs.eventtap.keyStroke({}, targetKey)
     end
+end
+
+function HyperKey:setPressedAloneEvent(event)
+    self._aloneEvent = event
 end
 
 

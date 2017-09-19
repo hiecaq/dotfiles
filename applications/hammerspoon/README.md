@@ -28,11 +28,13 @@ local yahyper = require "yahyper.lua"
 hyper = yahyper.new("YOUR_FAVORITE_KEY")
 -- set what key is invoked when hyper key is pressed alone
 hyper:setPressedAlone("THE_KEY_YOU_INTENDED")
+-- set what event is invoked before the returned pressed-alone key strokes
+hyper:setPressedAloneKey(func)
 -- construct a key combination, e.g., hyper+Ctrl+v
 hyper:bind({"Ctrl"}, "v")
--- set what happened when the key combination strokes
+-- set what happens when the key combination strokes
 hyper:bind({"Ctrl"}, "v"):stroke(func)
--- set what happened when the key combination is pressed
+-- set what happens when the key combination is pressed
 hyper:bind({"Ctrl"}, "v"):press(func)
 ```
 
