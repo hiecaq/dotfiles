@@ -218,6 +218,8 @@ noremap <Leader>Y "+Y
 noremap <Leader>p "+p
 " put the text from clipboard before the cursor
 noremap <Leader>P "+P
+" put the text with auto re-indent
+noremap <Leader>[p "+[p
 
 " close the current window
 nmap <Leader>q :q<CR>
