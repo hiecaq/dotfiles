@@ -88,6 +88,7 @@ Plug 'Vimjas/vim-python-pep8-indent', { 'for' : 'python' }
 Plug 'raimon49/requirements.txt.vim', { 'for' : 'requirements' }
 Plug 'tmux-plugins/vim-tmux', { 'for' : 'tmux' }
 Plug 'andreshazard/vim-logreview', { 'for' : 'logreview' }
+Plug 'javier-lopez/sml.vim', { 'for' : 'sml' }
 
 call plug#end()   " ### Plug list ends here
 
