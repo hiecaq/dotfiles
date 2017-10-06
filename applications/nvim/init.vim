@@ -76,6 +76,7 @@ Plug 'OmniSharp/omnisharp-vim', { 'do': 'cd server && xbuild', 'for' : 'cs' }
 Plug 'artur-shaik/vim-javacomplete2', { 'for' : 'java' }
 Plug 'zchee/deoplete-jedi', { 'for' : 'python' }
 Plug 'Shougo/neco-vim', { 'for' : 'vim' }
+Plug 'editorconfig/editorconfig-vim'
 """"""""""""""""""""""""
 "  language specifics  "
 """"""""""""""""""""""""
@@ -89,6 +90,8 @@ Plug 'raimon49/requirements.txt.vim', { 'for' : 'requirements' }
 Plug 'tmux-plugins/vim-tmux', { 'for' : 'tmux' }
 Plug 'andreshazard/vim-logreview', { 'for' : 'logreview' }
 Plug 'javier-lopez/sml.vim', { 'for' : 'sml' }
+" Plug 'jez/vim-better-sml', { 'for' : 'sml' }
+Plug 'tbastos/vim-lua', { 'for' : 'lua' }
 
 call plug#end()   " ### Plug list ends here
 
@@ -609,12 +612,20 @@ augroup END
 "  YAML  "
 """"""""""
 
-augroup YAML_Tabs_Speical
-    au!
-    autocmd FileType yaml :setlocal tabstop=2
-    autocmd FileType yaml :setlocal shiftwidth=2
-    autocmd FileType yaml :setlocal softtabstop=2
-augroup END
+" augroup YAML_Tabs_Speical
+"     au!
+"     autocmd FileType yaml :setlocal tabstop=2
+"     autocmd FileType yaml :setlocal shiftwidth=2
+"     autocmd FileType yaml :setlocal softtabstop=2
+" augroup END
+
+"""""""""
+"  sml  "
+"""""""""
+" augroup SML_Indent
+"     au!
+"     autocmd FileType sml : setlocal shiftwidth=4
+" augroup END
 
 """"""""""""""
 "  Todo.txt  "
