@@ -69,14 +69,18 @@ Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets' | Plug 'quinoa42/MyUltiSnips
 Plug 'w0rp/ale'
 Plug 'Shougo/deoplete.nvim', { 'do' : ':UpdateRemotePlugins' }
 Plug 'Shougo/echodoc.vim'
-" Plug 'tweekmonster/deoplete-clang2'
+if executable('clang')
+    Plug 'tweekmonster/deoplete-clang2', { 'for' : ['c', 'cpp'] }
+endif
 Plug 'OmniSharp/omnisharp-vim', { 'do': 'cd server && xbuild', 'for' : 'cs' }
             \ | Plug 'tpope/vim-dispatch', { 'for' : 'cs' }
             \ | Plug 'dimixar/deoplete-omnisharp', { 'for' : 'cs' }
 Plug 'artur-shaik/vim-javacomplete2', { 'for' : 'java' }
 Plug 'zchee/deoplete-jedi', { 'for' : 'python' }
 Plug 'Shougo/neco-vim', { 'for' : 'vim' }
-Plug 'editorconfig/editorconfig-vim'
+if executable('editorconfig')
+    Plug 'editorconfig/editorconfig-vim'
+endif
 """"""""""""""""""""""""
 "  language specifics  "
 """"""""""""""""""""""""
@@ -602,30 +606,8 @@ let g:vim_markdown_conceal = 0 " disable the conceal since it's tooooo ugly
 augroup Markdown_Initial
     au!
     autocmd VimEnter *.tmp :set ft=markdown " set markdown for *.tmp called by vimperator
-    " autocmd FileType markdown :setlocal wrap
-    " autocmd FileType markdown :setlocal linebreak
-    " autocmd FileType markdown :setlocal nonumber
     autocmd FileType markdown :SoftPencil
 augroup END
-
-""""""""""
-"  YAML  "
-""""""""""
-
-" augroup YAML_Tabs_Speical
-"     au!
-"     autocmd FileType yaml :setlocal tabstop=2
-"     autocmd FileType yaml :setlocal shiftwidth=2
-"     autocmd FileType yaml :setlocal softtabstop=2
-" augroup END
-
-"""""""""
-"  sml  "
-"""""""""
-" augroup SML_Indent
-"     au!
-"     autocmd FileType sml : setlocal shiftwidth=4
-" augroup END
 
 """"""""""""""
 "  Todo.txt  "
