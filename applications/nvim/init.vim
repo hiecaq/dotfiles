@@ -21,12 +21,15 @@ Plug 'vim-airline/vim-airline'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'majutsushi/tagbar', { 'on' : 'TagbarToggle' }
-if has("nvim")
-    Plug '/usr/local/opt/fzf', { 'do' : './install --all' } | Plug 'junegunn/fzf.vim'
-endif
+" if has("nvim")
+"     Plug '/usr/local/opt/fzf', { 'do' : './install --all' } | Plug 'junegunn/fzf.vim'
+" endif
 " Plug 'Shougo/unite.vim'
 Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
             \ | Plug 'chemzqm/unite-location'
+if executable('eclimd')
+    Plug '~/.config/eclim' , { 'for' : 'java' }
+endif
 """"""""""""""""""""""""""""""""
 "  text objects and operators  "
 """"""""""""""""""""""""""""""""
@@ -140,13 +143,13 @@ set ruler
 " show line numbers
 set number
 
-augroup number_highlights
-    au!
-    autocmd VimEnter,Colorscheme * :hi CursorLineNr  gui=bold guifg=#586e75 guibg=#073642
-augroup END
+" augroup number_highlights
+"     au!
+"     autocmd VimEnter,Colorscheme * :hi CursorLineNr  gui=bold guifg=#586e75 guibg=#073642
+" augroup END
 
 " highlight the current line/column
-"set cursorline
+" set cursorline
 "set cursorcolumn
 " search while typing patterns
 " set incsearch
@@ -378,7 +381,7 @@ map <Leader>c; <plug>NERDCommenterAppend
 " ;cy --> comment this line and copy
 map <Leader>cy <plug>NERDCommenterYank
 " ;cl --> comment from this position to end of the line
-map <Leader>cl <plug>NERDCommenterToEOL
+map <Leader>c$ <plug>NERDCommenterToEOL
 " ;cu --> uncomment
 map <Leader>cu <plug>NERDCommenterUncomment
 " ;cs --> commentSexy
@@ -426,9 +429,7 @@ if has("nvim")
                 \'[^. \t0-9]\::\w*',
                 \]
     let g:deoplete#omni#input_patterns.jsp = ['[^. \t0-9]\.\w*']
-    let g:deoplete#omni#functions.java = [
-                \ 'javacomplete#Complete'
-                \]
+    let g:deoplete#omni#functions.java = ['javacomplete#Complete']
 endif
 
 if has("patch-7.4.314")
@@ -436,6 +437,31 @@ if has("patch-7.4.314")
 endif
 
 let g:echodoc_enable_at_startup=1
+
+" let g:deoplete#enable_profile = 1
+" call deoplete#enable_logging('DEBUG', 'deoplete.log')
+" call deoplete#custom#source('jedi', 'debug_enabled', 1)
+
+"""""""""""
+"  Eclim  "
+"""""""""""
+
+" function! Java_autocomplete()
+"     if eclim#project#util#GetCurrentProjectName() == ''
+"         let b:deoplete_omni_functions = [
+"                     \ 'javacomplete#Complete'
+"                     \]
+"     else
+"         let b:deoplete_omni_functions = [
+"                     \ 'eclim#java#complete#CodeComplete'
+"                     \]
+"     endif
+" endfunction
+"
+" augroup Java_deoplete
+"     au!
+"     autocmd FileType java call Java_autocomplete()
+" augroup END
 
 """""""""""""""
 "  OmniSharp  "
@@ -496,11 +522,16 @@ endif
 """""""""""
 "  sneak  "
 """""""""""
-let g:sneak#s_next=1 " clever-f-like s/S support
-let g:sneak#label=1 " eazymotion-like s/S enhance
-let g:sneak#f_reset=0 " continue to use ;, for sneak
-let g:sneak#t_reset=0 " ^
-let g:sneak#absolute_dir=1 " s; forwards only and S, backwards only
+let g:sneak#s_next = 1 " clever-f-like s/S support
+let g:sneak#label = 1 " eazymotion-like s/S enhance
+let g:sneak#f_reset = 0 " continue to use ;, for sneak
+let g:sneak#t_reset = 0 " ^
+let g:sneak#absolute_dir = 1 " s; forwards only and S, backwards only
+
+augroup Sneak_color
+    au!
+    autocmd VimEnter,ColorScheme * :hi Sneak guifg=black ctermfg=black guibg=#FFE53D ctermbg=003
+augroup END
 
 """"""""""""""
 "  clever-f  "
@@ -519,7 +550,7 @@ noremap <plug>(slash-after) zz
 "  gutentags  "
 """""""""""""""
 let g:gutentags_resolve_symlinks = 1
-let g:gutentags_ctags_exclude=['*.txt', '*.md', '*.rst']
+let g:gutentags_ctags_exclude=['*.txt', '*.md', '*.rst', '*.json', 'Makefile', '*.ini', '*.yaml', '*.xml']
 let g:gutentags_file_list_command = {
             \ 'markers': {
             \ '.git': 'git ls-files',
@@ -536,7 +567,7 @@ let g:ale_lint_on_text_changed = 'never'
 call airline#parts#define_function('ALE', 'ALEGetStatusLine')
 call airline#parts#define_condition('ALE', 'exists("*ALEGetStatusLine")')
 let g:airline_section_error = airline#section#create_right(['ALE'])
-let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥']
+let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '✔']
 let g:ale_warn_about_trailing_whitespace = 0
 let g:ale_sign_column_always = 1
 nmap <silent> <Leader>ek <Plug>(ale_previous_wrap)
@@ -555,6 +586,7 @@ let g:ale_fixers = {
             \}
 
 let g:ale_c_gcc_options = '-std=gnu99 -Wall'
+" let g:ale_java_checkstyle_options = '-c ' . $HOME . '/.dotfiles/tools/checkstyle/google_checks.xml'
 " use flake8 installed at the virtualenv for neovim
 let g:ale_python_flake8_executable = $HOME . "/.pyenv/versions/neovim3/bin/flake8"
 let g:ale_python_flake8_use_global = 1
@@ -592,6 +624,7 @@ let g:vimtex_view_method = 'skim'
 let g:vimtex_compiler_progname = 'nvr'
 let g:vimtex_view_use_temp_files = 1
 let g:vimtex_quickfix_open_on_warning = 0
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              SYNTAX SETTINGS                               "

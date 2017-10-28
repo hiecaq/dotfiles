@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+VIMPLUGIN_PATH="$HOME/.config/eclim"
+
+ECLIPSE_PATH="/Applications/Eclipse Java.app/Contents/Eclipse"
+
+if  [[ $1 = "install" ]] || [[ $1 = "uninstall" ]] && [[ -f $2 ]]; then
+    java \
+        -Dvim.files="$VIMPLUGIN_PATH" \
+        -Declipse.home="$ECLIPSE_PATH" \
+        -jar "$2" $1
+else
+    echo "Usage: $0 [install|uninstall] [eclim.jar]"
+    exit 1
+fi
