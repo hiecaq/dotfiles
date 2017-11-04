@@ -30,8 +30,9 @@ Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
 if executable('eclimd')
     Plug '~/.config/eclim' , { 'for' : 'java' }
 endif
-" Plug 'kien/rainbow_parentheses.vim'
 Plug 'luochen1990/rainbow', { 'for' : ['json', 'racket'] }
+" Plug 'edkolev/tmuxline.vim'
+
 """"""""""""""""""""""""""""""""
 "  text objects and operators  "
 """"""""""""""""""""""""""""""""
@@ -102,6 +103,7 @@ Plug 'javier-lopez/sml.vim', { 'for' : 'sml' }
 " Plug 'jez/vim-better-sml', { 'for' : 'sml' }
 Plug 'tbastos/vim-lua', { 'for' : 'lua' }
 Plug 'wlangstroth/vim-racket'
+Plug 'tmux-plugins/vim-tmux'
 
 call plug#end()   " ### Plug list ends here
 

@@ -9,7 +9,7 @@ export CLICOLOR_FORCE=1
 #######################################################################
 
 ZSH_THEME="pygmalion"
-plugins=(git colorize pip python brew osx tmux zsh-syntax-highlighting vi-mode)
+plugins=(git colorize pip python brew osx tmux zsh-syntax-highlighting vi-mode gem)
 source $ZSH/oh-my-zsh.sh
 
 unalias pip
@@ -102,4 +102,4 @@ export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden --bin
 
 source ~/.aliases
 source $ZSHCONFIG/keybindings.zsh
-
+source $ZSHCONFIG/tmuxinator.zsh
