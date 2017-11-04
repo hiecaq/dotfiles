@@ -30,6 +30,8 @@ Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
 if executable('eclimd')
     Plug '~/.config/eclim' , { 'for' : 'java' }
 endif
+" Plug 'kien/rainbow_parentheses.vim'
+Plug 'luochen1990/rainbow', { 'for' : ['json', 'racket'] }
 """"""""""""""""""""""""""""""""
 "  text objects and operators  "
 """"""""""""""""""""""""""""""""
@@ -78,7 +80,7 @@ endif
 Plug 'OmniSharp/omnisharp-vim', { 'do': 'cd server && xbuild', 'for' : 'cs' }
             \ | Plug 'tpope/vim-dispatch', { 'for' : 'cs' }
             \ | Plug 'dimixar/deoplete-omnisharp', { 'for' : 'cs' }
-Plug 'artur-shaik/vim-javacomplete2', { 'for' : 'java' }
+" Plug 'artur-shaik/vim-javacomplete2', { 'for' : 'java' }
 Plug 'zchee/deoplete-jedi', { 'for' : 'python' }
 Plug 'Shougo/neco-vim', { 'for' : 'vim' }
 if executable('editorconfig')
@@ -99,6 +101,7 @@ Plug 'andreshazard/vim-logreview', { 'for' : 'logreview' }
 Plug 'javier-lopez/sml.vim', { 'for' : 'sml' }
 " Plug 'jez/vim-better-sml', { 'for' : 'sml' }
 Plug 'tbastos/vim-lua', { 'for' : 'lua' }
+Plug 'wlangstroth/vim-racket'
 
 call plug#end()   " ### Plug list ends here
 
@@ -429,7 +432,7 @@ if has("nvim")
                 \'[^. \t0-9]\::\w*',
                 \]
     let g:deoplete#omni#input_patterns.jsp = ['[^. \t0-9]\.\w*']
-    let g:deoplete#omni#functions.java = ['javacomplete#Complete']
+    " let g:deoplete#omni#functions.java = ['javacomplete#Complete']
 endif
 
 if has("patch-7.4.314")
@@ -446,22 +449,22 @@ let g:echodoc_enable_at_startup=1
 "  Eclim  "
 """""""""""
 
-" function! Java_autocomplete()
-"     if eclim#project#util#GetCurrentProjectName() == ''
-"         let b:deoplete_omni_functions = [
-"                     \ 'javacomplete#Complete'
-"                     \]
-"     else
-"         let b:deoplete_omni_functions = [
-"                     \ 'eclim#java#complete#CodeComplete'
-"                     \]
-"     endif
-" endfunction
-"
-" augroup Java_deoplete
-"     au!
-"     autocmd FileType java call Java_autocomplete()
-" augroup END
+function! Java_autocomplete()
+    if eclim#project#util#GetCurrentProjectName() == ''
+        let b:deoplete_omni_functions = [
+                    \ 'javacomplete#Complete'
+                    \]
+    else
+        let b:deoplete_omni_functions = [
+                    \ 'eclim#java#complete#CodeComplete'
+                    \]
+    endif
+endfunction
+
+augroup Java_deoplete
+    au!
+    autocmd FileType java call Java_autocomplete()
+augroup END
 
 """""""""""""""
 "  OmniSharp  "
@@ -586,6 +589,8 @@ let g:ale_fixers = {
             \}
 
 let g:ale_c_gcc_options = '-std=gnu99 -Wall'
+let g:ale_java_javac_classpath = '../lib/junit-4.11.jar'
+let g:ale_java_javac_options = '-sourcepath .'
 " let g:ale_java_checkstyle_options = '-c ' . $HOME . '/.dotfiles/tools/checkstyle/google_checks.xml'
 " use flake8 installed at the virtualenv for neovim
 let g:ale_python_flake8_executable = $HOME . "/.pyenv/versions/neovim3/bin/flake8"
@@ -625,6 +630,22 @@ let g:vimtex_compiler_progname = 'nvr'
 let g:vimtex_view_use_temp_files = 1
 let g:vimtex_quickfix_open_on_warning = 0
 
+"""""""""""""""""""""""""
+"  Rainbow Parentheses  "
+"""""""""""""""""""""""""
+
+let g:rainbow_active = 1
+
+let g:rainbow_conf = {
+            \	'guifgs': ['royalblue3', 'seagreen4', 'firebrick3', 'darkorange3'],
+            \	'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
+            \	'operators': '',
+            \	'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold'],
+            \	'separately': {
+            \		'*': 0,
+            \		'racket': {},
+            \	}
+            \}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              SYNTAX SETTINGS                               "
