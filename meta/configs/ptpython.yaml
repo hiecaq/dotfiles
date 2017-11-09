@@ -1,0 +1,4 @@
+- shell:
+    - [mkdir -p ~/.ptpython]
+- link:
+    ~/.ptpython/config.py: tools/python/ptpython.py
