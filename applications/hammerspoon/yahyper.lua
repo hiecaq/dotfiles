@@ -17,7 +17,7 @@ local HyperKey = {}
 -- HyperKey:bind(mod, key)                -> return a BindKey object by taken two arguments, modifier (mod) and key
 
 
-function HyperKey:new(key)
+function HyperKey:new(key, modalkey)
     local this = {
         _triggered = false,
         _hyperMod = nil,
@@ -40,7 +40,7 @@ function HyperKey:new(key)
         end
     end
     -- constructor begin
-    this._hyperMod = hs.hotkey.modal.new({"shift"}, key)
+    this._hyperMod = modalkey and hs.hotkey.modal.new({}, modalkey) or hs.hotkey.modal.new({"Shift"}, key)
     hs.hotkey.bind({}, key, this._pressed, this._released)
     -- constructor end
     return this
@@ -102,6 +102,10 @@ end
 
 function MHyper.new(key)
     return HyperKey:new(key)
+end
+
+function MHyper.new(key, modalkey)
+    return HyperKey:new(key, modalkey)
 end
 
 return MHyper -- end module

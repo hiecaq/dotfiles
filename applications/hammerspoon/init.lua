@@ -15,7 +15,7 @@ hs.window.animationDuration = 0
 --  hyper key  --
 -----------------
 
-hyper = yahyper.new("F18")
+hyper = yahyper.new("F18", "F19")
 hyper:setPressedAloneEvent(input.setEng)
 hyper:setPressedAlone("ESCAPE")
 
