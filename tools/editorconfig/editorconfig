@@ -16,4 +16,7 @@ indent_size = 2
 [*.sml]
 indent_size = 4
 
+[*.rb]
+indent_size = 2
+
 # vim: ft=dosini
