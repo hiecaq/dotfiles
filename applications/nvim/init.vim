@@ -73,6 +73,7 @@ Plug 'rhysd/vim-grammarous', { 'on': 'GrammarousCheck' }
 Plug 'junegunn/vim-slash'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets' | Plug 'quinoa42/MyUltiSnips'
 Plug 'w0rp/ale'
+" Plug 'neomake/neomake'
 Plug 'Shougo/deoplete.nvim', { 'do' : ':UpdateRemotePlugins' }
 Plug 'Shougo/echodoc.vim'
 if executable('clang')
@@ -83,6 +84,8 @@ Plug 'OmniSharp/omnisharp-vim', { 'do': 'cd server && xbuild', 'for' : 'cs' }
             \ | Plug 'dimixar/deoplete-omnisharp', { 'for' : 'cs' }
 " Plug 'artur-shaik/vim-javacomplete2', { 'for' : 'java' }
 Plug 'zchee/deoplete-jedi', { 'for' : 'python' }
+" Plug 'Shougo/deoplete-rct', { 'for' : 'ruby' }
+Plug 'fishbullet/deoplete-ruby', { 'for' : 'ruby' }
 Plug 'Shougo/neco-vim', { 'for' : 'vim' }
 if executable('editorconfig')
     Plug 'editorconfig/editorconfig-vim'
@@ -347,6 +350,9 @@ call denite#custom#var('grep', 'pattern_opt', [])
 call denite#custom#var('grep', 'separator', ['--'])
 call denite#custom#var('grep', 'final_opts', [])
 
+" history
+call denite#custom#var('command_history', 'ignore_command_regexp', ['^[A-Za-z]+$'])
+
 " Change default prompt
 call denite#custom#option('_', {
             \ 'prompt': '>',
@@ -364,6 +370,7 @@ nnoremap <silent> <Leader>dg :<C-u>Denite grep<CR>
 nnoremap <silent> <Leader>dd :<C-u>Denite line<CR>
 nnoremap <silent> <Leader>db :<C-u>Denite buffer<CR>
 nnoremap <silent> <Leader>dc :<C-u>Denite command<CR>
+nnoremap <silent> <Leader>dH :<C-u>Denite command_history<CR>
 nnoremap <silent> <Leader>dh :<C-u>Denite help<CR>
 nnoremap <silent> <Leader>do :<C-u>Denite outline<CR>
 nnoremap <silent> <Leader>dr :<C-u>Denite register<CR>
@@ -435,6 +442,8 @@ if has("nvim")
                 \]
     let g:deoplete#omni#input_patterns.jsp = ['[^. \t0-9]\.\w*']
     " let g:deoplete#omni#functions.java = ['javacomplete#Complete']
+    " let g:deoplete#omni#functions.ruby = ['rubycomplete#Complete']
+    " let g:deoplete#omni#input_patterns.ruby = ['[^. *\t]\.\w*', '[a-zA-Z_]\w*::']
 endif
 
 if has("patch-7.4.314")
@@ -581,6 +590,7 @@ let g:ale_linters = {
             \   'tex': ['chktex'],
             \   'c' : ['gcc'],
             \   'python' : ['flake8'],
+            \   'ruby' : ['rubocop', 'ruby'],
             \}
 
 let g:ale_fixers = {
@@ -591,8 +601,10 @@ let g:ale_fixers = {
             \}
 
 let g:ale_c_gcc_options = '-std=gnu99 -Wall'
-let g:ale_java_javac_classpath = '../lib/junit-4.11.jar'
-let g:ale_java_javac_options = '-sourcepath .'
+
+" let g:ale_java_javac_classpath = $HOME . "/path-to/lib/*:"
+"             \ . $HOME . "/path-to/bin/*"
+" let g:ale_java_javac_options = "-sourcepath " . $HOME . "/path-to/src"
 " let g:ale_java_checkstyle_options = '-c ' . $HOME . '/.dotfiles/tools/checkstyle/google_checks.xml'
 " use flake8 installed at the virtualenv for neovim
 let g:ale_python_flake8_executable = $HOME . "/.pyenv/versions/neovim3/bin/flake8"
@@ -646,6 +658,7 @@ let g:rainbow_conf = {
             \	'separately': {
             \		'*': 0,
             \		'racket': {},
+            \       'json' : {'parentheses': ['start=/{/ end=/}/ fold', 'start=/\[/ end=/\]/ fold']}
             \	}
             \}
 
