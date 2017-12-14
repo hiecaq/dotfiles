@@ -17,7 +17,7 @@ dotfiles/
 Usage
 -----
 
-A lot thanks to `dotbot`, which makes everything much easier:
+A lot thanks to [dotbot](https://github.com/anishathalye/dotbot), which makes everything much easier:
 
 ```bash
 ./install-profile <profile> [<configs...>]
