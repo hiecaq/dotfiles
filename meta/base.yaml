@@ -11,9 +11,9 @@
 - link:
     ~/.dotfiles: ''
 
-# my scripts
-- link:
-    ~/bin: bin
+# executable
+- shell:
+    - [mkdir -p ~/bin]
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]

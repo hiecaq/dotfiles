@@ -1,6 +1,7 @@
 terminfo
 bash
 zsh
+scripts
 git
 nvim
 tmux
