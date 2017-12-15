@@ -74,25 +74,24 @@ function BindKey:new(hyper, mod, key)
     local this = {
         _hyper = hyper, -- parent HyperKey
         _mod = mod,
-        _key = key
+        _key = key,
+        _wrapper = function (this, event)
+            return function ()
+                event()
+                this._hyper._triggered = true
+            end
+        end
     }
     self.__index = self
     return setmetatable(this, self)
 end
 
 function BindKey:stroke(event)
-    wrappedEvent = function ()
-        event()
-        self._hyper._triggered = true
-    end
-    self._hyper._hyperMod:bind(self._mod, self._key, nil, wrappedEvent)
+    self._hyper._hyperMod:bind(self._mod, self._key, nil, self:_wrapper(event))
 end
 
 function BindKey:press(event)
-    wrappedEvent = function ()
-        event()
-        self._hyper._triggered = true
-    end
+    wrappedEvent = self:_wrapper(event)
     self._hyper._hyperMod:bind(self._mod, self._key, wrappedEvent, nil, wrappedEvent)
 end
 
