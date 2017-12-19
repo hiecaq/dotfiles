@@ -1,0 +1,13 @@
+# Usually run for every zsh.
+# editor
+export VISUAL=nvim
+export EDITOR=$VISUAL
+
+# zsh configuration files
+export ZSHCONFIG=~/.zsh
+export ZSH=/Users/Quinoa/.oh-my-zsh
+
+# other directories
+export DOTFILES=~/.dotfiles
+export WORKPATH=~/Workspace/
+export PYENV_ROOT="$HOME/.pyenv"

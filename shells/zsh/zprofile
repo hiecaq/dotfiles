@@ -1,0 +1,16 @@
+# Run for login shells, before zshrc is run.
+
+### PATH
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+eval "$(rbenv init -)"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+
+### TeX
+PATH="$PATH:/Library/TeX/texbin"
+### tcl-tk
+PATH="/usr/local/opt/tcl-tk/bin:$PATH"
+### fzf
+export PATH="$PATH:/usr/local/opt/fzf/bin"
+
+PATH="$HOME/bin:$PATH"

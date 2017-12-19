@@ -1,4 +1,6 @@
 - link:
-    ~/.zshrc: shells/zshrc
-    ~/.zsh: shells/zsh
+    ~/.zsh: shells/zsh/config
+    ~/.zshenv: shells/zsh/zshenv
+    ~/.zprofile: shells/zsh/zprofile
+    ~/.zshrc: shells/zsh/zshrc
     ~/.aliases: shells/aliases
