@@ -92,6 +92,8 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 # preview window for long command
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden --bind '?:toggle-preview'"
 
+eval "$(pipenv --completion)"
+
 #######################################################################
 #                               source                                #
 #######################################################################

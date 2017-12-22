@@ -84,7 +84,6 @@ Plug 'OmniSharp/omnisharp-vim', { 'do': 'cd server && xbuild', 'for' : 'cs' }
             \ | Plug 'dimixar/deoplete-omnisharp', { 'for' : 'cs' }
 " Plug 'artur-shaik/vim-javacomplete2', { 'for' : 'java' }
 Plug 'zchee/deoplete-jedi', { 'for' : 'python' }
-" Plug 'Shougo/deoplete-rct', { 'for' : 'ruby' }
 Plug 'fishbullet/deoplete-ruby', { 'for' : 'ruby' }
 Plug 'Shougo/neco-vim', { 'for' : 'vim' }
 if executable('editorconfig')
@@ -203,8 +202,8 @@ endif " has("autocmd")
 "                                  Provider                                  "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if has("nvim")
-    let g:python_host_prog = $HOME . "/.pyenv/versions/neovim2/bin/python"
-    let g:python3_host_prog = $HOME . "/.pyenv/versions/neovim3/bin/python"
+    let g:python_host_prog = $HOME . "/Workspace/venv/neovim2/.venv/bin/python"
+    let g:python3_host_prog = $HOME . "/Workspace/venv/neovim3/.venv/bin/python"
 endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                KEY MAPPINGS                                "
@@ -607,13 +606,13 @@ let g:ale_c_gcc_options = '-std=gnu99 -Wall'
 " let g:ale_java_javac_options = "-sourcepath " . $HOME . "/path-to/src"
 " let g:ale_java_checkstyle_options = '-c ' . $HOME . '/.dotfiles/tools/checkstyle/google_checks.xml'
 " use flake8 installed at the virtualenv for neovim
-let g:ale_python_flake8_executable = $HOME . "/.pyenv/versions/neovim3/bin/flake8"
+let g:ale_python_flake8_executable = $HOME . "/Workspace/venv/neovim3/.venv/bin/flake8"
 let g:ale_python_flake8_use_global = 1
 " use yapf installed at the virtualenv for neovim
-let g:ale_python_yapf_executable = $HOME . "/.pyenv/versions/neovim3/bin/yapf"
+let g:ale_python_yapf_executable = $HOME . "/Workspace/venv/neovim3/.venv/bin/yapf"
 let g:ale_python_yapf_use_global = 1
 " use isort installed at the virtualenv for neovim
-let g:ale_python_isort_executable = $HOME . "/.pyenv/versions/neovim3/bin/isort"
+let g:ale_python_isort_executable = $HOME . "/Workspace/venv/neovim3/.venv/bin/isort"
 let g:ale_python_isort_use_global = 1
 
 noremap <Leader>A :<C-u>ALEFix<CR>
