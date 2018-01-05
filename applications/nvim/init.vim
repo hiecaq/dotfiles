@@ -82,7 +82,7 @@ endif
 Plug 'OmniSharp/omnisharp-vim', { 'do': 'cd server && xbuild', 'for' : 'cs' }
             \ | Plug 'tpope/vim-dispatch', { 'for' : 'cs' }
             \ | Plug 'dimixar/deoplete-omnisharp', { 'for' : 'cs' }
-" Plug 'artur-shaik/vim-javacomplete2', { 'for' : 'java' }
+Plug 'artur-shaik/vim-javacomplete2', { 'for' : 'java' }
 Plug 'zchee/deoplete-jedi', { 'for' : 'python' }
 Plug 'fishbullet/deoplete-ruby', { 'for' : 'ruby' }
 Plug 'Shougo/neco-vim', { 'for' : 'vim' }
@@ -411,6 +411,8 @@ let g:UltiSnipsJumpBackwardTrigger="<c-a><c-a>"
 let g:UltiSnipsSnippetsDir="~/.config/nvim/plugged/vim-snippets/UltiSnips"
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
+" python
+let g:ultisnips_python_style="sphinx"
 
 """"""""""""""
 "  deoplete  "
@@ -671,6 +673,8 @@ let g:rainbow_conf = {
 let g:vim_markdown_math = 1 " LaTeX support
 let g:vim_markdown_frontmatter = 1 " YAML frontmatter for Jekyl
 let g:vim_markdown_conceal = 0 " disable the conceal since it's tooooo ugly
+let g:tex_conceal = ""
+
 augroup Markdown_Initial
     au!
     autocmd VimEnter *.tmp :set ft=markdown " set markdown for *.tmp called by vimperator
