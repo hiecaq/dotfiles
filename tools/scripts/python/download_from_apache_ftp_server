@@ -1,0 +1,88 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import argparse
+import logging
+import os
+import os.path as op
+import sys
+import time
+from os import makedirs
+from urllib.parse import urljoin
+
+import requests
+from bs4 import BeautifulSoup
+
+
+def download(url, directory):
+    """Download all files under this url.
+
+    """
+    time.sleep(0.5)
+    r = requests.get(url)
+    r.raise_for_status()
+    b = BeautifulSoup(r.content, 'lxml')
+
+    #  files = list(
+    #      map(lambda x: x.find(href=True)['href'], b.find_all('tr')[3:-1])
+    #  )
+    files = [f.find(href=True)['href'] for f in b.find_all('tr')[3:-1]]
+    for a_file in files:
+        _url = urljoin(url, a_file)
+        dir_path = op.join(directory, a_file)
+        if (a_file[-1] == '/'):
+            os.mkdir(dir_path)
+            logging.info("maked dir %s", dir_path)
+            download(_url, dir_path)
+        else:
+            req = requests.get(_url)
+            req.raise_for_status()
+            with open(dir_path, 'w') as f:
+                f.write(req.text)
+            logging.info("written %s", dir_path)
+
+
+def parse_args(argv):
+    parser = argparse.ArgumentParser(
+        description="Download files from the given apache server",
+        allow_abbrev=False
+    )
+    parser.add_argument(
+        "url",
+        metavar="URL",
+        help="the url to download from",
+        type=str,
+    )
+    parser.add_argument(
+        "-o",
+        "--path",
+        metavar="DIR",
+        help="the directory where images will be downloaded to",
+        type=str
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_const",
+        const=1,
+        default=0,
+        dest="verbosity"
+    )
+    args = vars(parser.parse_args(argv))
+
+    return args
+
+
+def main():
+    args = parse_args(sys.argv[1:])
+    if args['verbosity'] == 1:
+        logging.basicConfig(level=logging.INFO)
+    dst = args['path'] if args['path'] is not None else args['url'].split('/')[-2]
+    if not op.exists(dst):
+        makedirs(dst)
+
+    download(args['url'], dst)
+
+
+if __name__ == "__main__":
+    main()
