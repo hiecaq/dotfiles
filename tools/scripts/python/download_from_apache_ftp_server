@@ -1,5 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#  Download a directory from a standard apache ftp server
+#  Copyright © 2018 quinoa42
+#
+#  Permission is hereby granted, free of charge, to any person obtaining
+#  a copy of this software and associated documentation files (the "Software"),
+#  to deal in the Software without restriction, including without limitation
+#  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+#  and/or sell copies of the Software, and to permit persons to whom the
+#  Software is furnished to do so, subject to the following conditions:
+#
+#  The above copyright notice and this permission notice shall be included
+#  in all copies or substantial portions of the Software.
+#
+#  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+#  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+#  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+#  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+#  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+#  TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+#  OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import argparse
 import logging
@@ -23,9 +43,6 @@ def download(url, directory):
     r.raise_for_status()
     b = BeautifulSoup(r.content, 'lxml')
 
-    #  files = list(
-    #      map(lambda x: x.find(href=True)['href'], b.find_all('tr')[3:-1])
-    #  )
     files = [f.find(href=True)['href'] for f in b.find_all('tr')[3:-1]]
     for a_file in files:
         _url = urljoin(url, a_file)
@@ -77,7 +94,10 @@ def main():
     args = parse_args(sys.argv[1:])
     if args['verbosity'] == 1:
         logging.basicConfig(level=logging.INFO)
-    dst = args['path'] if args['path'] is not None else args['url'].split('/')[-2]
+    dst = (
+        args['path']
+        if args['path'] is not None else args['url'].split('/')[-2]
+    )
     if not op.exists(dst):
         makedirs(dst)
 
