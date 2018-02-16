@@ -28,7 +28,10 @@ import os.path as op
 import sys
 import time
 from os import makedirs
-from urllib.parse import urljoin
+try:
+    from urllib.parse import urljoin
+except ImportError:
+    from urlparse import urljoin
 
 import requests
 from bs4 import BeautifulSoup
