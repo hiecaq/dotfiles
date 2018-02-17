@@ -32,6 +32,13 @@ hyper:bind({"Option"}, "Q"):stroke(window.setToUpperLeft)
 hyper:bind({"Option"}, "E"):stroke(window.setToUpperRight)
 hyper:bind({"Option"}, "Z"):stroke(window.setToLowerLeft)
 hyper:bind({"Option"}, "C"):stroke(window.setToLowerRight)
+hyper:bind({"Option"}, "S"):stroke(window.setToCenter)
+
+
+hyper:bind({"Option", "Ctrl"}, "H"):stroke(window.setToWestScreen)
+hyper:bind({"Option", "Ctrl"}, "L"):stroke(window.setToEastScreen)
+hyper:bind({"Option", "Ctrl"}, "J"):stroke(window.setToSouthScreen)
+hyper:bind({"Option", "Ctrl"}, "K"):stroke(window.setToNorthScreen)
 
 hyper:bind({"Ctrl"}, "L"):stroke(window.focusEast)
 hyper:bind({"Ctrl"}, "H"):stroke(window.focusWest)

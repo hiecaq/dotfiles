@@ -8,9 +8,10 @@ local grid = require "hs.grid"
 local geo = require "hs.geometry"
 local win = require "hs.window"
 local hints = require "hs.hints"
+local scn = require "hs.screen"
 
 grid.setMargins('0, 0')
-grid.setGrid('2x2')
+grid.setGrid('4x4')
 
 -------------------------------
 --  window resize functions  --
@@ -26,25 +27,33 @@ local function fixEdge(win)
 end
 
 -- help function to build window resize functions
-local function set(cell)
+local function set(cell, name)
     return function()
         local wn = win.focusedWindow()
-        grid.set(wn, cell, wn:screen())
-        if cell.x == 0 then
+        local screen = name ~= nil and wn:screen()[name](wn:screen()) or wn:screen()
+        grid.set(wn, cell, screen)
+        if cell.x == 0
+            and screen == scn.primaryScreen() then
             fixEdge(wn)
         end
     end
 end
 
-MWManager.setToLeft = set(geo(0,0,1,2))
-MWManager.setToRight = set(geo(1,0,1,2))
-MWManager.setToTop = set(geo(0,0,2,1))
-MWManager.setToBottom = set(geo(0,1,2,1))
-MWManager.maximize = set(geo(0,0,2,2))
-MWManager.setToUpperLeft = set(geo(0,0,1,1))
-MWManager.setToUpperRight = set(geo(1,0,1,1))
-MWManager.setToLowerLeft = set(geo(0,1,1,1))
-MWManager.setToLowerRight = set(geo(1,1,1,1))
+MWManager.setToLeft = set(geo(0,0,2,4), nil)
+MWManager.setToRight = set(geo(2,0,2,4), nil)
+MWManager.setToTop = set(geo(0,0,4,2), nil)
+MWManager.setToBottom = set(geo(0,2,4,2), nil)
+MWManager.maximize = set(geo(0,0,4,4), nil)
+MWManager.setToUpperLeft = set(geo(0,0,2,2), nil)
+MWManager.setToUpperRight = set(geo(2,0,2,2), nil)
+MWManager.setToLowerLeft = set(geo(0,2,2,2), nil)
+MWManager.setToLowerRight = set(geo(2,2,2,2), nil)
+MWManager.setToCenter = set(geo(1,1,2,2), nil)
+
+MWManager.setToEastScreen = set(geo(1,1,2,2), "toEast")
+MWManager.setToWestScreen = set(geo(1,1,2,2), "toWest")
+MWManager.setToNorthScreen = set(geo(1,1,2,2), "toNorth")
+MWManager.setToSouthScreen = set(geo(1,1,2,2), "toSouth")
 
 ------------------------------
 --  window focus functions  --
