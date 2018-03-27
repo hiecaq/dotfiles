@@ -11,3 +11,6 @@ export GPG_TTY=$(tty)
 source $ZSHCONFIG/config.zsh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# OPAM configuration
+. $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true

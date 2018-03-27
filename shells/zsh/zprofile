@@ -14,3 +14,7 @@ PATH="/usr/local/opt/tcl-tk/bin:$PATH"
 export PATH="$PATH:/usr/local/opt/fzf/bin"
 
 PATH="$HOME/bin:$PATH"
+
+if [[ -f /usr/libexec/path_helper ]]; then
+    eval `/usr/libexec/path_helper -s`
+fi
