@@ -1,0 +1,6 @@
+{
+    "pyls.configurationSources": ["flake8"],
+    "initializationOptions": {
+        "cacheDirectory": "/tmp/cquery"
+    }
+}

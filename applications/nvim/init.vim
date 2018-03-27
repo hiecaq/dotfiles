@@ -21,9 +21,9 @@ Plug 'vim-airline/vim-airline'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'majutsushi/tagbar', { 'on' : 'TagbarToggle' }
-" if has("nvim")
-"     Plug '/usr/local/opt/fzf', { 'do' : './install --all' } | Plug 'junegunn/fzf.vim'
-" endif
+if has("nvim")
+    Plug '/usr/local/opt/fzf', { 'do' : './install --all' } | Plug 'junegunn/fzf.vim'
+endif
 " Plug 'Shougo/unite.vim'
 Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
             \ | Plug 'chemzqm/unite-location'
@@ -70,6 +70,10 @@ Plug 'rhysd/vim-grammarous', { 'on': 'GrammarousCheck' }
 """""""""""""""""
 "  enhancement  "
 """""""""""""""""
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 Plug 'junegunn/vim-slash'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets' | Plug 'quinoa42/MyUltiSnips'
 Plug 'w0rp/ale'
@@ -77,14 +81,13 @@ Plug 'w0rp/ale'
 Plug 'Shougo/deoplete.nvim', { 'do' : ':UpdateRemotePlugins' }
 Plug 'Shougo/echodoc.vim'
 if executable('clang')
-    Plug 'tweekmonster/deoplete-clang2', { 'for' : ['c', 'cpp'] }
+    " Plug 'zchee/deoplete-clang', { 'for' : ['c', 'cpp'] }
 endif
-Plug 'OmniSharp/omnisharp-vim', { 'do': 'cd server && xbuild', 'for' : 'cs' }
+Plug 'OmniSharp/omnisharp-vim', { 'do': 'git submodule update --init --recursive && cd server && xbuild', 'for' : 'cs' }
             \ | Plug 'tpope/vim-dispatch', { 'for' : 'cs' }
             \ | Plug 'dimixar/deoplete-omnisharp', { 'for' : 'cs' }
-Plug 'artur-shaik/vim-javacomplete2', { 'for' : 'java' }
-Plug 'zchee/deoplete-jedi', { 'for' : 'python' }
-" Plug 'Shougo/deoplete-rct', { 'for' : 'ruby' }
+" Plug 'artur-shaik/vim-javacomplete2', { 'for' : 'java' }
+" Plug 'zchee/deoplete-jedi', { 'for' : 'python' }
 Plug 'fishbullet/deoplete-ruby', { 'for' : 'ruby' }
 Plug 'Shougo/neco-vim', { 'for' : 'vim' }
 if executable('editorconfig')
@@ -107,6 +110,8 @@ Plug 'javier-lopez/sml.vim', { 'for' : 'sml' }
 Plug 'tbastos/vim-lua', { 'for' : 'lua' }
 Plug 'wlangstroth/vim-racket'
 Plug 'tmux-plugins/vim-tmux'
+Plug 'reasonml-editor/vim-reason-plus', { 'for' : 'ocaml' }
+Plug 'udalov/kotlin-vim'
 
 call plug#end()   " ### Plug list ends here
 
@@ -268,7 +273,7 @@ let g:airline_skip_empty_sections = 1
 " extension: Smarter tabline
 let g:airline#extensions#tabline#enabled = 1
 " extension for ale
-let g:airline#extensions#ale#enabled = 0
+" let g:airline#extensions#ale#enabled = 1
 " let airline#extensions#ale#error_symbol = 'E:'
 " let airline#extensions#ale#warning_symbol = 'W:'
 " extension for tagbar
@@ -415,6 +420,32 @@ let g:UltiSnipsEditSplit="vertical"
 " python
 let g:ultisnips_python_style="sphinx"
 
+"""""""""
+"  LSP  "
+"""""""""
+set hidden
+set signcolumn=yes
+
+let g:LanguageClient_settingsPath = $HOME . '/.config/nvim/settings.json'
+
+let g:LanguageClient_serverCommands = {
+    \ 'ocaml': ['ocaml-language-server', '--stdio'],
+    \ 'python': ['~/.pyenv/versions/neovim3/bin/pyls'],
+    \ 'cpp' : ['cquery', '--log-file=/tmp/cq.log'],
+    \ 'c' : ['cquery', '--log-file=/tmp/cq.log'],
+    \ }
+
+nnoremap <buffer> <silent> gd :call LanguageClient_textDocument_definition()<CR>
+nnoremap <silent> <Leader>ds :<C-u>Denite documentSymbol<CR>
+nnoremap <silent> <Leader>dR :<C-u>Denite references<CR>
+nnoremap <silent> <Leader>dS :<C-u>Denite workspaceSymbol<CR>
+nnoremap <buffer> <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+
+augroup Language_Server
+    au!
+    autocmd FileType ocaml,python :nnoremap <buffer> <silent> K :call LanguageClient_textDocument_hover()<CR>
+augroup END
+
 """"""""""""""
 "  deoplete  "
 """"""""""""""
@@ -444,8 +475,13 @@ if has("nvim")
                 \]
     let g:deoplete#omni#input_patterns.jsp = ['[^. \t0-9]\.\w*']
     " let g:deoplete#omni#functions.java = ['javacomplete#Complete']
+    " let g:deoplete#omni#functions.java = ['eclim#java#complete#CodeComplete']
     " let g:deoplete#omni#functions.ruby = ['rubycomplete#Complete']
     " let g:deoplete#omni#input_patterns.ruby = ['[^. *\t]\.\w*', '[a-zA-Z_]\w*::']
+    " Clang
+    let g:deoplete#sources#clang#libclang_path = '/usr/local/Cellar/llvm/5.0.1/lib/libclang.dylib'
+    let g:deoplete#sources#clang#clang_header = '/usr/local/opt/llvm/lib/clang'
+    " let g:deoplete#sources#jedi#server_timeout = 30
 endif
 
 if has("patch-7.4.314")
@@ -482,10 +518,11 @@ augroup END
 """""""""""""""
 "  OmniSharp  "
 """""""""""""""
-if has("nvim")
-    let g:OmniSharp_selector_ui = 'fzf'    " Use fzf.vim
-endif
-
+" if has("nvim")
+"     let g:OmniSharp_selector_ui = 'fzf'    " Use fzf.vim
+" endif
+" let g:OmniSharp_server_type = 'roslyn'
+" let g:OmniSharp_server_path = $HOME . '/Workspace/dotnet/omnisharp/omnisharp/Omnisharp.exe'
 """"""""""""""""""""""
 "  Goyo & Limelight  "
 """"""""""""""""""""""
@@ -577,13 +614,18 @@ let g:gutentags_file_list_command = {
 """""""""
 "  ale  "
 """""""""
+augroup DisableALEForSomeType
+    au!
+    autocmd FileType python,ocaml :let b:ale_enabled = 0
+augroup END
+
 let g:ale_lint_on_text_changed = 'never'
 
 " Display Ale status in Airline
-call airline#parts#define_function('ALE', 'ALEGetStatusLine')
-call airline#parts#define_condition('ALE', 'exists("*ALEGetStatusLine")')
-let g:airline_section_error = airline#section#create_right(['ALE'])
-let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '✔']
+" call airline#parts#define_function('ALE', 'ALEGetStatusLine')
+" call airline#parts#define_condition('ALE', 'exists("*ALEGetStatusLine")')
+" let g:airline_section_error = airline#section#create_right(['ALE'])
+" let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '✔']
 let g:ale_warn_about_trailing_whitespace = 0
 let g:ale_sign_column_always = 1
 nmap <silent> <Leader>ek <Plug>(ale_previous_wrap)
@@ -604,10 +646,6 @@ let g:ale_fixers = {
 
 let g:ale_c_gcc_options = '-std=gnu99 -Wall'
 
-" let g:ale_java_javac_classpath = $HOME . "/path-to/lib/*:"
-"             \ . $HOME . "/path-to/bin/*"
-" let g:ale_java_javac_options = "-sourcepath " . $HOME . "/path-to/src"
-" let g:ale_java_checkstyle_options = '-c ' . $HOME . '/.dotfiles/tools/checkstyle/google_checks.xml'
 " use flake8 installed at the virtualenv for neovim
 let g:ale_python_flake8_executable = $HOME . "/.pyenv/versions/neovim3/bin/flake8"
 let g:ale_python_flake8_use_global = 1
