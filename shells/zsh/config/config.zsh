@@ -5,7 +5,7 @@
 #######################################################################
 
 ZSH_THEME="pygmalion"
-plugins=(git colorize pip python brew osx tmux zsh-syntax-highlighting vi-mode gem)
+plugins=(git colorize pip python brew osx tmux zsh-syntax-highlighting vi-mode gem tmuxinator)
 source $ZSH/oh-my-zsh.sh
 
 unalias pip
@@ -23,10 +23,14 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 #######################################################################
 
 vman() {
-    nvim -c "Man $*"
-
-    if [ "$?" != "0" ]; then
+    # copy & paste & adapted from https://github.com/jez/vim-superman
+    if [ $# -eq 0 ]; then
+        echo "What manual page do you want?";
+    elif ! man -d "$@" &> /dev/null; then
+        # Check that manpage exists to prevent visual noise.
         echo "No manual entry for $*"
+    else
+        nvim -c "Man $*" -c "silent only"
     fi
 }
 
@@ -98,4 +102,4 @@ export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden --bin
 
 source ~/.aliases
 source $ZSHCONFIG/keybindings.zsh
-source $ZSHCONFIG/tmuxinator.zsh
+# source $ZSHCONFIG/tmuxinator.zsh

@@ -1,13 +1,18 @@
 # Run for login shells, before zshrc is run.
 
+if [[ -f /usr/libexec/path_helper ]]; then
+    eval `/usr/libexec/path_helper -s`
+fi
+
+
 ### PATH
-export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+# PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 eval "$(rbenv init -)"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
 ### TeX
-PATH="$PATH:/Library/TeX/texbin"
+PATH="/Library/TeX/texbin:$PATH"
 ### tcl-tk
 PATH="/usr/local/opt/tcl-tk/bin:$PATH"
 ### fzf
@@ -15,6 +20,4 @@ export PATH="$PATH:/usr/local/opt/fzf/bin"
 
 PATH="$HOME/bin:$PATH"
 
-if [[ -f /usr/libexec/path_helper ]]; then
-    eval `/usr/libexec/path_helper -s`
-fi
+export PATH=$PATH
