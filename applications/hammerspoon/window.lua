@@ -50,6 +50,11 @@ MWManager.setToLowerLeft = set(geo(0,2,2,2), nil)
 MWManager.setToLowerRight = set(geo(2,2,2,2), nil)
 MWManager.setToCenter = set(geo(1,1,2,2), nil)
 
+MWManager.toggleFullScreen = function ()
+    local wn = win.focusedWindow()
+    wn:toggleFullScreen()
+end
+
 MWManager.setToEastScreen = set(geo(1,1,2,2), "toEast")
 MWManager.setToWestScreen = set(geo(1,1,2,2), "toWest")
 MWManager.setToNorthScreen = set(geo(1,1,2,2), "toNorth")

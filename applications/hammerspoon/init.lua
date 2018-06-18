@@ -33,6 +33,7 @@ hyper:bind({"Option"}, "E"):stroke(window.setToUpperRight)
 hyper:bind({"Option"}, "Z"):stroke(window.setToLowerLeft)
 hyper:bind({"Option"}, "C"):stroke(window.setToLowerRight)
 hyper:bind({"Option"}, "S"):stroke(window.setToCenter)
+hyper:bind({"Option"}, "F"):stroke(window.toggleFullScreen)
 
 
 hyper:bind({"Option", "Ctrl"}, "H"):stroke(window.setToWestScreen)
