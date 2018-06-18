@@ -13,18 +13,23 @@ env:
   # `infocmp xterm-256color`.
   TERM: xterm-256color-italic
 
-# Window dimensions in character columns and lines
-# (changes require restart)
-dimensions:
-  columns: 80
-  lines: 24
+window:
+  # Window dimensions in character columns and lines
+  # (changes require restart)
+  dimensions:
+    columns: 80
+    lines: 24
 
-# Adds this many blank pixels of padding around the window
-# Units are physical pixels; this is not DPI aware.
-# (change requires restart)
-padding:
-  x: 2
-  y: 2
+  # Adds this many blank pixels of padding around the window
+  # Units are physical pixels; this is not DPI aware.
+  # (change requires restart)
+  padding:
+    x: 2
+    y: 2
+
+  # Window decorations
+  # Setting this to false will result in window without borders and title bar.
+  decorations: true
 
 # Display tabs using this many cells (changes require restart)
 tabspaces: 8
@@ -58,15 +63,19 @@ font:
   # Offset is the extra space around each character. offset.y can be thought of
   # as modifying the linespacing, and offset.x as modifying the letter spacing.
   offset:
-    x: 0.0
-    y: 0.0
+    x: 0
+    y: 0
 
   # Glyph offset determines the locations of the glyphs within their cells with
   # the default being at the bottom. Increase the x offset to move the glyph to
   # the right, increase the y offset to move the glyph upward.
   glyph_offset:
-    x: 0.0
-    y: 0.0
+    x: 0
+    y: 0
+
+  # Scale the font size based on the monitor's DPI. This will lead to bigger text on HiDPI
+  # screens and make reading text a little easier.
+  scale_with_dpi: true
 
   # OS X only: use thin stroke font rendering. Thin strokes are suitable
   # for retina displays, but for non-retina you probably want this set to
@@ -92,27 +101,6 @@ colors:
     text: '0x073642'
     cursor: '0x839496'
 
-  # # Normal colors
-  # normal:
-  #   black:   '#073642'
-  #   red:     '#dc322f'
-  #   green:   '#859900'
-  #   yellow:  '#b58900'
-  #   blue:    '#268bd2'
-  #   magenta: '#d33682'
-  #   cyan:    '#2aa198'
-  #   white:   '#eee8d5'
-  #
-  # # Bright colors
-  # bright:
-  #   black:   '#002b36'
-  #   red:     '#cb4b16'
-  #   green:   '#586e75'
-  #   yellow:  '#657b83'
-  #   blue:    '#839496'
-  #   magenta: '#6c71c4'
-  #   cyan:    '#93a1a1'
-  #   white:   '#fdf6e3'
   # Normal colors
   normal:
     black:   '0x073642'
@@ -183,13 +171,38 @@ mouse_bindings:
   - { mouse: Middle, action: PasteSelection }
 
 mouse:
+  # Click settings
+  #
+  # The `double_click` and `triple_click` settings control the time
+  # alacritty should wait for accepting multiple clicks as one double
+  # or triple click.
   double_click: { threshold: 300 }
   triple_click: { threshold: 300 }
+
+  # Faux Scrollback
+  #
+  # The `faux_scrollback_lines` setting controls the number
+  # of lines the terminal should scroll when the alternate
+  # screen buffer is active. This is used to allow mouse
+  # scrolling for applications like `man`.
+  #
+  # To disable this completely, set `faux_scrollback_lines` to 0.
+  faux_scrollback_lines: 1
 
 selection:
   semantic_escape_chars: ",│`|:\"' ()[]{}<>"
 
-hide_cursor_when_typing: true
+dynamic_title: true
+
+hide_cursor_when_typing: false
+
+# Style of the cursor
+#
+# Values for 'cursor_style':
+# - Block
+# - Underline
+# - Beam
+cursor_style: Block
 
 # Live config reload (changes require restart)
 live_config_reload: true
@@ -199,6 +212,10 @@ live_config_reload: true
 # You can set shell.program to the path of your favorite shell, e.g. /bin/fish.
 # Entries in shell.args are passed unmodified as arguments to the shell.
 #
+# shell:
+#   program: /bin/bash
+#   args:
+#     - --login
 shell:
   program: /usr/local/bin/zsh
   args:
@@ -212,6 +229,9 @@ shell:
 # as well (F1, F2, ..). The number keys above the main keyboard are encoded as
 # `Key1`, `Key2`, etc. Keys on the number pad are encoded `Number1`, `Number2`,
 # etc.  These all match the glutin::VirtualKeyCode variants.
+#
+# A list with all available `key` names can be found here:
+# https://docs.rs/glutin/*/glutin/enum.VirtualKeyCode.html#variants
 #
 # Possible values for `mods`
 # `Command`, `Super` refer to the super/command/windows key
@@ -239,6 +259,8 @@ shell:
 key_bindings:
   - { key: V,        mods: Command, action: Paste                        }
   - { key: C,        mods: Command, action: Copy                         }
+  - { key: Paste,                   action: Paste                        }
+  - { key: Copy,                    action: Copy                         }
   - { key: Q,        mods: Command, action: Quit                         }
   - { key: W,        mods: Command, action: Quit                         }
   - { key: Home,                    chars: "\x1bOH",   mode: AppCursor   }
