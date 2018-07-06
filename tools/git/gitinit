@@ -5,3 +5,11 @@ git config --global alias.ignore '!gi() { curl -L -s https://www.gitignore.io/ap
 git config --global alias.s 'status --short'
 git config --global alias.l 'log --graph --pretty=oneline --abbrev-commit'
 git config --global alias.gpg 'config commit.gpgsign true'
+git config --global alias.lt 'log --graph --pretty=oneline --abbrev-commit --date-order'
+git config --global alias.lc 'diff-tree --no-commit-id --name-status -r HEAD'
+git config --global alias.how 'diff-tree --no-commit-id --name-status -r'
+git config --global merge.tool vimdiff
+git config --global mergetool.prompt true
+git config --global mergetool.vimdiff.cmd "nvim -d \$BASE \$LOCAL \$REMOTE \$MERGED -c '\$wincmd w' -c 'wincmd J'"
+git config --global diff.tool vimdiff
+git config --global difftool.vimdiff.cmd 'nvim -d $LOCAL $REMOTE'
