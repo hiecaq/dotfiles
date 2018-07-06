@@ -27,10 +27,10 @@ endif
 " Plug 'Shougo/unite.vim'
 Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
             \ | Plug 'chemzqm/unite-location'
-if executable('eclimd')
-    Plug '~/.config/eclim' , { 'for' : 'java' }
-endif
-Plug 'luochen1990/rainbow', { 'for' : ['json', 'racket'] }
+" if executable('eclimd')
+"     Plug '~/.config/eclim' , { 'for' : 'java' }
+" endif
+Plug 'luochen1990/rainbow', { 'for' : ['json', 'racket', 'lisp'] }
 " Plug 'edkolev/tmuxline.vim'
 
 """"""""""""""""""""""""""""""""
@@ -43,7 +43,7 @@ Plug 'kana/vim-textobj-user'
             \ | Plug 'sgur/vim-textobj-parameter'
             \ | Plug 'kana/vim-textobj-entire'
             \ | Plug 'glts/vim-textobj-comment'
-            \ | Plug 'kana/vim-textobj-function', { 'for' : ['C', 'java', 'vimscript'] }
+            \ | Plug 'kana/vim-textobj-function', { 'for' : ['c', 'java', 'vim'] }
             \ | Plug 'bps/vim-textobj-python', { 'for' : 'python' }
 Plug 'kana/vim-operator-user'
             \ | Plug 'kana/vim-operator-replace'
@@ -83,9 +83,9 @@ Plug 'Shougo/echodoc.vim'
 if executable('clang')
     " Plug 'zchee/deoplete-clang', { 'for' : ['c', 'cpp'] }
 endif
-Plug 'OmniSharp/omnisharp-vim', { 'do': 'git submodule update --init --recursive && cd server && xbuild', 'for' : 'cs' }
-            \ | Plug 'tpope/vim-dispatch', { 'for' : 'cs' }
-            \ | Plug 'dimixar/deoplete-omnisharp', { 'for' : 'cs' }
+" Plug 'OmniSharp/omnisharp-vim', { 'do': 'git submodule update --init --recursive && cd server && xbuild', 'for' : 'cs' }
+"             \ | Plug 'tpope/vim-dispatch', { 'for' : 'cs' }
+"             \ | Plug 'dimixar/deoplete-omnisharp', { 'for' : 'cs' }
 " Plug 'artur-shaik/vim-javacomplete2', { 'for' : 'java' }
 " Plug 'zchee/deoplete-jedi', { 'for' : 'python' }
 Plug 'fishbullet/deoplete-ruby', { 'for' : 'ruby' }
@@ -427,13 +427,17 @@ set hidden
 set signcolumn=yes
 
 let g:LanguageClient_settingsPath = $HOME . '/.config/nvim/settings.json'
+let g:LanguageClient_hasSnippetSupport = 0
 
 let g:LanguageClient_serverCommands = {
     \ 'ocaml': ['ocaml-language-server', '--stdio'],
     \ 'python': ['~/.pyenv/versions/neovim3/bin/pyls'],
     \ 'cpp' : ['cquery', '--log-file=/tmp/cq.log'],
     \ 'c' : ['cquery', '--log-file=/tmp/cq.log'],
+    \ 'kotlin': ['~/Workspace/kotlin/KotlinLanguageServer/build/install/kotlin-language-server/bin/kotlin-language-server'],
+    \ 'java': ['tcp://127.0.0.1:8080'],
     \ }
+    " \ 'ruby': ['tcp://localhost:7658'],
 
 nnoremap <buffer> <silent> gd :call LanguageClient_textDocument_definition()<CR>
 nnoremap <silent> <Leader>ds :<C-u>Denite documentSymbol<CR>
@@ -468,11 +472,11 @@ if has("nvim")
     " LaTeX
     let g:deoplete#omni#input_patterns.tex = g:vimtex#re#deoplete
     " java
-    let g:deoplete#omni#input_patterns.java = [
-                \'[^. \t0-9]\.\w*',
-                \'[^. \t0-9]\->\w*',
-                \'[^. \t0-9]\::\w*',
-                \]
+    " let g:deoplete#omni#input_patterns.java = [
+    "             \'[^. \t0-9]\.\w*',
+    "             \'[^. \t0-9]\->\w*',
+    "             \'[^. \t0-9]\::\w*',
+    "             \]
     let g:deoplete#omni#input_patterns.jsp = ['[^. \t0-9]\.\w*']
     " let g:deoplete#omni#functions.java = ['javacomplete#Complete']
     " let g:deoplete#omni#functions.java = ['eclim#java#complete#CodeComplete']
@@ -498,22 +502,22 @@ let g:echodoc_enable_at_startup=1
 "  Eclim  "
 """""""""""
 
-function! Java_autocomplete()
-    if eclim#project#util#GetCurrentProjectName() == ''
-        let b:deoplete_omni_functions = [
-                    \ 'javacomplete#Complete'
-                    \]
-    else
-        let b:deoplete_omni_functions = [
-                    \ 'eclim#java#complete#CodeComplete'
-                    \]
-    endif
-endfunction
-
-augroup Java_deoplete
-    au!
-    autocmd FileType java call Java_autocomplete()
-augroup END
+" function! Java_autocomplete()
+"     if eclim#project#util#GetCurrentProjectName() == ''
+"         let b:deoplete_omni_functions = [
+"                     \ 'javacomplete#Complete'
+"                     \]
+"     else
+"         let b:deoplete_omni_functions = [
+"                     \ 'eclim#java#complete#CodeComplete'
+"                     \]
+"     endif
+" endfunction
+"
+" augroup Java_deoplete
+"     au!
+"     autocmd FileType java call Java_autocomplete()
+" augroup END
 
 """""""""""""""
 "  OmniSharp  "
@@ -616,7 +620,7 @@ let g:gutentags_file_list_command = {
 """""""""
 augroup DisableALEForSomeType
     au!
-    autocmd FileType python,ocaml :let b:ale_enabled = 0
+    autocmd FileType python,ocaml,c,cpp,java :let b:ale_enabled = 0
 augroup END
 
 let g:ale_lint_on_text_changed = 'never'
@@ -656,6 +660,8 @@ let g:ale_python_yapf_use_global = 1
 let g:ale_python_isort_executable = $HOME . "/.pyenv/versions/neovim3/bin/isort"
 let g:ale_python_isort_use_global = 1
 
+" let g:ale_java_checkstyle_options = '-c ' . $HOME . '/.dotfiles/tools/checkstyle/google_checks.xml'
+
 noremap <Leader>A :<C-u>ALEFix<CR>
 
 """"""""""""""""""""""
@@ -675,6 +681,17 @@ xmap a/ <Plug>(textobj-comment-big-a)
 omap a/ <Plug>(textobj-comment-big-a)
 xmap i/ <Plug>(textobj-comment-i)
 omap i/ <Plug>(textobj-comment-i)
+
+""""""""""""""""""""
+"  textobj-entire  "
+""""""""""""""""""""
+
+let g:textobj_entire_no_default_key_mappings = 1
+
+xmap aP <Plug>(textobj-entire-a)
+omap aP <Plug>(textobj-entire-a)
+xmap iP <Plug>(textobj-entire-i)
+omap iP <Plug>(textobj-entire-i)
 
 """"""""""""
 "  vimtex  "
@@ -698,6 +715,7 @@ let g:rainbow_conf = {
             \	'separately': {
             \		'*': 0,
             \		'racket': {},
+            \       'lisp': {},
             \       'json' : {'parentheses': ['start=/{/ end=/}/ fold', 'start=/\[/ end=/\]/ fold']}
             \	}
             \}
