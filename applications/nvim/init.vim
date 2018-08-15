@@ -63,7 +63,7 @@ Plug 'rhysd/clever-f.vim'
 Plug 'justinmk/vim-sneak'
 Plug 'ap/vim-css-color'
 Plug 'junegunn/goyo.vim', { 'for': 'markdown' }
-Plug 'junegunn/limelight.vim', { 'for': 'markdown' }
+" Plug 'junegunn/limelight.vim', { 'for': 'markdown' }
 Plug 'reedes/vim-pencil', { 'for': 'markdown' }
 Plug 'scrooloose/nerdcommenter'
 Plug 'rhysd/vim-grammarous', { 'on': 'GrammarousCheck' }
@@ -428,17 +428,19 @@ set signcolumn=yes
 
 let g:LanguageClient_settingsPath = $HOME . '/.config/nvim/settings.json'
 let g:LanguageClient_hasSnippetSupport = 0
+let g:LanguageClient_selectionUI = "location-list"
 
 let g:LanguageClient_serverCommands = {
     \ 'ocaml': ['ocaml-language-server', '--stdio'],
     \ 'python': ['~/.pyenv/versions/neovim3/bin/pyls'],
     \ 'cpp' : ['cquery', '--log-file=/tmp/cq.log'],
     \ 'c' : ['cquery', '--log-file=/tmp/cq.log'],
-    \ 'kotlin': ['~/Workspace/kotlin/KotlinLanguageServer/build/install/kotlin-language-server/bin/kotlin-language-server'],
     \ 'java': ['tcp://127.0.0.1:8080'],
+    \ 'kotlin': ['tcp://127.0.0.1:8080'],
     \ }
     " \ 'ruby': ['tcp://localhost:7658'],
 
+    " \ 'kotlin': ['~/Workspace/kotlin/KotlinLanguageServer/build/install/kotlin-language-server/bin/kotlin-language-server'],
 nnoremap <buffer> <silent> gd :call LanguageClient_textDocument_definition()<CR>
 nnoremap <silent> <Leader>ds :<C-u>Denite documentSymbol<CR>
 nnoremap <silent> <Leader>dR :<C-u>Denite references<CR>
@@ -448,7 +450,12 @@ nnoremap <buffer> <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
 augroup Language_Server
     au!
     autocmd FileType ocaml,python :nnoremap <buffer> <silent> K :call LanguageClient_textDocument_hover()<CR>
+    autocmd FileType java :nnoremap <LocalLeader>T :call LanguageClient#workspace_executeCommand("toggleFrameVisibility", [])<CR>
+    autocmd FileType java :nnoremap <LocalLeader>RC :call LanguageClient#workspace_executeCommand("openRunConfigurations", [])<CR>
+    autocmd FileType java :nnoremap <LocalLeader>C :call LanguageClient#Call("idea/runConfigurations", {"line": LSP#line(), "character": LSP#character()}, function("EchoAnswer"))<CR>
+    autocmd FileType java :nnoremap <LocalLeader>B :call LanguageClient#Call("idea/buildProject", [], v:null)<CR>
 augroup END
+
 
 """"""""""""""
 "  deoplete  "
@@ -553,9 +560,9 @@ endfunction
 augroup Goyo_initialize
     au!
     autocmd User GoyoEnter nested call <SID>goyo_enter()
-    autocmd User GoyoEnter Limelight
+    " autocmd User GoyoEnter Limelight
     autocmd User GoyoLeave nested call <SID>goyo_leave()
-    autocmd User GoyoLeave Limelight!
+    " autocmd User GoyoLeave Limelight!
 augroup END
 
 " Limelight solarized setting
