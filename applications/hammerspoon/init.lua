@@ -64,3 +64,8 @@ hyper:bind({}, 'f'):press(movement.ffun)
 hyper:bind({}, '1'):stroke(input.setEng)
 hyper:bind({}, '2'):stroke(input.setChn)
 hyper:bind({}, '3'):stroke(input.setJpn)
+
+-- make a windowfilterDisable for redshift: VLC, Photos and screensaver/login window will disable color adjustment and inversion
+local wfRedshift=hs.window.filter.new({mpv={focused=true},Photos={focused=true},loginwindow={visible=true,allowRoles='*'}},'wf-redshift')
+-- start redshift: 2800K + inverted from 21 to 7, very long transition duration (19->23 and 5->9)
+hs.redshift.start(3600,'18:00','7:00','4h',false,wfRedshift)
