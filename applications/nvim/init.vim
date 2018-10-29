@@ -16,7 +16,7 @@ call plug#begin('~/.config/nvim/plugged') " ### plugin list begins here
 "  User Interface  "
 """"""""""""""""""""
 Plug 'icymind/NeoSolarized'
-Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline', { 'commit' : '13993d120e3e8a44fb8bc22b940b26a46f341e67' }
             \| Plug 'vim-airline/vim-airline-themes'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
@@ -30,7 +30,7 @@ Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
 " if executable('eclimd')
 "     Plug '~/.config/eclim' , { 'for' : 'java' }
 " endif
-Plug 'luochen1990/rainbow', { 'for' : ['json', 'racket', 'lisp'] }
+Plug 'luochen1990/rainbow', { 'for' : ['json', 'racket', 'lisp', 'hocon'] }
 " Plug 'edkolev/tmuxline.vim'
 
 """"""""""""""""""""""""""""""""
@@ -112,6 +112,10 @@ Plug 'wlangstroth/vim-racket'
 Plug 'tmux-plugins/vim-tmux'
 Plug 'reasonml-editor/vim-reason-plus', { 'for' : 'ocaml' }
 Plug 'udalov/kotlin-vim'
+Plug 'leafgarland/typescript-vim'
+Plug 'vim-scripts/cup.vim'
+Plug 'vim-scripts/bnf.vim'
+Plug 'GEverding/vim-hocon', { 'for' : 'hocon' }
 
 call plug#end()   " ### Plug list ends here
 
@@ -250,7 +254,7 @@ nmap <Leader>q :q<CR>
 " save the current window
 nmap <Leader>w :w<CR>
 " write & quit the current window
-nmap <Leader>Q :wq<CR>
+nmap Q <c-w><c-z>
 " spell-check toggle
 " nmap <Leader>SL :setlocal invspell spelllang=en_us<CR>
 " nmap <Leader>SA :spellr<CR>
@@ -260,7 +264,7 @@ nnoremap <silent> <Leader>o  :<c-u>put =repeat(nr2char(10), v:count1)<cr>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                              PLUGINS SETTINGS                              "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:loaded_matchit = 1
+" let loaded_matchit = 1
 """""""""""""
 "  Airline  "
 """""""""""""
@@ -272,12 +276,14 @@ let g:airline_theme='solarized'
 let g:airline_skip_empty_sections = 1
 " extension: Smarter tabline
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#formatter = "unique_tail_improved"
 " extension for ale
 " let g:airline#extensions#ale#enabled = 1
 " let airline#extensions#ale#error_symbol = 'E:'
 " let airline#extensions#ale#warning_symbol = 'W:'
 " extension for tagbar
 let g:airline#extensions#tagbar#enabled = 0
+let g:airline_focuslost_inactive=1
 
 """""""""""""""""""
 "  Indent Guides  "
@@ -436,11 +442,21 @@ let g:LanguageClient_serverCommands = {
     \ 'cpp' : ['cquery', '--log-file=/tmp/cq.log'],
     \ 'c' : ['cquery', '--log-file=/tmp/cq.log'],
     \ 'java': ['tcp://127.0.0.1:8080'],
-    \ 'kotlin': ['tcp://127.0.0.1:8080'],
+    \ 'javascript': ['javascript-typescript-stdio'],
+    \ 'typescript': ['javascript-typescript-stdio'],
+    \ 'kotlin': ['~/Workspace/kotlin/KotlinLanguageServer/build/install/kotlin-language-server/bin/kotlin-language-server'],
     \ }
     " \ 'ruby': ['tcp://localhost:7658'],
 
-    " \ 'kotlin': ['~/Workspace/kotlin/KotlinLanguageServer/build/install/kotlin-language-server/bin/kotlin-language-server'],
+    " \ 'kotlin': ['tcp://127.0.0.1:8080'],
+
+let g:LanguageClient_rootMarkers = {
+    \ 'javascript': ['package.json'],
+    \ 'typescript': ['package.json'],
+    \ 'rust': ['Cargo.toml'],
+    \ 'kotlin': ['build.gradle'],
+    \ }
+
 nnoremap <buffer> <silent> gd :call LanguageClient_textDocument_definition()<CR>
 nnoremap <silent> <Leader>ds :<C-u>Denite documentSymbol<CR>
 nnoremap <silent> <Leader>dR :<C-u>Denite references<CR>
@@ -449,7 +465,7 @@ nnoremap <buffer> <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
 
 augroup Language_Server
     au!
-    autocmd FileType ocaml,python :nnoremap <buffer> <silent> K :call LanguageClient_textDocument_hover()<CR>
+    autocmd FileType ocaml,python,typescript :nnoremap <buffer> <silent> K :call LanguageClient_textDocument_hover()<CR>
     autocmd FileType java :nnoremap <LocalLeader>T :call LanguageClient#workspace_executeCommand("toggleFrameVisibility", [])<CR>
     autocmd FileType java :nnoremap <LocalLeader>RC :call LanguageClient#workspace_executeCommand("openRunConfigurations", [])<CR>
     autocmd FileType java :nnoremap <LocalLeader>C :call LanguageClient#Call("idea/runConfigurations", {"line": LSP#line(), "character": LSP#character()}, function("EchoAnswer"))<CR>
@@ -627,7 +643,7 @@ let g:gutentags_file_list_command = {
 """""""""
 augroup DisableALEForSomeType
     au!
-    autocmd FileType python,ocaml,c,cpp,java :let b:ale_enabled = 0
+    autocmd FileType python,ocaml,c,cpp,java,typescript,kotlin :let b:ale_enabled = 0
 augroup END
 
 let g:ale_lint_on_text_changed = 'never'
@@ -652,6 +668,15 @@ let g:ale_fixers = {
             \   'python': [
             \       'yapf',
             \       'isort',
+            \   ],
+            \   'typescript': [
+            \       'prettier',
+            \   ],
+            \   'javascript': [
+            \       'prettier',
+            \   ],
+            \   'json': [
+            \       'prettier',
             \   ],
             \}
 
@@ -723,7 +748,8 @@ let g:rainbow_conf = {
             \		'*': 0,
             \		'racket': {},
             \       'lisp': {},
-            \       'json' : {'parentheses': ['start=/{/ end=/}/ fold', 'start=/\[/ end=/\]/ fold']}
+            \       'json' : {'parentheses': ['start=/{/ end=/}/ fold', 'start=/\[/ end=/\]/ fold']},
+            \       'hocon' : {'parentheses': ['start=/{/ end=/}/ fold', 'start=/\[/ end=/\]/ fold']},
             \	}
             \}
 
