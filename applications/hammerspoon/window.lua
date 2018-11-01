@@ -20,10 +20,10 @@ grid.setGrid('4x4')
 -- help function to solve the edge due to the limitation of API
 -- In my case, the Dock is located at left
 local function fixEdge(win) 
-    local r = win:size()
-    r.w = r.w + 4
-    win:move(hs.geometry.point(-4, 0))
-    win:setSize(r)
+    -- local r = win:size()
+    -- r.w = r.w + 4
+    -- win:move(hs.geometry.point(-4, 0))
+    -- win:setSize(r)
 end
 
 -- help function to build window resize functions
