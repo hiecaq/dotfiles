@@ -14,4 +14,5 @@ function reloadConfig(files)
     end
 end
 local myWatcher = hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", reloadConfig):start()
+local screenWatcher = hs.screen.watcher.newWithActiveScreen(hs.reload):start()
 hs.alert.show("Config loaded")
