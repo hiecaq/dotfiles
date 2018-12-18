@@ -5,7 +5,7 @@ Copy this file to ~/.ptpython/config.py
 """
 from __future__ import unicode_literals
 from prompt_toolkit.filters import ViInsertMode
-from prompt_toolkit.key_binding.input_processor import KeyPress
+from prompt_toolkit.key_binding.key_processor import KeyPress
 from prompt_toolkit.keys import Keys
 from pygments.token import Token
 
@@ -105,7 +105,9 @@ def configure(repl):
 
     # Enable 24bit True color. (Not all terminals support this. -- maybe check
     # $TERM before changing.)
-    repl.true_color = True
+    repl.color_depth = 'DEPTH_24_BIT'  # True color.
+
+    repl.enable_syntax_highlighting = True
 
     # Install custom colorscheme named 'my-colorscheme' and use it.
     """
@@ -161,8 +163,8 @@ def configure(repl):
 # `ptpython/style.py` for all possible tokens.
 _custom_ui_colorscheme = {
     # Blue prompt.
-    #  Token.Layout.Prompt:                          'bg:#eeeeff #000000 bold',
+    Token.Layout.Prompt:                          'bg:#eeeeff #000000 bold',
 
     # Make the status toolbar red.
-    #  Token.Toolbar.Status:                         'bg:#ff0000 #000000',
+    Token.Toolbar.Status:                         'bg:#ff0000 #000000',
 }
