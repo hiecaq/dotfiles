@@ -21,7 +21,9 @@ sanitise tridactyllocal tridactylsync
 "
 
 " Comment toggler for Reddit and Hacker News
-bind ;c hint -c [class*="expand"],[class="togg"]
+" bind ;c hint -c [class*="expand"],[class="togg"]
+
+bind ;d hint -W exclaim_quiet /Applications/Alacritty.app/Contents/MacOS/alacritty -e /usr/local/bin/aria2c
 
 " GitHub pull request checkout command to clipboard (only works if you're a collaborator or above)
 " bind yp composite js document.getElementById("clone-help-step-1").textContent.replace("git checkout -b", "git checkout -B").replace("git pull ", "git fetch ") + "git reset --hard " + document.getElementById("clone-help-step-1").textContent.split(" ")[3].replace("-","/") | yank
@@ -32,6 +34,7 @@ bind ;c hint -c [class*="expand"],[class="togg"]
 "
 " Misc settings
 "
+set editorcmd /Applications/Alacritty.app/Con*tents/MacOS/alacritty -e /usr/local/bin/nvim -f
 
 " set editorcmd to suckless terminal, or use the defaults on other platforms
 " js tri.browserBg.runtime.getPlatformInfo().then(os=>{const editorcmd = os.os=="linux" ? "st vim" : "auto"; tri.config.set("editorcmd", editorcmd)})
