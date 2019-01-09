@@ -3,6 +3,8 @@
 export VISUAL=nvim
 export EDITOR=$VISUAL
 
+export MANPAGER='nvim +Man!'
+
 # zsh configuration files
 export ZSHCONFIG=~/.zsh
 export ZSH=$HOME/.oh-my-zsh
