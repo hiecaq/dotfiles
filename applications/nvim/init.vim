@@ -16,7 +16,7 @@ call plug#begin('~/.config/nvim/plugged') " ### plugin list begins here
 "  User Interface  "
 """"""""""""""""""""
 Plug 'icymind/NeoSolarized'
-Plug 'vim-airline/vim-airline', { 'commit' : '13993d120e3e8a44fb8bc22b940b26a46f341e67' }
+Plug 'vim-airline/vim-airline'
             \| Plug 'vim-airline/vim-airline-themes'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
@@ -63,7 +63,6 @@ Plug 'rhysd/clever-f.vim'
 Plug 'justinmk/vim-sneak'
 Plug 'ap/vim-css-color'
 Plug 'junegunn/goyo.vim', { 'for': 'markdown' }
-" Plug 'junegunn/limelight.vim', { 'for': 'markdown' }
 Plug 'reedes/vim-pencil', { 'for': 'markdown' }
 Plug 'scrooloose/nerdcommenter'
 Plug 'rhysd/vim-grammarous', { 'on': 'GrammarousCheck' }
@@ -77,7 +76,6 @@ Plug 'autozimu/LanguageClient-neovim', {
 Plug 'junegunn/vim-slash'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets' | Plug 'quinoa42/MyUltiSnips'
 Plug 'w0rp/ale'
-" Plug 'neomake/neomake'
 Plug 'Shougo/deoplete.nvim', { 'do' : ':UpdateRemotePlugins' }
 Plug 'Shougo/echodoc.vim'
 if executable('clang')
@@ -116,6 +114,7 @@ Plug 'leafgarland/typescript-vim'
 Plug 'vim-scripts/cup.vim'
 Plug 'vim-scripts/bnf.vim'
 Plug 'GEverding/vim-hocon', { 'for' : 'hocon' }
+Plug 'cespare/vim-toml', { 'for': 'toml' }
 
 call plug#end()   " ### Plug list ends here
 
@@ -284,6 +283,7 @@ let g:airline#extensions#tabline#formatter = "unique_tail_improved"
 " extension for tagbar
 let g:airline#extensions#tagbar#enabled = 0
 let g:airline_focuslost_inactive=1
+let g:airline_detect_modified=1
 
 """""""""""""""""""
 "  Indent Guides  "
@@ -433,18 +433,22 @@ set hidden
 set signcolumn=yes
 
 let g:LanguageClient_settingsPath = $HOME . '/.config/nvim/settings.json'
+let g:LanguageClient_autoStart=1
 let g:LanguageClient_hasSnippetSupport = 0
 let g:LanguageClient_selectionUI = "location-list"
+let g:LanguageClient_loggingFile = "/tmp/LSPClient.log"
+let g:LanguageClient_serverStderr = "/tmp/LSPServer.log"
 
 let g:LanguageClient_serverCommands = {
     \ 'ocaml': ['ocaml-language-server', '--stdio'],
     \ 'python': ['~/.pyenv/versions/neovim3/bin/pyls'],
     \ 'cpp' : ['cquery', '--log-file=/tmp/cq.log'],
     \ 'c' : ['cquery', '--log-file=/tmp/cq.log'],
-    \ 'java': ['tcp://127.0.0.1:8080'],
     \ 'javascript': ['javascript-typescript-stdio'],
     \ 'typescript': ['javascript-typescript-stdio'],
     \ 'kotlin': ['~/Workspace/kotlin/KotlinLanguageServer/build/install/kotlin-language-server/bin/kotlin-language-server'],
+    \ 'rust': ['rustup', 'run', 'stable', 'rls'],
+    \ 'java': ['jdtls'],
     \ }
     " \ 'ruby': ['tcp://localhost:7658'],
 
@@ -455,17 +459,25 @@ let g:LanguageClient_rootMarkers = {
     \ 'typescript': ['package.json'],
     \ 'rust': ['Cargo.toml'],
     \ 'kotlin': ['build.gradle'],
+    \ 'java': ['build.gradle', 'build.xml'],
     \ }
 
-nnoremap <buffer> <silent> gd :call LanguageClient_textDocument_definition()<CR>
-nnoremap <silent> <Leader>ds :<C-u>Denite documentSymbol<CR>
-nnoremap <silent> <Leader>dR :<C-u>Denite references<CR>
-nnoremap <silent> <Leader>dS :<C-u>Denite workspaceSymbol<CR>
-nnoremap <buffer> <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+function LC_maps()
+    if has_key(g:LanguageClient_serverCommands, &filetype)
+        nnoremap <buffer> <silent> K :call LanguageClient#textDocument_hover()<cr>
+        nnoremap <buffer> <silent> gd :call LanguageClient#textDocument_definition()<CR>
+        nnoremap <buffer> <silent> <Leader>f :call LanguageClient_textDocument_codeAction()<CR>
+        nnoremap <silent> <Leader>ds :<C-u>Denite documentSymbol<CR>
+        nnoremap <silent> <Leader>dR :<C-u>Denite references<CR>
+        nnoremap <silent> <Leader>dS :<C-u>Denite workspaceSymbol<CR>
+        nnoremap <silent> <Leader>dF :<C-u>Denite contextMenu<CR>
+        nnoremap <buffer> <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+    endif
+endfunction
 
 augroup Language_Server
-    au!
-    autocmd FileType ocaml,python,typescript :nnoremap <buffer> <silent> K :call LanguageClient_textDocument_hover()<CR>
+	au!
+    autocmd FileType * call LC_maps()
     autocmd FileType java :nnoremap <LocalLeader>T :call LanguageClient#workspace_executeCommand("toggleFrameVisibility", [])<CR>
     autocmd FileType java :nnoremap <LocalLeader>RC :call LanguageClient#workspace_executeCommand("openRunConfigurations", [])<CR>
     autocmd FileType java :nnoremap <LocalLeader>C :call LanguageClient#Call("idea/runConfigurations", {"line": LSP#line(), "character": LSP#character()}, function("EchoAnswer"))<CR>
@@ -500,7 +512,7 @@ if has("nvim")
     "             \'[^. \t0-9]\->\w*',
     "             \'[^. \t0-9]\::\w*',
     "             \]
-    let g:deoplete#omni#input_patterns.jsp = ['[^. \t0-9]\.\w*']
+    " let g:deoplete#omni#input_patterns.jsp = ['[^. \t0-9]\.\w*']
     " let g:deoplete#omni#functions.java = ['javacomplete#Complete']
     " let g:deoplete#omni#functions.java = ['eclim#java#complete#CodeComplete']
     " let g:deoplete#omni#functions.ruby = ['rubycomplete#Complete']
@@ -516,6 +528,7 @@ if has("patch-7.4.314")
 endif
 
 let g:echodoc_enable_at_startup=1
+let g:echodoc#type="virtual"
 
 " let g:deoplete#enable_profile = 1
 " call deoplete#enable_logging('DEBUG', 'deoplete.log')
@@ -643,7 +656,7 @@ let g:gutentags_file_list_command = {
 """""""""
 augroup DisableALEForSomeType
     au!
-    autocmd FileType python,ocaml,c,cpp,java,typescript,kotlin :let b:ale_enabled = 0
+    autocmd FileType python,ocaml,c,cpp,typescript,java,kotlin,rust :let b:ale_enabled = 0
 augroup END
 
 let g:ale_lint_on_text_changed = 'never'
