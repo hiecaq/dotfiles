@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+cd "$QUINOA42_INSTALL_DIR"
+
+mkdir -p ~/bin
+mkdir -p ~/.config
+
+# _=$(link ~/Workspace/dotfiles ~/.dotfiles)
+
+exit 0
