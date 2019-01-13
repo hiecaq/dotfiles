@@ -67,3 +67,15 @@
 [submodule "applications/nvim/pack/general/opt/vim-gutentags"]
 	path = applications/nvim/pack/general/opt/vim-gutentags
 	url = git@github.com:ludovicchabant/vim-gutentags.git
+[submodule "applications/nvim/pack/general/start/vim-css-color"]
+	path = applications/nvim/pack/general/start/vim-css-color
+	url = git@github.com:ap/vim-css-color.git
+[submodule "applications/nvim/pack/environment/start/deoplete"]
+	path = applications/nvim/pack/environment/start/deoplete
+	url = git@github.com:Shougo/deoplete.nvim.git
+[submodule "applications/nvim/pack/environment/start/echodoc"]
+	path = applications/nvim/pack/environment/start/echodoc
+	url = git@github.com:Shougo/echodoc.vim.git
+[submodule "applications/nvim/pack/environment/opt/neco-vim"]
+	path = applications/nvim/pack/environment/opt/neco-vim
+	url = git@github.com:Shougo/neco-vim.git
