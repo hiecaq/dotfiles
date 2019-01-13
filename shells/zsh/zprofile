@@ -7,21 +7,21 @@ fi
 
 ### PATH
 # PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
-eval "$(rbenv init -)"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+# eval "$(rbenv init -)"
+# eval "$(pyenv init -)"
+# eval "$(pyenv virtualenv-init -)"
 
 ### TeX
-PATH="/Library/TeX/texbin:$PATH"
+# PATH="/Library/TeX/texbin:$PATH"
 ### tcl-tk
-PATH="/usr/local/opt/tcl-tk/bin:$PATH"
+# PATH="/usr/local/opt/tcl-tk/bin:$PATH"
 ### fzf
-export PATH="$PATH:/usr/local/opt/fzf/bin"
+# export PATH="$PATH:/usr/local/opt/fzf/bin"
 ### go
-PATH="$HOME/go/bin:$PATH"
+# PATH="$HOME/go/bin:$PATH"
 
-PATH="$HOME/bin:$PATH"
+# PATH="$HOME/bin:$PATH"
 
 export PATH=$PATH
 
-export PATH="$HOME/.cargo/bin:$PATH"
+# export PATH="$HOME/.cargo/bin:$PATH"

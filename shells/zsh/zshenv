@@ -7,9 +7,9 @@ export MANPAGER='nvim +Man!'
 
 # zsh configuration files
 export ZSHCONFIG=~/.zsh
-export ZSH=$HOME/.oh-my-zsh
+# export ZSH=$HOME/.oh-my-zsh
 
 # other directories
 export DOTFILES=~/.dotfiles
-export WORKPATH=~/Workspace/
+export WORKPATH=~/workspace/
 export PYENV_ROOT="$HOME/.pyenv"

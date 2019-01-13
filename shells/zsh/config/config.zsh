@@ -1,14 +1,21 @@
 #!/usr/bin/env zsh
 
 #######################################################################
-#                              Oh-My-Zsh                              #
+#                              antigen                                #
 #######################################################################
 
-ZSH_THEME="pygmalion"
-plugins=(git colorize pip python brew osx tmux zsh-syntax-highlighting vi-mode gem tmuxinator)
-source $ZSH/oh-my-zsh.sh
+source /usr/share/zsh/share/antigen.zsh
 
-unalias pip
+antigen use oh-my-zsh
+antigen bundle git
+antigen bundle colorize
+antigen bundle tmux
+antigen bundle vi-mode
+antigen bundle zsh-users/zsh-syntax-highlighting
+
+antigen theme pygmalion
+
+antigen apply
 
 #######################################################################
 #                      Zsh-syntax-hightlighting                       #
@@ -105,16 +112,16 @@ export BAT_THEME="TwoDark"
 #######################################################################
 #                                 exa                                 #
 #######################################################################
-export EXA_COLORS="*.zip=0:*.gz=0:*.rar=0:*.tar=0:*.7z=0:ex=31"
+export EXA_COLORS="*.zip=0:*.gz=0:*.rar=0:*.tar=0:*.7z=0:ex=31:di=244;1"
 
 #######################################################################
 #                               lunchy                                #
 #######################################################################
 
-LUNCHY_DIR=$(dirname `gem which lunchy`)/../extras
-if [ -f $LUNCHY_DIR/lunchy-completion.zsh ]; then
-. $LUNCHY_DIR/lunchy-completion.zsh
-fi
+# LUNCHY_DIR=$(dirname `gem which lunchy`)/../extras
+# if [ -f $LUNCHY_DIR/lunchy-completion.zsh ]; then
+# . $LUNCHY_DIR/lunchy-completion.zsh
+# fi
 
 #######################################################################
 #                               source                                #

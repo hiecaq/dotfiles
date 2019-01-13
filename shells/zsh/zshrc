@@ -9,8 +9,22 @@ export GPG_TTY=$(tty)
 
 ### config
 source $ZSHCONFIG/config.zsh
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # OPAM configuration
-. $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+# . $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+
+## Lines configured by zsh-newuser-install
+# HISTFILE=~/.histfile
+# HISTSIZE=10000
+# SAVEHIST=10000
+# setopt appendhistory
+# unsetopt autocd beep
+# bindkey -v
+## End of lines configured by zsh-newuser-install
+## The following lines were added by compinstall
+# zstyle :compinstall filename '/home/quinoa42/.zshrc'
+
+# autoload -Uz compinit
+# compinit
+# End of lines added by compinstall
