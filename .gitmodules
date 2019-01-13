@@ -1,3 +1,6 @@
 [submodule "terminals/tpm"]
 	path = terminals/tpm
 	url = git@github.com:tmux-plugins/tpm.git
+[submodule "applications/nvim/pack/general/opt/vim-tmux-navigator"]
+	path = applications/nvim/pack/general/opt/vim-tmux-navigator
+	url = git@github.com:christoomey/vim-tmux-navigator.git
