@@ -91,3 +91,7 @@
 [submodule "applications/nvim/pack/environment/start/MyUltiSnips"]
 	path = applications/nvim/pack/environment/start/MyUltiSnips
 	url = git@github.com:quinoa42/MyUltiSnips.git
+[submodule "applications/nvim/pack/environment/opt/LanguageClient-neovim"]
+	path = applications/nvim/pack/environment/opt/LanguageClient-neovim
+	url = git@github.com:autozimu/LanguageClient-neovim.git
+	branch = next
