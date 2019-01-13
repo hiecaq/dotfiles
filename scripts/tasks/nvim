@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+cd "$QUINOA42_INSTALL_DIR"
+
+mkdir -p ~/.config
+_=$(link $QUINOA42_INSTALL_DIR/applications/nvim ~/.config/nvim)
+
+exit 0
