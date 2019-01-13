@@ -55,3 +55,9 @@
 [submodule "applications/nvim/pack/general/start/clever-f"]
 	path = applications/nvim/pack/general/start/clever-f
 	url = git@github.com:rhysd/clever-f.vim.git
+[submodule "applications/nvim/pack/general/start/vim-sneak"]
+	path = applications/nvim/pack/general/start/vim-sneak
+	url = git@github.com:justinmk/vim-sneak.git
+[submodule "applications/nvim/pack/general/start/vim-slash"]
+	path = applications/nvim/pack/general/start/vim-slash
+	url = git@github.com:junegunn/vim-slash.git
