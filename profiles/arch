@@ -3,6 +3,7 @@ zsh
 git
 tmux
 nvim
+aria2
 mpv
 youtube-dl
 editorconfig

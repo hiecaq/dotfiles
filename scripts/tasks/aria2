@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+cd "$QUINOA42_INSTALL_DIR"
+
+_=$(link $QUINOA42_INSTALL_DIR/tools/aria2 ~/.aria2)
+
+exit 0
