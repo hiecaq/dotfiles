@@ -13,3 +13,6 @@
 [submodule "applications/nvim/pack/ui/start/vim-airline-themes"]
 	path = applications/nvim/pack/ui/start/vim-airline-themes
 	url = git@github.com:vim-airline/vim-airline-themes.git
+[submodule "applications/nvim/pack/ui/start/vim-indent-guides"]
+	path = applications/nvim/pack/ui/start/vim-indent-guides
+	url = git@github.com:nathanaelkane/vim-indent-guides.git
