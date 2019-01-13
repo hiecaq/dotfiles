@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+cd "$QUINOA42_INSTALL_DIR"
+
+_=$(link $QUINOA42_INSTALL_DIR/shells/zsh/config ~/.zsh)
+_=$(link $QUINOA42_INSTALL_DIR/shells/zsh/zshenv ~/.zshenv)
+_=$(link $QUINOA42_INSTALL_DIR/shells/zsh/zprofile ~/.zprofile)
+_=$(link $QUINOA42_INSTALL_DIR/shells/zsh/zshrc ~/.zshrc)
+_=$(link $QUINOA42_INSTALL_DIR/shells/aliases ~/.aliases)
+
+exit 0
