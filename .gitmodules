@@ -7,3 +7,9 @@
 [submodule "applications/nvim/pack/ui/start/NeoSolarized"]
 	path = applications/nvim/pack/ui/start/NeoSolarized
 	url = git@github.com:icymind/NeoSolarized.git
+[submodule "applications/nvim/pack/ui/start/vim-airline"]
+	path = applications/nvim/pack/ui/start/vim-airline
+	url = git@github.com:vim-airline/vim-airline.git
+[submodule "applications/nvim/pack/ui/start/vim-airline-themes"]
+	path = applications/nvim/pack/ui/start/vim-airline-themes
+	url = git@github.com:vim-airline/vim-airline-themes.git
