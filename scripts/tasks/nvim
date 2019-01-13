@@ -4,5 +4,7 @@ cd "$QUINOA42_INSTALL_DIR"
 
 mkdir -p ~/.config
 _=$(link $QUINOA42_INSTALL_DIR/applications/nvim ~/.config/nvim)
+_=$(cd "$QUINOA42_INSTALL_DIR/applications/nvim/pack/environment/opt/LanguageClient-neovim" && bash install.sh)
+_=$(nvim +"helptags ALL" +q)
 
 exit 0
