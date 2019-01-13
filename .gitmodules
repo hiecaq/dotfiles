@@ -52,3 +52,6 @@
 [submodule "applications/nvim/pack/textobj/start/vim-operator-surround"]
 	path = applications/nvim/pack/textobj/start/vim-operator-surround
 	url = git@github.com:rhysd/vim-operator-surround.git
+[submodule "applications/nvim/pack/general/start/clever-f"]
+	path = applications/nvim/pack/general/start/clever-f
+	url = git@github.com:rhysd/clever-f.vim.git
