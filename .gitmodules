@@ -82,3 +82,12 @@
 [submodule "applications/nvim/pack/ui/opt/rainbow"]
 	path = applications/nvim/pack/ui/opt/rainbow
 	url = git@github.com:luochen1990/rainbow.git
+[submodule "applications/nvim/pack/environment/start/ultisnips"]
+	path = applications/nvim/pack/environment/start/ultisnips
+	url = git@github.com:SirVer/ultisnips.git
+[submodule "applications/nvim/pack/environment/start/vim-snippets"]
+	path = applications/nvim/pack/environment/start/vim-snippets
+	url = git@github.com:honza/vim-snippets.git
+[submodule "applications/nvim/pack/environment/start/MyUltiSnips"]
+	path = applications/nvim/pack/environment/start/MyUltiSnips
+	url = git@github.com:quinoa42/MyUltiSnips.git
