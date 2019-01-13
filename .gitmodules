@@ -79,3 +79,6 @@
 [submodule "applications/nvim/pack/environment/opt/neco-vim"]
 	path = applications/nvim/pack/environment/opt/neco-vim
 	url = git@github.com:Shougo/neco-vim.git
+[submodule "applications/nvim/pack/ui/opt/rainbow"]
+	path = applications/nvim/pack/ui/opt/rainbow
+	url = git@github.com:luochen1990/rainbow.git
