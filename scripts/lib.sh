@@ -21,11 +21,16 @@ function abs_path() {
 }
 
 function link() {
+    if [[ $QUINOA42_INSTALL_OS == "OSX" ]]; then
+	    local LINK_FLAG="-sh"
+    else
+	    local LINK_FLAG="-sn"
+    fi
     if [[ -L $2 ]]; then
         echo "a symlink at $2 already exists" >&2
         exit 0
     fi
-    ln -sh $1 $2 || exit 1
+    ln $LINK_FLAG $1 $2 || exit 1
 
     echo "linked $1 at $2" >&2
     exit 0
