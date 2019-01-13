@@ -61,3 +61,6 @@
 [submodule "applications/nvim/pack/general/start/vim-slash"]
 	path = applications/nvim/pack/general/start/vim-slash
 	url = git@github.com:junegunn/vim-slash.git
+[submodule "applications/nvim/pack/general/opt/editorconfig-vim"]
+	path = applications/nvim/pack/general/opt/editorconfig-vim
+	url = git@github.com:editorconfig/editorconfig-vim.git

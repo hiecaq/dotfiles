@@ -3,5 +3,6 @@ zsh
 git
 tmux
 nvim
+editorconfig
 x11
 firefox
