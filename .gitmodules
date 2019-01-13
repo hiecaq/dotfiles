@@ -4,3 +4,6 @@
 [submodule "applications/nvim/pack/general/opt/vim-tmux-navigator"]
 	path = applications/nvim/pack/general/opt/vim-tmux-navigator
 	url = git@github.com:christoomey/vim-tmux-navigator.git
+[submodule "applications/nvim/pack/ui/start/NeoSolarized"]
+	path = applications/nvim/pack/ui/start/NeoSolarized
+	url = git@github.com:icymind/NeoSolarized.git
