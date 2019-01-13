@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+cd "$QUINOA42_INSTALL_DIR"
+
+mkdir -p ~/.tmux/plugins
+
+_=$(link $QUINOA42_INSTALL_DIR/terminals/tmux.conf ~/.tmux.conf)
+_=$(link $QUINOA42_INSTALL_DIR/terminals/tpm ~/.tmux/plugins/tpm)
+
+exit 0
