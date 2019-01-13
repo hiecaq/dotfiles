@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+cd "$QUINOA42_INSTALL_DIR"
+
+mkdir -p ~/.config
+
+_=$(link $QUINOA42_INSTALL_DIR/tools/youtube-dl ~/.config/youtube-dl)
+
+exit 0
