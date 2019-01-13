@@ -98,3 +98,6 @@
 [submodule "applications/nvim/pack/general/opt/fcitx"]
 	path = applications/nvim/pack/general/opt/fcitx
 	url = git@github.com:lilydjwg/fcitx.vim.git
+[submodule "applications/nvim/pack/environment/opt/tmux-complete"]
+	path = applications/nvim/pack/environment/opt/tmux-complete
+	url = git@github.com:wellle/tmux-complete.vim.git
