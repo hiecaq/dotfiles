@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+cd "$QUINOA42_INSTALL_DIR"
+
+_=$(link $QUINOA42_INSTALL_DIR/applications/x11/Xmodmap ~/.Xmodmap)
+_=$(link $QUINOA42_INSTALL_DIR/applications/x11/Xresources ~/.Xresources)
+_=$(link $QUINOA42_INSTALL_DIR/applications/x11/xinitrc ~/.xinitrc)
+
+exit 0
