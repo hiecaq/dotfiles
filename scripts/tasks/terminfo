@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+cd "$QUINOA42_INSTALL_DIR"
+
+mkdir -p ~/bin
+mkdir -p ~/.config
+
+tic $QUINOA42_INSTALL_DIR/terminals/xterm-256color-italic.terminfo
+tic -x $QUINOA42_INSTALL_DIR/terminals/tmux.terminfo
+
+exit 0
