@@ -17,7 +17,7 @@ QUINOA42_INSTALL_DIR=$DIR
 
 TASKS=$(ABS_DIR_PATH=$DIR abs_path ${PROFILE[@]})
 for f in $TASKS; do
-    $(. $f)
+    _=$(. $f)
     if [[ $? != 0 ]]; then
         echo "Something wrong happened!"
         exit 1
