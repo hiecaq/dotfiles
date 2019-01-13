@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+cd "$QUINOA42_INSTALL_DIR"
+
+_=$(link $QUINOA42_INSTALL_DIR/applications/firefox/tridactylrc ~/.tridactylrc)
+mkdir -p ~/.config/fireholo/chrome
+_=$(link $QUINOA42_INSTALL_DIR/applications/firefox/userChrome.css ~/.config/fireholo/chrome/userChrome.css)
+
+exit 0
