@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 git config --global core.editor nvim
 git config --global color.ui true
 git config --global push.followTags true
@@ -13,3 +15,5 @@ git config --global mergetool.prompt true
 git config --global mergetool.vimdiff.cmd "nvim -d \$BASE \$LOCAL \$REMOTE \$MERGED -c '\$wincmd w' -c 'wincmd J'"
 git config --global diff.tool vimdiff
 git config --global difftool.vimdiff.cmd 'nvim -d $LOCAL $REMOTE'
+
+exit 0
