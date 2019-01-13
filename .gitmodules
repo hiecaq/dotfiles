@@ -95,3 +95,6 @@
 	path = applications/nvim/pack/environment/opt/LanguageClient-neovim
 	url = git@github.com:autozimu/LanguageClient-neovim.git
 	branch = next
+[submodule "applications/nvim/pack/general/opt/fcitx"]
+	path = applications/nvim/pack/general/opt/fcitx
+	url = git@github.com:lilydjwg/fcitx.vim.git
