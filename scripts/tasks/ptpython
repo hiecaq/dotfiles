@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+cd "$QUINOA42_INSTALL_DIR"
+
+mkdir -p ~/.ptpython
+
+_=$(link $QUINOA42_INSTALL_DIR/tools/python/ptpython.py ~/.ptpython/config.py)
+
+exit 0
