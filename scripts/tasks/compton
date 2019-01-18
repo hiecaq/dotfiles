@@ -4,6 +4,6 @@ cd "$QUINOA42_INSTALL_DIR"
 
 mkdir -p ~/.config
 
-_=$(link $QUINOA42_INSTALL_DIR/applications/i3 ~/.config/i3)
+_=$(link $QUINOA42_INSTALL_DIR/applications/compton ~/.config/compton)
 
 exit 0
