@@ -278,6 +278,13 @@ augroup Lazy_Loaded_Text_Obj_And_Operators
     autocmd FileType c,java,vim :packadd vim-textobj-function
 augroup END
 
+"""""""""
+"  caw  "
+"""""""""
+let g:caw_operator_keymappings = 1
+nmap <Leader>c <Plug>(caw:prefix)
+xmap <Leader>c <Plug>(caw:prefix)
+
 " TODO: surround
 
 """"""""""""""
@@ -343,41 +350,6 @@ augroup END
 """""""""
 "  LSP  "
 """""""""
-augroup Lazy_Loaded_LSP
-    au!
-    autocmd FileType rust :packadd LanguageClient-neovim
-    autocmd FileType rust :set hidden
-    autocmd FileType rust :set signcolumn=yes
-    autocmd FileType rust :LanguageClientStart
-augroup END
-
-let g:LanguageClient_settingsPath = $HOME . '/.config/nvim/settings.json'
-let g:LanguageClient_autoStart=0
-let g:LanguageClient_hasSnippetSupport = 0
-let g:LanguageClient_selectionUI = "location-list"
-let g:LanguageClient_loggingFile = "/tmp/LSPClient.log"
-let g:LanguageClient_serverStderr = "/tmp/LSPServer.log"
-
-let g:LanguageClient_serverCommands = {
-    \ 'ocaml': ['ocaml-language-server', '--stdio'],
-    \ 'python': ['~/.pyenv/versions/neovim3/bin/pyls'],
-    \ 'cpp' : ['cquery', '--log-file=/tmp/cq.log'],
-    \ 'c' : ['cquery', '--log-file=/tmp/cq.log'],
-    \ 'javascript': ['javascript-typescript-stdio'],
-    \ 'typescript': ['javascript-typescript-stdio'],
-    \ 'kotlin': ['~/Workspace/kotlin/KotlinLanguageServer/build/install/kotlin-language-server/bin/kotlin-language-server'],
-    \ 'rust': ['rustup', 'run', 'stable', 'rls'],
-    \ 'java': ['jdtls'],
-    \ }
-
-let g:LanguageClient_rootMarkers = {
-    \ 'javascript': ['package.json'],
-    \ 'typescript': ['package.json'],
-    \ 'rust': ['Cargo.toml'],
-    \ 'kotlin': ['build.gradle'],
-    \ 'java': ['build.gradle', 'build.xml'],
-    \ }
-
 function LC_maps()
     if has_key(g:LanguageClient_serverCommands, &filetype)
         nnoremap <buffer> <silent> K :call LanguageClient#textDocument_hover()<cr>
@@ -390,6 +362,44 @@ function LC_maps()
         nnoremap <buffer> <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
     endif
 endfunction
+
+augroup Lazy_Loaded_LSP
+    au!
+    autocmd VimEnter,FileType rust,java,python
+                \ set hidden
+                \| setlocal signcolumn=yes
+                \| packadd LanguageClient-neovim
+                \| call LC_maps()
+                \| :LanguageClientStart
+augroup END
+
+let g:LanguageClient_settingsPath = $HOME . '/.config/nvim/settings.json'
+let g:LanguageClient_autoStart=0
+let g:LanguageClient_hasSnippetSupport = 0
+let g:LanguageClient_selectionUI = "location-list"
+let g:LanguageClient_loggingFile = "/tmp/LSPClient.log"
+let g:LanguageClient_serverStderr = "/tmp/LSPServer.log"
+
+let g:LanguageClient_serverCommands = {
+    \ 'ocaml': ['ocaml-language-server', '--stdio'],
+    \ 'python': ['pyls'],
+    \ 'cpp' : ['cquery', '--log-file=/tmp/cq.log'],
+    \ 'c' : ['cquery', '--log-file=/tmp/cq.log'],
+    \ 'javascript': ['javascript-typescript-stdio'],
+    \ 'typescript': ['javascript-typescript-stdio'],
+    \ 'kotlin': ['~/Workspace/kotlin/KotlinLanguageServer/build/install/kotlin-language-server/bin/kotlin-language-server'],
+    \ 'rust': ['rustup', 'run', 'stable', 'rls'],
+    \ 'java': ['jdtls', '-configuration', $HOME . '/workspace/school/lsp',  '-data', $HOME . '/workspace/school/lsp/tmp/' . fnamemodify(getcwd(), ':t'), '--add-modules=ALL-SYSTEM', '--add-opens', 'java.base/java.util=ALL-UNNAMED', '--add-opens', 'java.base/java.lang=ALL-UNNAMED'],
+    \ }
+
+let g:LanguageClient_rootMarkers = {
+    \ 'javascript': ['package.json'],
+    \ 'typescript': ['package.json'],
+    \ 'rust': ['Cargo.toml'],
+    \ 'kotlin': ['build.gradle'],
+    \ 'java': ['build.gradle', 'build.xml'],
+    \ }
+
 
 """""""""""""""""""""""""
 "  Rainbow Parentheses  "
@@ -443,3 +453,11 @@ endif
 if executable('fcitx')
     packadd! fcitx
 endif
+
+if has("autocmd")
+    augroup Tridactyl_Temp
+        au!
+        autocmd BufRead /tmp/tmp_*.{com,cn,net,org}_*.txt
+                    \ set ft=markdown
+    augroup END
+endif " has("autocmd")
