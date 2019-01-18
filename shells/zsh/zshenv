@@ -13,3 +13,8 @@ export ZSHCONFIG=~/.zsh
 export DOTFILES=~/.dotfiles
 export WORKPATH=~/workspace/
 export PYENV_ROOT="$HOME/.pyenv"
+
+export RUSTUP_HOME=$HOME/.rustup
+
+PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/bin:$PATH"
