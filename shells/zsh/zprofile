@@ -21,7 +21,3 @@ fi
 # PATH="$HOME/go/bin:$PATH"
 
 # PATH="$HOME/bin:$PATH"
-
-export PATH=$PATH
-
-# export PATH="$HOME/.cargo/bin:$PATH"
