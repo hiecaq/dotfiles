@@ -1,3 +1,0 @@
-- shell:
-  - [cp tools/scripts/bash/* ~/bin/]
-  - [cp tools/scripts/python/* ~/bin/]

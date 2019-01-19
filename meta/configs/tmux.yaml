@@ -1,6 +1,0 @@
-- shell:
-    - [mkdir -p ~/.tmux/plugins]
-
-- link:
-    ~/.tmux.conf: terminals/tmux.conf
-    ~/.tmux/plugins/tpm: terminals/tpm
