@@ -285,7 +285,16 @@ let g:caw_operator_keymappings = 1
 nmap <Leader>c <Plug>(caw:prefix)
 xmap <Leader>c <Plug>(caw:prefix)
 
-" TODO: surround
+""""""""""""""
+"  surround  "
+""""""""""""""
+nmap <Leader>sa <Plug>(operator-surround-append)
+xmap <Leader>sa <Plug>(operator-surround-append)
+nmap <Leader>sd <Plug>(operator-surround-delete)
+xmap <Leader>sd <Plug>(operator-surround-delete)
+nmap <Leader>sr <Plug>(operator-surround-replace)
+xmap <Leader>sr <Plug>(operator-surround-replace)
+
 
 """"""""""""""
 "  clever-f  "
