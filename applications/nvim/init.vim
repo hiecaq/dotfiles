@@ -36,14 +36,14 @@ set norelativenumber
 set number
 " no line wrap
 set nowrap
-" enable syntax highlights
-syntax enable
-" allow to replace default syntax highlights with intended ones
-syntax on
 " auto load plugin files for specific file types
 filetype plugin on
 " auto indent of file
 filetype indent on
+" enable syntax highlights
+syntax on
+" allow to replace default syntax highlights with intended ones
+syntax enable
 " disable fold
 set nofoldenable
 " replace tab with space
