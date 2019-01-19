@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
 # some lovely codes found online to check supports for true colors and italics.
 
