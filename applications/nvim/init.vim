@@ -442,6 +442,13 @@ if executable('tmux')
     packadd! tmux-complete
 endif
 
+"""""""""""""""
+"  gutentags  "
+"""""""""""""""
+
+let g:gutentags_exclude_project_root = ['/usr/local', $HOME . '/.password-store']
+
+
 """"""""""""""""""
 "  editorconfig  "
 """"""""""""""""""
