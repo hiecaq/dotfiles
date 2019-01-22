@@ -1,6 +1,7 @@
 base
 zsh
 terminfo
+alacritty
 git
 tmux
 nvim

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+cd "$QUINOA42_INSTALL_DIR"
+
+mkdir -p ~/.config/alacritty
+
+if [[ $QUINOA42_INSTALL_OS == "OSX" ]]; then
+    _=$(link $QUINOA42_INSTALL_DIR/terminals/alacritty/alacritty_macos.yml ~/.config/alacritty/alacritty.yml)
+else
+    _=$(link $QUINOA42_INSTALL_DIR/terminals/alacritty/alacritty.yml ~/.config/alacritty/alacritty.yml)
+fi
+
+exit 0
