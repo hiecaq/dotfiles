@@ -272,14 +272,6 @@ omap aP <Plug>(textobj-entire-a)
 xmap iP <Plug>(textobj-entire-i)
 omap iP <Plug>(textobj-entire-i)
 
-augroup Lazy_Loaded_Text_Obj_And_Operators
-    au!
-    autocmd FileType python :packadd vim-textobj-python
-                \ | runtime! OPT after/ftplugin/python/textobj-python.vim
-    autocmd FileType java,c,vim :packadd vim-textobj-function
-                \ | runtime! OPT after/ftplugin/*/textobj-function.vim
-augroup END
-
 """""""""
 "  caw  "
 """""""""
