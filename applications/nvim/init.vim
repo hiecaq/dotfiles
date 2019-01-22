@@ -108,8 +108,8 @@ nmap <Leader>w :w<CR>
 " close preview window
 nmap Q <c-w><c-z>
 " spell-check toggle
-" nmap <Leader>SL :setlocal invspell spelllang=en_us<CR>
-" nmap <Leader>SA :spellr<CR>
+nmap <Leader>SL :setlocal invspell spelllang=en_us<CR>
+nmap <Leader>SA :spellr<CR>
 " quick add empty lines
 nnoremap <silent> <Leader>O  :<c-u>put! =repeat(nr2char(10), v:count1)<cr>'[
 nnoremap <silent> <Leader>o  :<c-u>put =repeat(nr2char(10), v:count1)<cr>
@@ -275,7 +275,9 @@ omap iP <Plug>(textobj-entire-i)
 augroup Lazy_Loaded_Text_Obj_And_Operators
     au!
     autocmd FileType python :packadd vim-textobj-python
-    autocmd FileType c,java,vim :packadd vim-textobj-function
+                \ | runtime! OPT after/ftplugin/python/textobj-python.vim
+    autocmd FileType java,c,vim :packadd vim-textobj-function
+                \ | runtime! OPT after/ftplugin/*/textobj-function.vim
 augroup END
 
 """""""""
@@ -359,27 +361,30 @@ augroup END
 """""""""
 "  LSP  "
 """""""""
-function LC_maps()
+function LC_starts()
     if has_key(g:LanguageClient_serverCommands, &filetype)
+        let g:quinoa42_loaded_lsp = 1
         nnoremap <buffer> <silent> K :call LanguageClient#textDocument_hover()<cr>
         nnoremap <buffer> <silent> gd :call LanguageClient#textDocument_definition()<CR>
         nnoremap <buffer> <silent> <Leader>f :call LanguageClient_textDocument_codeAction()<CR>
-        nnoremap <silent> <Leader>ds :<C-u>Denite documentSymbol<CR>
-        nnoremap <silent> <Leader>dR :<C-u>Denite references<CR>
-        nnoremap <silent> <Leader>dS :<C-u>Denite workspaceSymbol<CR>
-        nnoremap <silent> <Leader>dF :<C-u>Denite contextMenu<CR>
+        nnoremap <buffer> <silent> <Leader>ds :<C-u>Denite documentSymbol<CR>
+        nnoremap <buffer> <silent> <Leader>dR :<C-u>Denite references<CR>
+        nnoremap <buffer> <silent> <Leader>dS :<C-u>Denite workspaceSymbol<CR>
+        nnoremap <buffer> <silent> <Leader>dF :<C-u>Denite contextMenu<CR>
         nnoremap <buffer> <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+        set hidden
+        set signcolumn=yes
+        packadd LanguageClient-neovim
+        LanguageClientStart
     endif
 endfunction
 
 augroup Lazy_Loaded_LSP
     au!
-    autocmd VimEnter,FileType rust,java,python
-                \ set hidden
-                \| setlocal signcolumn=yes
-                \| packadd LanguageClient-neovim
-                \| call LC_maps()
-                \| :LanguageClientStart
+    autocmd FileType rust,java,python
+                    \ if !exists('g:quinoa42_loaded_lsp') |
+                    \ call LC_starts() |
+                    \ endif
 augroup END
 
 let g:LanguageClient_settingsPath = $HOME . '/.config/nvim/settings.json'
@@ -398,7 +403,7 @@ let g:LanguageClient_serverCommands = {
     \ 'typescript': ['javascript-typescript-stdio'],
     \ 'kotlin': ['~/Workspace/kotlin/KotlinLanguageServer/build/install/kotlin-language-server/bin/kotlin-language-server'],
     \ 'rust': ['rustup', 'run', 'stable', 'rls'],
-    \ 'java': ['jdtls', '-configuration', $HOME . '/workspace/school/lsp',  '-data', $HOME . '/workspace/school/lsp/tmp/' . fnamemodify(getcwd(), ':t'), '--add-modules=ALL-SYSTEM', '--add-opens', 'java.base/java.util=ALL-UNNAMED', '--add-opens', 'java.base/java.lang=ALL-UNNAMED'],
+    \ 'java': ['jdtls'],
     \ }
 
 let g:LanguageClient_rootMarkers = {
@@ -469,6 +474,14 @@ endif
 if executable('fcitx')
     packadd! fcitx
 endif
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                             Language specific                              "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"""""""""""""""""""""""""""
+"  Tridactyl temporaries  "
+"""""""""""""""""""""""""""
 
 if has("autocmd")
     augroup Tridactyl_Temp
