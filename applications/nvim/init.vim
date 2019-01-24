@@ -108,8 +108,8 @@ nmap <Leader>w :w<CR>
 " close preview window
 nmap Q <c-w><c-z>
 " spell-check toggle
-nmap <Leader>SL :setlocal invspell spelllang=en_us<CR>
-nmap <Leader>SA :spellr<CR>
+nmap <Leader>sp :setlocal invspell spelllang=en_us<CR>
+nmap <Leader>sA :spellr<CR>
 " quick add empty lines
 nnoremap <silent> <Leader>O  :<c-u>put! =repeat(nr2char(10), v:count1)<cr>'[
 nnoremap <silent> <Leader>o  :<c-u>put =repeat(nr2char(10), v:count1)<cr>
