@@ -36,14 +36,19 @@ set norelativenumber
 set number
 " no line wrap
 set nowrap
+" default to cindent if no filetype specific indent is provided
+set cindent
 " auto load plugin files for specific file types
-filetype plugin on
-" auto indent of file
-filetype indent on
+filetype plugin indent on
 " enable syntax highlights
 syntax on
 " allow to replace default syntax highlights with intended ones
 syntax enable
+" enable breakindent
+if exists("+breakindent")
+    set breakindent
+    set breakindentopt=shift:0
+endif
 " disable fold
 set nofoldenable
 " replace tab with space
@@ -427,6 +432,7 @@ let g:rainbow_conf = {
             \		'racket': {},
             \       'lisp': {},
             \       'json' : {'parentheses': ['start=/{/ end=/}/ fold', 'start=/\[/ end=/\]/ fold']},
+            \       'jsonnet' : {'parentheses': ['start=/{/ end=/}/ fold', 'start=/\[/ end=/\]/ fold']},
             \       'hocon' : {'parentheses': ['start=/{/ end=/}/ fold', 'start=/\[/ end=/\]/ fold']},
             \	}
             \}
