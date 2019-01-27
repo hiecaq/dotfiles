@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+cd "$QUINOA42_INSTALL_DIR"
+mkdir -p ~/bin
+
+scripts=$(find tools/scripts -type f)
+for script in $scripts; do
+    short=$(basename "$script")
+    _=$(link $QUINOA42_INSTALL_DIR/$script ~/bin/$short)
+done
+
+exit 0
