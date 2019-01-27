@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+fd -a -e "pdf" . ~/documents | fzf | (nohup xargs -I{} zathura "{}" >/dev/null 2>&1 &)
