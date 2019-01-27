@@ -19,6 +19,7 @@ font pango:monospace 8
 for_window [class="^.*"] border pixel 0
 # float keepass
 for_window [class="KeePass2"] floating enable
+for_window [class="feh"] floating enable
 for_window [instance="fzfmenu"] floating enable
 
 # gaps
@@ -49,6 +50,7 @@ bindsym $mod+Shift+q kill
 bindsym $mod+space exec alacritty --class "fzfmenu" -e fzf_run
 bindsym $mod+z exec alacritty --class "fzfmenu" -e fzf_zathura
 bindsym $mod+v exec alacritty -d 120 24 --class "fzfmenu" -e fzf_dotfiles
+bindsym $mod+p exec alacritty --class "fzfmenu" -e fzf_pass
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.

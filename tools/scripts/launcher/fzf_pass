@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+pwdir=${PASSWORD_STORE_DIR-~/.password-store/}
+stringsize="${#pwdir}"
+fd -t f . ~/.password-store -x echo {.} | cut -c "$((stringsize + 1))"- | fzf | (nohup xargs -I{} pass -c "{}" >/dev/null 2&>1 &)

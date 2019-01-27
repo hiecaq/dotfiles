@@ -99,7 +99,7 @@ _gen_fzf_default_opts
 
 # use rg instead of find by default (and shows hidden files)
 export FZF_DEFAULT_COMMAND='rg -S --files'
-export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --ansi -d 30 --preview 'bat --color=always --style=changes {}' --preview-window 'wrap:hidden' --bind 'ctrl-v:toggle-preview'"
+export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --ansi -d 30 --preview 'bat --color=always --style=changes {}' --preview-window 'wrap:hidden:right:70%' --bind 'ctrl-v:toggle-preview'"
 
 # To apply the command to CTRL-T as well
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
@@ -107,6 +107,13 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 # preview window for long command
 
 export FZF_TMUX=1
+_fzf_complete_pass() {
+    _fzf_complete '+m' "$@" < <(
+        pwdir=${PASSWORD_STORE_DIR-~/.password-store/}
+        stringsize="${#pwdir}"
+        fd -t f . ~/.password-store -x echo {.} | cut -c "$((stringsize + 1))"-
+    )
+}
 
 #######################################################################
 #                                 BAT                                 #
