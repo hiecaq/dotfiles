@@ -99,7 +99,7 @@ _gen_fzf_default_opts
 
 # use rg instead of find by default (and shows hidden files)
 export FZF_DEFAULT_COMMAND='rg -S --files'
-export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --ansi -d 30 --preview 'bat --color=always {}' --preview-window 'wrap:hidden' --bind 'ctrl-v:toggle-preview'"
+export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --ansi -d 30 --preview 'bat --color=always --style=changes {}' --preview-window 'wrap:hidden' --bind 'ctrl-v:toggle-preview'"
 
 # To apply the command to CTRL-T as well
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
