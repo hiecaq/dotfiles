@@ -1,3 +1,2 @@
 #!/usr/bin/env zsh
 print -rl -- ${(ko)commands} | fzf | (nohup ${SHELL:-"/bin/sh"} &) >/dev/null 2>&1
-# (nohup xargs -I{} zathura "{}" >/dev/null 2>&1 &)

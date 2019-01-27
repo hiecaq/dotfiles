@@ -1,0 +1,2 @@
+#!/usr/bin/env zsh
+fd --max-depth=4 -t f . ~/.dotfiles | fzf | xargs -I{} tmux new-window -n launcher nvim -f "{}"
