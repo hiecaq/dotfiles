@@ -40,8 +40,6 @@ set nowrap
 set cindent
 " auto load plugin files for specific file types
 filetype plugin indent on
-" enable syntax highlights
-syntax on
 " allow to replace default syntax highlights with intended ones
 syntax enable
 " enable breakindent
