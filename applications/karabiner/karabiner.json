@@ -36,8 +36,8 @@
                                 ],
                                 "to_if_alone": [
                                     {
-                                        "key_code": "caps_lock",
-                                        "hold_down_milliseconds": 100
+                                        "hold_down_milliseconds": 100,
+                                        "key_code": "caps_lock"
                                     }
                                 ],
                                 "type": "basic"
@@ -439,6 +439,14 @@
                     },
                     "to": {
                         "key_code": "backslash"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "escape"
+                    },
+                    "to": {
+                        "key_code": "grave_accent_and_tilde"
                     }
                 }
             ],

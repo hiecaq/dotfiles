@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+cd "$QUINOA42_INSTALL_DIR"
+
+mkdir -p ~/.config
+
+_=$(link $QUINOA42_INSTALL_DIR/applications/karabiner ~/.config/karabiner)
+
+exit 0
