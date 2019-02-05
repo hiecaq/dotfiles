@@ -120,7 +120,7 @@ nnoremap <silent> <Leader>o  :<c-u>put =repeat(nr2char(10), v:count1)<cr>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                  Provider                                  "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if has("nvim") && has("mac")
+if has("nvim") && executable("pyenv")
     let g:python_host_prog = $HOME . "/.pyenv/versions/neovim2/bin/python"
     let g:python3_host_prog = $HOME . "/.pyenv/versions/neovim3/bin/python"
 endif
@@ -298,7 +298,7 @@ xmap <Leader>sr <Plug>(operator-surround-replace)
 """"""""""""""
 let g:clever_f_across_no_line=1 " only match the current line
 let g:clever_f_fix_key_direction=1 " fix f to forward and F backword, tT etc.
-let g:clever_f_chars_match_any_signs=";" " use ; to match all signs
+let g:clever_f_chars_match_any_signs="^" " use ^ to match all signs
 let g:clever_f_use_migemo=1 " enable migemo support
 
 
