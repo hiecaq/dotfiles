@@ -15,5 +15,6 @@ git config --global mergetool.prompt true
 git config --global mergetool.vimdiff.cmd "nvim -d \$BASE \$LOCAL \$REMOTE \$MERGED -c '\$wincmd w' -c 'wincmd J'"
 git config --global diff.tool vimdiff
 git config --global difftool.vimdiff.cmd 'nvim -d $LOCAL $REMOTE'
+git config --global diff.algorithm patience
 
 exit 0

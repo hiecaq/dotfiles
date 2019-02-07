@@ -61,6 +61,10 @@ set softtabstop=4
 set backspace=indent,eol,start whichwrap+=<,>,[,]
 " no annoying message when editing via scp
 let g:netrw_silent=1
+" diff opts
+if &diffopt =~ 'internal'
+    set diffopt+=indent-heuristic,algorithm:patience
+endif
 " automatically go to the line last time
 if has("autocmd")
     augroup vimrcEx
