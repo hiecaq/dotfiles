@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+cd "$QUINOA42_INSTALL_DIR"
+
+_=$(link $QUINOA42_INSTALL_DIR/tools/pam/pam_environment ~/.pam_environment)
+
+exit 0

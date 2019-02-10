@@ -1,8 +1,5 @@
 # Usually run for every zsh.
 # editor
-export VISUAL=nvim
-export EDITOR=$VISUAL
-
 export MANPAGER='nvim +Man!'
 
 # zsh configuration files

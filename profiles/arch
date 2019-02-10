@@ -1,4 +1,5 @@
 base
+pam
 zsh
 scripts
 terminfo
