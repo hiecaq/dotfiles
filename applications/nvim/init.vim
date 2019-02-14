@@ -49,6 +49,10 @@ if exists("+breakindent")
 endif
 " disable fold
 set nofoldenable
+" neovim 0.4.0+: transparent popup-menu
+if exists('&pumblend')
+    set pumblend=10
+endif
 " replace tab with space
 set expandtab
 " numbers of space standed by tab while editing
