@@ -36,8 +36,6 @@ set norelativenumber
 set number
 " no line wrap
 set nowrap
-" default to cindent if no filetype specific indent is provided
-set cindent
 " auto load plugin files for specific file types
 filetype plugin indent on
 " allow to replace default syntax highlights with intended ones
@@ -449,6 +447,11 @@ let g:rainbow_conf = {
 if executable('tmux')
     packadd! vim-tmux-navigator
     packadd! tmux-complete
+else
+  nnoremap <silent> <c-h> <c-w><c-h>
+  nnoremap <silent> <c-j> <c-w><c-j>
+  nnoremap <silent> <c-k> <c-w><c-k>
+  nnoremap <silent> <c-l> <c-w><c-l>
 endif
 
 """""""""""""""
