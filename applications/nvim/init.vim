@@ -1,3 +1,4 @@
+" GENERAL {{{
 if !has("nvim")
     set nocompatible              " be iMproved -- not needed for nvim
     set enc=utf-8
@@ -77,10 +78,9 @@ if has("autocmd")
                     \ endif
     augroup END
 endif " has("autocmd")
+" GENERAL END }}}
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                KEY MAPPINGS                                "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" KEY MAPPINGS {{{
 " set <Leader>
 nnoremap <space> <Nop>
 vnoremap <space> <Nop>
@@ -122,22 +122,18 @@ nmap <Leader>sA :spellr<CR>
 " quick add empty lines
 nnoremap <silent> <Leader>O  :<c-u>put! =repeat(nr2char(10), v:count1)<cr>'[
 nnoremap <silent> <Leader>o  :<c-u>put =repeat(nr2char(10), v:count1)<cr>
+" KEY MAPPINGS END }}}
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                  Provider                                  "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" PROVIDER {{{
 if has("nvim") && executable("pyenv")
     let g:python_host_prog = $HOME . "/.pyenv/versions/neovim2/bin/python"
     let g:python3_host_prog = $HOME . "/.pyenv/versions/neovim3/bin/python"
 endif
+" PROVIDER END }}}
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              PLUGINS SETTINGS                              "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" PLUGINS SETTINGS {{{1
 
-"""""""""""""
-"  Airline  "
-"""""""""""""
+" Airline {{{2
 " use Powerline symbols(special fonts requried)
 let g:airline_powerline_fonts = 1
 " theme
@@ -155,10 +151,9 @@ let g:airline#extensions#tabline#formatter = "unique_tail_improved"
 let g:airline#extensions#tagbar#enabled = 0
 let g:airline_focuslost_inactive=1
 let g:airline_detect_modified=1
+" Airline END }}}2
 
-"""""""""""""""""""
-"  Indent Guides  "
-"""""""""""""""""""
+" Indent Guides {{{2
 " start with vim
 let g:indent_guides_enable_on_vim_startup=1
 " exclude filetypes
@@ -177,10 +172,9 @@ if !has("nvim") && has("autocmd")
         autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=darkgrey   ctermbg=000
     augroup END
 endif
+" Indent Guides }}}2
 
-"""""""""""""""
-"  UltiSnips  "
-"""""""""""""""
+" UltiSnips {{{2
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
 let g:UltiSnipsExpandTrigger="<c-f>"
 let g:UltiSnipsListSnippets="<c-a>l"
@@ -191,10 +185,9 @@ let g:UltiSnipsSnippetsDir="~/.config/nvim/pack/environment/start/vim-snippets/U
 let g:UltiSnipsEditSplit="vertical"
 " python
 let g:ultisnips_python_style="sphinx"
+" UltiSnips END }}}2
 
-""""""""""""
-"  Denite  "
-""""""""""""
+" Denite  {{{2
 packadd denite
 
 " Change mappings.
@@ -253,15 +246,13 @@ nnoremap <silent> <Leader>do :<C-u>Denite outline<CR>
 nnoremap <silent> <Leader>dr :<C-u>Denite register<CR>
 nnoremap <silent> <Leader>dl :<C-u>Denite location_list<CR>
 nnoremap <silent> <Leader>dq :<C-u>Denite quickfix<CR>
+" Denite END }}}2
 
-""""""""""""""""""""""
-"  operator-replace  "
-""""""""""""""""""""""
+" operator-replace {{{2
 map _ <Plug>(operator-replace)
+" operator-replace END }}}2
 
-"""""""""""""""""""""
-"  textobj-comment  "
-"""""""""""""""""""""
+" textobj-comment {{{2
 let g:textobj_comment_no_default_key_mappings = 1
 
 xmap a? <Plug>(textobj-comment-a)
@@ -270,47 +261,40 @@ xmap a/ <Plug>(textobj-comment-big-a)
 omap a/ <Plug>(textobj-comment-big-a)
 xmap i/ <Plug>(textobj-comment-i)
 omap i/ <Plug>(textobj-comment-i)
+" textobj-comment END }}}2
 
-""""""""""""""""""""
-"  textobj-entire  "
-""""""""""""""""""""
+" textobj-entire {{{2
 let g:textobj_entire_no_default_key_mappings = 1
 
 xmap aP <Plug>(textobj-entire-a)
 omap aP <Plug>(textobj-entire-a)
 xmap iP <Plug>(textobj-entire-i)
 omap iP <Plug>(textobj-entire-i)
+" textobj-entire END }}}2
 
-"""""""""
-"  caw  "
-"""""""""
+" caw {{{2
 let g:caw_operator_keymappings = 1
 nmap <Leader>c <Plug>(caw:prefix)
 xmap <Leader>c <Plug>(caw:prefix)
+" caw END }}}2
 
-""""""""""""""
-"  surround  "
-""""""""""""""
+" surround {{{2
 nmap <Leader>sa <Plug>(operator-surround-append)
 xmap <Leader>sa <Plug>(operator-surround-append)
 nmap <Leader>sd <Plug>(operator-surround-delete)
 xmap <Leader>sd <Plug>(operator-surround-delete)
 nmap <Leader>sr <Plug>(operator-surround-replace)
 xmap <Leader>sr <Plug>(operator-surround-replace)
+" surround END }}}2
 
-
-""""""""""""""
-"  clever-f  "
-""""""""""""""
+" clever-f {{{2
 let g:clever_f_across_no_line=1 " only match the current line
 let g:clever_f_fix_key_direction=1 " fix f to forward and F backword, tT etc.
 let g:clever_f_chars_match_any_signs="^" " use ^ to match all signs
 let g:clever_f_use_migemo=1 " enable migemo support
+" clever-f }}}2
 
-
-"""""""""""
-"  sneak  "
-"""""""""""
+" sneak {{{2
 let g:sneak#s_next = 1 " clever-f-like s/S support
 let g:sneak#label = 1 " eazymotion-like s/S enhance
 let g:sneak#f_reset = 0 " continue to use ;, for sneak
@@ -321,15 +305,13 @@ augroup Sneak_Color
     au!
     autocmd VimEnter,ColorScheme * :hi Sneak guifg=black ctermfg=black guibg=#FFE53D ctermbg=003
 augroup END
+" sneak END }}}2
 
-"""""""""""""""
-"  vim-slash  "
-"""""""""""""""
+" vim-slash {{{2
 noremap <plug>(slash-after) zz
+" vim-slash END }}}2
 
-""""""""""""""
-"  deoplete  "
-""""""""""""""
+" deoplete {{{2
 if has("nvim")
     " enable deoplete
     let g:deoplete#enable_at_startup=1
@@ -358,10 +340,9 @@ augroup Lazy_Loaded_deoplete_completion_source
     au!
     autocmd FileType vim :packadd neco-vim
 augroup END
+" deoplete END }}}2
 
-"""""""""
-"  LSP  "
-"""""""""
+" LSP {{{2
 function LC_starts()
     if has_key(g:LanguageClient_serverCommands, &filetype)
         let g:quinoa42_loaded_lsp = 1
@@ -414,11 +395,9 @@ let g:LanguageClient_rootMarkers = {
     \ 'kotlin': ['build.gradle'],
     \ 'java': ['build.gradle', 'build.xml'],
     \ }
+" LSP END }}}2
 
-
-"""""""""""""""""""""""""
-"  Rainbow Parentheses  "
-"""""""""""""""""""""""""
+" Rainbow Parentheses {{{2
 augroup Lazy_Loaded_Rainbow
     au!
     autocmd FileType json,racket,lisp,hocon :packadd rainbow
@@ -440,10 +419,9 @@ let g:rainbow_conf = {
             \       'hocon' : {'parentheses': ['start=/{/ end=/}/ fold', 'start=/\[/ end=/\]/ fold']},
             \	}
             \}
+" Rainbow Parentheses END }}}2
 
-""""""""""
-"  tmux  "
-""""""""""
+" tmux {{{2
 if executable('tmux')
     packadd! vim-tmux-navigator
     packadd! tmux-complete
@@ -453,38 +431,33 @@ else
   nnoremap <silent> <c-k> <c-w><c-k>
   nnoremap <silent> <c-l> <c-w><c-l>
 endif
+" tmux END }}}2
 
-"""""""""""""""
-"  gutentags  "
-"""""""""""""""
-
+" gutentags {{{2
 let g:gutentags_exclude_project_root = ['/usr/local', $HOME . '/.password-store']
+" gutentags END }}}2
 
-
-""""""""""""""""""
-"  editorconfig  "
-""""""""""""""""""
+" editorconfig {{{2
 if executable('editorconfig')
     packadd! editorconfig-vim
 endif
+" editorconfig END }}}2
 
-"""""""""""
-"  ctags  "
-"""""""""""
+" ctags {{{2
 if executable('ctags')
     packadd! vim-gutentags
 endif
+" ctags END }}}2
 
-"""""""""""
-"  fcitx  "
-"""""""""""
+" fcitx {{{2
 if executable('fcitx')
     packadd! fcitx
 endif
+" fcitx END }}}2
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                             Language specific                              "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" PLUGINS SETTINGS END }}}1
+
+" LANGUAGE SPECIFIC {{{1
 
 """""""""""""""""""""""""""
 "  Tridactyl temporaries  "
@@ -497,3 +470,6 @@ if has("autocmd")
                     \ set ft=markdown
     augroup END
 endif " has("autocmd")
+" LANGUAGE SPECIFIC END }}}1
+
+" vim: foldenable:foldmethod=marker
