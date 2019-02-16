@@ -455,6 +455,11 @@ if executable('fcitx')
 endif
 " fcitx END }}}2
 
+" mundo {{{2
+nnoremap <silent> <leader>u :MundoToggle<CR>
+let g:mundo_prefer_python3=1
+" mundo END }}}2
+
 " PLUGINS SETTINGS END }}}1
 
 " LANGUAGE SPECIFIC {{{1
