@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:simnalamburt/vim-mundo.git
+	branch = master
+	commit = 3eb20180e561da98d49a52b3a5d7af2bcda37162
+	parent = 2252d082c6479a03cfb62bb061819194496dc011
+	method = merge
+	cmdver = 0.4.0
