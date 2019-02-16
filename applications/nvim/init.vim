@@ -94,6 +94,10 @@ nmap <silent> <leader>ee :e $MYVIMRC<cr>
 " nmap <silent> <leader>CS :let @/ = ""<cr>
 " nohlsearch
 nmap <leader>// :nohlsearch<cr>
+" neovim 0.2.3+: show replace results on the fly
+if exists('&inccommand')
+    set inccommand=split
+endif
 " prevent normal mode operator x from polluting the registers
 nnoremap x "_x
 " alias
