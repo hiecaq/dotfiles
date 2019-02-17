@@ -34,9 +34,6 @@
 [submodule "applications/nvim/pack/textobj/start/vim-textobj-entire"]
 	path = applications/nvim/pack/textobj/start/vim-textobj-entire
 	url = git@github.com:kana/vim-textobj-entire.git
-[submodule "applications/nvim/pack/textobj/opt/vim-textobj-function"]
-	path = applications/nvim/pack/textobj/opt/vim-textobj-function
-	url = git@github.com:kana/vim-textobj-function.git
 [submodule "applications/nvim/pack/textobj/start/vim-textobj-comment"]
 	path = applications/nvim/pack/textobj/start/vim-textobj-comment
 	url = git@github.com:glts/vim-textobj-comment.git
