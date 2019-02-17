@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:bps/vim-textobj-python.git
+	branch = master
+	commit = 585c76d58f1a9c458c87471b072c9ad9eb159ae2
+	parent = f12d88a8b4373dc6548292870f4711b7757ae4f4
+	method = merge
+	cmdver = 0.4.0

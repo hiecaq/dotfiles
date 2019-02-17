@@ -1,0 +1,6 @@
+language: vim
+
+script: |
+  make test
+
+sudo: false
