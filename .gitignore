@@ -1,6 +1,5 @@
 .DS_Store
 drafts/
-applications/nvim/autoload
 applications/nvim/plugged
 applications/nvim/.netrwhist
 karabiner.d/log

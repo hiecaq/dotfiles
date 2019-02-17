@@ -13,12 +13,10 @@ set wildignorecase
 set wildmenu
 
 " enable 256 colors
-set t_Co=256
 if has("termguicolors")
     set termguicolors
-endif
-
-if !has("nvim")
+else
+    set t_Co=256
     set t_8f=[38;2;%lu;%lu;%lum
     set t_8b=[48;2;%lu;%lu;%lum
 endif
@@ -32,7 +30,11 @@ set noshowmode
 " show position of cursor
 set ruler
 " show relative line numbers
-set norelativenumber
+if v:version >= 800 && has("patch374")
+    set relativenumber
+else
+    set norelativenumber
+endif
 " show line numbers
 set number
 " no line wrap
@@ -347,30 +349,10 @@ augroup END
 " deoplete END }}}2
 
 " LSP {{{2
-function LC_starts()
-    if has_key(g:LanguageClient_serverCommands, &filetype)
-        let g:quinoa42_loaded_lsp = 1
-        nnoremap <buffer> <silent> K :call LanguageClient#textDocument_hover()<cr>
-        nnoremap <buffer> <silent> gd :call LanguageClient#textDocument_definition()<CR>
-        nnoremap <buffer> <silent> <Leader>f :call LanguageClient_textDocument_codeAction()<CR>
-        nnoremap <buffer> <silent> <Leader>ds :<C-u>Denite documentSymbol<CR>
-        nnoremap <buffer> <silent> <Leader>dR :<C-u>Denite references<CR>
-        nnoremap <buffer> <silent> <Leader>dS :<C-u>Denite workspaceSymbol<CR>
-        nnoremap <buffer> <silent> <Leader>dF :<C-u>Denite contextMenu<CR>
-        nnoremap <buffer> <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-        set hidden
-        set signcolumn=yes
-        packadd LanguageClient-neovim
-        LanguageClientStart
-    endif
-endfunction
-
 augroup Lazy_Loaded_LSP
     au!
     autocmd FileType rust,java,python
-                    \ if !exists('g:quinoa42_loaded_lsp') |
-                    \ call LC_starts() |
-                    \ endif
+                    \ call lazy#LC_starts()
 augroup END
 
 let g:LanguageClient_settingsPath = $HOME . '/.config/nvim/settings.json'
@@ -402,11 +384,6 @@ let g:LanguageClient_rootMarkers = {
 " LSP END }}}2
 
 " Rainbow Parentheses {{{2
-augroup Lazy_Loaded_Rainbow
-    au!
-    autocmd FileType json,racket,lisp,hocon :packadd rainbow
-augroup END
-
 let g:rainbow_active = 1
 
 let g:rainbow_conf = {
@@ -439,6 +416,9 @@ endif
 
 " gutentags {{{2
 let g:gutentags_exclude_project_root = ['/usr/local', $HOME . '/.password-store']
+if executable('ctags')
+    packadd! vim-gutentags
+endif
 " gutentags END }}}2
 
 " editorconfig {{{2
@@ -446,12 +426,6 @@ if executable('editorconfig')
     packadd! editorconfig-vim
 endif
 " editorconfig END }}}2
-
-" ctags {{{2
-if executable('ctags')
-    packadd! vim-gutentags
-endif
-" ctags END }}}2
 
 " fcitx {{{2
 if executable('fcitx')
