@@ -37,9 +37,6 @@
 [submodule "applications/nvim/pack/textobj/start/vim-textobj-comment"]
 	path = applications/nvim/pack/textobj/start/vim-textobj-comment
 	url = git@github.com:glts/vim-textobj-comment.git
-[submodule "applications/nvim/pack/textobj/opt/vim-textobj-python"]
-	path = applications/nvim/pack/textobj/opt/vim-textobj-python
-	url = git@github.com:bps/vim-textobj-python.git
 [submodule "applications/nvim/pack/textobj/start/vim-operator-user"]
 	path = applications/nvim/pack/textobj/start/vim-operator-user
 	url = git@github.com:kana/vim-operator-user.git
