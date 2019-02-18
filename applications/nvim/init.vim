@@ -90,10 +90,10 @@ nnoremap <space> <Nop>
 vnoremap <space> <Nop>
 let mapleader="\<space>"
 vnoremap <esc> <esc><esc><esc>
-"Fast reloading of the .vimrc
+"Fast reloading .vimrc
 nmap <silent> <leader>ss :source $MYVIMRC<cr>
-"Fast editing of .vimrc
-nmap <silent> <leader>ee :e $MYVIMRC<cr>
+"Fast editing .vimrc
+nmap <silent> <leader>ee :tabe $MYVIMRC<cr>
 " clear search pattern
 " nmap <silent> <leader>CS :let @/ = ""<cr>
 " nohlsearch
@@ -130,6 +130,8 @@ nmap <Leader>sA :spellr<CR>
 " quick add empty lines
 nnoremap <silent> <Leader>O  :<c-u>put! =repeat(nr2char(10), v:count1)<cr>'[
 nnoremap <silent> <Leader>o  :<c-u>put =repeat(nr2char(10), v:count1)<cr>
+" make the previous word uppercase
+inoremap <silent> <c-a><c-u> <esc>gUawea
 " KEY MAPPINGS END }}}
 
 " PROVIDER {{{
@@ -187,7 +189,7 @@ endif
 let g:UltiSnipsExpandTrigger="<c-f>"
 let g:UltiSnipsListSnippets="<c-a>l"
 let g:UltiSnipsJumpForwardTrigger="<c-f>"
-let g:UltiSnipsJumpBackwardTrigger="<c-a><c-a>"
+let g:UltiSnipsJumpBackwardTrigger="<c-b>"
 let g:UltiSnipsSnippetsDir="~/.config/nvim/pack/environment/start/vim-snippets/UltiSnips"
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
@@ -211,6 +213,12 @@ call denite#custom#map(
             \ '<denite:move_to_previous_line>',
             \ 'noremap'
             \)
+call denite#custom#map(
+        \ 'insert',
+        \ '<esc>',
+        \ '<denite:quit>',
+        \ 'noremap'
+        \)
 
 " Change sorters.
 call denite#custom#source(
