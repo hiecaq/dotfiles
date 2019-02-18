@@ -465,4 +465,17 @@ if has("autocmd")
 endif " has("autocmd")
 " LANGUAGE SPECIFIC END }}}1
 
+" SPELLINGS {{{1
+ia defien define
+ia dfine define
+ia dfeien define
+ia dfeine define
+ia improt import
+ia whiel while
+ia reutrn return
+ia reutnr return
+ia breka break
+ia contineu continue
+" SPELLINGS END }}}1
+
 " vim: foldenable:foldmethod=marker
