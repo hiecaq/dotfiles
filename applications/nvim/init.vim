@@ -62,6 +62,8 @@ set tabstop=4
 set shiftwidth=4
 " let vim consider contious spaces as tab
 set softtabstop=4
+" round indent to 'shiftwidth' when using > and <
+set shiftround
 " allow backspace
 set backspace=indent,eol,start whichwrap+=<,>,[,]
 " no annoying message when editing via scp
