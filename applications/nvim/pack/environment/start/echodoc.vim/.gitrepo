@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:Shougo/echodoc.vim.git
+	branch = master
+	commit = fffc749d2b8000101eb38f7d8018f68cdf28cd7d
+	parent = edbea77902e2decb8ea3238ffaa8fb1bb2a06bd5
+	method = merge
+	cmdver = 0.4.0
