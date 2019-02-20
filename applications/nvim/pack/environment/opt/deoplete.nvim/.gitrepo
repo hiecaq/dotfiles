@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:Shougo/deoplete.nvim
+	branch = master
+	commit = a711749ad6f6a455f64c0677f1a7c70b9550c6ca
+	parent = 3867468df8451a8918aaa20f768ba16aae83513b
+	method = merge
+	cmdver = 0.4.0
