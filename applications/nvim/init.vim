@@ -253,6 +253,7 @@ nnoremap <silent> <Leader>df :<C-u>Denite file_rec<CR>
 nnoremap <silent> <Leader>dj :<C-u>Denite jump<CR>
 nnoremap <silent> <Leader>dt :<C-u>Denite tag<CR>
 nnoremap <silent> <Leader>dg :<C-u>Denite grep<CR>
+nnoremap <silent> <Leader>* :execute "Denite grep:::" . shellescape(expand("<cword>"))<CR>
 nnoremap <silent> <Leader>dd :<C-u>Denite line<CR>
 nnoremap <silent> <Leader>db :<C-u>Denite buffer<CR>
 nnoremap <silent> <Leader>dc :<C-u>Denite command<CR>
