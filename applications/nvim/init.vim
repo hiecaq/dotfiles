@@ -52,7 +52,7 @@ endif
 set nofoldenable
 " neovim 0.4.0+: transparent popup-menu
 if exists('&pumblend')
-    set pumblend=10
+    set pumblend=20
 endif
 " replace tab with space
 set expandtab
@@ -329,10 +329,9 @@ noremap <plug>(slash-after) zz
 " vim-slash END }}}2
 
 " deoplete {{{2
-if has("nvim")
-    " enable deoplete
-    let g:deoplete#enable_at_startup=1
-    " even show when there is only one result
+if has("nvim") && has('python3')
+    packadd! deoplete.nvim
+    " even show completions when there is only one result
     set completeopt=longest,menuone
     " <C-h>, <BS>: close popup and delete backword char.
     inoremap <expr><C-h> deoplete#smart_close_popup()."\<C-h>"
@@ -344,6 +343,8 @@ if has("nvim")
     let g:deoplete#ignore_sources._ = ['buffer', 'javacomplete2']
     let g:deoplete#omni#functions = {}
 
+    " enable deoplete
+    call deoplete#enable()
 endif
 
 if has("patch-7.4.314")
