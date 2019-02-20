@@ -184,19 +184,6 @@ if !has("nvim") && has("autocmd")
 endif
 " Indent Guides }}}2
 
-" UltiSnips {{{2
-" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<c-f>"
-let g:UltiSnipsListSnippets="<c-a>l"
-let g:UltiSnipsJumpForwardTrigger="<c-f>"
-let g:UltiSnipsJumpBackwardTrigger="<c-b>"
-let g:UltiSnipsSnippetsDir="~/.config/nvim/pack/environment/start/vim-snippets/UltiSnips"
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
-" python
-let g:ultisnips_python_style="sphinx"
-" UltiSnips END }}}2
-
 " Denite  {{{2
 packadd denite
 
