@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:autozimu/LanguageClient-neovim.git
+	branch = next
+	commit = 14dafc186c9c96053336f20dbf59ba14b767034f
+	parent = 18663e2229db7e8ca3e800f4a6e4400f22b6c806
+	method = merge
+	cmdver = 0.4.0
