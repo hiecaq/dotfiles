@@ -84,6 +84,11 @@ if has("autocmd")
 endif " has("autocmd")
 " GENERAL END }}}
 
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
+
 " KEY MAPPINGS {{{
 " set <Leader>
 nnoremap <space> <Nop>
@@ -183,6 +188,23 @@ if !has("nvim") && has("autocmd")
     augroup END
 endif
 " Indent Guides }}}2
+
+" Neosnippet {{{2
+" Plugin key-mappings.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+imap <C-F> <Plug>(neosnippet_expand_or_jump)
+smap <C-F> <Plug>(neosnippet_expand_or_jump)
+xmap <C-F> <Plug>(neosnippet_expand_target)
+
+let g:neosnippet#enable_snipmate_compatibility=1
+" let g:neosnippet#disable_runtime_snippets= {
+"            \ '_': 1,
+"            \ }
+let g:neosnippet#enable_complete_done=1
+let g:neosnippet#enable_completed_snippet=1
+let g:neosnippet#enable_optional_arguments=0
+
+" Neosnippet END }}}2
 
 " Denite  {{{2
 packadd denite
@@ -323,6 +345,9 @@ if has("nvim") && has('python3')
     " <C-h>, <BS>: close popup and delete backword char.
     inoremap <expr><C-h> deoplete#smart_close_popup()."\<C-h>"
     inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
+    inoremap <silent><expr><CR>
+                \ pumvisible() ? deoplete#close_popup() :
+                \ "\<CR>"
     if !exists('g:deoplete#omni#input_patterns')
         let g:deoplete#omni#input_patterns = {}
     endif
@@ -339,7 +364,7 @@ if has("patch-7.4.314")
 endif
 
 let g:echodoc_enable_at_startup=1
-let g:echodoc#type="virtual"
+let g:echodoc#type="echo"
 
 augroup Lazy_Loaded_deoplete_completion_source
     au!
@@ -356,7 +381,7 @@ augroup END
 
 let g:LanguageClient_settingsPath = $HOME . '/.config/nvim/settings.json'
 let g:LanguageClient_autoStart=0
-let g:LanguageClient_hasSnippetSupport = 0
+let g:LanguageClient_hasSnippetSupport = 1
 let g:LanguageClient_selectionUI = "location-list"
 let g:LanguageClient_loggingFile = "/tmp/LSPClient.log"
 let g:LanguageClient_serverStderr = "/tmp/LSPServer.log"

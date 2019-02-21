@@ -3,6 +3,7 @@
 
 setlocal wrap
 setlocal linebreak
+setlocal conceallevel=0
 nnoremap <buffer> j gj
 vnoremap <buffer> j gj
 nnoremap <buffer> k gk
