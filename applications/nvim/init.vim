@@ -360,6 +360,8 @@ if has("nvim") && has('python3')
     let g:deoplete#ignore_sources._ = ['buffer', 'javacomplete2']
     let g:deoplete#omni#functions = {}
 
+    " do not truncate the type of the completed item
+    call deoplete#custom#source('_', 'max_abbr_width', 0)
     " enable deoplete
     call deoplete#enable()
 endif
