@@ -15,14 +15,16 @@ set wildmenu
 " enable 256 colors
 if has("termguicolors")
     set termguicolors
-else
-    set t_Co=256
-    set t_8f=[38;2;%lu;%lu;%lum
-    set t_8b=[48;2;%lu;%lu;%lum
+    if !has("nvim")
+        set t_Co=256
+        set t_8f=[38;2;%lu;%lu;%lum
+        set t_8b=[48;2;%lu;%lu;%lum
+    endif
 endif
 
 " color theme
 colorscheme NeoSolarized
+
 " set background type
 set background=dark
 " disable default mode indicator(have airline already)
@@ -208,71 +210,73 @@ let g:neosnippet#enable_optional_arguments=0
 " Neosnippet END }}}2
 
 " Denite  {{{2
-packadd! denite.nvim
+if has("nvim") && has("python3")
+    packadd! denite.nvim
 
-" Change mappings.
-call denite#custom#map(
-            \ 'insert',
-            \ '<C-n>',
-            \ '<denite:move_to_next_line>',
-            \ 'noremap'
-            \)
-call denite#custom#map(
-            \ 'insert',
-            \ '<C-p>',
-            \ '<denite:move_to_previous_line>',
-            \ 'noremap'
-            \)
-call denite#custom#map(
-        \ 'insert',
-        \ '<esc>',
-        \ '<denite:quit>',
-        \ 'noremap'
-        \)
+    " Change mappings.
+    call denite#custom#map(
+                \ 'insert',
+                \ '<C-n>',
+                \ '<denite:move_to_next_line>',
+                \ 'noremap'
+                \)
+    call denite#custom#map(
+                \ 'insert',
+                \ '<C-p>',
+                \ '<denite:move_to_previous_line>',
+                \ 'noremap'
+                \)
+    call denite#custom#map(
+                \ 'insert',
+                \ '<esc>',
+                \ '<denite:quit>',
+                \ 'noremap'
+                \)
 
-" Change sorters.
-call denite#custom#source(
-            \ '_', 'sorters', ['sorter_sublime'])
+    " Change sorters.
+    call denite#custom#source(
+                \ '_', 'sorters', ['sorter_sublime'])
 
-" Change file_rec command.
-call denite#custom#var('file_rec', 'command',
-            \ ['rg', '--files', '--glob', '!.git'])
-" Ag command on grep source
-call denite#custom#var('grep', 'command', ['rg'])
-call denite#custom#var('grep', 'default_opts',
-            \ ['--smart-case', '--vimgrep', '-U'])
-call denite#custom#var('grep', 'recursive_opts', [])
-call denite#custom#var('grep', 'pattern_opt', [])
-call denite#custom#var('grep', 'separator', ['--'])
-call denite#custom#var('grep', 'final_opts', [])
+    " Change file_rec command.
+    call denite#custom#var('file_rec', 'command',
+                \ ['rg', '--files', '--glob', '!.git'])
+    " Ag command on grep source
+    call denite#custom#var('grep', 'command', ['rg'])
+    call denite#custom#var('grep', 'default_opts',
+                \ ['--smart-case', '--vimgrep', '-U'])
+    call denite#custom#var('grep', 'recursive_opts', [])
+    call denite#custom#var('grep', 'pattern_opt', [])
+    call denite#custom#var('grep', 'separator', ['--'])
+    call denite#custom#var('grep', 'final_opts', [])
 
-" history
-call denite#custom#var('command_history', 'ignore_command_regexp', ['^[A-Za-z]+$'])
+    " history
+    call denite#custom#var('command_history', 'ignore_command_regexp', ['^[A-Za-z]+$'])
 
-" Change default prompt
-call denite#custom#option('_', {
-            \ 'prompt': '>',
-            \ 'winheight': 16,
-            \ 'vertical_preview': 1
-            \ })
+    " Change default prompt
+    call denite#custom#option('_', {
+                \ 'prompt': '>',
+                \ 'winheight': 16,
+                \ 'vertical_preview': 1
+                \ })
 
-nnoremap <silent> <Leader><space>  :<C-u>Denite -resume<CR>
-nnoremap <silent> <Leader>j :call execute('Denite -resume -select=+'.v:count1.' -immediately')<CR>
-nnoremap <silent> <Leader>k :call execute('Denite -resume -select=-'.v:count1.' -immediately')<CR>
-nnoremap <silent> <Leader>df :<C-u>Denite file_rec<CR>
-nnoremap <silent> <Leader>dj :<C-u>Denite jump<CR>
-nnoremap <silent> <Leader>dt :<C-u>Denite tag<CR>
-nnoremap <silent> <Leader>dg :<C-u>Denite grep<CR>
-nnoremap <silent> <Leader>* :execute "Denite grep:::" . shellescape(expand("<cword>"))<CR>
-nnoremap <silent> <Leader>dd :<C-u>Denite line<CR>
-nnoremap <silent> <Leader>db :<C-u>Denite buffer<CR>
-nnoremap <silent> <Leader>dc :<C-u>Denite command<CR>
-nnoremap <silent> <Leader>dH :<C-u>Denite command_history<CR>
-nnoremap <silent> <Leader>dh :<C-u>Denite help<CR>
-nnoremap <silent> <Leader>do :<C-u>Denite outline<CR>
-nnoremap <silent> <Leader>dr :<C-u>Denite register<CR>
-nnoremap <silent> <Leader>dl :<C-u>Denite location_list<CR>
-nnoremap <silent> <Leader>dq :<C-u>Denite quickfix<CR>
+    nnoremap <silent> <Leader><space>  :<C-u>Denite -resume<CR>
+    nnoremap <silent> <Leader>j :call execute('Denite -resume -select=+'.v:count1.' -immediately')<CR>
+    nnoremap <silent> <Leader>k :call execute('Denite -resume -select=-'.v:count1.' -immediately')<CR>
+    nnoremap <silent> <Leader>df :<C-u>Denite file_rec<CR>
+    nnoremap <silent> <Leader>dj :<C-u>Denite jump<CR>
+    nnoremap <silent> <Leader>dt :<C-u>Denite tag<CR>
+    nnoremap <silent> <Leader>dg :<C-u>Denite grep<CR>
+    nnoremap <silent> <Leader>* :execute "Denite grep:::" . shellescape(expand("<cword>"))<CR>
+    nnoremap <silent> <Leader>dd :<C-u>Denite line<CR>
+    nnoremap <silent> <Leader>db :<C-u>Denite buffer<CR>
+    nnoremap <silent> <Leader>dc :<C-u>Denite command<CR>
+    nnoremap <silent> <Leader>dH :<C-u>Denite command_history<CR>
+    nnoremap <silent> <Leader>dh :<C-u>Denite help<CR>
+    nnoremap <silent> <Leader>do :<C-u>Denite outline<CR>
+    nnoremap <silent> <Leader>dr :<C-u>Denite register<CR>
+    nnoremap <silent> <Leader>dl :<C-u>Denite location_list<CR>
+    nnoremap <silent> <Leader>dq :<C-u>Denite quickfix<CR>
+endif
 " Denite END }}}2
 
 " operator-replace {{{2
