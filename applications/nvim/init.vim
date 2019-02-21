@@ -31,7 +31,7 @@ set noshowmode
 set ruler
 " show relative line numbers
 if v:version >= 800 && has("patch374")
-    set relativenumber
+    set norelativenumber
 else
     set norelativenumber
 endif
@@ -72,6 +72,12 @@ let g:netrw_silent=1
 if &diffopt =~ 'internal'
     set diffopt+=indent-heuristic,algorithm:patience
 endif
+
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
+
 " automatically go to the line last time
 if has("autocmd")
     augroup vimrcEx
@@ -83,11 +89,6 @@ if has("autocmd")
     augroup END
 endif " has("autocmd")
 " GENERAL END }}}
-
-" For conceal markers.
-if has('conceal')
-  set conceallevel=2 concealcursor=niv
-endif
 
 " KEY MAPPINGS {{{
 " set <Leader>
