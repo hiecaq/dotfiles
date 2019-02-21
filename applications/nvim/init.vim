@@ -208,7 +208,7 @@ let g:neosnippet#enable_optional_arguments=0
 " Neosnippet END }}}2
 
 " Denite  {{{2
-packadd denite
+packadd! denite.nvim
 
 " Change mappings.
 call denite#custom#map(
