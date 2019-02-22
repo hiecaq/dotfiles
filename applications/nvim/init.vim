@@ -35,12 +35,8 @@ set background=dark
 set noshowmode
 " show position of cursor
 set ruler
-" show relative line numbers
-if v:version >= 800 && has("patch374")
-    set norelativenumber
-else
-    set norelativenumber
-endif
+" don't show relative line numbers
+set norelativenumber
 " show line numbers
 set number
 " no line wrap
