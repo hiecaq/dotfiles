@@ -37,6 +37,3 @@
 [submodule "applications/nvim/pack/languages/start/vim-toml"]
 	path = applications/nvim/pack/languages/start/vim-toml
 	url = git@github.com:cespare/vim-toml.git
-[submodule "applications/nvim/pack/languages/start/vim-markdown"]
-	path = applications/nvim/pack/languages/start/vim-markdown
-	url = git@github.com:plasticboy/vim-markdown.git
