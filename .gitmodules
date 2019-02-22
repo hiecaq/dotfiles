@@ -4,9 +4,6 @@
 [submodule "applications/nvim/pack/ui/start/unite-location"]
 	path = applications/nvim/pack/ui/start/unite-location
 	url = git@github.com:chemzqm/unite-location.git
-[submodule "applications/nvim/pack/textobj/start/vim-textobj-user"]
-	path = applications/nvim/pack/textobj/start/vim-textobj-user
-	url = git@github.com:kana/vim-textobj-user.git
 [submodule "applications/nvim/pack/textobj/start/vim-textobj-variable-segment"]
 	path = applications/nvim/pack/textobj/start/vim-textobj-variable-segment
 	url = git@github.com:Julian/vim-textobj-variable-segment.git
@@ -19,9 +16,6 @@
 [submodule "applications/nvim/pack/textobj/start/vim-textobj-comment"]
 	path = applications/nvim/pack/textobj/start/vim-textobj-comment
 	url = git@github.com:glts/vim-textobj-comment.git
-[submodule "applications/nvim/pack/textobj/start/vim-operator-user"]
-	path = applications/nvim/pack/textobj/start/vim-operator-user
-	url = git@github.com:kana/vim-operator-user.git
 [submodule "applications/nvim/pack/textobj/start/vim-operator-replace"]
 	path = applications/nvim/pack/textobj/start/vim-operator-replace
 	url = git@github.com:kana/vim-operator-replace.git
