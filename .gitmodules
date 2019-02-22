@@ -34,6 +34,3 @@
 [submodule "applications/nvim/pack/textobj/start/vim-textobj-indent"]
 	path = applications/nvim/pack/textobj/start/vim-textobj-indent
 	url = git@github.com:kana/vim-textobj-indent.git
-[submodule "applications/nvim/pack/languages/start/vim-toml"]
-	path = applications/nvim/pack/languages/start/vim-toml
-	url = git@github.com:cespare/vim-toml.git
