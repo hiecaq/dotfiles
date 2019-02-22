@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:mboughaba/i3config.vim.git
+	branch = master
+	commit = a561ccc58809bdadb025bd539649a25e13ca1c4a
+	parent = 39e86ca7270bcf4a76775f2ccea82172a9b1d477
+	method = merge
+	cmdver = 0.4.0
