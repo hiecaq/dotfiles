@@ -49,9 +49,6 @@
 [submodule "applications/nvim/pack/languages/start/vim-markdown"]
 	path = applications/nvim/pack/languages/start/vim-markdown
 	url = git@github.com:plasticboy/vim-markdown.git
-[submodule "applications/nvim/pack/general/start/tabular"]
-	path = applications/nvim/pack/general/start/tabular
-	url = git@github.com:godlygeek/tabular.git
 [submodule "applications/nvim/pack/languages/start/vim-jsonnet"]
 	path = applications/nvim/pack/languages/start/vim-jsonnet
 	url = git@github.com:google/vim-jsonnet.git
