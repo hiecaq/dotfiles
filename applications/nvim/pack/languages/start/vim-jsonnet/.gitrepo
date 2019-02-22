@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:google/vim-jsonnet.git
+	branch = master
+	commit = 824dcfe76568dba38135332fc4729e2b2c4d9b3a
+	parent = 75d1ad9c3a86adcbf42cfb10eee18ad502ceac47
+	method = merge
+	cmdver = 0.4.0
