@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:justinmk/vim-sneak.git
+	branch = master
+	commit = 91192d8969af1d86c98beff4001612976ea25d7a
+	parent = 7a10cadcc2c1a873a62baee2aeba28ecd4c798e6
+	method = merge
+	cmdver = 0.4.0
