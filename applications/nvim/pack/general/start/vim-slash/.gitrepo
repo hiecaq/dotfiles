@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:junegunn/vim-slash.git
+	branch = master
+	commit = abfd99fad599af932cb6b97e995bcb59784a9a3b
+	parent = f4e9cc832e9e3108582b80d0955b6d3fa9c4f665
+	method = merge
+	cmdver = 0.4.0
