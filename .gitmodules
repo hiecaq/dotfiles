@@ -4,6 +4,3 @@
 [submodule "applications/nvim/pack/ui/start/unite-location"]
 	path = applications/nvim/pack/ui/start/unite-location
 	url = git@github.com:chemzqm/unite-location.git
-[submodule "applications/nvim/pack/textobj/start/vim-textobj-variable-segment"]
-	path = applications/nvim/pack/textobj/start/vim-textobj-variable-segment
-	url = git@github.com:Julian/vim-textobj-variable-segment.git
