@@ -16,9 +16,6 @@
 [submodule "applications/nvim/pack/textobj/start/vim-textobj-comment"]
 	path = applications/nvim/pack/textobj/start/vim-textobj-comment
 	url = git@github.com:glts/vim-textobj-comment.git
-[submodule "applications/nvim/pack/textobj/start/vim-operator-surround"]
-	path = applications/nvim/pack/textobj/start/vim-operator-surround
-	url = git@github.com:rhysd/vim-operator-surround.git
 [submodule "applications/nvim/pack/textobj/start/vim-textobj-indent"]
 	path = applications/nvim/pack/textobj/start/vim-textobj-indent
 	url = git@github.com:kana/vim-textobj-indent.git
