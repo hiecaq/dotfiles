@@ -460,7 +460,7 @@ endif
 
 " fcitx {{{2
 if (has('python3') || has('python')) && executable('fcitx')
-    packadd! fcitx
+    packadd! fcitx.vim
 endif
 " fcitx END }}}2
 

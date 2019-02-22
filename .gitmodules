@@ -31,9 +31,6 @@
 [submodule "applications/nvim/pack/textobj/start/vim-operator-surround"]
 	path = applications/nvim/pack/textobj/start/vim-operator-surround
 	url = git@github.com:rhysd/vim-operator-surround.git
-[submodule "applications/nvim/pack/general/opt/vim-gutentags"]
-	path = applications/nvim/pack/general/opt/vim-gutentags
-	url = git@github.com:ludovicchabant/vim-gutentags.git
 [submodule "applications/nvim/pack/general/start/vim-css-color"]
 	path = applications/nvim/pack/general/start/vim-css-color
 	url = git@github.com:ap/vim-css-color.git
