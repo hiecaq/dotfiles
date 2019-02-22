@@ -13,7 +13,7 @@ set wildignorecase
 set wildmenu
 
 " enable 256 colors
-if has("termguicolors")
+if has("termguicolors") && expand("$COLORTERM") ==# "truecolor"
     set termguicolors
     if !has("nvim")
         set t_Co=256
@@ -22,8 +22,12 @@ if has("termguicolors")
     endif
 endif
 
-" color theme
-colorscheme NeoSolarized
+" colorschemes
+if &termguicolors
+    colorscheme NeoSolarized
+else
+    colorscheme desert
+endif
 
 " set background type
 set background=dark
@@ -182,7 +186,7 @@ let g:indent_guides_start_level=2
 let g:indent_guides_guide_size=1
 
 " manually set colors ( no longer needed thanks to nvim)
-if !has("nvim") && has("autocmd")
+if !has("nvim") && has("autocmd") && &termguicolors
     let g:indent_guides_auto_colors = 0
     augroup Indent_Guides_Initial
         au!
