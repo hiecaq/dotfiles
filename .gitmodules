@@ -31,9 +31,6 @@
 [submodule "applications/nvim/pack/textobj/start/vim-operator-surround"]
 	path = applications/nvim/pack/textobj/start/vim-operator-surround
 	url = git@github.com:rhysd/vim-operator-surround.git
-[submodule "applications/nvim/pack/general/start/vim-sneak"]
-	path = applications/nvim/pack/general/start/vim-sneak
-	url = git@github.com:justinmk/vim-sneak.git
 [submodule "applications/nvim/pack/general/start/vim-slash"]
 	path = applications/nvim/pack/general/start/vim-slash
 	url = git@github.com:junegunn/vim-slash.git
