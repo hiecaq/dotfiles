@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:nathanaelkane/vim-indent-guides.git
+	branch = master
+	commit = 54d889a63716ee2f1818aa2ec5082db47147147b
+	parent = d5b9a97841553d09dc36dc90afeabd1a6852372c
+	method = merge
+	cmdver = 0.4.0
