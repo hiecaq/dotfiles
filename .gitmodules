@@ -43,6 +43,3 @@
 [submodule "applications/nvim/pack/languages/start/vim-jsonnet"]
 	path = applications/nvim/pack/languages/start/vim-jsonnet
 	url = git@github.com:google/vim-jsonnet.git
-[submodule "applications/nvim/pack/languages/start/vim-i3config"]
-	path = applications/nvim/pack/languages/start/vim-i3config
-	url = git@github.com:mboughaba/i3config.vim.git
