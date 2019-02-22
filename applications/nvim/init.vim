@@ -372,11 +372,6 @@ endif
 
 let g:echodoc_enable_at_startup=1
 let g:echodoc#type="echo"
-
-augroup Lazy_Loaded_deoplete_completion_source
-    au!
-    autocmd FileType vim :packadd neco-vim
-augroup END
 " deoplete END }}}2
 
 " LSP {{{2

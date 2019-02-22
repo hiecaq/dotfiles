@@ -34,9 +34,6 @@
 [submodule "applications/nvim/pack/general/start/vim-css-color"]
 	path = applications/nvim/pack/general/start/vim-css-color
 	url = git@github.com:ap/vim-css-color.git
-[submodule "applications/nvim/pack/environment/opt/neco-vim"]
-	path = applications/nvim/pack/environment/opt/neco-vim
-	url = git@github.com:Shougo/neco-vim.git
 [submodule "applications/nvim/pack/ui/opt/rainbow"]
 	path = applications/nvim/pack/ui/opt/rainbow
 	url = git@github.com:luochen1990/rainbow.git
