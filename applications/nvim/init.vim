@@ -453,13 +453,13 @@ endif
 " gutentags END }}}2
 
 " editorconfig {{{2
-if executable('editorconfig')
+if (has('python3') || has('python')) && executable('editorconfig')
     packadd! editorconfig-vim
 endif
 " editorconfig END }}}2
 
 " fcitx {{{2
-if executable('fcitx')
+if (has('python3') || has('python')) && executable('fcitx')
     packadd! fcitx
 endif
 " fcitx END }}}2
