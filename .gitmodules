@@ -7,6 +7,3 @@
 [submodule "applications/nvim/pack/textobj/start/vim-textobj-variable-segment"]
 	path = applications/nvim/pack/textobj/start/vim-textobj-variable-segment
 	url = git@github.com:Julian/vim-textobj-variable-segment.git
-[submodule "applications/nvim/pack/textobj/start/vim-textobj-parameter"]
-	path = applications/nvim/pack/textobj/start/vim-textobj-parameter
-	url = git@github.com:sgur/vim-textobj-parameter.git
