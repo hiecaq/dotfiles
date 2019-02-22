@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:icymind/NeoSolarized.git
+	branch = master
+	commit = 1af4bf6835f0fbf156c6391dc228cae6ea967053
+	parent = f75f21cca76e596a9db211d6f733ce202b045fc2
+	method = merge
+	cmdver = 0.4.0
