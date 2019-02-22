@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:sgur/vim-textobj-parameter.git
+	branch = master
+	commit = 201144f19a1a7081033b3cf2b088916dd0bcb98c
+	parent = 81e7e784a9c974c5dd62726def6c19fd787a7063
+	method = merge
+	cmdver = 0.4.0
