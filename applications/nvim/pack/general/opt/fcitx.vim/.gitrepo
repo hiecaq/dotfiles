@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:lilydjwg/fcitx.vim.git
+	branch = master
+	commit = cd5b278dc4972f95365e8a4badaad499446c2fd1
+	parent = 9ad6337a8be74558729b20d21e51105b9baad104
+	method = merge
+	cmdver = 0.4.0
