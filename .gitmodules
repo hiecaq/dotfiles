@@ -43,9 +43,6 @@
 [submodule "applications/nvim/pack/environment/start/MyUltiSnips"]
 	path = applications/nvim/pack/environment/start/MyUltiSnips
 	url = git@github.com:quinoa42/MyUltiSnips.git
-[submodule "applications/nvim/pack/environment/opt/tmux-complete"]
-	path = applications/nvim/pack/environment/opt/tmux-complete
-	url = git@github.com:wellle/tmux-complete.vim.git
 [submodule "applications/nvim/pack/textobj/start/caw"]
 	path = applications/nvim/pack/textobj/start/caw
 	url = git@github.com:tyru/caw.vim.git

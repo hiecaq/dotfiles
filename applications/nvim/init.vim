@@ -431,7 +431,6 @@ let g:rainbow_conf = {
 " tmux {{{2
 if executable('tmux')
     packadd! vim-tmux-navigator
-    packadd! tmux-complete
 else
   nnoremap <silent> <c-h> <c-w><c-h>
   nnoremap <silent> <c-j> <c-w><c-j>
