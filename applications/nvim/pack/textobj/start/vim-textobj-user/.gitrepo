@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:kana/vim-textobj-user.git
+	branch = master
+	commit = 074ce2575543f790290b189860597a3dcac1f79d
+	parent = 4435be50eeb052c0afba849cac40c12ff7c1e647
+	method = merge
+	cmdver = 0.4.0
