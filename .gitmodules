@@ -22,9 +22,6 @@
 [submodule "applications/nvim/pack/textobj/start/vim-operator-surround"]
 	path = applications/nvim/pack/textobj/start/vim-operator-surround
 	url = git@github.com:rhysd/vim-operator-surround.git
-[submodule "applications/nvim/pack/textobj/start/caw"]
-	path = applications/nvim/pack/textobj/start/caw
-	url = git@github.com:tyru/caw.vim.git
 [submodule "applications/nvim/pack/textobj/start/vim-textobj-indent"]
 	path = applications/nvim/pack/textobj/start/vim-textobj-indent
 	url = git@github.com:kana/vim-textobj-indent.git
