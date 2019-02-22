@@ -1,0 +1,42 @@
+language: generic
+
+os:
+  - linux
+  - osx
+
+dist: xenial
+
+install:
+  - git clone --depth 1 --single-branch https://github.com/thinca/vim-themis && (cd vim-themis && git rev-parse HEAD)
+  - |
+    if [[ "$TRAVIS_OS_NAME" == 'osx' ]]; then
+      brew update
+      export HOMEBREW_NO_AUTO_UPDATE=1
+      brew install macvim
+      brew list python3 &>/dev/null || brew install python3
+      pip3 install codecov covimerage
+    else
+      pip3 install codecov covimerage --user
+    fi
+
+before_script:
+  - uname -a
+  - vim --version
+  - covimerage --version
+  - python3 --version
+
+script:
+  - cd test/ && PROFILE_LOG=profile.txt ../vim-themis/bin/themis .
+
+after_success:
+  - covimerage write_coverage profile.txt
+  - coverage xml
+  - bash <(curl -s https://codecov.io/bash)
+
+cache: pip
+
+addons:
+  apt:
+    packages:
+      - python3
+      - python3-pip

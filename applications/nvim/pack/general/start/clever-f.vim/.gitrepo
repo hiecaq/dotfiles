@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:rhysd/clever-f.vim.git
+	branch = master
+	commit = c9c3f830fc77b5abaea0f1542f976a2310d38ed8
+	parent = e72a861f3ad45be39230c5e4da6c47489b15b276
+	method = merge
+	cmdver = 0.4.0
