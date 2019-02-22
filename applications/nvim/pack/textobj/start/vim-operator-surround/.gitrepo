@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:rhysd/vim-operator-surround.git
+	branch = master
+	commit = 80337a40a829cfc77b065a71d8a609e2ad7d2c8b
+	parent = 7b6683cd4591a5ecbbb5c7e20009545cbf498064
+	method = merge
+	cmdver = 0.4.0
