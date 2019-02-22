@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:christoomey/vim-tmux-navigator.git
+	branch = master
+	commit = 4e1a877f51a17a961b8c2a285ee80aebf05ccf42
+	parent = c3cc983b86e088b3d67e6176226dd88ed4b992d9
+	method = merge
+	cmdver = 0.4.0
