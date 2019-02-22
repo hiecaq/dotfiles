@@ -7,9 +7,6 @@
 [submodule "applications/nvim/pack/ui/start/NeoSolarized"]
 	path = applications/nvim/pack/ui/start/NeoSolarized
 	url = git@github.com:icymind/NeoSolarized.git
-[submodule "applications/nvim/pack/ui/start/vim-indent-guides"]
-	path = applications/nvim/pack/ui/start/vim-indent-guides
-	url = git@github.com:nathanaelkane/vim-indent-guides.git
 [submodule "applications/nvim/pack/ui/start/unite-location"]
 	path = applications/nvim/pack/ui/start/unite-location
 	url = git@github.com:chemzqm/unite-location.git
