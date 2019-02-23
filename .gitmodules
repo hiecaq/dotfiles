@@ -1,6 +1,3 @@
 [submodule "terminals/tpm"]
 	path = terminals/tpm
 	url = git@github.com:tmux-plugins/tpm.git
-[submodule "applications/nvim/pack/ui/start/unite-location"]
-	path = applications/nvim/pack/ui/start/unite-location
-	url = git@github.com:chemzqm/unite-location.git
