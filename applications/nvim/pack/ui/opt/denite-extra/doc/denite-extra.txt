@@ -1,0 +1,172 @@
+*denite-extra.txt*				Some extra sources for |denite|
+
+Version: 0.3
+Author:  Qiming Zhao <chemzqm at gmail.com>
+License: MIT license
+
+CONTENTS						*denite-extra-contents*
+
+Introduction		|denite-extra-introduction|
+Install			|denite-extra-install|
+Sources 		|denite-extra-sources|
+  session 			|denite-extra-session|
+  project			|denite-extra-project|
+  commands			|denite-extra-commands|
+  location_list			|denite-extra-location_list|
+  quickfix			|denite-extra-quickfix|
+  history 			|denite-extra-history|
+Changelog 			|denite-extra-changelog|
+Feedback 			|denite-feedback|
+
+==============================================================================
+INTRODUCTION					*denite-extra-introduction*
+
+Denite-extra is a vim/neovim plugin for user to easily manage sources
+including "session" "project" "commands" "location_list" "quickfix"
+
+==============================================================================
+INSTALL 					 	*denite-extra-install*
+
+Make sure you have "echo has('python3')" return 1 before useing |denite|.
+
+Take [vim-plug](https://github.com/junegunn/vim-plug) for example, add: >
+
+    Plug 'Shougo/denite.nvim'
+    Plug 'chemzqm/denite-extra'
+
+To your .vimrc and run "PlugInstall" after vim restarted.
+
+Run "UpdateRemotePlugins" command after denite.nvim installed.
+
+Note: |denite-extra| requires python >= 3.5.
+
+Note: tabopen action only support iTerm2, which is Mac only.
+
+==============================================================================
+SOURCES 					 	*denite-extra-sources*
+
+------------------------------------------------------------------------------
+SESSION 						*denite-extra-session*
+
+session 	Manage vim session files.
+		
+		Actions:
+
+		load 	load selected session, default action.
+
+		delete 	remove selected session(s)
+
+		Note: use `g:denite_source_session_path' to change location of
+		session files, the default is `~/.vim/sessions`
+`
+
+------------------------------------------------------------------------------
+PROJECT 						*denite-extra-project*
+
+project 	Manage your projects
+		
+		Actions:
+
+		open 	open denite file_rec of selected project
+
+		tabopen open selected project directory in new iTerm2 tab
+
+------------------------------------------------------------------------------
+COMMANDS 						*denite-extra-commands*
+
+commands 	Manage your vim commands in json file.
+
+		The commands is read from the file "~/.vim/commands.json" by
+		default, which contains commands description in json format, for
+		example: >
+
+		[{
+		  "command": "Mouse",
+		  "description": "Toggler mouse option",
+		  "args": 0
+		}]
+<
+		args could be 1 or 0 to indicate whether the command need
+		arguments.
+
+		Vars:
+
+		config 	for custom json file path, for example: >
+
+		call denite#custom#var('commands', 'config', '~/commands.json')
+<
+		Actions:
+
+		execute execute selected command
+
+		edit 	edit selected command
+
+------------------------------------------------------------------------------
+LOCATIONLIST 					*denite-extra-location_list*
+
+location_list 	Manage vim's location_list
+		
+		Actions:
+
+		Same as file_rec.
+
+------------------------------------------------------------------------------
+QUICKFIX 						*denite-extra-quickfix*
+
+quickfix 	Manage vim's quickfix list
+		
+		Actions:
+
+		[cc] Jump to selected location use `:cc` (default action)
+
+		[quickfix] Make selected targets as new quickfix list.
+
+------------------------------------------------------------------------------
+HISTORY 						*denite-extra-history*
+
+history 	Manage vim's history
+
+		Arguments:
+
+		args[0] could be the type of history:
+
+		"cmd" 		for command line
+		"search"	for search
+		"expr" 		for expressions
+		"input" 	for input history
+		"debug" 	for debug history
+		
+		Actions:
+
+		execute 	default action.
+				execute selected search or command
+
+		feedkeys 	feedkeys to command line for modification
+				
+
+
+==============================================================================
+CHANGELOG 					 	*denite-extra-changelog*
+
+0.3 	Mar 16, 2018
+
+	- remove func source, use https://github.com/neoclide/npm.nvim
+	  instead.
+
+0.2 	Mar 16, 2018
+
+	- remove node source, use https://github.com/neoclide/npm.nvim
+	  instead.
+
+0.1     Feb 24, 2017
+
+	- works
+
+==============================================================================
+FEEDBACK 					 	*denite-extra-feedback*
+
+|denite-extra| is open sourced at https://github.com/chemzqm/denite-extra.
+feel free to open a issue when you get any problem.
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:noet:fen:
