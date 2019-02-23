@@ -212,6 +212,7 @@ let g:neosnippet#enable_optional_arguments=0
 " Denite  {{{2
 if has("nvim") && has("python3")
     packadd! denite.nvim
+    packadd! denite-extra
 
     " Change mappings.
     call denite#custom#map(
