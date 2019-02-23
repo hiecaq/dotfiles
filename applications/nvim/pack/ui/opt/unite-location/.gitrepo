@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:chemzqm/unite-location.git
+	branch = master
+	commit = 21e571d8bda5b383043b955a22ba8ce88b18851e
+	parent = cf0dafe67c4c50ca42b4527ad9474b69e06176e8
+	method = merge
+	cmdver = 0.4.0
