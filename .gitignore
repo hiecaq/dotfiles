@@ -3,3 +3,4 @@ drafts/
 applications/nvim/plugged
 applications/nvim/.netrwhist
 karabiner.d/log
+applications/nvim/pack/*/*/*/doc/tags
