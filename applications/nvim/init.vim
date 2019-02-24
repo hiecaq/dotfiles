@@ -284,6 +284,11 @@ endif
 map _ <Plug>(operator-replace)
 " operator-replace END }}}2
 
+" operator-end {{{2
+map <silent> ; <Plug>(operator-end-toggle-semicolon)
+map <silent> , <Plug>(operator-end-toggle-comma)
+" operator-end }}}2
+
 " textobj-comment {{{2
 let g:textobj_comment_no_default_key_mappings = 1
 
