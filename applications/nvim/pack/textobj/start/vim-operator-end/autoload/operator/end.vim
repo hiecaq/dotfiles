@@ -10,7 +10,7 @@ function! operator#end#set_symbol(symbol) abort
 endfunction
 
 function! s:end_with_symbol(content) abort
-    return a:content =~# '\v\s*' . s:op_end_symbol
+    return a:content =~# '\v\s*' . s:op_end_symbol . '\s*$'
 endfunction
 
 function! s:pos_new(pos) abort
@@ -51,7 +51,7 @@ function! s:operator_end_char_toggle(start, end) abort
     endif
     call setpos('.', [a:end.bufnum, a:end.lnum, a:end.col, a:end.off])
     if s:end_with_symbol(l:content)
-        let l:index = match(l:content, s:op_end_symbol)
+        let l:index = match(l:content, '\v' . s:op_end_symbol . '\s*$')
         call s:normal(string(l:offset + l:index) . '|"_x')
     else
         let l:line = getline(a:end.lnum)

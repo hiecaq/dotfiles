@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:quinoa42/vim-operator-end.git
 	branch = master
-	commit = 516ae216b2a01b350fa279aa95d835e9dcbbea3a
-	parent = 024e8431bf561e8979689d892998ae855fd60f47
+	commit = dcadf6405639696ea17e611628d985cc7edc6e4b
+	parent = 0bdc83a58725c1fd9b71dbbc8f5517195c11dc44
 	method = merge
 	cmdver = 0.4.0
