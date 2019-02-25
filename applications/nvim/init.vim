@@ -238,17 +238,31 @@ if has("nvim") && has("python3")
     call denite#custom#source(
                 \ '_', 'sorters', ['sorter_sublime'])
 
-    " Change file_rec command.
-    call denite#custom#var('file_rec', 'command',
-                \ ['rg', '--files', '--glob', '!.git'])
-    " Ag command on grep source
-    call denite#custom#var('grep', 'command', ['rg'])
-    call denite#custom#var('grep', 'default_opts',
-                \ ['--smart-case', '--vimgrep', '-U'])
-    call denite#custom#var('grep', 'recursive_opts', [])
-    call denite#custom#var('grep', 'pattern_opt', [])
-    call denite#custom#var('grep', 'separator', ['--'])
-    call denite#custom#var('grep', 'final_opts', [])
+    if executable('rg')
+        " Change file_rec command.
+        call denite#custom#var('file_rec', 'command',
+                    \ ['rg', '--files', '--glob', '!.git'])
+        " rg command on grep source
+        call denite#custom#var('grep', 'command', ['rg'])
+        call denite#custom#var('grep', 'default_opts',
+                    \ ['--smart-case', '--vimgrep', '--no-heading', '-U'])
+        call denite#custom#var('grep', 'recursive_opts', [])
+        call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
+        call denite#custom#var('grep', 'separator', ['--'])
+        call denite#custom#var('grep', 'final_opts', [])
+    elseif executable('ag')
+        " Change file_rec command.
+        call denite#custom#var('file/rec', 'command',
+                    \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
+        " ag command on grep source
+        call denite#custom#var('grep', 'command', ['ag'])
+        call denite#custom#var('grep', 'default_opts',
+                    \ ['-i', '--vimgrep'])
+        call denite#custom#var('grep', 'recursive_opts', [])
+        call denite#custom#var('grep', 'pattern_opt', [])
+        call denite#custom#var('grep', 'separator', ['--'])
+        call denite#custom#var('grep', 'final_opts', [])
+    endif
 
     " history
     call denite#custom#var('command_history', 'ignore_command_regexp', ['^[A-Za-z]+$'])
