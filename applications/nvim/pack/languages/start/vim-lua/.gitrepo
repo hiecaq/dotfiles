@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:tbastos/vim-lua.git
+	branch = master
+	commit = 1b80f6bf950f85a1f2068c1407e70d1279342a52
+	parent = 16a93975bba8d5fcfcb54828d9bed33524fdf20d
+	method = merge
+	cmdver = 0.4.0
