@@ -75,11 +75,6 @@ if &diffopt =~ 'internal'
     set diffopt+=indent-heuristic,algorithm:patience
 endif
 
-" For conceal markers.
-if has('conceal')
-  set conceallevel=2 concealcursor=niv
-endif
-
 " automatically go to the line last time
 if has("autocmd")
     augroup vimrcEx
