@@ -1,0 +1,30 @@
+\documentclass{book}
+
+\input{preamble}
+\addbibresource{book.bib}
+\addglobalbib{book.bib}
+
+\begin{document}
+
+\frontmatter
+\input{ frontmatter }
+
+\mainmatter
+% Todo This should NOT match
+\input{chapters}
+\todo[inline]{Match more things}
+
+\appendix
+\input{appendix}
+% TODO: This should be much better!
+
+% IMPORTANT: Mucho importante
+
+% IMPORTANTE: Very important
+
+\backmatter
+% FIXME Be smarter
+\input{backmatter}
+
+\bibliography{book.bib,test}
+\end{document}
