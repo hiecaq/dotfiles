@@ -1,7 +1,7 @@
 Operator for toggling trailing symbols
 ================================================
 
-This plugin defines two operator that toggles the existence of a perticular symbol at the end of a motion or textobj. The implementation provides bindings for comma and semicolon, but one can easily add their own.
+This plugin defines two operator that toggles the existence of a particular symbol at the end of a motion or textobj. The implementation provides bindings for comma and semicolon, but one can easily add their own.
 
 Requirements
 ----------------------
@@ -21,7 +21,7 @@ map <silent> , <Plug>(operator-end-toggle-comma)
 Defining more operators
 ----------------------
 
-You can define new operators that toggle some perticular symbol with the following code:
+You can define new operators that toggle some particular symbol with the following code:
 
 ```vim
 call operator#user#define('end-toggle-sharp', 'operator#end#toggle', 'call operator#end#set_symbol("#")')
@@ -49,12 +49,12 @@ int f() {
 }
 ```
 
-This is likely to happen if you stay up late and somehow believe that you are writing in a language that doesn't require a semicolon to mark the end of a statement. If you want to repeat append, you might need to use macro or something more fancy. But with this plugin, you can simply do `;i{`, and you are free to move on.
+This is likely to happen if you stay up late and somehow believe that you are writing in a language that doesn't require a semicolon to mark the end of a statement. If you want to repeat appending semicolon on each line, you might need to use macro or something more fancy. But with this plugin, you can simply do `;i{`, and you are free to move on.
 
 Miscs
 ----------------------
 
-This is my first vim plugin, so the implementation might seems a little bit ugly. Any helps, found issues and PRs are appreciated.
+This is my first Vim plugin, so the implementation might seems a little bit ugly. Any helps, found issues and PRs are appreciated.
 
 TODO list:
 - [ ] doc
