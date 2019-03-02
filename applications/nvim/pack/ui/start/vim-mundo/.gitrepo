@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:simnalamburt/vim-mundo.git
 	branch = master
-	commit = f16e39913a9f32ee3483f7fa531621ae7b437816
-	parent = 94adef17a2edb60ab7b8421a0a2d2dcc34286d82
+	commit = 99fe679637d5a366e42b4f99d81d9d37de167798
+	parent = bf190366ceec2b6b6f6bc500af75b22cb6087dd7
 	method = merge
 	cmdver = 0.4.0
