@@ -14,5 +14,6 @@ ptpython
 editorconfig
 x11
 compton
-i3
+awesome
+fontconfig
 firefox
