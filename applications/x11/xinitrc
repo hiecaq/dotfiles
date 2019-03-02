@@ -8,10 +8,6 @@ sysmodmap=/etc/X11/xinit/.Xmodmap
 userwallpaper=$HOME/.fehbg
 usercomptonconfig=$HOME/.config/compton/compton.conf
 
-export GTK_IM_MODULE=fcitx
-export QT_IM_MODULE=fcitx
-export XMODIFIERS=@im=fcitx
-
 # merge in defaults and keymaps
 
 if [ -f $sysresources ]; then
@@ -26,10 +22,16 @@ if [ -f "$userresources" ]; then
     xrdb -merge "$userresources"
 fi
 
-if (xinput | grep "HHKB" > /dev/null); then
+if (hash xinput 2>/dev/null) && (xinput | grep "HHKB" > /dev/null); then
     xmodmap $hhkbmodmap
 elif [ -f "$usermodmap" ]; then
     xmodmap "$usermodmap"
+fi
+
+if (hash xinput 2>/dev/null); then
+    xinput disable 10 # cam
+    xinput disable 11 # cam
+    xinput disable 12 # touchscreen
 fi
 
 # start some nice programs
@@ -54,4 +56,4 @@ if (hash fcitx 2>/dev/null); then
     fcitx &
 fi
 
-exec i3
+exec awesome
