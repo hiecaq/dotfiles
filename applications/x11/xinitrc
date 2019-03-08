@@ -56,4 +56,8 @@ if (hash fcitx 2>/dev/null); then
     fcitx &
 fi
 
+if (hash redshift 2>/dev/null); then
+    systemctl --user start redshift.service
+fi
+
 exec awesome
