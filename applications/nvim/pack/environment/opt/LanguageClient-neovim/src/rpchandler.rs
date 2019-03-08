@@ -36,7 +36,7 @@ impl LanguageClient {
             }
         }
 
-        // TODO
+        // FIXME
         if let Err(err) = self.handle_fs_events() {
             warn!("{:?}", err);
         }
@@ -70,6 +70,7 @@ impl LanguageClient {
             lsp::request::DocumentSymbolRequest::METHOD => {
                 self.textDocument_documentSymbol(&params)
             }
+            lsp::request::ShowMessageRequest::METHOD => self.window_showMessageRequest(&params),
             lsp::request::WorkspaceSymbol::METHOD => self.workspace_symbol(&params),
             lsp::request::CodeActionRequest::METHOD => self.textDocument_codeAction(&params),
             lsp::request::Completion::METHOD => self.textDocument_completion(&params),
@@ -110,8 +111,8 @@ impl LanguageClient {
                     }
                 } else {
                     // Message from vim. Proxy to language server.
-                    let (languageId_target,): (String,) =
-                        self.gather_args(&[VimVar::LanguageId], &params)?;
+                    let filename = self.vim()?.get_filename(&params)?;
+                    let languageId_target = self.vim()?.get_languageId(&filename, &params)?;
                     info!(
                         "Proxy message directly to language server: {:?}",
                         method_call
@@ -189,8 +190,8 @@ impl LanguageClient {
                     }
                 } else {
                     // Message from vim. Proxy to language server.
-                    let (languageId_target,): (String,) =
-                        self.gather_args(&[VimVar::LanguageId], &params)?;
+                    let filename = self.vim()?.get_filename(&params)?;
+                    let languageId_target = self.vim()?.get_languageId(&filename, &params)?;
                     info!(
                         "Proxy message directly to language server: {:?}",
                         notification
