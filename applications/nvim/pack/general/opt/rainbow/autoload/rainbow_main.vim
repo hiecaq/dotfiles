@@ -83,7 +83,7 @@ fun rainbow_main#gen_config(ft)
 		return 0
 	else
 		let conf = extend(extend({'syn_name_prefix': substitute(a:ft, '\v\A+(\a)', '\u\1', 'g').'Rainbow'}, dft_conf), af_conf)
-		let conf.cycle = has('gui_running')? s:lcm(len(conf.guifgs), len(conf.guis)) : s:lcm(len(conf.ctermfgs), len(conf.cterm))
+		let conf.cycle = has('gui_running')? s:lcm(len(conf.guifgs), len(conf.guis)) : s:lcm(len(conf.ctermfgs), len(conf.cterms))
 		return conf
 	endif
 endfun
@@ -93,7 +93,7 @@ fun rainbow_main#gen_configs(ft)
 endfun
 
 fun rainbow_main#load()
-	let b:rainbow_confs = rainbow_main#gen_configs(&ft)
+	let b:rainbow_confs = rainbow_main#gen_configs(&filetype)
 	for conf in b:rainbow_confs
 		call rainbow#syn(conf)
 		call rainbow#hi(conf)
