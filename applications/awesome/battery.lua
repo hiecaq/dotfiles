@@ -1,10 +1,10 @@
-local utility = require("utility")
+local utility = require("util")
 local wibox = require("wibox")
 local gears = require("gears")
 
-THIS = {}
+local THIS = {}
 
-local icon = {
+local icon = { --- {{{
     ["Charging"] = {
         [100] = '',
         [90] = '',
@@ -34,7 +34,7 @@ local icon = {
     ["Full"] = {
         [100] = '',
     }
-}
+} --- }}}
 
 function THIS.battery(name)
     local battery_widget = wibox.widget {
@@ -57,7 +57,7 @@ function THIS.battery(name)
         set_battery = function(self, val)
             local value = tonumber(val.capacity:match("^%s*(.-)%s*$"))
             self.inner.status.text = (icon[val.status:match("^%s*(.-)%s*$")][(value // 10) * 10])
-            self.inner.capacity.text = value .. "% "
+            self.inner.capacity.text = value .. "%"
         end,
     }
     gears.timer {
@@ -73,3 +73,5 @@ function THIS.battery(name)
 end
 
 return THIS
+
+-- vim: foldenable:foldmethod=marker

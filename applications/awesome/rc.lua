@@ -9,6 +9,7 @@ require("awful.autofocus")
 -- Widget and layout library
 local wibox = require("wibox")
 local bat = require('battery')
+local disk = require('disk')
 -- Theme handling library
 local beautiful = require("beautiful")
 -- Notification library
@@ -209,6 +210,8 @@ awful.screen.connect_for_each_screen(function(s)
         },
         s.mytasklist, -- Middle widget
         { -- Right widgets
+            disk.disk_space_usage("/", ""),
+            disk.disk_space_usage("$HOME", ""),
             bat.battery('BAT0'),
             layout = wibox.layout.fixed.horizontal,
             wibox.widget.systray(),

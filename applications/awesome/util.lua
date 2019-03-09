@@ -1,7 +1,10 @@
 local fs = require("gears.filesystem")
+local awful = require("awful")
+local str = require("gears.string")
 
 local THIS = {} -- module
 
+-- Dirtable(dirpath, filelist) {{{
 local Dirtable = {}
 
 function Dirtable:new(dirpath, filelist)
@@ -38,5 +41,35 @@ end
 function THIS.dirtable(dirpath, filelist)
     return Dirtable:new(dirpath, filelist)
 end
+-- Dirtable(dirpath, filelist) }}}
+
+-- AsyncTsv(cmd, fields) {{{
+local AsyncTsv = {}
+
+function AsyncTsv:new(cmd, fields)
+    local this = { _cmd = cmd, _fields = fields }
+    self.__index = self
+    setmetatable(this, self)
+
+    return this
+end
+
+function AsyncTsv:do_with(callback)
+    awful.spawn.easy_async_with_shell(self._cmd, function(stdout, stderr, reason, exit_code)
+        local output = str.split(stdout:match("^%s*(.-)%s*$"), "\t")
+        local tsv = {}
+        for i, field in ipairs(self._fields) do
+            tsv[field] = output[i]
+        end
+        callback(tsv)
+    end)
+end
+
+function THIS.async_tsv(cmd, fields)
+    return AsyncTsv:new(cmd, fields)
+end
+-- AsyncTsv(cmd, fields) }}}
 
 return THIS -- end module
+
+-- vim: foldenable:foldmethod=marker
