@@ -241,25 +241,45 @@ globalkeys = gears.table.join(
     awful.key({ modkey,           }, "Escape", awful.tag.history.restore,
               {description = "go back", group = "tag"}),
 
+    awful.key({ modkey,           }, "h",
+        function () awful.client.focus.global_bydirection("left") end,
+        {description = "focus left by direction", group = "client"}
+    ),
     awful.key({ modkey,           }, "l",
-        function ()
-            awful.client.focus.byidx( 1)
-        end,
+        function () awful.client.focus.global_bydirection("right") end,
+        {description = "focus right by direction", group = "client"}
+    ),
+    awful.key({ modkey,           }, "j",
+        function () awful.client.focus.global_bydirection("down") end,
+        {description = "focus down by direction", group = "client"}
+    ),
+    awful.key({ modkey,           }, "k",
+        function () awful.client.focus.global_bydirection("up") end,
+        {description = "focus up by direction", group = "client"}
+    ),
+    awful.key({ modkey,           }, "n",
+        function () awful.client.focus.byidx( 1) end,
         {description = "focus next by index", group = "client"}
     ),
-    awful.key({ modkey,           }, "h",
-        function ()
-            awful.client.focus.byidx(-1)
-        end,
+    awful.key({ modkey,           }, "p",
+        function () awful.client.focus.byidx(-1) end,
         {description = "focus previous by index", group = "client"}
     ),
     awful.key({ modkey,           }, "w", function () mymainmenu:show() end,
               {description = "show main menu", group = "awesome"}),
 
     -- Layout manipulation
-    awful.key({ modkey, "Shift"   }, "l", function () awful.client.swap.byidx(  1)    end,
-              {description = "swap with next client by index", group = "client"}),
-    awful.key({ modkey, "Shift"   }, "h", function () awful.client.swap.byidx( -1)    end,
+    awful.key({ modkey, "Shift"   }, "h", function () awful.client.swap.global_bydirection("left") end,
+              {description = "swap with left client by direction", group = "client"}),
+    awful.key({ modkey, "Shift"   }, "l", function () awful.client.swap.global_bydirection("right") end,
+              {description = "swap with right client by direction", group = "client"}),
+    awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.global_bydirection("down") end,
+              {description = "swap with lower client by direction", group = "client"}),
+    awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.global_bydirection("up") end,
+              {description = "swap with upper client by direction", group = "client"}),
+    awful.key({ modkey, "Shift"   }, "n", function () awful.client.swap.byidx(  1)    end,
+              {description = "swap with left client by direction", group = "client"}),
+    awful.key({ modkey, "Shift"   }, "p", function () awful.client.swap.byidx( -1)    end,
               {description = "swap with previous client by index", group = "client"}),
     awful.key({ modkey, "Control" }, "l", function () awful.screen.focus_relative( 1) end,
               {description = "focus the next screen", group = "screen"}),
@@ -279,7 +299,7 @@ globalkeys = gears.table.join(
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
               {description = "open a terminal", group = "launcher"}),
-    awful.key({ modkey, "Control" }, "r", awesome.restart,
+    awful.key({ modkey, "Control", "Shift" }, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit,
               {description = "quit awesome", group = "awesome"}),
@@ -301,17 +321,17 @@ globalkeys = gears.table.join(
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(-1)                end,
               {description = "select previous", group = "layout"}),
 
-    awful.key({ modkey, "Control" }, "n",
-              function ()
-                  local c = awful.client.restore()
-                  -- Focus restored client
-                  if c then
-                    c:emit_signal(
-                        "request::activate", "key.unminimize", {raise = true}
-                    )
-                  end
-              end,
-              {description = "restore minimized", group = "client"}),
+    -- awful.key({ modkey, "Control" }, "n",
+    --           function ()
+    --               local c = awful.client.restore()
+    --               -- Focus restored client
+    --               if c then
+    --                 c:emit_signal(
+    --                     "request::activate", "key.unminimize", {raise = true}
+    --                 )
+    --               end
+    --           end,
+    --           {description = "restore minimized", group = "client"}),
 
     -- Prompt
     awful.key({ modkey },            "r",     function () awful.screen.focused().mypromptbox:run() end,
@@ -328,7 +348,7 @@ globalkeys = gears.table.join(
               end,
               {description = "lua execute prompt", group = "awesome"}),
     -- Menubar
-    awful.key({ modkey }, "p", function() menubar.show() end,
+    awful.key({ modkey, "Control" }, "r", function() menubar.show() end,
               {description = "show the menubar", group = "launcher"})
 )
 
@@ -349,13 +369,13 @@ clientkeys = gears.table.join(
               {description = "move to screen", group = "client"}),
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,
               {description = "toggle keep on top", group = "client"}),
-    awful.key({ modkey,           }, "n",
-        function (c)
-            -- The client currently has the input focus, so it cannot be
-            -- minimized, since minimized clients can't have the focus.
-            c.minimized = true
-        end ,
-        {description = "minimize", group = "client"}),
+    -- awful.key({ modkey,           }, "n",
+    --     function (c)
+    --         -- The client currently has the input focus, so it cannot be
+    --         -- minimized, since minimized clients can't have the focus.
+    --         c.minimized = true
+    --     end ,
+    --     {description = "minimize", group = "client"}),
     awful.key({ modkey,           }, "m",
         function (c)
             c.maximized = not c.maximized
