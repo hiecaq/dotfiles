@@ -1,0 +1,71 @@
+[general]
+metadata = $XDG_DATA_HOME/offlineimap
+accounts = main
+maxsyncaccounts = 1
+ui = ttyui
+pythonfile = $XDG_CONFIG_HOME/offlineimap/util.py
+socktimeout = 30
+fsync = False
+
+
+[mbnames]
+enabled = yes
+filename = $XDG_DATA_HOME/mutt/mailboxes
+header = "mailboxes "
+peritem = "+%(accountname)s/%(foldername)s"
+sep = " "
+footer = "\n"
+incremental = no
+
+# ACCOUNT ############################## {{{1
+[Account main]
+localrepository = main-local
+remoterepository = main-remote
+quick = 5
+maildir-windows-compatible = no
+synclabels = no
+labelsheader = X-Keywords
+postsynchook = notmuch new
+
+# local ######################## {{{2
+[Repository main-local]
+type = Maildir
+localfolders = ~/documents/mail/main
+sync_deletes = yes
+utime_from_header = yes
+filename_use_mail_timestamp = yes
+nametrans = lambda folder: {'drafts':  '[Gmail]/Drafts',
+                                'sent':    '[Gmail]/Sent Mail',
+                                'flagged': '[Gmail]/Starred',
+                                'trash':   '[Gmail]/Trash',
+                                'archive': '[Gmail]/All Mail',
+                                'inbox': 'INBOX',
+                            }.get(folder, folder)
+# local ######################## }}}2
+
+# remote ######################## {{{2
+[Repository main-remote]
+type = Gmail
+remoteusereval = get_username("gmail")
+remotepasseval = get_pass("gmail")
+starttls = yes
+ssl = yes
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+ssl_version = tls1_2
+auth_mechanisms = XOAUTH2
+oauth2_client_id_eval = get_client_id("gmail")
+oauth2_client_secret_eval = get_client_secret("gmail")
+oauth2_request_url = https://accounts.google.com/o/oauth2/token
+oauth2_refresh_token_eval = get_refresh_token("gmail")
+maxconnections = 1
+nametrans = lambda foldername: re.sub ('^\[gmail\]/', '',
+                               re.sub ('sent_mail', 'sent',
+                               re.sub ('all_mail', 'archive',
+                               re.sub (' ', '_', foldername.lower()))))
+folderfilter = lambda folder: folder not in ['[Gmail]/Spam', '[Gmail]/Important', '[Gmail]/Trash', 'INBOX', '[Gmail]/Starred']
+createfolders = True
+sync_deletes = no
+# remote ######################## }}}2
+# ACCOUNT ############################## }}}1
+
+# vim: foldenable:foldmethod=marker ft=conf
