@@ -3,7 +3,7 @@
 " Provided only as an example.
 " Do not install/run without reading through as you may be surprised by some
 " of the settings.
- 
+
 " May require the latest beta builds.
 
 " Move this to $XDG_CONFIG_DIR/tridactyl/tridactylrc (that's
@@ -11,7 +11,7 @@
 " install the native messenger (:installnative in Tridactyl). Run :source to
 " get it in the browser, or just restart.
 
-" NB: If you want "vim-like" behaviour where removing a line from 
+" NB: If you want "vim-like" behaviour where removing a line from
 " here makes the setting disappear, uncomment the line below.
 
 sanitise tridactyllocal tridactylsync
@@ -53,9 +53,15 @@ fixamo_quiet
 " Make quickmarks for the sane Tridactyl issue view
 " quickmark t https://github.com/cmcaine/tridactyl/issues?utf8=%E2%9C%93&q=sort%3Aupdated-desc+
 
+" search engines
+set searchurls.archpack https://www.archlinux.org/packages/?sort=&q=%s&maintainer=&flagged=
+set searchurls.archwiki https://wiki.archlinux.org/index.php?search=%s&title=Special:Search&go=Go
+set searchurls.aur https://aur.archlinux.org/packages/?O=0&K=
+set searchurls.crate https://crates.io/search?q=
+
 "
 " URL redirects
-" 
+"
 
 " New reddit is bad
 " autocmd DocStart www.reddit.com js tri.excmds.urlmodify("-t", "www", "old")
