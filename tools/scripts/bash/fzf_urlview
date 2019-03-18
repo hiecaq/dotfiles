@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
-tmux capture-pane -J -p -t "$TMUX_PANE" | rg -o 'https?://[A-Za-z0-9./%&?=+_-]+' | fzf-tmux | xargs -r xdg-open
+sed 's/ //g' | rg -o 'https?://[A-Za-z0-9./%&?=+_-]+' | fzf-tmux | xargs -r xdg-open

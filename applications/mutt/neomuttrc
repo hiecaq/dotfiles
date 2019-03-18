@@ -85,6 +85,7 @@ set menu_scroll
 set nomarkers
 
 bind attach <return> view-mailcap
+macro pager \co <pipe-entry>'fzf_urlview'<enter> 'Follow links with urlview'
 # Pager View ############ }}}
 
 # Compose View ########## {{{
