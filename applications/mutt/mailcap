@@ -1,0 +1,5 @@
+text/html; firefox --new-tab %s
+image/jpg; feh %s
+image/png; feh %s
+image/gif; feh %s
+application/pdf; zathura %s
