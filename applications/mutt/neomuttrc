@@ -51,30 +51,35 @@ tag-transforms "inbox"   "i"   \
                "replied" "↻"  \
                "sent"    "➥"  \
                "todo"    "T"   \
-               "deleted" "DEL" \
+               "archived" "" \
+               "deleted" "ﮁ" \
+               "signed" "" \
                "invites" "CAL"
 
-tag-formats "inbox"   "GI" \
+tag-formats "archived"   "GA" \
             "todo"  "GU" \
             "replied" "GR" \
             "sent"    "GS" \
             "unread"    "Gt" \
             "deleted" "GD" \
+            "signed"  "Gs" \
             "invites" "Gi"
 
 set date_format="%m/%d"
-set index_format='%4C %S %[%y/%m/%d] %-18.18n %?GD?%GD& ? %?GU?%GU& ? %?GR?%GR& ? %?GI?%GI& ? %s'
+set index_format='%4C %[%y/%m/%d] %-18.18n %?GD?%GD& ?%?Gs?%Gs& ?%?GU?%GU& ?%?GR?%GR& ?%?GA?%GA& ? %s'
 # color index_tag red white "inbox"
 # color index_tags green default
 
-set index_format="[%Z]  %D  %-20.20F  %s"
+# set index_format="[%Z]  %D  %-20.20F  %s"
 set sort=threads
 set sort_aux=last-date-received
 set uncollapse_jump
 
 bind index t collapse-thread
 bind index,pager \` modify-labels
-macro index A "<modify-labels>+archive -unread\n"
+macro index A "<modify-labels>+archived -unread\n"
+macro index D "<modify-labels>+deleted -archived -unread\n"
+bind index ? vfolder-from-query
 # Index View ############ }}}
 
 # Pager View ############ {{{
@@ -120,11 +125,11 @@ set nm_default_uri="notmuch:///home/quinoa42/documents/mail"
 set virtual_spoolfile
 set nm_query_type = threads
 set nm_exclude_tags = "deleted"
-virtual-mailboxes "newsletters" "notmuch://?query=tag:newsletters and not tag:archive"
-virtual-mailboxes "mailing lists" "notmuch://?query=tag:mailinglists and not tag:archive"
-virtual-mailboxes "participated" "notmuch://?query=tag:participated and not tag:archive"
-virtual-mailboxes "general" "notmuch://?query=tag:general and not tag:archive"
-virtual-mailboxes "archive" "notmuch://?query=tag:archive"
+virtual-mailboxes "newsletters" "notmuch://?query=tag:newsletters and not tag:archived"
+virtual-mailboxes "mailing lists" "notmuch://?query=tag:mailinglists and not tag:archived"
+virtual-mailboxes "participated" "notmuch://?query=tag:participated and not tag:archived"
+virtual-mailboxes "general" "notmuch://?query=tag:general and not tag:archived"
+virtual-mailboxes "archived" "notmuch://?query=tag:archived"
 # notmuch ############### }}}
 
 # vim: foldenable:foldmethod=marker
