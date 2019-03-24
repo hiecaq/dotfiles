@@ -39,15 +39,15 @@ local icon = { --- {{{
 function THIS.battery(name)
     local battery_widget = wibox.widget {
         {
+            {
+                id = "status",
+                text = "",
+                widget = wibox.widget.textbox
+            },
             id = "inner",
             {
                 id = "capacity",
                 text = "0%",
-                widget = wibox.widget.textbox
-            },
-            {
-                id = "status",
-                text = "",
                 widget = wibox.widget.textbox
             },
             layout = wibox.layout.fixed.horizontal

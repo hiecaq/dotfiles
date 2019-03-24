@@ -11,13 +11,13 @@ function THIS.disk_space_usage(path, icon)
         {
             id = "inner",
             {
-                id = "info",
-                text = "0G/0G",
+                id = "icon",
+                text = icon,
                 widget = wibox.widget.textbox
             },
             {
-                id = "icon",
-                text = icon,
+                id = "info",
+                text = "0G/0G",
                 widget = wibox.widget.textbox
             },
             layout = wibox.layout.fixed.horizontal
