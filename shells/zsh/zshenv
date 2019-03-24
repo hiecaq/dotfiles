@@ -1,6 +1,7 @@
 # Usually run for every zsh.
 # editor
 export MANPAGER='nvim +Man!'
+export CLIPPY_DISABLE_DOCS_LINKS=1
 
 # zsh configuration files
 export ZSHCONFIG=~/.zsh

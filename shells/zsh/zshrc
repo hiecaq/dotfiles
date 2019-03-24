@@ -14,11 +14,10 @@ source $ZSHCONFIG/config.zsh
 # OPAM configuration
 # . $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
-## Lines configured by zsh-newuser-install
-# HISTFILE=~/.histfile
-# HISTSIZE=10000
-# SAVEHIST=10000
-# setopt appendhistory
+HISTFILE=~/.histfile
+HISTSIZE=10000
+SAVEHIST=10000
+setopt incappendhistory
 # unsetopt autocd beep
 # bindkey -v
 ## End of lines configured by zsh-newuser-install
