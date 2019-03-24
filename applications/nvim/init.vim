@@ -24,7 +24,7 @@ endif
 
 " colorschemes
 if &termguicolors
-    colorscheme NeoSolarized
+    colorscheme gruvbox
 else
     colorscheme desert
 endif
@@ -150,7 +150,8 @@ endif
 " use Powerline symbols(special fonts requried)
 let g:airline_powerline_fonts = 1
 " theme
-let g:airline_theme='solarized'
+packadd! gruvbox
+let g:airline_theme='gruvbox'
 " hide empty sections
 let g:airline_skip_empty_sections = 1
 " extension: Smarter tabline
@@ -198,9 +199,8 @@ let g:neosnippet#enable_snipmate_compatibility=1
 " let g:neosnippet#disable_runtime_snippets= {
 "            \ '_': 1,
 "            \ }
-let g:neosnippet#enable_complete_done=1
 let g:neosnippet#enable_completed_snippet=1
-let g:neosnippet#enable_optional_arguments=0
+let g:neosnippet#enable_optional_arguments=&filetype ==# "python" ? 1 : 0
 
 " Neosnippet END }}}2
 
@@ -365,9 +365,9 @@ if has("nvim") && has('python3')
     " <C-h>, <BS>: close popup and delete backword char.
     inoremap <expr><C-h> deoplete#smart_close_popup()."\<C-h>"
     inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
-    inoremap <silent><expr><CR>
-                \ pumvisible() ? deoplete#close_popup() :
-                \ "\<CR>"
+    " inoremap <silent><expr><CR>
+    "            \ pumvisible() ? deoplete#close_popup() :
+    "            \ "\<CR>"
     if !exists('g:deoplete#omni#input_patterns')
         let g:deoplete#omni#input_patterns = {}
     endif
@@ -377,6 +377,8 @@ if has("nvim") && has('python3')
 
     " do not truncate the type of the completed item
     call deoplete#custom#source('_', 'max_abbr_width', 0)
+    call deoplete#custom#source('_', 'max_kind_width', 0)
+    call deoplete#custom#source('_', 'max_menu_width', 0)
     " enable deoplete
     call deoplete#enable()
 endif
