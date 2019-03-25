@@ -6,7 +6,7 @@ local fmt = "df -h %s | tail -n 1 | awk \'{ print $2\"\\t\"$4\"\\t\"$5 }\'"
 local fields = { "total", "avail", "use%" }
 local THIS = {}
 
-function THIS.disk_space_usage(path, icon)
+function THIS.disk_space_usage(path, icon, timeout)
     local disk_space_widget = wibox.widget {
         {
             id = "inner",
@@ -30,7 +30,7 @@ function THIS.disk_space_usage(path, icon)
     }
     local async_info = util.async_tsv(string.format(fmt, path), fields)
     gears.timer {
-        timeout = 600,
+        timeout = timeout,
         call_now = true,
         autostart = true,
         callback = function()

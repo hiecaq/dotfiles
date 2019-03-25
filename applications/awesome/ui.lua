@@ -3,7 +3,10 @@ local gears = require("gears")
 local awful = require("awful")
 local wibox = require("wibox")
 local bat = require('battery')
+local meminfo = require('memory')
+local cpustat = require('cpu')
 local disk = require('disk')
+local net = require('net')
 local naughty = require("naughty")
 
 beautiful.init(gears.filesystem.get_xdg_config_home() .. "awesome/theme.lua")
@@ -135,17 +138,19 @@ function THIS.setup(s)
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
             spacing = 20,
-            -- mylauncher,
             stylized(s.mytaglist),
+            stylized(disk.disk_space_usage("/", "", 600)),
+            stylized(disk.disk_space_usage("$HOME", "", 600)),
             s.mypromptbox,
         },
         nil,
         wibox.widget {
             { -- Right widgets
                 stylized(wibox.widget.systray()),
-                stylized(disk.disk_space_usage("/", "")),
-                stylized(disk.disk_space_usage("$HOME", "")),
-                stylized(bat.battery('BAT0')),
+                stylized(cpustat.cpu_stat('﬙', 5, 1000)),
+                stylized(meminfo.memory_usage('', 5, 1000)),
+                stylized(net.net('wlp2s0', "祝","", 10)),
+                stylized(bat.battery('BAT0', 10)),
                 stylized(mytextclock),
                 spacing = 20,
                 layout = wibox.layout.fixed.horizontal,

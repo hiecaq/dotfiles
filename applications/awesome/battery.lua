@@ -36,7 +36,7 @@ local icon = { --- {{{
     }
 } --- }}}
 
-function THIS.battery(name)
+function THIS.battery(name, timeout)
     local battery_widget = wibox.widget {
         {
             {
@@ -61,7 +61,7 @@ function THIS.battery(name)
         end,
     }
     gears.timer {
-        timeout = 10,
+        timeout = timeout,
         call_now = true,
         autostart = true,
         callback = function()

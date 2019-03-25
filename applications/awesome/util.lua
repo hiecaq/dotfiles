@@ -68,7 +68,28 @@ end
 function THIS.async_tsv(cmd, fields)
     return AsyncTsv:new(cmd, fields)
 end
+
 -- AsyncTsv(cmd, fields) }}}
+
+function THIS.sum(t, args)
+    local sum = 0
+    for i,v in ipairs(args) do
+        sum = sum + t[v]
+    end
+    return sum
+end
+
+local unit = { "B", "KB", "MB", "GB" }
+
+function THIS.byte_repr(bytes)
+    for i,u in ipairs(unit) do
+        if bytes < 1024 then
+            return string.format("%.1f%s", bytes, u)
+        end
+        bytes = bytes / 1024
+    end
+    return string.format("%.1f%s", bytes, #unit)
+end
 
 return THIS -- end module
 

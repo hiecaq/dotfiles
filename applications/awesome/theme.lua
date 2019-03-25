@@ -55,6 +55,8 @@ theme.bg_systray    = theme.bg_general
 -- hotkeys_[bg|fg|border_width|border_color|shape|opacity|modifiers_fg|label_bg|label_fg|group_margin|font|description_font]
 -- Example:
 --theme.taglist_bg_focus = "#ff0000"
+theme.graph_fg = theme.fg_normal
+theme.graph_bg = theme.bg_general
 
 -- Generate taglist squares:
 local taglist_square_size = dpi(4)
