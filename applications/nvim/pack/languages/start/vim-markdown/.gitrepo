@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:plasticboy/vim-markdown.git
 	branch = master
-	commit = 691d961a643064ee1feddba8371ff12e44678f5a
-	parent = 108979e168bb19e9fd8e6a451452bad68b1c4e0a
+	commit = 82754af21b12b1343d569a13020e8ffaf35faaa9
+	parent = 7567de145b0a452a0aa57d6346ba77275b1e816f
 	method = merge
 	cmdver = 0.4.0
