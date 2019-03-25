@@ -1,5 +1,5 @@
 # ============================================================================
-# FILE: converter_truncate_abbr.py
+# FILE: converter_truncate_info.py
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================
@@ -12,17 +12,17 @@ class Filter(Base):
     def __init__(self, vim):
         super().__init__(vim)
 
-        self.name = 'converter_truncate_abbr'
-        self.description = 'truncate abbr converter'
+        self.name = 'converter_truncate_info'
+        self.description = 'truncate info converter'
 
     def filter(self, context):
-        max_width = context['max_abbr_width']
-        if max_width <= 0:
+        max_width = context['max_info_width']
+        if not context['candidates'] or max_width <= 0:
             return context['candidates']
 
-        footer_width = max_width / 3
+        footer_width = 1
         for candidate in context['candidates']:
-            candidate['abbr'] = truncate_skipping(
-                candidate.get('abbr', candidate['word']),
+            candidate['info'] = truncate_skipping(
+                candidate.get('info', ''),
                 max_width, '..', footer_width)
         return context['candidates']

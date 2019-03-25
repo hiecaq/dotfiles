@@ -6,7 +6,7 @@
 
 import re
 
-from deoplete.source.base import Base
+from deoplete.base.source import Base
 from deoplete.util import (
     convert2list, set_pattern, convert2candidates)
 
@@ -83,8 +83,6 @@ class Source(Base):
             elif not isinstance(candidates, list):
                 candidates = []
         except Exception:
-            self.print_error('Error occurred calling omnifunction: ' +
-                             self._omnifunc)
             candidates = []
 
         candidates = convert2candidates(candidates)

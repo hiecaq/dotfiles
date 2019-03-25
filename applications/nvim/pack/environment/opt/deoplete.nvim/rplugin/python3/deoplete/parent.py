@@ -15,7 +15,7 @@ from deoplete import logger
 from deoplete.process import Process
 from deoplete.util import error_tb, error
 
-dp_main = os.path.join(os.path.dirname(__file__), 'dp_main.py')
+main = os.path.join(os.path.dirname(__file__), '_main.py')
 
 
 class _Parent(logger.LoggingMixin):
@@ -89,7 +89,7 @@ class AsyncParent(_Parent):
             self._vim.loop.subprocess_exec(
                 partial(Process, self),
                 self._vim.vars.get('python3_host_prog', 'python3'),
-                dp_main,
+                main,
                 self._vim.vars['deoplete#_serveraddr'],
                 stderr=None,
                 startupinfo=startupinfo))

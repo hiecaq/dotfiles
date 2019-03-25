@@ -220,12 +220,16 @@ class Child(logger.LoggingMixin):
                                     ctx['max_abbr_width'])
         ctx['max_kind_width'] = min(source.max_kind_width,
                                     ctx['max_kind_width'])
+        ctx['max_info_width'] = min(source.max_info_width,
+                                    ctx['max_info_width'])
         ctx['max_menu_width'] = min(source.max_menu_width,
                                     ctx['max_menu_width'])
         if ctx['max_abbr_width'] > 0:
             ctx['max_abbr_width'] = max(20, ctx['max_abbr_width'])
         if ctx['max_kind_width'] > 0:
             ctx['max_kind_width'] = max(10, ctx['max_kind_width'])
+        if ctx['max_info_width'] > 0:
+            ctx['max_info_width'] = max(10, ctx['max_info_width'])
         if ctx['max_menu_width'] > 0:
             ctx['max_menu_width'] = max(10, ctx['max_menu_width'])
 
@@ -275,12 +279,12 @@ class Child(logger.LoggingMixin):
         if source.is_silent:
             return
         if self._source_errors[source.name] > 2:
-            error(self._vim, 'Too many errors from "%s". '
-                  'This source is disabled until Neovim '
-                  'is restarted.' % source.name)
+            error(self._vim,
+                  f'Too many errors from "{source.name}". '
+                  'This source is disabled until Neovim is restarted.')
             self._ignore_sources.append(source.name)
         else:
-            error_tb(self._vim, 'Error from %s: %r' % (source.name, exc))
+            error_tb(self._vim, f'Error from {source.name}: {exc}')
 
     def _process_filter(self, f, context, max_candidates):
         try:

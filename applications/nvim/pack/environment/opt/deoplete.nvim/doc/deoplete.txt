@@ -898,6 +898,14 @@ converter_remove_paren
 converter_truncate_abbr
 		It truncates a candidate's abbr by the current window width.
 
+				*deoplete-filter-converter_truncate_kind*
+converter_truncate_kind
+		It truncates a candidate's kind by the current window width.
+
+				*deoplete-filter-converter_truncate_info*
+converter_truncate_info
+		It truncates a candidate's info by the current window width.
+
 				*deoplete-filter-converter_truncate_menu*
 converter_truncate_menu
 		It truncates a candidate's menu by the current window width.
@@ -1100,6 +1108,15 @@ max_kind_width
 
 		Default: 40
 
+				*deoplete-source-attribute-max_info_width*
+max_info_width
+		(Integer)			(Optional)
+		If the candidate info length exceeds the length it will be cut
+		down.
+		If it is less than or equal to 0, it will be disabled.
+
+		Default: 200
+
 				*deoplete-source-attribute-max_menu_width*
 max_menu_width
 		(Integer)			(Optional)
@@ -1228,7 +1245,7 @@ vars		(Dictionary)			(Optional)
 	If "context['is_async']" is True, the gather_candidates is called
 	repeatedly.
 >
-	from deoplete.source.base import Base
+	from deoplete.base.source import Base
 
 	class Source(Base):
 	    def __init__(self, vim):
@@ -1577,7 +1594,7 @@ Please update them to the latest version.
 Q: "Broken pipe" error.
 https://github.com/Shougo/deoplete.nvim/issues/653
 
-A: Please test dp_main.py.
+A: Please test _main.py.
 https://github.com/Shougo/deoplete.nvim/issues/635#issuecomment-363331278
 
 Please test neovim-python module.
@@ -1752,6 +1769,11 @@ Q: What does each part of a line on the pop up mean?  For example I see:
 A: It is the source mark. [~] is from around source.  A is from
    |deoplete-source-around|.
 
+Q: I want to use floating preview window feature with deoplete.
+
+A: Please install float-preview.nvim plugin.
+https://github.com/ncm2/float-preview.nvim
+
 						    *deoplete-faq-ft-specific*
 3. Filetype Specific Questions~
 
@@ -1779,7 +1801,7 @@ A: Please set "input_patterns" manually. >
 
        call deoplete#custom#var('omni', 'input_patterns', {
        \ 'javascript': '[^. *\t]\.\w*',
-       \ )
+       \ })
 
 Q: I want to use "vim-lua-ftplugin".
    https://github.com/xolox/vim-lua-ftplugin
