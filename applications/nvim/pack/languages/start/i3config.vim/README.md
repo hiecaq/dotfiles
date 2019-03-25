@@ -10,8 +10,10 @@ provided (as of Sat 12 Mar 2016) in:
 
 <http://i3wm.org/docs/userguide.html#configuring>
 
-![Screenshot](https://github.com/mboughaba/i3config.vim/blob/master/screenshot.png)
+![](i3config.vim.gif)
+
 *using vim color scheme [dracula](https://github.com/dracula/vim)*
+
 *using Powerline font [ProFont for Powerline](https://github.com/powerline/fonts/blob/master/ProFont/README.rst)*
 
 ## Features
@@ -46,6 +48,15 @@ or
 
 ```vim
 :set filetype=i3config
+```
+
+or you can add this line your .vimrc file
+
+```vim
+aug i3config_ft_detection
+  au!
+  au BufNewFile,BufRead ~/.config/i3/config set filetype=i3config
+aug end
 ```
 
 ## Installation instructions
