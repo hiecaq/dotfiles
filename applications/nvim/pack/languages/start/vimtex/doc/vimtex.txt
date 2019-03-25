@@ -71,6 +71,7 @@ CONTENTS                                                      *vimtex-contents*
     Table of contents                           |vimtex-toc|
       Custom mappings                           |vimtex-toc-custom-maps|
     Denite/Unite source                         |vimtex-denite| / |vimtex-unite|
+    fzf.vim integration                         |vimtex-fzf| 
   Compilation                                   |vimtex-compiler|
     Latexmk                                     |vimtex-latexmk|
     Latexrun                                    |vimtex-latexrun|
@@ -1656,6 +1657,15 @@ OPTIONS                                                        *vimtex-options*
   and have to be specifically disabled. However, it is possible to use the
   entry `disable` to disable either all warnings, or all package warnings, if
   so desired.
+  Warnings by following packages can be disabled individually:
+  `babel`, `biblatex`, `fixltx2e`, `hyperref`, `natbib`, `scrreprt`, and `titlesec`.
+  The entry `general` under packages can be used to turn off messages of
+  packages matching the pattern >
+
+    Package .* Warning: %m on input line %l.
+<
+  Note: Messages by `natbib` follow also this pattern but have to be turned
+        off with the entry `natbib`.
 
   Some examples may be helpful: >
 
@@ -1685,12 +1695,13 @@ OPTIONS                                                        *vimtex-options*
           \ 'font' : 1,
           \ 'packages' : {
           \   'default' : 1,
-          \   'natbib' : 1,
-          \   'biblatex' : 1,
+          \   'general' : 1,
           \   'babel' : 1,
-          \   'hyperref' : 1,
-          \   'scrreprt' : 1,
+          \   'biblatex' : 1,
           \   'fixltx2e' : 1,
+          \   'hyperref' : 1,
+          \   'natbib' : 1,
+          \   'scrreprt' : 1,
           \   'titlesec' : 1,
           \ },
           \}
@@ -3173,8 +3184,8 @@ parsing the LaTeX project and displaying a table of contents in a separate
 window. For more info, see |vimtex-toc|.
 
 The "engine" for collecting the table-of-content entries may also be used as
-a backend for external plugins. There are sources for |denite.nvim| and
-|unite.vim| that should work well. The source code may be used as inspiration
+a backend for external plugins. There are sources for |denite.nvim|, |unite.vim|
+and |fzf.vim| that should work well. The source code may be used as inspiration
 to write custom sources or sources for other, similar plugins.
 
 ------------------------------------------------------------------------------
@@ -3288,6 +3299,31 @@ one may override the default mapping, e.g.: >
 
   nnoremap <localleader>lt :<c-u>Denite vimtex<cr>
   nnoremap <localleader>lt :<c-u>Unite vimtex<cr>
+
+------------------------------------------------------------------------------
+FZF INTEGRATION                                                   *vimtex-fzf*
+
+                                           https://github.com/junegunn/fzf.vim
+                                               https://github.com/junegunn/fzf
+|fzf.vim| integrates the general-purpose command-line fuzzy finder |fzf| into vim
+and neovim. Similar to the |denite.vim| and |unite.vim| source it may be used to
+quickly navigate |vimtex|'s built-in ToC feature. To use it, just define a
+mapping to `vimtex#fzf#run()` in your .vimrc, e.g.: >
+
+  nnoremap <localleader>lt :call vimtex#fzf#run()<cr>
+
+You can also choose to only show certain entry "layers", according to this
+table (see |vimtex-toc| for detailed explanation of the "layers"):
+
+  `c`:  content
+  `t`:  todo
+  `l`:  label
+  `i`:  include
+
+The default behavior is to show all layers, i.e. 'ctli'. To only show
+`content` and `label`s use: >
+
+  :call vimtex#fzf#run('ct')
 
 ==============================================================================
 COMPILER                                                      *vimtex-compiler*
