@@ -6,10 +6,10 @@
 
 import argparse
 import shutil
-from os import path, pardir
-from os.path import relpath, isabs, isdir, join, normpath
+from sys import executable, base_exec_prefix
+from pathlib import Path
 
-from denite.source.base import Base
+from denite.base.source import Base
 from denite.process import Process
 from denite.util import parse_command, abspath
 
@@ -60,7 +60,7 @@ class Source(Base):
             return []
 
         directory = context['__directory']
-        if not isdir(directory):
+        if not Path(directory).is_dir():
             return []
 
         if context['is_redraw'] and directory in self._cache:
@@ -95,15 +95,15 @@ class Source(Base):
         if not outs:
             return []
         directory = context['__directory']
-        if isabs(outs[0]):
+        if Path(outs[0]).is_absolute():
             candidates = [{
-                'word': relpath(x, start=directory),
+                'word': str(Path(x).relative_to(directory)),
                 'action__path': x,
                 } for x in outs if x != '']
         else:
             candidates = [{
                 'word': x,
-                'action__path': join(directory, x),
+                'action__path': str(Path(directory).joinpath(x)),
                 } for x in outs if x != '']
         context['__current_candidates'] += candidates
 
@@ -113,6 +113,26 @@ class Source(Base):
             self._cache[directory] = context['__current_candidates']
 
         return candidates
+
+    @staticmethod
+    def get_python_exe():
+        if 'py' in str(Path(executable).name):
+            return executable
+
+        for exe in ['python3', 'python']:
+            if shutil.which(exe) is not None:
+                return shutil.which(exe)
+
+        for name in (Path(base_exec_prefix).joinpath(v) for v in [
+                'python3', 'python',
+                str(Path('bin').joinpath('python3')),
+                str(Path('bin').joinpath('python')),
+        ]):
+            if name.exists():
+                return str(name)
+
+        # return sys.executable anyway. This may not work on windows
+        return executable
 
     def parse_command_for_scantree(self, cmd):
         """Given the user choice for --ignore get the corresponding value"""
@@ -128,17 +148,8 @@ class Source(Base):
         else:
             ignore = args.ignore
 
-        current_folder, _ = path.split(__file__)
-        scantree_py = normpath(join(current_folder,
-                                    pardir, pardir, 'scantree.py'))
+        scantree_py = Path(__file__).parent.parent.parent.joinpath(
+            'scantree.py')
 
-        if shutil.which('python3') is not None:
-            python_exe = 'python3'
-        else:
-            python_exe = 'python'
-        if shutil.which(python_exe) is None:
-            raise FileNotFoundError(
-                f'Coudn''t find {python_exe} executable!')
-
-        return [python_exe, scantree_py, '--ignore', ignore,
+        return [Source.get_python_exe(), str(scantree_py), '--ignore', ignore,
                 '--path', ':directory']

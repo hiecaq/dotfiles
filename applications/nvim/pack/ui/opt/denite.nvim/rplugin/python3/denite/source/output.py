@@ -5,7 +5,7 @@
 
 import re
 
-from denite.source.base import Base
+from denite.base.source import Base
 
 
 class Source(Base):
@@ -13,7 +13,6 @@ class Source(Base):
     def __init__(self, vim):
         super().__init__(vim)
         self.name = 'output'
-        # why doesn't this seem to be working?
         self.default_action = 'yank'
 
     def define_syntax(self):

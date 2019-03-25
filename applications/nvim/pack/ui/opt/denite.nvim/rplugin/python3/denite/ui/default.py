@@ -60,6 +60,7 @@ class Default(object):
         self._guicursor = ''
         self._titlestring = ''
         self._ruler = False
+        self._prev_action = ''
         self._prev_status = {}
         self._prev_curpos = []
         self._is_suspend = False
@@ -181,36 +182,7 @@ class Default(object):
         self._titlestring = self._vim.options['titlestring']
         self._ruler = self._vim.options['ruler']
 
-        split = self._context['split']
-        if (split != 'no' and self._winid > 0 and
-                self._vim.call('win_gotoid', self._winid)):
-            if split != 'vertical' and split != 'floating':
-                # Move the window to bottom
-                self._vim.command('wincmd J')
-            self._winrestcmd = ''
-        else:
-            # Create new buffer
-            if split == 'tab':
-                self._vim.command('tabnew')
-            elif (split == 'floating' and
-                  self._vim.call('exists', '*nvim_open_win')):
-                # Use floating window
-                self._vim.call(
-                    'nvim_open_win',
-                    self._vim.call('bufnr', '%'), True,
-                    self._context['winwidth'],
-                    self._context['winheight'], {
-                        'relative': 'editor',
-                        'row': self._context['winrow'],
-                        'col': self._context['wincol'],
-                    })
-            elif split != 'no':
-                vertical = 'vertical' if split == 'vertical' else ''
-                self._vim.command(
-                    f'{self._get_direction()} {vertical} new')
-            self._vim.call(
-                'denite#util#execute_path',
-                'silent keepalt edit', '[denite]')
+        self._switch_buffer()
         self.resize_buffer()
 
         self._winheight = self._vim.current.window.height
@@ -218,14 +190,14 @@ class Default(object):
 
         self._options = self._vim.current.buffer.options
         self._options['buftype'] = 'nofile'
-        self._options['bufhidden'] = 'wipe'
+        self._options['bufhidden'] = 'delete'
         self._options['swapfile'] = False
         self._options['buflisted'] = False
         self._options['modeline'] = False
         self._options['filetype'] = 'denite'
         self._options['modifiable'] = True
 
-        if split == 'floating':
+        if self._context['split'] == 'floating':
             # Disable ruler
             self._vim.options['ruler'] = False
 
@@ -262,6 +234,37 @@ class Default(object):
 
         self.init_syntax()
 
+    def _switch_buffer(self):
+        split = self._context['split']
+        if (split != 'no' and self._winid > 0 and
+                self._vim.call('win_gotoid', self._winid)):
+            if split != 'vertical' and split != 'floating':
+                # Move the window to bottom
+                self._vim.command('wincmd J')
+            self._winrestcmd = ''
+        else:
+            command = 'edit'
+            if split == 'tab':
+                self._vim.command('tabnew')
+            elif (split == 'floating' and
+                  self._vim.call('exists', '*nvim_open_win')):
+                # Use floating window
+                self._vim.call(
+                    'nvim_open_win',
+                    self._vim.call('bufnr', '%'), True, {
+                        'relative': 'editor',
+                        'row': int(self._context['winrow']),
+                        'col': int(self._context['wincol']),
+                        'width': int(self._context['winwidth']),
+                        'height': int(self._context['winheight']),
+                    })
+            elif split != 'no':
+                command = self._get_direction()
+                command += ' vsplit' if split == 'vertical' else ' split'
+            self._vim.call(
+                'denite#util#execute_path',
+                f'silent keepalt {command}', '[denite]')
+
     def _get_direction(self):
         direction = self._context['direction']
         if direction == 'dynamictop' or direction == 'dynamicbottom':
@@ -276,12 +279,9 @@ class Default(object):
         return direction
 
     def _get_wininfo(self):
-        wininfo = self._vim.call('denite#helper#_get_wininfo')
         return [
             self._vim.options['columns'], self._vim.options['lines'],
-            self._vim.call('tabpagebuflist'),
-            wininfo['bufnr'], wininfo['winnr'],
-            wininfo['winid'], wininfo['tabnr'],
+            self._vim.call('win_getid'),
         ]
 
     def _switch_prev_buffer(self):
@@ -544,10 +544,8 @@ class Default(object):
         if self._win_cursor != self._vim.call('line', '.'):
             self._vim.call('cursor', [self._win_cursor, 1])
 
-        if self._context['auto_preview']:
-            self.do_action('preview')
-        if self._context['auto_highlight']:
-            self.do_action('highlight')
+        if self._context['auto_action']:
+            self.do_action(self._context['auto_action'])
 
     def change_mode(self, mode):
         self._current_mode = mode
@@ -694,9 +692,10 @@ class Default(object):
 
     def do_action(self, action_name, command=''):
         candidates = self.get_selected_candidates()
-        if not candidates:
+        if not candidates or not action_name:
             return
 
+        self._prev_action = action_name
         action = self._denite.get_action(
             self._context, action_name, candidates)
         if not action:
@@ -1037,9 +1036,10 @@ class Default(object):
                 self._vim.command('autocmd denite WinEnter <buffer> ' +
                                   'Denite -resume -buffer_name=' +
                                   self._context['buffer_name'])
-            self._vim.command('nnoremap <silent><buffer> <CR> ' +
-                              ':<C-u>Denite -resume -buffer_name=' +
-                              self._context['buffer_name'] + '<CR>')
+            for mapping in ['i', 'a', '<CR>']:
+                self._vim.command(f'nnoremap <silent><buffer> {mapping} ' +
+                                  ':<C-u>Denite -resume -buffer_name=' +
+                                  f"{self._context['buffer_name']}<CR>")
         self._is_suspend = True
         self._options['modifiable'] = False
         return STATUS_ACCEPT

@@ -5,7 +5,7 @@
 # License: MIT license
 # ============================================================================
 
-from denite.kind.base import Base
+from denite.base.kind import Base
 
 
 class Kind(Base):
@@ -18,7 +18,7 @@ class Kind(Base):
 
     def action_cd(self, context):
         target = context['targets'][0]
-        self.vim.command(f'lcd {target["action__path"]}')
+        self.vim.call('denite#util#cd', target['action__path'])
 
     def action_narrow(self, context):
         target = context['targets'][0]

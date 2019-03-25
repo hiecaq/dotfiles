@@ -257,14 +257,15 @@ class Denite(object):
     def get_action_names(self, context, targets):
         kinds = set()
         for target in targets:
-            kinds.add(self._get_kind(context, target))
+            k = self._get_kind(context, target)
+            if k:
+                kinds.add(k)
         if len(kinds) != 1:
-            self.error('Multiple kinds are detected')
+            if len(kinds) > 1:
+                self.error('Multiple kinds are detected')
             return []
 
         kind = kinds.pop()
-        if not kind:
-            return []
         actions = kind.get_action_names()
         actions += self._get_custom_actions(kind.name).keys()
         return actions
@@ -312,6 +313,8 @@ class Denite(object):
 
     def _load_sources(self, context):
         # Load sources from runtimepath
+        # Note: load "denite.source" for old sources compatibility
+        import denite.source # noqa
         rplugins = import_rplugins('Source', context, 'source', [
             normcase(normpath(x.path))
             for x in self._sources.values()
@@ -357,12 +360,19 @@ class Denite(object):
                 setattr(f, 'name', module_path.replace('.', '/'))
             f.path = path
             self._filters[f.name] = f
-            if f.name in self._custom['alias_filter']:
-                # Load alias
-                for alias in self._custom['alias_filter'][f.name]:
-                    self._filters[alias] = Filter(self._vim)
-                    self._filters[alias].name = alias
-                    self._filters[alias].path = path
+
+            if f.name not in self._custom['alias_filter']:
+                self._custom['alias_filter'][f.name] = []
+            alias_filter = self._custom['alias_filter'][f.name]
+
+            if '/' in f.name:
+                alias_filter.append(f.name.replace('/', '_'))
+
+            # Load alias
+            for alias in alias_filter:
+                self._filters[alias] = Filter(self._vim)
+                self._filters[alias].name = alias
+                self._filters[alias].path = path
 
     def _load_kinds(self, context):
         # Load kinds from runtimepath
