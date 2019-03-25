@@ -5,6 +5,7 @@ local wibox = require("wibox")
 local bat = require('battery')
 local meminfo = require('memory')
 local cpustat = require('cpu')
+local thermal = require('thermal')
 local disk = require('disk')
 local net = require('net')
 local naughty = require("naughty")
@@ -147,6 +148,7 @@ function THIS.setup(s)
         wibox.widget {
             { -- Right widgets
                 stylized(wibox.widget.systray()),
+                stylized(thermal.thermal_measure("thermal_zone10", '﨏', 30, 100, 5)),
                 stylized(cpustat.cpu_stat('﬙', 5, 1000)),
                 stylized(meminfo.memory_usage('', 5, 1000)),
                 stylized(net.net('wlp2s0', "祝","", 10)),

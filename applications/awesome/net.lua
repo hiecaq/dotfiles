@@ -31,8 +31,8 @@ function THIS.net(name, tx_symbol, rx_symbol, timeout)
         set_info = function(self, val)
             local new_tx_bytes = tonumber(val.tx_bytes:match("^%s*(.-)%s*$"))
             local new_rx_bytes = tonumber(val.rx_bytes:match("^%s*(.-)%s*$"))
-            self.inner.tx.text = string.format("%9s".. tx_symbol, util.byte_repr(calc_speed(old_tx_bytes, new_tx_bytes, timeout)) .. "/s")
-            self.inner.rx.text = string.format(rx_symbol .. "%-9s", util.byte_repr(calc_speed(old_rx_bytes, new_rx_bytes, timeout)) .. "/s")
+            self.inner.tx.text = string.format("%10s".. tx_symbol, util.byte_repr(calc_speed(old_tx_bytes, new_tx_bytes, timeout)) .. "/s")
+            self.inner.rx.text = string.format(rx_symbol .. "%-10s", util.byte_repr(calc_speed(old_rx_bytes, new_rx_bytes, timeout)) .. "/s")
             old_rx_bytes = new_rx_bytes
             old_tx_bytes = new_tx_bytes
         end,
