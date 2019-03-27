@@ -235,7 +235,7 @@ if has("nvim") && has("python3")
 
     if executable('rg')
         " Change file_rec command.
-        call denite#custom#var('file_rec', 'command',
+        call denite#custom#var('file/rec', 'command',
                     \ ['rg', '--files', '--glob', '!.git'])
         " rg command on grep source
         call denite#custom#var('grep', 'command', ['rg'])
@@ -272,7 +272,7 @@ if has("nvim") && has("python3")
     nnoremap <silent> <Leader><space>  :<C-u>Denite -resume<CR>
     nnoremap <silent> <Leader>j :call execute('Denite -resume -select=+'.v:count1.' -immediately')<CR>
     nnoremap <silent> <Leader>k :call execute('Denite -resume -select=-'.v:count1.' -immediately')<CR>
-    nnoremap <silent> <Leader>df :<C-u>Denite file_rec<CR>
+    nnoremap <silent> <Leader>df :<C-u>Denite file/rec<CR>
     nnoremap <silent> <Leader>dj :<C-u>Denite jump<CR>
     nnoremap <silent> <Leader>dt :<C-u>Denite tag<CR>
     nnoremap <silent> <Leader>dg :<C-u>Denite grep<CR>
@@ -404,6 +404,37 @@ let g:LanguageClient_hasSnippetSupport = 1
 let g:LanguageClient_selectionUI = "location-list"
 let g:LanguageClient_loggingFile = "/tmp/LSPClient.log"
 let g:LanguageClient_serverStderr = "/tmp/LSPServer.log"
+
+let g:LanguageClient_diagnosticsDisplay = {
+    \   1: {
+    \       "name": "Error",
+    \       "texthl": "ALEError",
+    \       "signText": "▐▌",
+    \       "signTexthl": "ALEErrorSign",
+    \       "virtualTexthl": "Error",
+    \   },
+    \   2: {
+    \       "name": "Warning",
+    \       "texthl": "ALEWarning",
+    \       "signText": "▐▌",
+    \       "signTexthl": "ALEWarningSign",
+    \       "virtualTexthl": "Todo",
+    \   },
+    \   3: {
+    \       "name": "Information",
+    \       "texthl": "ALEInfo",
+    \       "signText": "▐▌",
+    \       "signTexthl": "ALEInfoSign",
+    \       "virtualTexthl": "Todo",
+    \   },
+    \   4: {
+    \       "name": "Hint",
+    \       "texthl": "ALEInfo",
+    \       "signText": "▐▌",
+    \       "signTexthl": "ALEInfoSign",
+    \       "virtualTexthl": "Todo",
+    \   },
+    \ }
 
 let g:LanguageClient_serverCommands = {
     \ 'ocaml': ['ocaml-language-server', '--stdio'],
