@@ -144,8 +144,6 @@ globalkeys = gears.table.join(
               {description = "view previous", group = "tag"}),
     awful.key({ modkey,           }, "e",  awful.tag.viewnext,
               {description = "view next", group = "tag"}),
-    awful.key({ modkey }, "h", function () awful.screen.focus_relative(-1) end,
-              {description = "focus the previous screen", group = "tag"}),
     awful.key({ modkey,           }, "u", awful.client.urgent.jumpto,
               {description = "jump to urgent client", group = "client"}),
     awful.key({ modkey,           }, "Tab",
