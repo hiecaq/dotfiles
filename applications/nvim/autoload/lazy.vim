@@ -29,6 +29,7 @@ let s:loaded_lsp = 0
 
 function! g:lazy#LC_starts()
     if has_key(g:LanguageClient_serverCommands, &filetype)
+        setlocal formatexpr=LanguageClient#textDocument_rangeFormatting()
         nnoremap <buffer> <silent> K :call LanguageClient#textDocument_hover()<cr>
         nnoremap <buffer> <silent> gd :call LanguageClient#textDocument_definition()<CR>
         nnoremap <buffer> <silent> <Leader>f :call LanguageClient_textDocument_codeAction()<CR>
