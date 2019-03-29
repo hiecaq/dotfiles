@@ -233,11 +233,20 @@ if has("nvim") && has("python3")
     call denite#custom#source(
                 \ '_', 'sorters', ['sorter_sublime'])
 
-    if executable('rg')
-        " Change file_rec command.
+    " Change file_rec command.
+    if executable('fd')
         call denite#custom#var('file/rec', 'command',
-                    \ ['rg', '--files', '--glob', '!.git'])
-        " rg command on grep source
+                    \ ['fd', '-t', 'f', '.'])
+    elseif executable('rg')
+        call denite#custom#var('file/rec', 'command',
+                   \ ['rg', '--files', '--glob', '!.git'])
+    elseif executable('ag')
+        call denite#custom#var('file/rec', 'command',
+                    \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
+    endif
+
+    " Change grep source
+    if executable('rg')
         call denite#custom#var('grep', 'command', ['rg'])
         call denite#custom#var('grep', 'default_opts',
                     \ ['--smart-case', '--vimgrep', '--no-heading', '-U'])
@@ -246,10 +255,6 @@ if has("nvim") && has("python3")
         call denite#custom#var('grep', 'separator', ['--'])
         call denite#custom#var('grep', 'final_opts', [])
     elseif executable('ag')
-        " Change file_rec command.
-        call denite#custom#var('file/rec', 'command',
-                    \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
-        " ag command on grep source
         call denite#custom#var('grep', 'command', ['ag'])
         call denite#custom#var('grep', 'default_opts',
                     \ ['-i', '--vimgrep'])
@@ -286,6 +291,7 @@ if has("nvim") && has("python3")
     nnoremap <silent> <Leader>dr :<C-u>Denite register<CR>
     nnoremap <silent> <Leader>dl :<C-u>Denite location_list<CR>
     nnoremap <silent> <Leader>dq :<C-u>Denite quickfix<CR>
+    nnoremap <silent> <Leader>dm :<C-u>Denite mark<CR>
 endif
 " Denite END }}}2
 
