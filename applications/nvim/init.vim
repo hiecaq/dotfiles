@@ -209,6 +209,10 @@ if has("nvim") && has("python3")
     packadd! denite.nvim
     packadd! denite-extra
 
+    if has("nvim-0.4.0")
+        call denite#custom#option('default', {'split': 'floating'})
+    endif
+
     " Change mappings.
     call denite#custom#map(
                 \ 'insert',
@@ -288,6 +292,7 @@ if has("nvim") && has("python3")
     nnoremap <silent> <Leader>dH :<C-u>Denite command_history<CR>
     nnoremap <silent> <Leader>dh :<C-u>Denite help<CR>
     nnoremap <silent> <Leader>do :<C-u>Denite outline<CR>
+    nnoremap <silent> <Leader>dO :<C-u>Denite file/old<CR>
     nnoremap <silent> <Leader>dr :<C-u>Denite register<CR>
     nnoremap <silent> <Leader>dl :<C-u>Denite location_list<CR>
     nnoremap <silent> <Leader>dq :<C-u>Denite quickfix<CR>
@@ -410,6 +415,10 @@ let g:LanguageClient_hasSnippetSupport = 1
 let g:LanguageClient_selectionUI = "location-list"
 let g:LanguageClient_loggingFile = "/tmp/LSPClient.log"
 let g:LanguageClient_serverStderr = "/tmp/LSPServer.log"
+let g:LanguageClient_fzfContextMenu = 0
+if has("nvim-0.4.0")
+    let g:LanguageClient_hoverPreview = "Always"
+endif
 
 let g:LanguageClient_diagnosticsDisplay = {
     \   1: {
@@ -524,6 +533,8 @@ let g:mundo_prefer_python3=1
 """""""""""""""""""""""""""
 "  Tridactyl temporaries  "
 """""""""""""""""""""""""""
+
+let g:markdown_fenced_languages = ['rust']
 
 if has("autocmd")
     augroup Tridactyl_Temp

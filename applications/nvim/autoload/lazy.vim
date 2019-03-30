@@ -29,19 +29,18 @@ let s:loaded_lsp = 0
 
 function! g:lazy#LC_starts()
     if has_key(g:LanguageClient_serverCommands, &filetype)
+        setlocal signcolumn=yes
         setlocal formatexpr=LanguageClient#textDocument_rangeFormatting()
         nnoremap <buffer> <silent> K :call LanguageClient#textDocument_hover()<cr>
         nnoremap <buffer> <silent> gd :call LanguageClient#textDocument_definition()<CR>
-        nnoremap <buffer> <silent> <Leader>f :call LanguageClient_textDocument_codeAction()<CR>
         nnoremap <buffer> <silent> <Leader>ds :<C-u>Denite documentSymbol<CR>
         nnoremap <buffer> <silent> <Leader>dR :<C-u>Denite references<CR>
         nnoremap <buffer> <silent> <Leader>dS :<C-u>Denite workspaceSymbol<CR>
-        nnoremap <buffer> <silent> <Leader>dF :<C-u>Denite contextMenu<CR>
+        nnoremap <buffer> <silent> <Leader>f :<C-u>Denite contextMenu<CR>
         nnoremap <buffer> <silent> <Leader>R :call LanguageClient#textDocument_rename()<CR>
         if !s:loaded_lsp
             let s:loaded_lsp = 1
             set hidden
-            set signcolumn=yes
             packadd LanguageClient-neovim
             LanguageClientStart
         endif
