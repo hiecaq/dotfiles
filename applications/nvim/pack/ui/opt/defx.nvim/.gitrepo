@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:Shougo/defx.nvim.git
+	branch = master
+	commit = 7364b9fbd678b2180869239aab167c968eebee69
+	parent = f4b35ee10fbb8ab0b34b05db4e712b73cb9d50a5
+	method = merge
+	cmdver = 0.4.0
