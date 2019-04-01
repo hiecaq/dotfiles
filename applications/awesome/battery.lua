@@ -1,6 +1,8 @@
 local utility = require("util")
 local wibox = require("wibox")
 local gears = require("gears")
+local naughty = require("naughty")
+local beautiful = require("beautiful")
 
 local THIS = {}
 
@@ -52,11 +54,14 @@ function THIS.battery(name, timeout)
             },
             layout = wibox.layout.fixed.horizontal
         },
-        -- bg = "#ff0000",
         widget = wibox.container.background,
         set_battery = function(self, val)
             local value = tonumber(val.capacity:match("^%s*(.-)%s*$"))
-            self.inner.status.text = (icon[val.status:match("^%s*(.-)%s*$")][(value // 10) * 10])
+            local state = val.status:match("^%s*(.-)%s*$")
+            if value < 15 and state == "Discharging" then
+                naughty.notify({text="RUNNING OUT BATTERY!", timeout=timeout, bg = beautiful.bg_urgent})
+            end
+            self.inner.status.text = (icon[state][(value // 10) * 10])
             self.inner.capacity.text = value .. "%"
         end,
     }
