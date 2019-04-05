@@ -24,6 +24,10 @@ sanitise tridactyllocal tridactylsync
 " bind ;c hint -c [class*="expand"],[class="togg"]
 
 bind ;d hint -W exclaim_quiet tmux new-window -d -n aria2c aria2c
+bind ;m composite hint -pipe * innerHTML | yank
+
+
+
 
 " GitHub pull request checkout command to clipboard (only works if you're a collaborator or above)
 " bind yp composite js document.getElementById("clone-help-step-1").textContent.replace("git checkout -b", "git checkout -B").replace("git pull ", "git fetch ") + "git reset --hard " + document.getElementById("clone-help-step-1").textContent.split(" ")[3].replace("-","/") | yank
