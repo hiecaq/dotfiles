@@ -47,5 +47,15 @@ function! g:lazy#LC_starts()
     endif
 endfunction
 
+let s:loaded_defx = 0
+
+function! g:lazy#Defx_toggle()
+    if !s:loaded_defx
+        packadd defx.nvim
+        let s:loaded_defx = 1
+    endif
+    Defx -split=floating -resume
+endfunction
+
 " vim: foldenable:foldmethod=marker
 

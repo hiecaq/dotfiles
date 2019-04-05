@@ -204,6 +204,12 @@ let g:neosnippet#enable_optional_arguments=&filetype ==# "python" ? 1 : 0
 
 " Neosnippet END }}}2
 
+" Defx  {{{2
+if has ("nvim") && has("python3")
+    nnoremap <silent> <leader>F :call lazy#Defx_toggle()<CR>
+endif
+" Defx END }}}2
+
 " Denite  {{{2
 if has("nvim") && has("python3")
     packadd! denite.nvim
@@ -405,7 +411,7 @@ let g:echodoc#type="echo"
 " LSP {{{2
 augroup Lazy_Loaded_LSP
     au!
-    autocmd FileType rust,java,python
+    autocmd FileType rust,java,python,c,cpp,cuda,objc
                     \ call lazy#LC_starts()
 augroup END
 
@@ -454,8 +460,10 @@ let g:LanguageClient_diagnosticsDisplay = {
 let g:LanguageClient_serverCommands = {
     \ 'ocaml': ['ocaml-language-server', '--stdio'],
     \ 'python': ['pyls'],
-    \ 'cpp' : ['cquery', '--log-file=/tmp/cq.log'],
-    \ 'c' : ['cquery', '--log-file=/tmp/cq.log'],
+    \ 'c': ['ccls', '--log-file=/tmp/cc.log'],
+    \ 'cpp': ['ccls', '--log-file=/tmp/cc.log'],
+    \ 'cuda': ['ccls', '--log-file=/tmp/cc.log'],
+    \ 'objc': ['ccls', '--log-file=/tmp/cc.log'],
     \ 'javascript': ['javascript-typescript-stdio'],
     \ 'typescript': ['javascript-typescript-stdio'],
     \ 'kotlin': ['~/Workspace/kotlin/KotlinLanguageServer/build/install/kotlin-language-server/bin/kotlin-language-server'],
@@ -534,7 +542,7 @@ let g:mundo_prefer_python3=1
 "  Tridactyl temporaries  "
 """""""""""""""""""""""""""
 
-let g:markdown_fenced_languages = ['rust']
+let g:markdown_fenced_languages = ['rust', 'c']
 
 if has("autocmd")
     augroup Tridactyl_Temp
