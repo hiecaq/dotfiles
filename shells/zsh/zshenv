@@ -14,5 +14,6 @@ export PYENV_ROOT="$HOME/.pyenv"
 
 export RUSTUP_HOME=$HOME/.rustup
 
+PATH=$HOME/.npm-global/bin:$PATH
 PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/bin:$PATH"
