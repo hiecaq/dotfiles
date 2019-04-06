@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:junegunn/vim-slash.git
 	branch = master
-	commit = abfd99fad599af932cb6b97e995bcb59784a9a3b
-	parent = f4e9cc832e9e3108582b80d0955b6d3fa9c4f665
+	commit = 3bbd704ebc6c423de60729d6af1cb39f9c4220b1
+	parent = 66089fc013fbeaba0c19863871fd4f6cc206dab7
 	method = merge
 	cmdver = 0.4.0
