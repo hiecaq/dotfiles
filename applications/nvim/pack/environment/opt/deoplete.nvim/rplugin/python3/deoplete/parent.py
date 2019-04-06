@@ -9,13 +9,12 @@ import os
 import msgpack
 import subprocess
 from functools import partial
+from pathlib import Path
 from queue import Queue
 
 from deoplete import logger
 from deoplete.process import Process
 from deoplete.util import error_tb, error
-
-main = os.path.join(os.path.dirname(__file__), '_main.py')
 
 
 class _Parent(logger.LoggingMixin):
@@ -84,6 +83,9 @@ class AsyncParent(_Parent):
         if os.name == 'nt':
             startupinfo = subprocess.STARTUPINFO()
             startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
+        main = str(Path(__file__).parent.parent.parent.parent.joinpath(
+            'autoload', 'deoplete', '_main.py'))
 
         self._hnd = self._vim.loop.create_task(
             self._vim.loop.subprocess_exec(
