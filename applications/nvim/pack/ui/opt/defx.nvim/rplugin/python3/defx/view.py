@@ -418,7 +418,10 @@ class View(object):
             'autocmd! defx * <buffer>',
         ])
         self._vim.command('autocmd defx '
-                          'CursorHold,WinEnter,FocusGained <buffer> '
+                          'WinEnter <buffer> '
+                          'call defx#call_action("check_redraw")')
+        self._vim.command('autocmd defx '
+                          'CursorHold,FocusGained <buffer> '
                           'call defx#call_async_action("check_redraw")')
 
         self._prev_highlight_commands = []
@@ -496,7 +499,10 @@ class View(object):
 
     def _update_paths(self, index: int, path: str) -> None:
         var_defx = self._buffer.vars['defx']
-        var_defx['paths'][index] = path
+        if len(var_defx['paths']) <= index:
+            var_defx['paths'].append(path)
+        else:
+            var_defx['paths'][index] = path
         self._buffer.vars['defx'] = var_defx
 
     def _init_cursor(self, defx: Defx) -> None:
@@ -532,3 +538,4 @@ class View(object):
                     Defx(self._vim, self._context, path, index))
             else:
                 self.cd(self._defxs[index], path, self._context.cursor)
+            self._update_paths(index, path)
