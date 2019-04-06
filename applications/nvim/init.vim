@@ -171,7 +171,7 @@ let g:airline_detect_modified=1
 " start with vim
 let g:indent_guides_enable_on_vim_startup=1
 " exclude filetypes
-let g:indent_guides_exclude_filetypes = ['help', 'man', 'fzf']
+let g:indent_guides_exclude_filetypes = ['help', 'man', 'fzf', 'defx']
 " show indent starts from 2 level
 let g:indent_guides_start_level=2
 " size
