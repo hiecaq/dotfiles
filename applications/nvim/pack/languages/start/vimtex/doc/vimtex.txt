@@ -204,6 +204,19 @@ Vim version~
   to one's `vimrc` file.  This might work, but issues due to older versions
   than the mentioned here will be ignored.
 
+Order of "syntax on" and "filetype plugin on"~
+                                                       *vimtex_syntax_filetype*
+  |vimtex| provides an `after/syntax/tex.vim` that improves syntax highlighting,
+  see |vimtex-syntax|. Some of the improvements require that the filetype
+  plugin has been loaded first. This means one must have the following lines
+  in the following order in ones `vimrc` file: >
+
+    filetype plugin indent on
+    syntax on
+<
+  Note: Many plugin managers, like |vim-plug|, will automatically add these
+        lines in the correct order.
+
 Compiler backend~
 
   |vimtex| uses `latexmk`, `latexrun`, or `arara` to compile the LaTeX document.
@@ -1471,6 +1484,9 @@ OPTIONS                                                        *vimtex-options*
   Vimtex will recognize included files for a lot of different purposes. Most
   of these come from e.g. `\input{file}` or `\include{file}`. This option
   allows to add more commands that are used to include files.
+
+  Note: This option is read during initialization of vimtex, and so it must be
+        set early. I.e., it can not be set in `after/ftplugin/tex.vim`.
 
   Default value: ['input', 'include', 'subfile']
 
