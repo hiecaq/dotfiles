@@ -168,7 +168,7 @@ client.connect_signal("focus", function(c)
     awful.screen.focus(c.screen)
     naughty.notify {
         position = "top_middle",
-        title = gears.string.split(c.name,'\n')[1],
+        title = c.name and gears.string.split(c.name,'\n')[1],
         -- message = " hello ",
         timeout = 0.5,
         height = beautiful.height_general
