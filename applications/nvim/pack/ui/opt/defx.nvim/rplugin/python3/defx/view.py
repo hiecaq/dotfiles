@@ -4,6 +4,7 @@
 # License: MIT license
 # ============================================================================
 
+import copy
 import time
 import typing
 from pathlib import Path
@@ -29,6 +30,7 @@ class View(object):
         self._bufname = '[defx]'
         self._buffer: Nvim.buffer = None
         self._prev_action = ''
+        self._prev_syntaxes: typing.List[str] = []
         self._prev_highlight_commands: typing.List[str] = []
         self._winrestcmd = ''
 
@@ -40,6 +42,7 @@ class View(object):
         self._bufname = f'[defx] {self._context.buffer_name}-{self._index}'
         self._winrestcmd = self._vim.call('winrestcmd')
         self._prev_wininfo = self._get_wininfo()
+        self._prev_bufnr = self._context.prev_bufnr
 
         if not self._init_defx(paths, clipboard):
             # Skipped initialize
@@ -279,7 +282,6 @@ class View(object):
 
     def _init_columns(self, columns: typing.List[str]) -> None:
         # Initialize columns
-        self._columns: typing.List[Column] = []
         self._all_columns: typing.Dict[str, Column] = {}
 
         for path_column in self._load_custom_columns():
@@ -292,13 +294,14 @@ class View(object):
                 self._all_columns[column.name] = column
 
         custom = self._vim.call('defx#custom#_get')['column']
-        self._columns = [self._all_columns[x]
-                         for x in columns if x in self._all_columns]
+        self._columns: typing.List[Column] = [
+            copy.copy(self._all_columns[x])
+            for x in columns if x in self._all_columns
+        ]
         for column in self._columns:
             if column.name in custom:
                 column.vars.update(custom[column.name])
             column.on_init(self._context)
-            column.syntax_name = 'Defx_' + column.name
 
     def _resize_window(self) -> None:
         window_options = self._vim.current.window.options
@@ -373,7 +376,6 @@ class View(object):
 
         self._buffer = self._vim.current.buffer
         self._bufnr = self._buffer.number
-        self._prev_bufnr = self._context.prev_bufnr
         self._winid = self._vim.call('win_getid')
 
         window_options = self._vim.current.window.options
@@ -418,9 +420,6 @@ class View(object):
             'autocmd! defx * <buffer>',
         ])
         self._vim.command('autocmd defx '
-                          'WinEnter <buffer> '
-                          'call defx#call_action("check_redraw")')
-        self._vim.command('autocmd defx '
                           'CursorHold,FocusGained <buffer> '
                           'call defx#call_async_action("check_redraw")')
 
@@ -443,26 +442,33 @@ class View(object):
 
     def _init_length(self) -> None:
         start = 1
-        for column in self._columns:
+        for [index, column] in enumerate(self._columns):
             column.start = start
             length = column.length(
                 self._context._replace(targets=self._candidates))
             column.end = start + length
+            column.syntax_name = f'Defx_{column.name}_{index}'
             start += length + 1
 
     def _update_syntax(self) -> None:
         commands: typing.List[str] = []
+
+        for syntax in self._prev_syntaxes:
+            commands.append(
+                'silent! syntax clear ' + syntax)
+
+        self._prev_syntaxes = []
         for column in self._columns:
-            commands.append(
-                'silent! syntax clear ' + column.syntax_name)
-            for syntax in column.syntaxes():
+            source_highlights = column.highlight_commands()
+            if source_highlights:
                 commands.append(
-                    'silent! syntax clear ' + syntax)
-            commands.append(
-                'syntax region ' + column.syntax_name +
-                r' start=/\%' + str(column.start) + r'v/ end=/\%' +
-                str(column.end) + 'v/ keepend oneline')
-            commands += column.highlight_commands()
+                    'syntax region ' + column.syntax_name +
+                    r' start=/\%' + str(column.start) + r'v/ end=/\%' +
+                    str(column.end) + 'v/ keepend oneline')
+                self._prev_syntaxes += [column.syntax_name]
+
+                commands += source_highlights
+                self._prev_syntaxes += column.syntaxes()
 
         if commands == self._prev_highlight_commands:
             # Skip highlights
