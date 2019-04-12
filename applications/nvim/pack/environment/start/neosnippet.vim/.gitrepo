@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:Shougo/neosnippet.vim
 	branch = master
-	commit = 00908a8a5f56fad3e6f30b2ed7b825b62294926a
-	parent = 782fb2dd984eb243633998f593ac124b490c55b8
+	commit = 3d3362622ef10deedaea8e026054064bf62aeb33
+	parent = c565951f2aff12bcc8feb05c847417a4400bfcbc
 	method = merge
 	cmdver = 0.4.0
