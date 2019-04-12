@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:mboughaba/i3config.vim.git
 	branch = master
-	commit = b8039f3a6ba31f95299a50e347b049b804b90485
+	commit = da2aeaa81a19af58fba5ce555519f6ca49108241
 	parent = 9a587d708de690ca204d8f62fa94ac9d2f905c93
 	method = merge
 	cmdver = 0.4.0
