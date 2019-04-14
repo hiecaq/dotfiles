@@ -49,7 +49,8 @@ class View(object):
             self._winid = self._vim.call('win_getid')
             if paths and self._vim.call('bufnr', '%') == self._bufnr:
                 self._update_defx(paths)
-                self.redraw(True)
+            self._init_columns(self._context.columns.split(':'))
+            self.redraw(True)
 
     def do_action(self, action_name: str,
                   action_args: typing.List[str],
@@ -132,8 +133,8 @@ class View(object):
 
         if is_force:
             self._init_candidates()
-            self._init_length()
-            self._update_syntax()
+            self._init_column_length()
+            self._init_column_syntax()
 
         for column in self._columns:
             column.on_redraw(self._context)
@@ -275,33 +276,10 @@ class View(object):
             self, context: typing.Dict[str, typing.Any]) -> Context:
         # Convert to int
         for attr in [x[0] for x in Context()._asdict().items()
-                     if isinstance(x[1], int)]:
+                     if isinstance(x[1], int) and x[0] in context]:
             context[attr] = int(context[attr])
 
         return Context(**context)
-
-    def _init_columns(self, columns: typing.List[str]) -> None:
-        # Initialize columns
-        self._all_columns: typing.Dict[str, Column] = {}
-
-        for path_column in self._load_custom_columns():
-            column = import_plugin(path_column, 'column', 'Column')
-            if not column:
-                continue
-
-            column = column(self._vim)
-            if column.name not in self._all_columns:
-                self._all_columns[column.name] = column
-
-        custom = self._vim.call('defx#custom#_get')['column']
-        self._columns: typing.List[Column] = [
-            copy.copy(self._all_columns[x])
-            for x in columns if x in self._all_columns
-        ]
-        for column in self._columns:
-            if column.name in custom:
-                column.vars.update(custom[column.name])
-            column.on_init(self._context)
 
     def _resize_window(self) -> None:
         window_options = self._vim.current.window.options
@@ -350,7 +328,7 @@ class View(object):
         # Create new buffer
         vertical = 'vertical' if self._context.split == 'vertical' else ''
         no_split = self._context.split in ['no', 'tab', 'floating']
-        if self._vim.call('bufexists', self._bufnr):
+        if self._vim.call('bufloaded', self._bufnr):
             command = ('buffer' if no_split else 'sbuffer')
             self._vim.command(
                 'silent keepalt %s %s %s %s' % (
@@ -431,6 +409,7 @@ class View(object):
         self._defxs = []
         self._update_defx(paths)
 
+        self._init_all_columns()
         self._init_columns(self._context.columns.split(':'))
 
         self.redraw(True)
@@ -440,17 +419,69 @@ class View(object):
 
         return True
 
-    def _init_length(self) -> None:
+    def _init_all_columns(self) -> None:
+        self._all_columns: typing.Dict[str, Column] = {}
+
+        for path_column in self._load_custom_columns():
+            column = import_plugin(path_column, 'column', 'Column')
+            if not column:
+                continue
+
+            column = column(self._vim)
+            if column.name not in self._all_columns:
+                self._all_columns[column.name] = column
+
+    def _init_columns(self, columns: typing.List[str]) -> None:
+        custom = self._vim.call('defx#custom#_get')['column']
+        self._columns: typing.List[Column] = [
+            copy.copy(self._all_columns[x])
+            for x in columns if x in self._all_columns
+        ]
+        for column in self._columns:
+            if column.name in custom:
+                column.vars.update(custom[column.name])
+            column.on_init(self._context)
+
+    def _init_column_length(self) -> None:
+        within_variable = False
+        within_variable_columns: typing.List[Column] = []
         start = 1
         for [index, column] in enumerate(self._columns):
-            column.start = start
-            length = column.length(
-                self._context._replace(targets=self._candidates))
-            column.end = start + length
             column.syntax_name = f'Defx_{column.name}_{index}'
-            start += length + 1
 
-    def _update_syntax(self) -> None:
+            if within_variable and not column.is_stop_variable:
+                within_variable_columns.append(column)
+                continue
+
+            # Calculate variable_length
+            variable_length = 0
+            if column.is_stop_variable:
+                for variable_column in within_variable_columns:
+                    variable_length += variable_column.length(
+                        self._context._replace(targets=self._candidates))
+
+            length = column.length(
+                self._context._replace(targets=self._candidates,
+                                       variable_length=variable_length))
+
+            column.start = start
+            column.end = start + length
+
+            if column.is_start_variable:
+                within_variable = True
+                within_variable_columns.append(column)
+            else:
+                column.is_within_variable = False
+                start += length + 1
+
+            if column.is_stop_variable:
+                for variable_column in within_variable_columns:
+                    # Overwrite syntax_name
+                    variable_column.syntax_name = column.syntax_name
+                    variable_column.is_within_variable = True
+                within_variable = False
+
+    def _init_column_syntax(self) -> None:
         commands: typing.List[str] = []
 
         for syntax in self._prev_syntaxes:
@@ -461,11 +492,13 @@ class View(object):
         for column in self._columns:
             source_highlights = column.highlight_commands()
             if source_highlights:
-                commands.append(
-                    'syntax region ' + column.syntax_name +
-                    r' start=/\%' + str(column.start) + r'v/ end=/\%' +
-                    str(column.end) + 'v/ keepend oneline')
-                self._prev_syntaxes += [column.syntax_name]
+                if (not column.is_within_variable and
+                        column.start > 0 and column.end > 0):
+                    commands.append(
+                        'syntax region ' + column.syntax_name +
+                        r' start=/\%' + str(column.start) + r'v/ end=/\%' +
+                        str(column.end) + 'v/ keepend oneline')
+                    self._prev_syntaxes += [column.syntax_name]
 
                 commands += source_highlights
                 self._prev_syntaxes += column.syntaxes()
@@ -496,12 +529,25 @@ class View(object):
 
     def _get_columns_text(self, context: Context,
                           candidate: typing.Dict[str, typing.Any]) -> str:
-        text = ''
+        texts: typing.List[str] = []
+        variable_texts: typing.List[str] = []
         for column in self._columns:
-            if text:
-                text += ' '
-            text += column.get(context, candidate)
-        return text
+            if column.is_stop_variable:
+                if variable_texts:
+                    variable_texts.append('')
+                text = column.get_with_variable_text(
+                    context, ' '.join(variable_texts), candidate)
+                texts.append(text)
+
+                variable_texts = []
+            else:
+                text = column.get(context, candidate)
+                if column.is_start_variable or column.is_within_variable:
+                    if text:
+                        variable_texts.append(text)
+                else:
+                    texts.append(text)
+        return ' '.join(texts)
 
     def _update_paths(self, index: int, path: str) -> None:
         var_defx = self._buffer.vars['defx']
