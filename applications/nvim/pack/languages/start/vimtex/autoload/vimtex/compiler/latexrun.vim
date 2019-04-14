@@ -58,7 +58,8 @@ function! s:compiler.build_cmd() abort dict " {{{1
 
   let l:cmd .= ' --latex-cmd ' . self.get_engine()
 
-  let l:cmd .= ' -O ' . (empty(self.build_dir) ? '.' : self.build_dir)
+  let l:cmd .= ' -O '
+        \ . (empty(self.build_dir) ? '.' : fnameescape(self.build_dir))
 
   return l:cmd . ' ' . vimtex#util#shellescape(self.target)
 endfunction
@@ -124,7 +125,8 @@ function! s:compiler.clean(...) abort dict " {{{1
         \   ? 'cd /D "' . self.root . '" & '
         \   : 'cd ' . vimtex#util#shellescape(self.root) . '; ')
         \ . 'latexrun --clean-all'
-        \ . ' -O ' . (empty(self.build_dir) ? '.' : self.build_dir)
+        \ . ' -O '
+        \   . (empty(self.build_dir) ? '.' : fnameescape(self.build_dir))
   call vimtex#process#run(l:cmd)
 
   call vimtex#log#info('Compiler clean finished')
@@ -197,14 +199,9 @@ function! s:compiler_jobs.exec() abort dict " {{{1
   let s:cb_target = self.target_path !=# b:vimtex.tex ? self.target_path : ''
   let l:options.exit_cb = function('s:callback')
 
-  if !empty(self.root)
-    let l:save_pwd = getcwd()
-    execute 'lcd' fnameescape(self.root)
-  endif
+  call vimtex#paths#pushd(self.root)
   let self.job = job_start(l:cmd, l:options)
-  if !empty(self.root)
-    execute 'lcd' fnameescape(l:save_pwd)
-  endif
+  call vimtex#paths#popd()
 endfunction
 
 " }}}1

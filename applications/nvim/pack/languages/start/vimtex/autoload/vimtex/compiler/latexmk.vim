@@ -167,7 +167,7 @@ function! s:compiler.build_cmd() abort dict " {{{1
   let l:cmd .= ' ' . self.get_engine()
 
   if !empty(self.build_dir)
-    let l:cmd .= ' -outdir=' . self.build_dir
+    let l:cmd .= ' -outdir=' . fnameescape(self.build_dir)
   endif
 
   if self.continuous
@@ -304,7 +304,7 @@ function! s:compiler.clean(full) abort dict " {{{1
         \   : 'cd ' . vimtex#util#shellescape(self.root) . '; ')
         \ . self.executable . ' ' . (a:full ? '-C ' : '-c ')
   if !empty(self.build_dir)
-    let l:cmd .= printf(' -outdir=%s ', self.build_dir)
+    let l:cmd .= printf(' -outdir=%s ', fnameescape(self.build_dir))
   endif
   let l:cmd .= vimtex#util#shellescape(self.target)
   call vimtex#process#run(l:cmd)
@@ -334,7 +334,7 @@ function! s:compiler.start(...) abort dict " {{{1
     call map(l:dirs, 'strpart(v:val, strlen(self.root) + 1)')
     call vimtex#util#uniq(sort(filter(l:dirs, "v:val !=# ''")))
     call map(l:dirs,
-          \ (self.build_dir[0] !=# '/' ? "self.root . '/' . " : '')
+          \ (vimtex#paths#is_abs(self.build_dir) ? '' : "self.root . '/' . ")
           \ . "self.build_dir . '/' . v:val")
     call filter(l:dirs, '!isdirectory(v:val)')
 
@@ -476,14 +476,9 @@ function! s:compiler_jobs.exec() abort dict " {{{1
     let l:options.exit_cb = function('s:callback')
   endif
 
-  if !empty(self.root)
-    let l:save_pwd = getcwd()
-    execute 'lcd' fnameescape(self.root)
-  endif
+  call vimtex#paths#pushd(self.root)
   let self.job = job_start(l:cmd, l:options)
-  if !empty(self.root)
-    execute 'lcd' fnameescape(l:save_pwd)
-  endif
+  call vimtex#paths#popd()
 endfunction
 
 " }}}1
