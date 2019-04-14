@@ -26,7 +26,7 @@ endif
 if &termguicolors
     colorscheme gruvbox
 else
-    colorscheme desert
+    colorscheme gruvbox
 endif
 
 " set background type
@@ -64,6 +64,8 @@ set tabstop=4
 set shiftwidth=4
 " let vim consider contious spaces as tab
 set softtabstop=4
+" stop at the last matching, don't restart at the beginning
+set nowrapscan
 " round indent to 'shiftwidth' when using > and <
 set shiftround
 " allow backspace
