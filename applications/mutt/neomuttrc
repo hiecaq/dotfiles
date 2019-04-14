@@ -23,7 +23,7 @@ set thorough_search
 
 # Defaults ################ {{{
 source /usr/share/doc/neomutt/vim-keys/vim-keys.rc
-source /usr/share/doc/neomutt/colorschemes/vombatidae.neomuttrc
+source ~/.config/mutt/gruvbox.neomuttrc
 # Defaults ################ }}}
 
 # Sidebar ############### {{{
