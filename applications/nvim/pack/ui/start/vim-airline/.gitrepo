@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:vim-airline/vim-airline.git
 	branch = master
-	commit = cbf264ff5f323ab8a8cf02f59f79bf858d496047
-	parent = 1d619f0f110dd980eadc136c7ca86cc322aa748c
+	commit = ead2cd63bbe4ceec161f9634c8b52048551f91b4
+	parent = d6cd4cee5bad018b94ac8405c2c7cf5202710b71
 	method = merge
 	cmdver = 0.4.0
