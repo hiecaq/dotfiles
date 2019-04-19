@@ -29,6 +29,7 @@ let s:loaded_lsp = 0
 
 function! g:lazy#LC_starts()
     if has_key(g:LanguageClient_serverCommands, &filetype)
+        let &l:textwidth = g:quinoa42_textwidth
         setlocal signcolumn=yes
         setlocal formatexpr=LanguageClient#textDocument_rangeFormatting()
         nnoremap <buffer> <silent> K :call LanguageClient#textDocument_hover()<cr>

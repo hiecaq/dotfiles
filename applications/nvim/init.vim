@@ -56,6 +56,9 @@ set nofoldenable
 if exists('&pumblend')
     set pumblend=20
 endif
+" auto break new lines on textwidth
+let g:quinoa42_textwidth=79
+let &textwidth=g:quinoa42_textwidth
 " replace tab with space
 set expandtab
 " numbers of space standed by tab while editing
@@ -553,6 +556,7 @@ if has("autocmd")
                     \ set ft=markdown
     augroup END
 endif " has("autocmd")
+
 " LANGUAGE SPECIFIC END }}}1
 
 " SPELLINGS {{{1

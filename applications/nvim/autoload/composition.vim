@@ -25,14 +25,8 @@
 " }}}
 
 function! composition#sane()
-    setlocal wrap
-    setlocal linebreak
-    setlocal conceallevel=0
-    noremap <buffer> j gj
-    noremap <buffer> k gk
-    noremap <buffer> $ g$
-    noremap <buffer> ^ g^
-    noremap <buffer> 0 g0
+    setlocal conceallevel=1
+    setlocal concealcursor="n"
 endfunction
 
 " vim: foldenable:foldmethod=marker
