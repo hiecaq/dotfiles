@@ -1,9 +1,11 @@
 {
-    "pyls.configurationSources": ["flake8"],
+    "python": {
+        "pyls.configurationSources": ["flake8"]
+    },
     "initializationOptions": {
         "cacheDirectory": "/tmp/cquery"
     },
     "rust": {
-        "clippy_preference": "on"
+        "clippy_preference": "on",
     }
 }

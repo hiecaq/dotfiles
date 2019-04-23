@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
-tr '\n' ' ' | rg -o 'https?://[A-Za-z0-9./%&?=#+~_-]+' | fzf-tmux | xargs -r xdg-open
+tr '\n' ' ' | rg -o 'https?://[A-Za-z0-9./%&?=#+;~_-]+' | fzf-tmux | xargs -r xdg-open
