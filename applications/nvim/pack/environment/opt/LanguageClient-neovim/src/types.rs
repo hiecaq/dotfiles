@@ -171,7 +171,7 @@ pub struct State {
 
 impl State {
     #[allow(clippy::new_ret_no_self)]
-    pub fn new(tx: crossbeam_channel::Sender<Call>) -> Fallible<State> {
+    pub fn new(tx: crossbeam_channel::Sender<Call>) -> Fallible<Self> {
         let logger = logger::init()?;
 
         let client = RpcClient::new(
@@ -182,7 +182,7 @@ impl State {
             tx.clone(),
         )?;
 
-        Ok(State {
+        Ok(Self {
             tx,
 
             clients: hashmap! {
@@ -333,11 +333,11 @@ pub struct DiagnosticsDisplay {
 }
 
 impl DiagnosticsDisplay {
-    pub fn default() -> HashMap<u64, DiagnosticsDisplay> {
+    pub fn default() -> HashMap<u64, Self> {
         let mut map = HashMap::new();
         map.insert(
             1,
-            DiagnosticsDisplay {
+            Self {
                 name: "Error".to_owned(),
                 texthl: "ALEError".to_owned(),
                 signText: "✖".to_owned(),
@@ -347,7 +347,7 @@ impl DiagnosticsDisplay {
         );
         map.insert(
             2,
-            DiagnosticsDisplay {
+            Self {
                 name: "Warning".to_owned(),
                 texthl: "ALEWarning".to_owned(),
                 signText: "⚠".to_owned(),
@@ -357,7 +357,7 @@ impl DiagnosticsDisplay {
         );
         map.insert(
             3,
-            DiagnosticsDisplay {
+            Self {
                 name: "Information".to_owned(),
                 texthl: "ALEInfo".to_owned(),
                 signText: "ℹ".to_owned(),
@@ -367,7 +367,7 @@ impl DiagnosticsDisplay {
         );
         map.insert(
             4,
-            DiagnosticsDisplay {
+            Self {
                 name: "Hint".to_owned(),
                 texthl: "ALEInfo".to_owned(),
                 signText: "➤".to_owned(),
@@ -386,25 +386,25 @@ pub struct DocumentHighlightDisplay {
 }
 
 impl DocumentHighlightDisplay {
-    pub fn default() -> HashMap<u64, DocumentHighlightDisplay> {
+    pub fn default() -> HashMap<u64, Self> {
         let mut map = HashMap::new();
         map.insert(
             1,
-            DocumentHighlightDisplay {
+            Self {
                 name: "Text".to_owned(),
                 texthl: "SpellCap".to_owned(),
             },
         );
         map.insert(
             2,
-            DocumentHighlightDisplay {
+            Self {
                 name: "Read".to_owned(),
                 texthl: "SpellLocal".to_owned(),
             },
         );
         map.insert(
             3,
-            DocumentHighlightDisplay {
+            Self {
                 name: "Write".to_owned(),
                 texthl: "SpellRare".to_owned(),
             },
@@ -526,35 +526,16 @@ pub struct VimCompleteItemUserData {
 }
 
 impl VimCompleteItem {
-    pub fn from_lsp(
-        lspitem: &CompletionItem,
-        complete_position: Option<u64>,
-    ) -> Fallible<VimCompleteItem> {
+    pub fn from_lsp(lspitem: &CompletionItem, complete_position: Option<u64>) -> Fallible<Self> {
+        info!(
+            "LSP CompletionItem to VimCompleteItem: {:?}, {:?}",
+            lspitem, complete_position
+        );
         let abbr = lspitem.label.clone();
-        let mut word = lspitem.insert_text.clone().unwrap_or_default();
-        if word.is_empty() {
-            match (lspitem.text_edit.clone(), complete_position) {
-                (Some(text_edit), Some(complete_position)) => {
-                    // TextEdit range start might be different from vim expected completion start.
-                    // From spec, TextEdit can only span one line, i.e., the current line.
-                    if text_edit.range.start.character != complete_position {
-                        word = text_edit
-                            .new_text
-                            .get((complete_position as usize)..)
-                            .and_then(|line| line.split_whitespace().next())
-                            .map_or_else(String::new, ToOwned::to_owned);
-                    } else {
-                        word = text_edit.new_text.clone();
-                    }
-                }
-                (Some(text_edit), _) => {
-                    word = text_edit.new_text.clone();
-                }
-                (_, _) => {
-                    word = lspitem.label.clone();
-                }
-            }
-        }
+        let word = lspitem
+            .insert_text
+            .clone()
+            .unwrap_or_else(|| lspitem.label.clone());
 
         let snippet;
         if lspitem.insert_text_format == Some(InsertTextFormat::Snippet) {
@@ -573,7 +554,7 @@ impl VimCompleteItem {
             snippet: snippet.clone(),
         };
 
-        Ok(VimCompleteItem {
+        Ok(Self {
             word,
             abbr,
             icase: Some(1),
@@ -673,7 +654,7 @@ impl ToString for Hover {
             HoverContents::Scalar(ref ms) => ms.to_string(),
             HoverContents::Array(ref vec) => vec
                 .iter()
-                .map(|i| i.to_string())
+                .map(ToString::to_string)
                 .collect::<Vec<_>>()
                 .join("\n"),
             HoverContents::Markup(ref mc) => mc.to_string(),
@@ -712,7 +693,7 @@ impl ToDisplay for lsp::MarkedString {
             MarkedString::String(ref s) => s,
             MarkedString::LanguageString(ref ls) => &ls.value,
         };
-        s.lines().map(|i| i.to_string()).collect()
+        s.lines().map(String::from).collect()
     }
 
     fn vim_filetype(&self) -> Option<String> {
@@ -747,7 +728,7 @@ impl ToDisplay for Hover {
                         let mut buf = Vec::new();
 
                         buf.push(format!("```{}", ls.language));
-                        buf.extend(ls.value.lines().map(|i| i.to_string()));
+                        buf.extend(ls.value.lines().map(String::from));
                         buf.push("```".to_string());
 
                         buf
@@ -771,7 +752,7 @@ impl ToDisplay for Hover {
 
 impl ToDisplay for str {
     fn to_display(&self) -> Vec<String> {
-        self.lines().map(|s| s.to_string()).collect()
+        self.lines().map(String::from).collect()
     }
 }
 
@@ -798,7 +779,7 @@ impl LinesLen for Hover {
     fn lines_len(&self) -> usize {
         match self.contents {
             HoverContents::Scalar(ref c) => c.lines_len(),
-            HoverContents::Array(ref arr) => arr.iter().map(|i| i.lines_len()).sum(),
+            HoverContents::Array(ref arr) => arr.iter().map(LinesLen::lines_len).sum(),
             HoverContents::Markup(ref c) => c.lines_len(),
         }
     }
@@ -1027,7 +1008,7 @@ impl FromLSP<SymbolInformation> for QuickfixEntry {
     fn from_lsp(sym: &SymbolInformation) -> Fallible<Self> {
         let start = sym.location.range.start;
 
-        Ok(QuickfixEntry {
+        Ok(Self {
             filename: sym.location.uri.filepath()?.to_string_lossy().into_owned(),
             lnum: start.line + 1,
             col: Some(start.character + 1),

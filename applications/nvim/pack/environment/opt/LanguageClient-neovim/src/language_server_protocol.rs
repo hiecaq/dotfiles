@@ -25,7 +25,7 @@ impl LanguageClient {
 
     pub fn loop_call(&self, rx: &crossbeam_channel::Receiver<Call>) -> Fallible<()> {
         for call in rx.iter() {
-            let language_client = LanguageClient(self.0.clone());
+            let language_client = Self(self.0.clone());
             thread::spawn(move || {
                 if let Err(err) = language_client.handle_call(call) {
                     error!("Error handling request:\n{:?}", err);
@@ -2675,11 +2675,7 @@ impl LanguageClient {
             buf += "Idle";
         } else {
             // For RLS this can be "Build" or "Diagnostics" or "Indexing".
-            buf += params
-                .title
-                .as_ref()
-                .map(|title| title.as_ref())
-                .unwrap_or("Busy");
+            buf += params.title.as_ref().map(AsRef::as_ref).unwrap_or("Busy");
 
             // For RLS this is the crate name, present only if the progress isn't known.
             if let Some(message) = params.message {
