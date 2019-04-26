@@ -99,7 +99,7 @@ class Kind(Openable):
                 'col': target['action__col'],
                 'text': target['action__text'],
             }
-            if 'action__bufnr 'in target:
+            if 'action__bufnr' in target:
                 qfloc['bufnr'] = target['action__bufnr']
             else:
                 qfloc['filename'] = target['action__path']
@@ -149,6 +149,7 @@ class Kind(Openable):
                                 not x.options['previewwindow'],
                                 self.vim.windows), None)
 
+    # Needed for openable actions
     def _jump(self, context, target):
         if 'action__pattern' in target:
             self.vim.call('search', target['action__pattern'], 'w')
