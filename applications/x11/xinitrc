@@ -25,12 +25,15 @@ fi
 if (hash xinput 2>/dev/null) && (xinput | grep "HHKB" > /dev/null); then
     xmodmap $hhkbmodmap
     xinput disable 13 # touchscreen
-elif [ -f "$usermodmap" ]; then
+    xinput disable 11 # cam
+    xinput disable 12 # cam
+elif (hash xinput 2>/dev/null) && (xinput | grep "Ultimate Gadget" > /dev/null); then
+    xinput disable 14 # cam
+    xinput disable 15 # cam
+    xinput disable 16 # touchscreen
+elif (hash xinput 2>/dev/null) && [ -f "$usermodmap" ]; then
     xmodmap "$usermodmap"
     xinput disable 10 # touchscreen
-fi
-
-if (hash xinput 2>/dev/null); then
     xinput disable 11 # cam
     xinput disable 12 # cam
 fi
