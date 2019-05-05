@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:ap/vim-css-color.git
 	branch = master
-	commit = 8d640e4c5d89dde55ef79d43fee1c8ecd12495b9
-	parent = 9d44dd5a62699a94087cc3c78b7817c6af9ec106
+	commit = 10eae530889331457b738b28eafcfa3789481fcd
+	parent = 735361b10cff7955cc83b5728596d851be1a7b63
 	method = merge
 	cmdver = 0.4.0
