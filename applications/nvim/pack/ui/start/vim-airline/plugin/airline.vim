@@ -195,14 +195,18 @@ function! s:airline_theme(...)
   endif
 endfunction
 
-function! s:airline_refresh()
+function! s:airline_refresh(...)
+  " a:1, fast refresh, do not reload the theme
+  let fast=!empty(get(a:000, 0, 0))
   if !exists("#airline")
     " disabled
     return
   endif
   call airline#util#doautocmd('AirlineBeforeRefresh')
   call airline#highlighter#reset_hlcache()
-  call airline#load_theme()
+  if !fast
+    call airline#load_theme()
+  endif
   call airline#update_statusline()
   call airline#update_tabline()
 endfunction
@@ -219,15 +223,22 @@ function! s:airline_extensions()
   let loaded = airline#extensions#get_loaded_extensions()
   let files = split(globpath(&rtp, "autoload/airline/extensions/*.vim"), "\n")
   call map(files, 'fnamemodify(v:val, ":t:r")')
-  if !empty(files)
-    echohl Title
-    echo printf("%-15s\t%s\t%s", "Extension", "Extern", "Status")
-    echohl Normal
+  if empty(files)
+    echo "No extensions loaded"
+    return
   endif
+  echohl Title
+  echo printf("%-15s\t%s\t%s", "Extension", "Extern", "Status")
+  echohl Normal
+  let set=[]
   for ext in sort(files)
+    if index(set, ext) > -1
+      continue
+    endif
     let indx=match(loaded, '^'.ext.'\*\?$')
     let external = (indx > -1 && loaded[indx] =~ '\*$')
     echo printf("%-15s\t%s\t%sloaded", ext, external, indx == -1 ? 'not ' : '')
+    call add(set, ext)
   endfor
 endfunction
 
@@ -255,7 +266,7 @@ endfunction
 command! -bar -nargs=? -complete=customlist,<sid>get_airline_themes AirlineTheme call <sid>airline_theme(<f-args>)
 command! -bar AirlineToggleWhitespace call airline#extensions#whitespace#toggle()
 command! -bar AirlineToggle  call s:airline_toggle()
-command! -bar AirlineRefresh call s:airline_refresh()
+command! -bar -bang AirlineRefresh call s:airline_refresh(<q-bang>)
 command! AirlineExtensions   call s:airline_extensions()
 
 call airline#init#bootstrap()

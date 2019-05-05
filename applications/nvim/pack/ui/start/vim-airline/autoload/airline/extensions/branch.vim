@@ -180,6 +180,7 @@ function! s:update_untracked()
   endif
 
   let needs_update = 1
+  let vcs_checks   = get(g:, "airline#extensions#branch#vcs_checks", ["untracked", "dirty"])
   for vcs in keys(s:vcs_config)
     if file =~ s:vcs_config[vcs].exclude
       " Skip check for files that live in the exclude directory
@@ -202,9 +203,13 @@ function! s:update_untracked()
     " invalidated again before s:update_untracked is called, then we lose the
     " result of the previous call, i.e. the head string is not updated. It
     " doesn't happen often in practice, so we let it be.
-    call airline#async#vcs_untracked(config, file, vcs)
+    if index(vcs_checks, 'untracked') > -1
+      call airline#async#vcs_untracked(config, file, vcs)
+    endif
     " Check clean state of repo
-    call airline#async#vcs_clean(config.dirty, file, vcs)
+    if index(vcs_checks, 'dirty') > -1
+      call airline#async#vcs_clean(config.dirty, file, vcs)
+    endif
   endfor
 endfunction
 
@@ -239,7 +244,9 @@ function! airline#extensions#branch#head()
     endif
     let b:airline_head .= s:format_name({s:vcs_config[vcs].display_branch}())
     let additional = b:buffer_vcs_config[vcs].untracked
-    if empty(additional) && b:buffer_vcs_config[vcs].dirty
+    if empty(additional) &&
+          \ has_key(b:buffer_vcs_config[vcs], 'dirty') &&
+          \ b:buffer_vcs_config[vcs].dirty
       let additional = g:airline_symbols['dirty']
     endif
     let b:airline_head .= additional

@@ -66,9 +66,18 @@ endfunction
 
 function! s:set_clean_variables(file, vcs)
   let var=getbufvar(fnameescape(a:file), 'buffer_vcs_config', {})
-  let var[a:vcs].dirty=1
-  call setbufvar(fnameescape(a:file), 'buffer_vcs_config', var)
-  unlet! b:airline_head
+  if has_key(var, a:vcs) && has_key(var[a:vcs], 'dirty')
+    let var[a:vcs].dirty=1
+    call setbufvar(fnameescape(a:file), 'buffer_vcs_config', var)
+    unlet! b:airline_head
+  endif
+endfunction
+
+function! s:set_clean_jobs_variable(vcs, file, id)
+  if !has_key(s:clean_jobs, a:vcs)
+    let s:clean_jobs[a:vcs] = {}
+  endif
+  let s:clean_jobs[a:vcs][a:file]=a:id
 endfunction
 
 function! s:on_exit_clean(...) dict abort
@@ -76,7 +85,7 @@ function! s:on_exit_clean(...) dict abort
   if !empty(buf)
     call s:set_clean_variables(self.file, self.vcs)
   endif
-  if has_key(get(s:clean_jobs, 'self.vcs', {}), self.file)
+  if has_key(get(s:clean_jobs, self.vcs, {}), self.file)
     call remove(s:clean_jobs[self.vcs], self.file)
   endif
 endfunction
@@ -184,7 +193,7 @@ if v:version >= 800 && has("job")
           \ 'err_io':   'null',
           \ 'out_cb':   function('s:on_stdout', options),
           \ 'close_cb': function('s:on_exit_clean', options)})
-    let jobs[a:file] = id
+    call s:set_clean_jobs_variable(a:vcs, a:file, id)
   endfunction
 
   function! airline#async#vim_vcs_untracked(config, file)
@@ -307,7 +316,7 @@ elseif has("nvim")
       call remove(s:clean_jobs[a:vcs], a:file)
     endif
     let id = jobstart(cmd, config)
-    let s:clean_jobs[a:vcs][a:file] = id
+    call s:set_clean_jobs_variable(a:vcs, a:file, id)
   endfunction
 
 endif
