@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:Julian/vim-textobj-variable-segment.git
 	branch = master
-	commit = 6c60e9b831961f9ed6bc4ff229792745747de3e8
-	parent = 263755a738008aad6b0e9dfe1ceeecb12305598a
+	commit = 1af9cdef58a4072dddbe926e7c8c53903e97b70a
+	parent = a65d229b6a291ac126dc1b03892a91f8715e7699
 	method = merge
 	cmdver = 0.4.0
