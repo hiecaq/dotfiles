@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:ludovicchabant/vim-gutentags.git
 	branch = master
-	commit = 4814b6763b3052d5a81652cc8b230eff8c56492b
-	parent = ca98d1aa7e5cf0b879d9e8d4230940b260ec7fe8
+	commit = eecb136fae97e30d5f01e71f0d3b775c8b017385
+	parent = f792aec9ea3ce3033bfc2724fa1d8f252d66c32d
 	method = merge
 	cmdver = 0.4.0
