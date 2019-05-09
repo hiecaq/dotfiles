@@ -369,6 +369,9 @@ let g:sneak#f_reset = 0 " continue to use ;, for sneak
 let g:sneak#t_reset = 0 " ^
 let g:sneak#absolute_dir = 1 " s; forwards only and S, backwards only
 
+map s <Plug>Sneak_s
+map S <Plug>Sneak_S
+
 augroup Sneak_Color
     au!
     autocmd VimEnter,ColorScheme * :hi Sneak guifg=black ctermfg=black guibg=#FFE53D ctermbg=003
