@@ -59,6 +59,7 @@ endif
 " auto break new lines on textwidth
 let g:quinoa42_textwidth=79
 let &textwidth=g:quinoa42_textwidth
+let g:man_hardwrap=1
 " replace tab with space
 set expandtab
 " numbers of space standed by tab while editing

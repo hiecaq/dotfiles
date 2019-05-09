@@ -8,6 +8,7 @@ fi
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
 # latex set ups
 export TEXMFHOME="$HOME/.config/texmf"
+export MANWIDTH=80
 
 
 ### PATH
