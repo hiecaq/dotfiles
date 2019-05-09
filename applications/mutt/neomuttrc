@@ -15,7 +15,7 @@ set mail_check=0
 set nomove
 set delete
 set noconfirmappend
-set quit=ask-yes
+unset quit
 set nomark_old
 set pipe_decode
 set thorough_search
