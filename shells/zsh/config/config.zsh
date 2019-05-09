@@ -123,7 +123,10 @@ _fzf_complete_task() {
 
 
 c() {
-    cd $(fd --absolute-path -L -t d . $1 | fzf)
+    ____C__DIR="$(fd -L -t d . $1 | fzf)"
+    if [[ $? -eq 0 ]]; then
+        cd $____C__DIR
+    fi
 }
 #######################################################################
 #                                 BAT                                 #
