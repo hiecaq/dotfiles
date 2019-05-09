@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:luochen1990/rainbow.git
 	branch = master
-	commit = cf0445dd528e98417ddfaf1c6f54214f1281aeb2
-	parent = 3e2292a59fc11210327755c569437d103ad2b119
+	commit = 04b7723b810f24152865af656c46e8513489b77a
+	parent = 7adac2168356c5dbddb1f67055d6e81a7deef0d7
 	method = merge
 	cmdver = 0.4.0

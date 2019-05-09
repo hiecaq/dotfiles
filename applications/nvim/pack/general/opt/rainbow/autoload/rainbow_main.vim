@@ -6,6 +6,7 @@ let s:rainbow_conf = {
 \	'guis': [''],
 \	'cterms': [''],
 \	'operators': '_,_',
+\	'contains_prefix': 'TOP',
 \	'parentheses_options': '',
 \	'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
 \	'separately': {
@@ -24,7 +25,7 @@ let s:rainbow_conf = {
 \			'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/'],
 \		},
 \		'vim': {
-\			'parentheses_options': 'containedin=vimFuncBody',
+\			'parentheses_options': 'containedin=vimFuncBody,vimExecute',
 \			'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold'],
 \		},
 \		'xml': {
@@ -42,8 +43,8 @@ let s:rainbow_conf = {
 \		},
 \		'php': {
 \			'syn_name_prefix': 'phpBlockRainbow',
-\			'parentheses_options': 'containedin=@htmlPreproc contains=@phpClTop',
-\			'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/', 'start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold containedin= contains=TOP'],
+\			'contains_prefix': '',
+\			'parentheses': ['start=/(/ end=/)/ containedin=@htmlPreproc contains=@phpClTop', 'start=/\[/ end=/\]/ containedin=@htmlPreproc contains=@phpClTop', 'start=/{/ end=/}/ containedin=@htmlPreproc contains=@phpClTop', 'start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold contains_prefix=TOP'],
 \		},
 \		'stylus': {
 \			'parentheses': ['start=/{/ end=/}/ fold contains=@colorableGroup'],
@@ -92,7 +93,7 @@ fun rainbow_main#gen_config(ft)
 		return 0
 	else
 		let conf = extend(extend({'syn_name_prefix': substitute(a:ft, '\v\A+(\a)', '\u\1', 'g').'Rainbow'}, dft_conf), af_conf)
-		let conf.cycle = has('gui_running')? s:lcm(len(conf.guifgs), len(conf.guis)) : s:lcm(len(conf.ctermfgs), len(conf.cterms))
+		let conf.cycle = (has('gui_running') || (has('termguicolors') && &termguicolors)) ? s:lcm(len(conf.guifgs), len(conf.guis)) : s:lcm(len(conf.ctermfgs), len(conf.cterms))
 		return conf
 	endif
 endfun
