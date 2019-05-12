@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:justinmk/vim-sneak.git
 	branch = master
-	commit = 91192d8969af1d86c98beff4001612976ea25d7a
-	parent = 7a10cadcc2c1a873a62baee2aeba28ecd4c798e6
+	commit = 045b3c0a70815de8e928a094c36d3b6bfde0aade
+	parent = bc4d007223518475254669673085146bc91573fd
 	method = merge
 	cmdver = 0.4.0
