@@ -14,12 +14,21 @@ endfunction
 function! deoplete#mapping#_dummy(func) abort
   return "\<C-r>=".a:func."()\<CR>"
 endfunction
-function! s:check_completion_mode() abort
-  return exists('*complete_info') &&
-        \ (pumvisible() && get(complete_info(), 'mode', '') !=# 'eval')
+function! s:check_completion_info(candidates) abort
+  if !exists('*complete_info')
+    return 0
+  endif
+
+  let info = complete_info()
+  if info.mode !=# '' && info.mode !=# 'eval'
+    return 1
+  endif
+
+  let old_candidates = sort(map(copy(info.items), 'v:val.word'))
+  return sort(map(copy(a:candidates), 'v:val.word')) ==# old_candidates
 endfunction
 function! deoplete#mapping#_complete() abort
-  if s:check_completion_mode()
+  if s:check_completion_info(g:deoplete#_context.candidates)
     return ''
   endif
 
@@ -29,7 +38,7 @@ function! deoplete#mapping#_complete() abort
   return ''
 endfunction
 function! deoplete#mapping#_prev_complete() abort
-  if s:check_completion_mode()
+  if s:check_completion_info(g:deoplete#_filtered_prev.candidates)
     return ''
   endif
 
