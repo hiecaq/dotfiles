@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:Shougo/defx.nvim.git
 	branch = master
-	commit = 54a448e10b0b0006c9eda6b02e7c4c0fe159de04
-	parent = 32aaaedcdf352cf97a62621ac408aa5a86dfff21
+	commit = b414e901b5e3a411dfb0057341b6162ee0a19cf8
+	parent = 184ac0972f7a82678b2ab64a8a19429bf7143fc4
 	method = merge
 	cmdver = 0.4.0
