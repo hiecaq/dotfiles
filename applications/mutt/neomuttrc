@@ -116,6 +116,8 @@ bind index p recall-message
 # Compose View ########## }}}
 
 # Accounts ############## {{{
+source /usr/share/doc/neomutt/samples/gpg.rc
+set pgp_self_encrypt = yes
 source ~/.config/mutt/neomuttrc.local
 # Accounts ############## }}}
 
