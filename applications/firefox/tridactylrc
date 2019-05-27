@@ -26,7 +26,9 @@ sanitise tridactyllocal tridactylsync
 bind ;d hint -W exclaim_quiet tmux new-window -d -n aria2c aria2c
 bind ;m composite hint -pipe * innerHTML | yank
 
-
+" Only hint search results on Google
+bindurl www.google.com f hint -Jc .rc > .r > a
+bindurl www.google.com F hint -Jtc .rc>.r>a
 
 
 " GitHub pull request checkout command to clipboard (only works if you're a collaborator or above)
@@ -68,11 +70,9 @@ set searchurls.crate https://crates.io/search?q=
 "
 
 " New reddit is bad
-" autocmd DocStart www.reddit.com js tri.excmds.urlmodify("-t", "www", "old")
+" autocmd DocStart ^http(s?)://www.reddit.com js tri.excmds.urlmodify("-t", "www", "old")
 " Mosquito nets won't make themselves
-autocmd DocStart www.amazon.com js tri.excmds.urlmodify("-t", "www", "smile")
-
-blacklistadd twitter.com
+autocmd DocStart ^http(s?)://www.amazon.com js tri.excmds.urlmodify("-t", "www", "smile")
 
 " This will have to do until someone writes us a nice syntax file :)
 " vim: set filetype=vim:
