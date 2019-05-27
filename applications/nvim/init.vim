@@ -528,6 +528,7 @@ endif
 
 " editorconfig {{{2
 if (has('python3') || has('python')) && executable('editorconfig')
+    let g:EditorConfig_max_line_indicator = "exceeding"
     packadd! editorconfig-vim
 endif
 " editorconfig END }}}2
@@ -551,7 +552,7 @@ let g:mundo_prefer_python3=1
 "  Tridactyl temporaries  "
 """""""""""""""""""""""""""
 
-let g:markdown_fenced_languages = ['rust', 'c']
+let g:markdown_fenced_languages = ['rust', 'c', 'javascript', 'html', 'python']
 
 if has("autocmd")
     augroup Tridactyl_Temp
