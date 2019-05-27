@@ -1,19 +1,6 @@
 # Usually run for every zsh.
-# editor
-export MANPAGER='nvim +Man!'
+
 export CLIPPY_DISABLE_DOCS_LINKS=1
 
 # zsh configuration files
 export ZSHCONFIG=~/.zsh
-# export ZSH=$HOME/.oh-my-zsh
-
-# other directories
-export DOTFILES=~/.dotfiles
-export WORKPATH=~/workspace/
-export PYENV_ROOT="$HOME/.pyenv"
-
-export RUSTUP_HOME=$HOME/.rustup
-
-PATH=$HOME/.npm-global/bin:$PATH
-PATH="$HOME/.cargo/bin:$PATH"
-export PATH="$HOME/bin:$PATH"

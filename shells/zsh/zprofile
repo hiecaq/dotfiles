@@ -6,24 +6,7 @@ fi
 
 # hidpi for qt5
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
-# latex set ups
-export TEXMFHOME="$HOME/.config/texmf"
+
+# editor
+export MANPAGER='nvim +Man!'
 export MANWIDTH=80
-
-
-### PATH
-# PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
-# eval "$(rbenv init -)"
-# eval "$(pyenv init -)"
-# eval "$(pyenv virtualenv-init -)"
-
-### TeX
-# PATH="/Library/TeX/texbin:$PATH"
-### tcl-tk
-# PATH="/usr/local/opt/tcl-tk/bin:$PATH"
-### fzf
-# export PATH="$PATH:/usr/local/opt/fzf/bin"
-### go
-# PATH="$HOME/go/bin:$PATH"
-
-# PATH="$HOME/bin:$PATH"

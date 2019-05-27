@@ -1,7 +1,20 @@
 XDG_CONFIG_HOME DEFAULT=@{HOME}/.config
 XDG_DATA_HOME DEFAULT=@{HOME}/.local/share
+# editor
 VISUAL DEFAULT=nvim
 EDITOR DEFAULT=${VISUAL}
+# Some directories
+DOTFILES DEFAULT=@{HOME}/.dotfiles
+WORKPATH DEFAULT=@{HOME}/workspace
+# languages' dirs
+RUSTUP_HOME DEFAULT=@{HOME}/.rustup
+TEXMFHOME DEFAULT=@{HOME}/.config/texmf
+# PATH
+PATH DEFAULT=@{HOME}/bin:@{HOME}/.cargo/bin:@{HOME}/.npm-global/bin:${PATH}
+
+# fcitx
 GTK_IM_MODULE=fcitx
 QT_IM_MODULE=fcitx
 XMODIFIERS=@im=fcitx
+
+# vim: ft=conf
