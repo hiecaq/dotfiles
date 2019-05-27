@@ -287,12 +287,13 @@ if has("nvim") && has("python3")
     call denite#custom#option('_', {
                 \ 'prompt': '>',
                 \ 'winheight': 16,
-                \ 'vertical_preview': 1
+                \ 'vertical_preview': 1,
+                \ 'statusline': v:false,
                 \ })
 
     nnoremap <silent> <Leader><space>  :<C-u>Denite -resume<CR>
-    nnoremap <silent> <Leader>j :call execute('Denite -resume -select=+'.v:count1.' -immediately')<CR>
-    nnoremap <silent> <Leader>k :call execute('Denite -resume -select=-'.v:count1.' -immediately')<CR>
+    nnoremap <silent> <Leader>j :call execute('Denite -resume -cursor-pos=+1 -immediately')<CR>
+    nnoremap <silent> <Leader>k :call execute('Denite -resume -cursor-pos=-1 -immediately')<CR>
     nnoremap <silent> <Leader>df :<C-u>Denite file/rec<CR>
     nnoremap <silent> <Leader>dj :<C-u>Denite jump<CR>
     nnoremap <silent> <Leader>dt :<C-u>Denite tag<CR>
