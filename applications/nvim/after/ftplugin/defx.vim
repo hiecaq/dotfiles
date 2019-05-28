@@ -10,12 +10,16 @@ nnoremap <silent><buffer><expr> C
             \                'mark:filename:type:size:time')
 nnoremap <silent><buffer><expr> S
             \ defx#do_action('toggle_sort', 'time')
-nnoremap <silent><buffer><expr> <Enter>
+nnoremap <silent><buffer><expr> <cr>
             \ defx#do_action('multi', ['drop', 'quit'])
+nnoremap <silent><buffer><expr> V
+            \ defx#do_action('toggle_select')
 nnoremap <silent><buffer><expr> v
             \ defx#do_action('multi', [['drop', 'vsplit'], 'quit'])
 nnoremap <silent><buffer><expr> s
             \ defx#do_action('multi', [['drop', 'split'], 'quit'])
+nnoremap <silent><buffer><expr> d
+            \ defx#do_action('call', 'wrapper#DeniteFileRec')
 nnoremap <silent><buffer><expr> yy
             \ defx#do_action('yank_path')
 nnoremap <silent><buffer><expr> .

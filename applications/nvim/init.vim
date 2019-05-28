@@ -285,7 +285,7 @@ if has("nvim") && has("python3")
 
     " Change default prompt
     call denite#custom#option('_', {
-                \ 'prompt': '>',
+                \ 'prompt': '▸',
                 \ 'winheight': 16,
                 \ 'vertical_preview': 1,
                 \ 'statusline': v:false,

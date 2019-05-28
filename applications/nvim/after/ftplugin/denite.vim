@@ -3,7 +3,7 @@ nnoremap <silent><buffer><expr> <CR>
             \ denite#do_map('do_action')
 nnoremap <silent><buffer><expr> <c-v>
             \ denite#do_map('do_action', 'preview')
-nnoremap <silent><buffer><expr> y
+nnoremap <silent><buffer><expr> yy
             \ denite#do_map('do_action', 'yank')
 nnoremap <silent><buffer><expr> v
             \ denite#do_map('do_action', 'vsplitswitch')
