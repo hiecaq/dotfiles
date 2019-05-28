@@ -18,8 +18,10 @@ nnoremap <silent><buffer><expr> v
             \ defx#do_action('multi', [['drop', 'vsplit'], 'quit'])
 nnoremap <silent><buffer><expr> s
             \ defx#do_action('multi', [['drop', 'split'], 'quit'])
+nnoremap <silent><buffer><expr> t
+            \ defx#do_action('multi', ['quit', ['drop', 'tabedit']])
 nnoremap <silent><buffer><expr> d
-            \ defx#do_action('call', 'wrapper#DeniteFileRec')
+            \ defx#do_action('multi', [['call', 'wrapper#DeniteFileRec'], 'quit'])
 nnoremap <silent><buffer><expr> yy
             \ defx#do_action('yank_path')
 nnoremap <silent><buffer><expr> .
