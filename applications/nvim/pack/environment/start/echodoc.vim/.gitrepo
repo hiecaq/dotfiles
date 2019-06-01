@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:Shougo/echodoc.vim.git
 	branch = master
-	commit = ff8d60d631a66de5bcad8325eb50f2cd20fa163d
-	parent = 96629684fa7467ffcf5c1142d7ccece40fb720bb
+	commit = a356d856702c275360ba5cfb91fc98542c2f075f
+	parent = cba07a6f49cd201de923f897adcc67b5061044da
 	method = merge
 	cmdver = 0.4.0
