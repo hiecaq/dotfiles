@@ -152,6 +152,16 @@ endif
 
 " PLUGINS SETTINGS {{{1
 
+" Proj {{{2
+if has("nvim") && has("python3")
+    packadd! proj.nvim
+    call proj#markers#set({
+                \ '_': ['.git', 'README.md', '.editorconfig', 'Makefile'],
+                \ 'rust': ['Cargo.toml'],
+                \ })
+endif
+" Proj END }}}2
+
 " Airline {{{2
 " use Powerline symbols(special fonts requried)
 let g:airline_powerline_fonts = 1
@@ -294,11 +304,11 @@ if has("nvim") && has("python3")
     nnoremap <silent> <Leader><space>  :<C-u>Denite -resume<CR>
     nnoremap <silent> <Leader>j :call execute('Denite -resume -cursor-pos=+1 -immediately')<CR>
     nnoremap <silent> <Leader>k :call execute('Denite -resume -cursor-pos=-1 -immediately')<CR>
-    nnoremap <silent> <Leader>df :<C-u>Denite file/rec<CR>
+    nnoremap <silent> <Leader>df :call execute("Denite file/rec:" . proj#root())<CR>
     nnoremap <silent> <Leader>dj :<C-u>Denite jump<CR>
     nnoremap <silent> <Leader>dt :<C-u>Denite tag<CR>
     nnoremap <silent> <Leader>dg :<C-u>Denite grep<CR>
-    nnoremap <silent> <Leader>* :execute "Denite grep:::" . shellescape(expand("<cword>"))<CR>
+    nnoremap <silent> <Leader>* :call execute("Denite grep:::" . shellescape(expand("<cword>")))<CR>
     nnoremap <silent> <Leader>dd :<C-u>Denite line<CR>
     nnoremap <silent> <Leader>db :<C-u>Denite buffer<CR>
     nnoremap <silent> <Leader>dc :<C-u>Denite command<CR>
