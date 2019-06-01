@@ -55,7 +55,7 @@ function! g:lazy#Defx_toggle()
         packadd defx.nvim
         let s:loaded_defx = 1
     endif
-    Defx -split=floating -resume
+    call execute('Defx -split=floating -resume ' . proj#root())
 endfunction
 
 " vim: foldenable:foldmethod=marker
