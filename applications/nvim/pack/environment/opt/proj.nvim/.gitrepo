@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:quinoa42/proj.nvim.git
+	branch = master
+	commit = 8abebafa86f72d14fc21ad24542cf85732aad9ce
+	parent = 708e9d84f47527ab238fd5bb7c08931004371718
+	method = merge
+	cmdver = 0.4.0
