@@ -1,11 +1,10 @@
-sudo: false
-dist: trusty
+dist: xenial
 
 language: python
 
 python:
   - 3.6
-  # - 3.7
+  - 3.7
 
 install:
   - eval "$(curl -Ss https://raw.githubusercontent.com/neovim/bot-ci/master/scripts/travis-setup.sh) nightly-x64"
@@ -14,7 +13,7 @@ install:
 env:
   global:
     - PATH=$HOME/neovim/bin:$PATH
-    - PYTEST_ADDOPTS=--cov -rplugin/python3/deoplete
+    - PYTEST_ADDOPTS=--cov rplugin/python3/deoplete
 
 script:
   - make --keep-going test lint

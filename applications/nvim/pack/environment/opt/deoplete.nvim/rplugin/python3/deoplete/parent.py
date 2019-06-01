@@ -8,6 +8,7 @@ import time
 import os
 import msgpack
 import subprocess
+import sys
 from functools import partial
 from pathlib import Path
 from queue import Queue
@@ -65,11 +66,36 @@ class SyncParent(_Parent):
 
 
 class AsyncParent(_Parent):
+    def _get_python_executable(self):
+        """Get Python executable.
+
+        This handles Python being embedded in Vim on Windows or OSX.
+
+        Taken from jedia.api.environment._try_get_same_env.
+        """
+        exe = sys.executable
+        if not os.path.basename(exe).lower().startswith('python'):
+            if os.name == 'nt':
+                checks = (r'Scripts\python.exe', 'python.exe')
+            else:
+                checks = (
+                    'bin/python%s.%s' % (sys.version_info[0], sys.version[1]),
+                    'bin/python%s' % (sys.version_info[0]),
+                    'bin/python',
+                )
+            for check in checks:
+                guess = os.path.join(sys.exec_prefix, check)
+                if os.path.isfile(guess):
+                    return guess
+            return self._vim.vars.get('python3_host_prog', 'python3')
+        return exe
+
     def _start_process(self):
         self._stdin = None
         self._queue_id = ''
         self._queue_in = Queue()
         self._queue_out = Queue()
+        self._queue_err = Queue()
         self._packer = msgpack.Packer(
             use_bin_type=True,
             encoding='utf-8',
@@ -90,11 +116,13 @@ class AsyncParent(_Parent):
         self._hnd = self._vim.loop.create_task(
             self._vim.loop.subprocess_exec(
                 partial(Process, self),
-                self._vim.vars.get('python3_host_prog', 'python3'),
+                self._get_python_executable(),
                 main,
                 self._vim.vars['deoplete#_serveraddr'],
-                stderr=None,
                 startupinfo=startupinfo))
+
+    def _print_error(self, message):
+        error(self._vim, message)
 
     def _connect_stdin(self, stdin):
         self._stdin = stdin
@@ -143,6 +171,9 @@ class AsyncParent(_Parent):
     def _get(self, queue_id):
         if not self._hnd:
             return []
+
+        while not self._queue_err.empty():
+            self._print_error(self._queue_err.get_nowait())
 
         outs = []
         while not self._queue_out.empty():
