@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:honza/vim-snippets.git
 	branch = master
-	commit = 91ef2dcf1e75d06fd04ceafc144c8cf5d1b4f46a
-	parent = db1ad02a8dfd4ee2c40e920bcc700a23488a540c
+	commit = a11cf5b47fcb9de72b5c8694a4e2fe2dca8c0ae7
+	parent = 4dcad245c8b392025fa4c191ee29aad7f0a44d1e
 	method = merge
 	cmdver = 0.4.0
