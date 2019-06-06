@@ -425,7 +425,11 @@ if has("patch-7.4.314")
 endif
 
 let g:echodoc_enable_at_startup=1
-let g:echodoc#type="echo"
+if has("nvim-0.4.0")
+    let g:echodoc#type="floating"
+else
+    let g:echodoc#type="echo"
+endif
 " deoplete END }}}2
 
 " LSP {{{2
@@ -504,8 +508,8 @@ let g:LanguageClient_rootMarkers = {
 let g:rainbow_active = 1
 
 let g:rainbow_conf = {
-            \	'guifgs': ['royalblue3', 'seagreen4', 'firebrick3', 'darkorange3'],
-            \	'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
+            \	'guifgs': ['#d65d0e', '#cc241d', '#b16286', '#458588'],
+            \	'ctermfgs': ['166', 'red', 'magenta', 'blue'],
             \	'operators': '',
             \	'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold'],
             \	'separately': {
@@ -515,6 +519,7 @@ let g:rainbow_conf = {
             \       'json' : {'parentheses': ['start=/{/ end=/}/ fold', 'start=/\[/ end=/\]/ fold']},
             \       'jsonnet' : {'parentheses': ['start=/{/ end=/}/ fold', 'start=/\[/ end=/\]/ fold']},
             \       'hocon' : {'parentheses': ['start=/{/ end=/}/ fold', 'start=/\[/ end=/\]/ fold']},
+            \       'rust' : {'parentheses': ['start=/{/ end=/}/ fold', 'start=/(/ end=/)/ fold']},
             \	}
             \}
 " Rainbow Parentheses END }}}2
