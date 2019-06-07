@@ -424,6 +424,10 @@ if has("patch-7.4.314")
     set shortmess+=c
 endif
 
+if has ("nvim-0.4.0") || has("patch-8.1.1270")
+    set shortmess-=S
+endif
+
 let g:echodoc_enable_at_startup=1
 if has("nvim-0.4.0")
     let g:echodoc#type="floating"
