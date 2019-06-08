@@ -541,6 +541,7 @@ endif
 
 " gutentags {{{2
 let g:gutentags_exclude_project_root = ['/usr/local', $HOME . '/.password-store']
+let g:gutentags_exclude_filetypes = ["gitcommit"]
 if executable('ctags')
     packadd! vim-gutentags
 endif
