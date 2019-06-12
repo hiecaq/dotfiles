@@ -386,7 +386,7 @@ class Default(object):
 
     def _update_displayed_texts(self):
         candidates_len = len(self._candidates)
-        if self._context['auto_resize']:
+        if not self._is_async and self._context['auto_resize']:
             winminheight = int(self._context['winminheight'])
             if (winminheight is not -1 and candidates_len < winminheight):
                 self._winheight = winminheight
@@ -530,6 +530,18 @@ class Default(object):
         is_vertical = split == 'vertical'
 
         if not is_vertical and self._vim.current.window.height != winheight:
+            if self._floating:
+                self._vim.call('nvim_win_set_config', self._winid,
+                               {'height': winheight})
+                if self._vim.vars['denite#_filter_winid'] > 0:
+                    self._vim.call(
+                        'nvim_win_set_config',
+                        self._vim.vars['denite#_filter_winid'], {
+                            'relative': 'editor',
+                            'row': self._context['winrow'] + winheight,
+                            'col': int(self._context['wincol']),
+                         })
+
             self._vim.command('resize ' + str(winheight))
             if self._context['reversed']:
                 self._vim.command('normal! zb')

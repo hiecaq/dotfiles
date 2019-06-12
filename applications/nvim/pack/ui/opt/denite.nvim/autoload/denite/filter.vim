@@ -90,7 +90,7 @@ function! s:new_filter_buffer(context) abort
   if a:context['split'] ==# 'floating' && exists('*nvim_open_win')
     call nvim_open_win(bufnr('%'), v:true, {
           \ 'relative': 'editor',
-          \ 'row': a:context['winrow'] + a:context['winheight'],
+          \ 'row': a:context['winrow'] + winheight(0),
           \ 'col': str2nr(a:context['wincol']),
           \ 'width': str2nr(a:context['winwidth']),
           \ 'height': 1,
@@ -187,6 +187,8 @@ function! s:quit() abort
   call denite#filter#_move_to_parent(v:false)
 
   call s:stop_timer()
+
+  let g:denite#_filter_winid = -1
 endfunction
 
 function! denite#filter#_move_to_parent(is_async) abort
