@@ -171,6 +171,9 @@ EXAMPLES						*denite-examples*
 	call denite#custom#source(
 	\ 'file/rec', 'sorters', ['sorter/sublime'])
 
+	" Change default action.
+	call denite#custom#kind('file', 'default_action', 'split')
+
 	" Add custom menus
 	let s:menus = {}
 
@@ -425,7 +428,7 @@ FUNCTIONS						*denite-functions*
 
 denite#call_map({map-name}[, {args}])			*denite#call_map()*
 		Fire {map-name} mapping with {args}.  You can find the
-		mappings list in |denite-mappings|.
+		mappings list in |denite-key-mappings|.
 		{args} behavior depends on {map-name}.
 		Note: It can be used in denite-filter buffer.
 
@@ -449,6 +452,19 @@ denite#custom#filter({filter-name}, {variable-name}, {value})
 		to {value}.  You may specify multiple filters with the
 		separator "," in {filter-name}.
 
+						*denite#custom#kind()*
+denite#custom#kind({kind-name}, {option-name}, {value})
+		Set {kind-name} kind specialized {option-name} to {value}.
+		You may specify multiple kinds with the separator "," in
+		{kind-name}.
+		A {kind-name} of "_" sets the default for all kinds.
+
+		The options below are available:
+
+		default_action			(String)
+		Specify the kind default action.
+		|denite-kind-attribute-default-action|
+
 						*denite#custom#option()*
 denite#custom#option({buffer-name}, {option-name}, {value})
 denite#custom#option({buffer-name}, {dict})
@@ -461,9 +477,9 @@ denite#custom#option({buffer-name}, {dict})
 		substituted to "_", and "-" prefix is removed. >
 
 	call denite#custom#option('default', {
-	      \ 'short_source_names': v:true
+	      \ 'source_names': 'short',
 	      \ })
-
+<
 						*denite#custom#source()*
 denite#custom#source({source-name}, {option-name}, {value})
 		Set {source-name} source specialized {option-name} to {value}.
@@ -473,24 +489,29 @@ denite#custom#source({source-name}, {option-name}, {value})
 
 		The options below are available:
 
-		matchers			(List)
-		Specify a list of matcher names.  The filters overwrite source
-		default matchers.
-		Default:  ['matcher/fuzzy']
-
-		sorters				(List)
-		Specify a list of sorter names.  The filters overwrite source
-		default sorters.
-		Default:  ['sorter/rank']
-
-		converters			(List)
-		Specify a list of converter names.  The filters overwrite
-		source default converters.
-		Default:  []
-
 		args				(List)
 		Specify the source default arguments.
 		Default:  []
+
+		converters			(List)
+		Specify a list of converter names.
+		|denite-source-attribute-converters|
+
+		default_action			(String)
+		Specify the source default action.
+		|denite-source-attribute-default-action|
+
+		matchers			(List)
+		Specify a list of matcher names.
+		|denite-source-attribute-matchers|
+
+		max_candidates			(Number)
+		Specify the maximum candidates.
+		|denite-source-attribute-max_candidates|
+
+		sorters				(List)
+		Specify a list of sorter names.
+		|denite-source-attribute-sorters|
 
 							*denite#custom#var()*
 denite#custom#var({source-name}, {var-name}, {value})
@@ -505,7 +526,7 @@ denite#do_action({context}, {action-name}, {targets})
 
 denite#do_map({map-name}[, {args}])			*denite#do_map()*
 		Fire {map-name} mapping with {args}.  You can find the
-		mappings list in |denite-mappings|.
+		mappings list in |denite-key-mappings|.
 		{args} behavior depends on {map-name}.
 		Note: It is only used to define mappings.
 		Note: It can be used in denite-filter buffer. >
@@ -759,6 +780,7 @@ OPTIONS							*denite-options*
         		\   '1' : 20, '2' : 21, '3' : 22, '4' : 23, '5' : 24,
         		\   '6' : 25, '7' : 26, '8' : 27, '9' : 28, '0' : 29,
         		\ }
+<
 						*denite-option-refresh*
 -refresh
 		Refresh the candidates when |denite-option-resume| is true.
@@ -1880,6 +1902,36 @@ A: >
 	autocmd FileType denite-filter call s:denite_filter_my_settings()
 	function! s:denite_filter_my_settings() abort
 	  imap <silent><buffer> <C-c> <Plug>(denite_filter_quit)
+	endfunction
+
+Q: I want to call default action in denite filter window.
+
+A: >
+
+	autocmd FileType denite-filter call s:denite_filter_my_settings()
+	function! s:denite_filter_my_settings() abort
+	  inoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
+	endfunction
+
+Q: I want to disable deoplete auto completion in denite filter window.
+
+A:
+>
+	autocmd FileType denite-filter call s:denite_filter_my_settings()
+	function! s:denite_filter_my_settings() abort
+	  call deoplete#custom#buffer_option('auto_complete', v:false)
+	endfunction
+
+Q: I want to execute custom action in denite window.
+
+A: >
+
+	autocmd FileType denite call s:denite_my_settings()
+	call denite#custom#action('directory', 'dein_update',
+	\ function('s:dein_update'))
+	function! s:denite_filter_my_settings() abort
+	  nnoremap <silent><buffer><expr> U
+	  \ denite#do_map('do_action', 'dein_update')
 	endfunction
 
 ==============================================================================

@@ -5,7 +5,7 @@
 # ============================================================================
 
 from denite.util import (
-    get_custom_source, debug, regex_convert_str_vim,
+    get_custom, debug, regex_convert_str_vim,
     import_rplugins, expand, split_input, abspath)
 
 import copy
@@ -84,21 +84,25 @@ class Child(object):
     def start(self, context):
         self._custom = context['custom']
 
-        if self._vim.options['runtimepath'] != self._runtimepath:
-            # Recache
-            self._load_sources(context)
-            self._load_filters(context)
-            self._load_kinds(context)
-            self._runtimepath = self._vim.options['runtimepath']
+        if self._vim.options['runtimepath'] == self._runtimepath:
+            return
 
-        for alias, base in [[x, y] for [x, y] in
-                            self._custom['alias_source'].items()
-                            if x not in self._sources]:
-            if base not in self._sources:
-                self.error('Invalid base: ' + base)
-                continue
-            self._sources[alias] = copy.copy(self._sources[base])
-            self._sources[alias].name = alias
+        # Recache
+        self._load_sources(context)
+        self._load_filters(context)
+        self._load_kinds(context)
+        self._runtimepath = self._vim.options['runtimepath']
+
+        # Check invalid alias
+        aliases = []
+        aliases += [[x, y] for [x, y] in
+                    self._custom['alias_source'].items()
+                    if x not in self._sources]
+        aliases += [[x, y] for [x, y] in
+                    self._custom['alias_filter'].items()
+                    if x not in self._filters]
+        for base, alias in aliases:
+            self.error(f'Invalid base: {base} for {alias}')
 
     def gather_candidates(self, context):
         for source in self._current_sources:
@@ -139,16 +143,17 @@ class Child(object):
             source.index = index
 
             # Set the source attributes.
-            self._set_source_attribute(source, 'matchers')
-            self._set_source_attribute(source, 'sorters')
-            self._set_source_attribute(source, 'converters')
-            self._set_source_attribute(source, 'max_candidates')
+            self._set_custom_attribute('source', source, 'matchers')
+            self._set_custom_attribute('source', source, 'sorters')
+            self._set_custom_attribute('source', source, 'converters')
+            self._set_custom_attribute('source', source, 'max_candidates')
+            self._set_custom_attribute('source', source, 'default_action')
             source.vars.update(
-                get_custom_source(self._custom, source.name,
-                                  'vars', source.vars))
+                get_custom(self._custom, 'source',
+                           source.name, 'vars', source.vars))
             if not source.context['args']:
-                source.context['args'] = get_custom_source(
-                    self._custom, source.name, 'args', [])
+                source.context['args'] = get_custom(
+                    self._custom, 'source', source.name, 'args', [])
 
             if hasattr(source, 'on_init'):
                 source.on_init(source.context)
@@ -403,10 +408,9 @@ class Child(object):
             ctx['candidates'] = matcher.filter(ctx)
         return ctx['candidates']
 
-    def _set_source_attribute(self, source, attr):
-        source_attr = getattr(source, attr)
-        setattr(source, attr, get_custom_source(
-            self._custom, source.name, attr, source_attr))
+    def _set_custom_attribute(self, kind, obj, attr):
+        setattr(obj, attr, get_custom(
+            self._custom, kind, obj.name, attr, getattr(obj, attr)))
 
     def _load_sources(self, context):
         # Load sources from runtimepath
@@ -489,7 +493,11 @@ class Child(object):
             if not hasattr(kind, 'name') or not kind.name:
                 # Prefer foo/bar instead of foo.bar in name
                 setattr(kind, 'name', module_path.replace('.', '/'))
+
+            # Set the kind attributes.
             kind.path = path
+            self._set_custom_attribute('kind', kind, 'default_action')
+
             self._kinds[kind.name] = kind
 
     def _get_kind(self, context, target):
