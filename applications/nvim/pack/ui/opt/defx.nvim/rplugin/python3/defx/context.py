@@ -24,6 +24,7 @@ class Context(typing.NamedTuple):
     resume: bool = False
     root_marker: str = ''
     search: str = ''
+    session_file: str = ''
     sort: str = ''
     show_ignored_files: bool = False
     split: str = 'no'
@@ -34,5 +35,6 @@ class Context(typing.NamedTuple):
     visual_end: int = 0
     wincol: int = 0
     winheight: int = 0
+    winrelative: str = 'editor'
     winrow: int = 0
     winwidth: int = 0
