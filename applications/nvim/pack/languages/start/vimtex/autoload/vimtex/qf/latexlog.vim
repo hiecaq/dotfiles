@@ -21,7 +21,7 @@ function! s:qf.init(state) abort dict "{{{1
   let self.config.packages = get(self.config, 'packages', {})
   let self.config.packages.default = get(self.config.packages, 'default',
         \ self.config.default)
-  let self.config.fix_paths = get(self.config, 'fix_paths', 1)
+  let self.config.ignore_filters = get(self.config, 'ignore_filters', [])
 
   let self.types = map(
         \ filter(items(s:), 'v:val[0] =~# ''^type_'''),
@@ -160,23 +160,25 @@ function! s:qf.setqflist(tex, log, jump) abort dict "{{{1
     throw 'Vimtex: No log file found'
   endif
 
-  "
-  " We use a temporary autocmd to fix some paths in the quickfix entry
-  "
-  if self.config.fix_paths
-    let self.main = a:tex
-    let self.root = b:vimtex.root
-    augroup vimtex_qf_tmp
-      autocmd!
-      autocmd QuickFixCmdPost [cl]*file call b:vimtex.qf.fix_paths()
-    augroup END
-  endif
-
   execute (a:jump ? 'cfile' : 'cgetfile') fnameescape(a:log)
 
-  if self.config.fix_paths
-    autocmd! vimtex_qf_tmp
+  " Apply some post processing of the quickfix list (if configured)
+  let self.main = a:tex
+  let self.root = b:vimtex.root
+  call self.fix_paths()
+  if !empty(self.config.ignore_filters)
+    let l:qflist = getqflist()
+    for l:re in self.config.ignore_filters
+      call filter(l:qflist, 'v:val.text !~# l:re')
+    endfor
+    call setqflist(l:qflist, 'r')
   endif
+
+  " Set title if supported
+  try
+    call setqflist([], 'r', {'title': 'Vimtex errors (' . self.name . ')'})
+  catch
+  endtry
 endfunction
 
 " }}}1
@@ -211,14 +213,7 @@ function! s:qf.fix_paths() abort dict " {{{1
     let l:qf.bufnr = bufnr(l:file)
   endfor
 
-  " Update qflist
   call setqflist(l:qflist, 'r')
-
-  " Set title if supported
-  try
-    call setqflist([], 'r', {'title': 'Vimtex errors (' . self.name . ')'})
-  catch
-  endtry
 endfunction
 
 " }}}1
