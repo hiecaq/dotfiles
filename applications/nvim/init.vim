@@ -23,11 +23,7 @@ if has("termguicolors") && expand("$COLORTERM") ==# "truecolor"
 endif
 
 " colorschemes
-if &termguicolors
-    colorscheme gruvbox
-else
-    colorscheme gruvbox
-endif
+colorscheme gruvbox
 
 " set background type
 set background=dark
