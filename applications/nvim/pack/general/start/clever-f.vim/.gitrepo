@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:rhysd/clever-f.vim.git
 	branch = master
-	commit = e7ed607887ed6cb9c3ca6e3b72ef53505ab90ec5
-	parent = 07b267a0418bbdd1f0fa7f2c47f3c49d1bc47ca1
+	commit = 85ec2bee3053c435d060af114ba062215ac3eb86
+	parent = 97da3d3217de273c2e3e7994dd80850cce17f2f5
 	method = merge
 	cmdver = 0.4.0
