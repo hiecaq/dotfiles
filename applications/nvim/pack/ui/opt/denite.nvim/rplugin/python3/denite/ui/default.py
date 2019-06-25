@@ -388,10 +388,12 @@ class Default(object):
         candidates_len = len(self._candidates)
         if not self._is_async and self._context['auto_resize']:
             winminheight = int(self._context['winminheight'])
+            max_height = min(int(self._context['winheight']),
+                             self._get_max_height())
             if (winminheight is not -1 and candidates_len < winminheight):
                 self._winheight = winminheight
-            elif candidates_len > int(self._context['winheight']):
-                self._winheight = int(self._context['winheight'])
+            elif candidates_len > max_height:
+                self._winheight = max_height
             elif candidates_len != self._winheight:
                 self._winheight = candidates_len
 
@@ -520,19 +522,27 @@ class Default(object):
                 if index in self._selected_candidates
                 else ' ') + ' '.join(terms).replace('\n', '')
 
+    def _get_max_height(self):
+        return int(self._vim.options['lines']) if not self._floating else (
+            int(self._vim.options['lines']) -
+            int(self._context['winrow']) -
+            int(self._vim.options['cmdheight']))
+
     def _resize_buffer(self):
         split = self._context['split']
-        if split == 'no' or split == 'tab':
+        if (split == 'no' or split == 'tab' or
+                self._vim.call('winnr', '$') == 1):
             return
 
-        winheight = self._winheight
-        winwidth = self._winwidth
+        winheight = max(self._winheight, 1)
+        winwidth = max(self._winwidth, 1)
         is_vertical = split == 'vertical'
 
         if not is_vertical and self._vim.current.window.height != winheight:
             if self._floating:
-                self._vim.call('nvim_win_set_config', self._winid,
-                               {'height': winheight})
+                self._vim.call(
+                    'nvim_win_set_config', self._winid,
+                    {'height': winheight})
                 filter_winid = self._vim.vars['denite#_filter_winid']
                 if self._vim.call('win_id2win', filter_winid) > 0:
                     self._vim.call(
@@ -657,7 +667,7 @@ class Default(object):
         clearmatch(self._vim)
 
     def _get_cursor_candidate(self):
-        if self._cursor > len(self._candidates):
+        if not self._candidates or self._cursor > len(self._candidates):
             return {}
         return self._candidates[self._cursor - 1]
 
