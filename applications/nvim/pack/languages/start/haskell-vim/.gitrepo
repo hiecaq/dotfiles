@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:neovimhaskell/haskell-vim.git
+	branch = master
+	commit = b1ac46807835423c4a4dd063df6d5b613d89c731
+	parent = e7fd5e10a3a4bcc84e5551e7f45c27cd7cb9af49
+	method = merge
+	cmdver = 0.4.0
