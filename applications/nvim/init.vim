@@ -52,6 +52,10 @@ set nofoldenable
 if exists('&pumblend')
     set pumblend=20
 endif
+" neovim 0.4.0+: transparent floating windows
+if exists('&winblend')
+    set winblend=20
+endif
 " auto break new lines on textwidth
 let g:quinoa42_textwidth=79
 let &textwidth=g:quinoa42_textwidth
