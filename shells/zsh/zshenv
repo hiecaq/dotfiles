@@ -1,6 +1,8 @@
 # Usually run for every zsh.
 
 export CLIPPY_DISABLE_DOCS_LINKS=1
+export RUSTUP_DIST_SERVER=https://mirrors.tuna.tsinghua.edu.cn/rustup
 
 # zsh configuration files
 export ZSHCONFIG=~/.zsh
+export PATH=$HOME/bin:$HOME/.cargo/bin:$HOME/.npm-global/bin:${PATH}

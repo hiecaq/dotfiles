@@ -8,9 +8,8 @@ DOTFILES DEFAULT=@{HOME}/.dotfiles
 WORKPATH DEFAULT=@{HOME}/workspace
 # languages' dirs
 RUSTUP_HOME DEFAULT=@{HOME}/.rustup
+CARGO_TARGET_DIR DEFAULT=@{HOME}/.cache/rust-targets
 TEXMFHOME DEFAULT=@{HOME}/.config/texmf
-# PATH
-PATH DEFAULT=@{HOME}/bin:@{HOME}/.cargo/bin:@{HOME}/.npm-global/bin:${PATH}
 
 # fcitx
 GTK_IM_MODULE=fcitx
