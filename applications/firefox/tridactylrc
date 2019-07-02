@@ -40,6 +40,7 @@ bindurl www.google.com F hint -Jtc .rc>.r>a
 "
 " Misc settings
 "
+set browser firefox-developer-edition
 set editorcmd tmux new-window -n firefox 'nvim -f %f; tmux wait-for -S firefox-neww-done' \; wait-for firefox-neww-done
 
 " set editorcmd to suckless terminal, or use the defaults on other platforms
