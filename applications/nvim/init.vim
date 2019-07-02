@@ -304,7 +304,7 @@ if has("nvim") && has("python3")
     nnoremap <silent> <Leader><space>  :<C-u>Denite -resume<CR>
     nnoremap <silent> <Leader>j :call execute('Denite -resume -cursor-pos=+1 -immediately')<CR>
     nnoremap <silent> <Leader>k :call execute('Denite -resume -cursor-pos=-1 -immediately')<CR>
-    nnoremap <silent> <Leader>df :call execute("Denite file/rec:" . proj#root() . " file:new:" . proj#root())<CR>
+    nnoremap <silent> <Leader>df :call g:wrapper#DeniteFileRec(proj#root())<CR>
     nnoremap <silent> <Leader>dj :<C-u>Denite jump<CR>
     nnoremap <silent> <Leader>dt :<C-u>Denite tag<CR>
     nnoremap <silent> <Leader>dg :<C-u>Denite grep<CR>

@@ -31,8 +31,12 @@ function! g:wrapper#TocLocationList()
     Denite location_list
 endfunction
 
-function! g:wrapper#DeniteFileRec(context)
-    call execute('Denite file/rec:'. a:context.targets[0])
+function! g:wrapper#DeniteFileRecWith(context)
+    call g:wrapper#DeniteFileRec(a:context.targets[0])
+endfunction
+
+function! g:wrapper#DeniteFileRec(dir)
+    call execute("Denite file/rec:" . a:dir . " file:new:" . a:dir)
 endfunction
 
 " vim: foldenable:foldmethod=marker

@@ -21,7 +21,7 @@ nnoremap <silent><buffer><expr> s
 nnoremap <silent><buffer><expr> t
             \ defx#do_action('multi', ['quit', ['drop', 'tabedit']])
 nnoremap <silent><buffer><expr> d
-            \ defx#do_action('multi', [['call', 'wrapper#DeniteFileRec'], 'quit'])
+            \ defx#do_action('multi', [['call', 'wrapper#DeniteFileRecWith'], 'quit'])
 nnoremap <silent><buffer><expr> yy
             \ defx#do_action('yank_path')
 nnoremap <silent><buffer><expr> .
