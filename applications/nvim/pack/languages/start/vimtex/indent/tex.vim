@@ -18,8 +18,14 @@ set cpoptions&vim
 
 setlocal autoindent
 setlocal indentexpr=VimtexIndentExpr()
-setlocal indentkeys&
-setlocal indentkeys+=[,(,{,),},],\&,=item,=else,=fi
+setlocal indentkeys=!^F,o,O,(,),],},\&,=item,=else,=fi
+
+" Add standard closing math delimiters to indentkeys
+for s:delim in [
+      \ 'rangle', 'rbrace', 'rvert', 'rVert', 'rfloor', 'rceil', 'urcorner']
+  let &l:indentkeys .= ',=' . s:delim
+endfor
+
 
 function! VimtexIndentExpr() abort " {{{1
   return VimtexIndent(v:lnum)
@@ -243,20 +249,25 @@ function! s:indent_conditionals(line, lnum, prev_line, prev_lnum) abort " {{{1
 
   if empty(s:re_cond) | return 0 | endif
 
-  " Match for conditional indents
-  if a:line =~# s:re_cond.close
-    silent! unlet s:conditional_opened
-    return -s:sw
-  elseif get(s:, 'conditional_opened')
-        \ && a:line =~# s:re_cond.else
-    return -s:sw
-  elseif get(s:, 'conditional_opened')
-        \ && a:prev_line =~# s:re_cond.else
-    return s:sw
-  elseif a:prev_line =~# s:re_cond.open
-    let s:conditional_opened = 1
-    return s:sw
+  if get(s:, 'conditional_opened')
+    if a:line =~# s:re_cond.close
+      silent! unlet s:conditional_opened
+      return a:prev_line =~# s:re_cond.open ? 0 : -s:sw
+    elseif a:line =~# s:re_cond.else
+      return -s:sw
+    elseif a:prev_line =~# s:re_cond.else
+      return s:sw
+    elseif a:prev_line =~# s:re_cond.open
+      return s:sw
+    endif
   endif
+
+  if a:line =~# s:re_cond.open
+        \ && a:line !~# s:re_cond.close
+    let s:conditional_opened = 1
+  endif
+
+  return 0
 endfunction
 
 " }}}1
