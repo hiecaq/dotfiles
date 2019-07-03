@@ -372,6 +372,7 @@ let g:clever_f_across_no_line=1 " only match the current line
 let g:clever_f_fix_key_direction=1 " fix f to forward and F backword, tT etc.
 let g:clever_f_chars_match_any_signs="^" " use ^ to match all signs
 let g:clever_f_use_migemo=1 " enable migemo support
+let g:clever_f_mark_direct=1 " showing char that can be directly jumped to
 " clever-f }}}2
 
 " sneak {{{2
