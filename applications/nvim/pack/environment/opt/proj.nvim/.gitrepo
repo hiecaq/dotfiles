@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:quinoa42/proj.nvim.git
 	branch = master
-	commit = 8abebafa86f72d14fc21ad24542cf85732aad9ce
-	parent = 708e9d84f47527ab238fd5bb7c08931004371718
+	commit = f21b32013d41284f24c0b4900ac983d3f77a84e3
+	parent = d843723324ed0d5651f2d8e383fb7166086bd790
 	method = merge
 	cmdver = 0.4.0

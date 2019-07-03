@@ -8,6 +8,7 @@
 
 import pynvim
 import os.path as op
+from pathlib import Path
 
 @pynvim.plugin
 class ProjPlugin(object):
@@ -24,14 +25,17 @@ class ProjPlugin(object):
         return self.nvim.call('proj#markers#get', ext)
 
     def _find(self, filename, ext):
+        filename = filename or self.nvim.call('getcwd()')
         markers = self._get_markers(ext) + self._get_markers('_')
         if op.basename(filename) in markers:
             return op.dirname(filename)
-        while filename != op.abspath(op.sep):
-            filename = op.dirname(filename)
+        while True:
             if next(filter(op.exists, (op.join(filename, marker)
                 for marker in markers)), None) is not None:
                 return filename
-        return None
+            if filename == op.abspath(op.sep):
+                break
+            filename = op.dirname(filename)
+        return str(Path.home())
 
 # vim: foldenable:foldmethod=marker
