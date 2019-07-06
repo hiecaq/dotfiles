@@ -365,6 +365,11 @@ nmap <Leader>sd <Plug>(operator-surround-delete)
 xmap <Leader>sd <Plug>(operator-surround-delete)
 nmap <Leader>sr <Plug>(operator-surround-replace)
 xmap <Leader>sr <Plug>(operator-surround-replace)
+let g:operator#surround#blocks = {
+            \ "rust": [
+            \       { 'block' : ['dbg!(', ')'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['d'] },
+            \],
+            \}
 " surround END }}}2
 
 " clever-f {{{2
