@@ -57,7 +57,7 @@ if exists('&winblend')
     set winblend=20
 endif
 " auto break new lines on textwidth
-let g:quinoa42_textwidth=79
+let g:quinoa42_textwidth=80
 let &textwidth=g:quinoa42_textwidth
 let g:man_hardwrap=1
 " replace tab with space
@@ -445,7 +445,7 @@ endif
 " LSP {{{2
 augroup Lazy_Loaded_LSP
     au!
-    autocmd FileType rust,java,python,c,cpp,cuda,objc
+    autocmd FileType rust,java,python,c,cpp,cuda,objc,haskell
                     \ call lazy#LC_starts()
 augroup END
 
@@ -459,6 +459,11 @@ let g:LanguageClient_fzfContextMenu = 0
 if has("nvim-0.4.0")
     let g:LanguageClient_hoverPreview = "Always"
 endif
+
+hi! link ALEErrorSign GruvboxRedBold
+hi! link ALEWarningSign GruvboxYellowBold
+hi! link ALEInfoSign GruvboxBlueBold
+hi! link ALEHintSign GruvboxBlue
 
 let g:LanguageClient_diagnosticsDisplay = {
     \   1: {
@@ -486,10 +491,21 @@ let g:LanguageClient_diagnosticsDisplay = {
     \       "name": "Hint",
     \       "texthl": "ALEInfo",
     \       "signText": "▐▌",
-    \       "signTexthl": "ALEInfoSign",
+    \       "signTexthl": "ALEHintSign",
     \       "virtualTexthl": "Todo",
     \   },
     \ }
+
+if has("nvim")
+    " no signcolumn
+    set signcolumn=no
+    sign define LanguageClientWarning numhl=ALEWarningSign
+    sign define LanguageClientError numhl=ALEErrorSign
+    sign define LanguageClientInformation numhl=ALEInfoSign
+    sign define LanguageClientHint numhl=ALEHintSign
+else
+    set signcolumn=number
+endif
 
 let g:LanguageClient_serverCommands = {
     \ 'ocaml': ['ocaml-language-server', '--stdio'],
@@ -502,6 +518,7 @@ let g:LanguageClient_serverCommands = {
     \ 'typescript': ['javascript-typescript-stdio'],
     \ 'kotlin': ['~/Workspace/kotlin/KotlinLanguageServer/build/install/kotlin-language-server/bin/kotlin-language-server'],
     \ 'rust': ['rustup', 'run', 'stable', 'rls'],
+    \ 'haskell': ['hie-wrapper'],
     \ 'java': ['jdtls'],
     \ }
 
@@ -579,7 +596,8 @@ let g:mundo_prefer_python3=1
 "  Tridactyl temporaries  "
 """""""""""""""""""""""""""
 
-let g:markdown_fenced_languages = ['rust', 'c', 'javascript', 'html', 'python']
+let g:markdown_fenced_languages = ['rust', 'c', 'javascript', 'html', 'python',
+            \ 'haskell', 'yaml']
 
 if has("autocmd")
     augroup Tridactyl_Temp
