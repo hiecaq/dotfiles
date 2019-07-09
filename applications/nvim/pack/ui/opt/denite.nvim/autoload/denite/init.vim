@@ -49,6 +49,9 @@ function! denite#init#_initialize() abort
     endif
     call s:initialize_variables()
   catch
+    call denite#util#print_error(v:exception)
+    call denite#util#print_error(v:throwpoint)
+
     if denite#util#has_yarp()
       if !has('nvim') && !exists('*neovim_rpc#serveraddr')
         call denite#util#print_error(
@@ -67,11 +70,6 @@ function! denite#init#_initialize() abort
     endif
     return 1
   endtry
-
-  let g:denite#_update_candidates_timer = timer_start(300,
-        \ {-> denite#call_async_map('update_candidates')}, {'repeat': -1})
-  let g:denite#_update_buffer_timer = timer_start(300,
-        \ {-> denite#call_map('update_buffer')}, {'repeat': -1})
 endfunction
 function! s:initialize_variables() abort
   let g:denite#_filter_winid = -1
@@ -103,7 +101,7 @@ function! denite#init#_user_options() abort
         \ 'empty': v:true,
         \ 'expand': v:false,
         \ 'filter_split_direction': 'botright',
-        \ 'filter_updatetime': 300,
+        \ 'filter_updatetime': 100,
         \ 'highlight_filter_background': 'NormalFloat',
         \ 'highlight_matched_range': 'Underlined',
         \ 'highlight_matched_char': 'Search',
