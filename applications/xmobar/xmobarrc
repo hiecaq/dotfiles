@@ -31,20 +31,19 @@ Config { font = "xft:DejavuSansMono Nerd Font:size=8:bold:antialias=true,Noto Sa
                     ["-t", "<acstatus><left>",
                     "-L", "15", "-H", "80", "-c", "0", "-p", "3",
                     "--low","#cc241d",
-                    "--align", "r",
                     "--", "-O", "<fc=#8ec07c></fc>", "-i", "", "-o", ""]
                     600
                     , Run Date "%a %y-%m-%_d %H:%M" "date" 10
                     , Run DiskU [("/", "<used>/<size>"), ("/home", "<free>/<size>")]
                                 ["-L", "10", "-H", "30", "-m", "1", "-p", "3", "--normal","#fabd2f","--low","#cc241d"]
                                 18000
-                    , Run MPD ["-t",
-                            "<statei> <artist> | <title> (<album>)",
-                            "--", "-P", "", "-Z", "", "-S", ""] 10
+                    -- , Run MPD ["-t",
+                    --         "<statei> <artist> | <title> (<album>)",
+                    --         "--", "-P", "", "-Z", "", "-S", ""] 10
                     , Run Com "netctl_current" [] "wifi" 100
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ %mpd%  %disku%  %battery%  %thermal10%  %cpu%  %memory%  %wifi% %wlp2s0%  <fc=#fabd2f>%date%</fc>  %uname% "
+       , template = "%StdinReader% }{ %disku%  %battery%  %thermal10%  %cpu%  %memory%  %wifi% %wlp2s0%  <fc=#fabd2f>%date%</fc>  %uname% "
        }
 -- vim: ft=haskell :

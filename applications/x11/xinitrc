@@ -57,11 +57,11 @@ if [[ -f $usercomptonconfig ]] && (hash compton 2>/dev/null); then
 fi
 
 if (hash fcitx 2>/dev/null); then
-    fcitx &
+    fcitx
 fi
 
 if (hash redshift 2>/dev/null); then
-    systemctl --user start redshift.service
+    redshift &
 fi
 
-exec awesome
+exec xmonad
