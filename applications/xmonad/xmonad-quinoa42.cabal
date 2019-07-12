@@ -1,0 +1,34 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 281b43fb80495db5cc9f68d053c2ee1656a7ae38e1bac5226520b4d4462bfd13
+
+name:           xmonad-quinoa42
+version:        0.1.0
+synopsis:       my xmonad and xmobar setting
+homepage:       https://github.com/quinoa42/dotfiles#readme
+bug-reports:    https://github.com/quinoa42/dotfiles/issues
+author:         quinoa42
+maintainer:     quinoa42.echo@gmail.com
+copyright:      © quinoa42
+license:        MIT
+build-type:     Simple
+
+source-repository head
+  type: git
+  location: https://github.com/quinoa42/dotfiles
+
+executable xmonad
+  main-is: xmonad.hs
+  other-modules:
+      Paths_xmonad_quinoa42
+  ghc-options: -Wall -fwarn-tabs -threaded -O2 -with-rtsopts=-N4
+  build-depends:
+      X11
+    , base
+    , xmonad
+    , xmonad-contrib
+  default-language: Haskell2010

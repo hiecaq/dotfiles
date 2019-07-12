@@ -1,0 +1,23 @@
+# copy & paste from https://www.ncaq.net/2019/02/05/15/42/31/
+name: xmonad-quinoa42
+synopsis: my xmonad and xmobar setting
+version: 0.1.0
+github: quinoa42/dotfiles
+author: quinoa42
+maintainer: quinoa42.echo@gmail.com
+copyright: © quinoa42
+license: MIT
+dependencies:
+  - X11
+  - base
+  - xmonad
+  - xmonad-contrib
+executables:
+  xmonad:
+    main: xmonad.hs
+    ghc-options:
+      - -Wall
+      - -fwarn-tabs
+      - -threaded
+      - -O2
+      - -with-rtsopts=-N4
