@@ -1,0 +1,22 @@
+directory: ~/music
+library: ~/music/library.db
+plugins: lastgenre mbsync fetchart embedart duplicates smartplaylist mpdupdate mpdstats edit
+
+sort_item:
+  album+ disc+ track+ artist+
+
+musicbrainz:
+  searchlimit: 3
+
+lastgenre:
+  canonical: yes
+
+smartplaylist:
+    relative_to: ~/music
+    playlist_dir: ~/.local/share/mpd/playlists
+    playlists:
+        - name: all.m3u
+          query: ''
+
+        - name: jazz.m3u
+          query: 'genre:jazz'
