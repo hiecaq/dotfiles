@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# used by xmobar to show current used netctl profile
+
+netctl-auto list | rg '\*' | sd "\*\s(.+)" '$1'
