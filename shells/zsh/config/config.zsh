@@ -121,6 +121,12 @@ _fzf_complete_task() {
     )
 }
 
+_fzf_complete_launch() {
+    _fzf_complete '+m' "$@" < <(
+        print -rl -- ${(ko)commands}
+    )
+}
+
 
 c() {
     ____C__DIR="$(fd -L -t d . $1 | fzf)"

@@ -1,3 +1,16 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
-(nohup systemd-cat "$@" &) > /dev/null 2>&1
+# launch a program in a non-blocking way
+
+if [[ -n "${DESKTOP_APPS[(r)$1]}" ]]; then
+    (nohup systemd-cat "$@" &) > /dev/null 2>&1
+elif [[ -n "$TMUX" ]]; then
+    # # alternative: blocking call
+    # _ARGS="$@; tmux wait-for -S $1-neww-done"
+    # tmux new-window "$_ARGS"
+    # tmux wait-for "$1-neww-done"
+
+    tmux new-window -n "$1" "$@"
+else
+    (nohup alacritty -e "$@" &) > /dev/null 2>&1
+fi
