@@ -4,26 +4,27 @@
 #                              antigen                                #
 #######################################################################
 
-source /usr/share/zsh/share/antigen.zsh
-
-antigen use oh-my-zsh
-antigen bundle git
-antigen bundle colorize
-antigen bundle tmux
-antigen bundle vi-mode
-antigen bundle zsh-users/zsh-syntax-highlighting
-
-antigen theme pygmalion
-
-antigen apply
+# source /usr/share/zsh/share/antigen.zsh
+#
+# antigen use oh-my-zsh
+# antigen bundle git
+# antigen bundle colorize
+# antigen bundle tmux
+# antigen bundle vi-mode
+# antigen bundle zsh-users/zsh-syntax-highlighting
+#
+# antigen theme pygmalion
+#
+# antigen apply
 
 #######################################################################
 #                      Zsh-syntax-hightlighting                       #
 #######################################################################
 
-source $ZSHCONFIG/zsh-syntax-highlighting.zsh
+source $ZSHPLUGINS/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+#
+# ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 
 #######################################################################
 #                            Vim SuperMan                             #

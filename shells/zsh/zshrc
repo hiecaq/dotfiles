@@ -1,4 +1,18 @@
+zmodload zsh/regex 2>/dev/null && export _zsh_has_re=1 || export _zsh_has_re=0
+
 # Run for interactive shells.
+
+autoload -Uz compinit promptinit
+
+### completion
+
+compinit
+zstyle ':completion:*' menu select
+
+### prompt
+
+promptinit
+prompt quinoa
 
 # settings
 export KEYTIMEOUT=10
@@ -18,12 +32,13 @@ HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
 setopt incappendhistory
+
+setopt transient_rprompt
 # unsetopt autocd beep
 # bindkey -v
 ## End of lines configured by zsh-newuser-install
 ## The following lines were added by compinstall
 # zstyle :compinstall filename '/home/quinoa42/.zshrc'
 
-# autoload -Uz compinit
-# compinit
 # End of lines added by compinstall
+

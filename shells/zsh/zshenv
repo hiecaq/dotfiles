@@ -5,4 +5,9 @@ export RUSTUP_DIST_SERVER=https://mirrors.tuna.tsinghua.edu.cn/rustup
 
 # zsh configuration files
 export ZSHCONFIG=~/.zsh
-export PATH=$HOME/bin:$HOME/.cargo/bin:$HOME/.npm-global/bin:${PATH}
+export ZSHPLUGINS=~/.dotfiles/shells/zsh/plugins
+
+typeset -U path
+path=($HOME/bin $HOME/.cargo/bin $HOME/.npm-global/bin $path[@])
+typeset -U fpath
+fpath=($HOME/.dotfiles/shells/zsh/funcs $fpath[@])
