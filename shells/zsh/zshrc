@@ -1,13 +1,17 @@
-zmodload zsh/regex 2>/dev/null && export _zsh_has_re=1 || export _zsh_has_re=0
-
 # Run for interactive shells.
+
+zmodload zsh/regex 2>/dev/null && export _zsh_has_re=1 || export _zsh_has_re=0
 
 autoload -Uz compinit promptinit
 
 ### completion
 
 compinit
+# tab-selectable completion menu
 zstyle ':completion:*' menu select
+# gentoo-wiki suggested fancy completion prompts
+zstyle ':completion:*:descriptions' format '%U%B%d%b%u'
+zstyle ':completion:*:warnings' format '%Bno matches for: %d'
 
 ### prompt
 
@@ -28,17 +32,21 @@ source $ZSHCONFIG/config.zsh
 # OPAM configuration
 # . $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
+## history
 HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
-setopt incappendhistory
+setopt append_history
 
 setopt transient_rprompt
-# unsetopt autocd beep
-# bindkey -v
-## End of lines configured by zsh-newuser-install
-## The following lines were added by compinstall
-# zstyle :compinstall filename '/home/quinoa42/.zshrc'
+setopt hist_ignore_dups
+setopt hist_ignore_space
+setopt hist_reduce_blanks
 
-# End of lines added by compinstall
+## other
+setopt interactive_comments
+unsetopt autocd beep
 
+zstyle :compinstall filename '/home/quinoa42/.zshrc'
+
+# fast-theme ~/.zsh/gruvbox.ini

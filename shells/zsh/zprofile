@@ -13,3 +13,5 @@ export MANWIDTH=80
 
 
 export DESKTOP_APPS="$(rg --files-without-match "Terminal=true" /usr/share/applications/*.desktop | sd '(.*/)*(.*\.)*(.+)\.desktop' '$3')"
+
+# vim: ft=zsh :

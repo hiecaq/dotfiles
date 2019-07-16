@@ -21,10 +21,10 @@
 #                      Zsh-syntax-hightlighting                       #
 #######################################################################
 
-source $ZSHPLUGINS/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $ZSHCONFIG/zsh-syntax-highlighting.zsh
 
-#
-# ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 
 #######################################################################
 #                            Vim SuperMan                             #
