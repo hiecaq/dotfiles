@@ -52,15 +52,20 @@ stty -ixon
 
 # vi mode
 bindkey -v
-bindkey "^F" vi-cmd-mode
 
 # handy keybindings
 bindkey "^A" beginning-of-line
 bindkey "^E" end-of-line
-# bindkey "^R" history-incremental-search-backward
 bindkey "^P" history-search-backward
 bindkey "^Y" accept-and-hold
 bindkey "^N" history-search-forward
 bindkey "^Q" push-line-or-edit
+bindkey "^U" backward-kill-line
+bindkey "^F" forward-char
+bindkey "^B" backward-char
+
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey -M vicmd 'V' edit-command-line
 
 # vim: foldenable:foldmethod=marker

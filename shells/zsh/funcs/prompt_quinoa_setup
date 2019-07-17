@@ -96,10 +96,9 @@ psvar=("$SSH_TTY" )
 
 
 cwd_abridged() {
-    __PWD=$(print -P '%~')
     typeset -i width
     let "width = $(tput cols) - 25"
-    psvar[2]="$(print -P '%$width<...<$__PWD')"
+    psvar[2]="$(print -P '%$width<...<%~')"
 }
 
 cwd_abridged_lazy() {
@@ -113,5 +112,15 @@ add-zsh-hook precmd cwd_abridged_lazy
 PS1='%F{blue}[%*] %F{cyan}%2v $_current_branch
 %(!.%F{red}.%F{blue})%f '
 RPS1='%F{yellow}%1(j.ﰌ %j .)%F{red}%(?.. %? )%F{magenta}%n%(1V.%F{cyan}@%f%F{yellow}%m%f.)'
+
+hash -d workspace=~/workspace
+hash -d videos=~/videos
+hash -d dotfiles=~/.dotfiles
+hash -d documents=~/documents
+hash -d downloads=~/downloads
+hash -d pictures=~/pictures
+hash -d music=~/music
+hash -d config=~/.config
+hash -d data=~/.local/share
 
 # vim: ft=zsh:foldenable:foldmethod=marker

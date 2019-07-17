@@ -36,12 +36,15 @@ source $ZSHCONFIG/config.zsh
 HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
-setopt append_history
+setopt inc_append_history
 
 setopt transient_rprompt
 setopt hist_ignore_dups
 setopt hist_ignore_space
 setopt hist_reduce_blanks
+setopt hist_verify
+setopt extended_history
+unsetopt hist_beep
 
 ## other
 setopt interactive_comments
