@@ -1,0 +1,21 @@
+#!/usr/bin/env zsh
+
+_get_supers() {
+    typeset -U backlist
+    backlist=($1)
+    ptr=$1
+    while [[ '/' != "$ptr" ]]; do
+        ptr="$ptr:h"
+        backlist+=($ptr )
+    done
+    print -C 1 ${backlist[@]}
+}
+
+c() {
+    ____C__DIR="$(_get_supers $PWD | fzf)"
+    if [[ $? -eq 0 ]]; then
+        cd $____C__DIR
+    fi
+}
+
+c "$@"

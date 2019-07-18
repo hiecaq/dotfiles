@@ -181,14 +181,7 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 export FZF_TMUX=1
 
-autoload -Uz _fzf_complete_pass _fzf_complete_launch _fzf_complete_task
-
-c() {
-    ____C__DIR="$(fd -L -t d . $1 | fzf)"
-    if [[ $? -eq 0 ]]; then
-        cd $____C__DIR
-    fi
-}
+autoload -Uz _fzf_complete_pass _fzf_complete_launch _fzf_complete_task c
 ###### fzf }}}2
 
 ###### bat {{{2
