@@ -1,0 +1,14 @@
+#!/usr/bin/env zsh
+
+mproxy() {
+    if [[ $1 = "set" ]]; then
+        export http_proxy="$2"
+        export https_proxy="$2"
+    elif [[ $1 = "unset" ]]; then
+        unset http_proxy https_proxy
+    else
+        echo "USAGE: $0 <ss|unset> [protocol://addr:port]"
+    fi
+}
+
+mproxy "$@"

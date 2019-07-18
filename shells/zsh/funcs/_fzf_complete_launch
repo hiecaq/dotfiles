@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+
+_fzf_complete_launch() {
+    _fzf_complete '+m' "$@" < <(
+        print -rl -- ${(ko)commands}
+    )
+}
+
+_fzf_complete_launch "$@"

@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+
+_fzf_complete_task() {
+    _fzf_complete '+m' "$@" < <(
+        task commands | rg '^\b[a-zA-Z.]+\b' --only-matching
+    )
+}
+
+_fzf_complete_task "$@"

@@ -1,0 +1,15 @@
+#!/usr/bin/env zsh
+# copy & paste & adapted from https://github.com/jez/vim-superman
+
+vman() {
+    if [ $# -eq 0 ]; then
+        echo "What manual page do you want?";
+    elif ! man -d "$@" &> /dev/null; then
+        # Check that manpage exists to prevent visual noise.
+        echo "No manual entry for $*"
+    else
+        nvim -c "Man $*" -c "silent only"
+    fi
+}
+
+vman "$@"

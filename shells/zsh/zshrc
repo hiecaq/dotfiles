@@ -4,7 +4,7 @@ zmodload zsh/regex 2>/dev/null && export _zsh_has_re=1 || export _zsh_has_re=0
 
 autoload -Uz compinit promptinit
 
-### completion
+### completion {{{1
 
 compinit
 # tab-selectable completion menu
@@ -13,24 +13,268 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*:descriptions' format '%U%B%d%b%u'
 zstyle ':completion:*:warnings' format '%Bno matches for: %d'
 
-### prompt
+### }}}1
+
+### prompt {{{1
 
 promptinit
 prompt quinoa
 
-# settings
+### }}}1
+
+### miscs {{{1
+
 export KEYTIMEOUT=10
 export CLICOLOR_FORCE=1
-
-### gpg
 export GPG_TTY=$(tty)
 
-### config
-source $ZSHCONFIG/config.zsh
-# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+### }}}
 
-# OPAM configuration
-# . $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+### config {{{1
+
+###### Zsh-syntax-hightlighting {{{2
+
+source ~/.dotfiles/shells/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+######### highlight config {{{3
+# Declare the variable
+typeset -A ZSH_HIGHLIGHT_STYLES
+
+# unknown-token - unknown tokens / errors
+# reserved-word - shell reserved words (if, for)
+# alias - aliases
+# suffix-alias - suffix aliases (requires zsh 5.1.1 or newer)
+# builtin - shell builtin commands (shift, pwd, zstyle)
+# function - function names
+# command - command names
+# precommand - precommand modifiers (e.g., noglob, builtin)
+# commandseparator - command separation tokens (;, &&)
+# hashed-command - hashed commands
+# path - existing filenames
+# path_pathseparator - path separators in filenames (/); if unset, path is used (default)
+# path_prefix - prefixes of existing filenames
+# path_prefix_pathseparator - path separators in prefixes of existing filenames (/); if unset, path_prefix is used (default)
+# globbing - globbing expressions (*.txt)
+# history-expansion - history expansion expressions (!foo and ^foo^bar)
+# single-hyphen-option - single hyphen options (-o)
+# double-hyphen-option - double hyphen options (--option)
+# back-quoted-argument - backquoted expressions (`foo`)
+# single-quoted-argument - single quoted arguments ('foo')
+# double-quoted-argument - double quoted arguments ("foo")
+# dollar-quoted-argument - dollar quoted arguments ($'foo')
+# dollar-double-quoted-argument - parameter expansion inside double quotes ($foo inside "")
+# back-double-quoted-argument - back double quoted arguments (\x inside "")
+# back-dollar-quoted-argument - back dollar quoted arguments (\x inside $'')
+# assign - parameter assignments
+# redirection - redirection operators (<, >, etc)
+# comment - comments, when setopt INTERACTIVE_COMMENTS is in effect (echo # foo)
+# arg0 - a command word other than one of those enumrated above (other than a command, precommand, alias, function, or shell builtin command).
+# default - everything else
+
+# To differentiate aliases from other command types
+# ZSH_HIGHLIGHT_STYLES[alias]='fg=magenta,bold'
+
+# To have paths colored instead of underlined
+# ZSH_HIGHLIGHT_STYLES[path]='fg=cyan'
+
+# To disable highlighting of globbing expressions
+# ZSH_HIGHLIGHT_STYLES[globbing]='none'
+
+# disable highlighting for unknown-token
+ZSH_HIGHLIGHT_STYLES[unknown-token]='none'
+
+# use blue to highlight command(e.g., git)
+ZSH_HIGHLIGHT_STYLES[command]='fg=004'
+
+# builtins(e.g., pwd): blue, italic
+ZSH_HIGHLIGHT_STYLES[builtin]='fg=004,standout'
+
+# commandseparator(;, &&): lighter gray
+ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=014'
+
+# alias: blue
+ZSH_HIGHLIGHT_STYLES[alias]='fg=004'
+
+# single hyphen-option: darker red,italic
+ZSH_HIGHLIGHT_STYLES[single-hyphen-option]='fg=124'
+
+# double hyphen-option: darker red
+ZSH_HIGHLIGHT_STYLES[double-hyphen-option]='fg=124'
+
+# quoted arguments(strings)
+ZSH_HIGHLIGHT_STYLES[single-quoted-argument]='fg=006'
+ZSH_HIGHLIGHT_STYLES[double-quoted-argument]='fg=006'
+
+# dollar quoted arguments:gold
+ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]='fg=003'
+
+# other commands: red
+ZSH_HIGHLIGHT_STYLES[arg0]='fg=001'
+
+# To define styles for nested brackets up to level 4
+ZSH_HIGHLIGHT_STYLES[bracket-level-1]='fg=010'
+ZSH_HIGHLIGHT_STYLES[bracket-level-2]='fg=014'
+ZSH_HIGHLIGHT_STYLES[bracket-level-3]='fg=010'
+ZSH_HIGHLIGHT_STYLES[bracket-level-4]='fg=014'
+ZSH_HIGHLIGHT_STYLES[bracket-error]='fg=001'
+ZSH_HIGHLIGHT_STYLES[cursor-matchingbracket]='fg=007'
+
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+####### }}}3
+###### Zsh-syntax-hightlighting }}}2
+
+###### vman {{{2
+autoload -Uz vman
+compdef vman="man"
+###### vman }}}2
+
+###### proxy {{{2
+autoload -Uz mproxy
+###### proxy }}}2
+
+###### fzf {{{2
+[[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
+[[ -f /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
+
+_gen_fzf_default_opts() {
+    local base03="234"
+    local base02="235"
+    local base01="240"
+    local base00="241"
+    local base0="244"
+    local base1="245"
+    local base2="254"
+    local base3="230"
+    local yellow="136"
+    local orange="166"
+    local red="160"
+    local magenta="125"
+    local violet="61"
+    local blue="33"
+    local cyan="37"
+    local green="64"
+
+  # Comment and uncomment below for the light theme.
+
+  # Solarized Dark color scheme for fzf
+    export FZF_DEFAULT_OPTS="
+      --color fg:-1,bg:-1,hl:$blue,fg+:$base2,bg+:$base02,hl+:$blue
+      --color info:$yellow,prompt:$yellow,pointer:$base3,marker:$base3,spinner:$yellow
+      "
+      ## Solarized Light color scheme for fzf
+          #export FZF_DEFAULT_OPTS="
+          #  --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
+          #  --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
+          #"
+}
+
+_gen_fzf_default_opts
+
+# use rg instead of find by default (and shows hidden files)
+export FZF_DEFAULT_COMMAND='rg -S --files'
+export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --inline-info --ansi -d 30 --preview 'bat --color=always --style=changes {}' --preview-window 'wrap:hidden:right:70%' --bind 'ctrl-v:toggle-preview' --bind 'ctrl-f:execute-silent(xdg-open {})'"
+
+# To apply the command to CTRL-T as well
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+# preview window for long command
+
+export FZF_TMUX=1
+
+autoload -Uz _fzf_complete_pass _fzf_complete_launch _fzf_complete_task
+
+c() {
+    ____C__DIR="$(fd -L -t d . $1 | fzf)"
+    if [[ $? -eq 0 ]]; then
+        cd $____C__DIR
+    fi
+}
+###### fzf }}}2
+
+###### bat {{{2
+export BAT_THEME="TwoDark"
+###### bat }}}2
+
+###### exa {{{2
+export EXA_COLORS="*.zip=0:*.gz=0:*.rar=0:*.tar=0:*.7z=0:ex=31:di=244;1"
+###### exa }}}2
+
+### config }}}1
+
+### aliases {{{1
+source ~/.aliases
+### aliases }}}1
+
+### key bindings {{{1
+### create a zkbd compatible hash; from archwiki {{{2
+# to add other keys to this hash, see: man 5 terminfo
+typeset -g -A key
+
+key[Home]="${terminfo[khome]}"
+key[End]="${terminfo[kend]}"
+key[Insert]="${terminfo[kich1]}"
+key[Backspace]="${terminfo[kbs]}"
+key[Delete]="${terminfo[kdch1]}"
+key[Up]="${terminfo[kcuu1]}"
+key[Down]="${terminfo[kcud1]}"
+key[Left]="${terminfo[kcub1]}"
+key[Right]="${terminfo[kcuf1]}"
+key[PageUp]="${terminfo[kpp]}"
+key[PageDown]="${terminfo[knp]}"
+key[ShiftTab]="${terminfo[kcbt]}"
+
+# setup key accordingly
+[[ -n "${key[Home]}"      ]] && bindkey -- "${key[Home]}"      beginning-of-line
+[[ -n "${key[End]}"       ]] && bindkey -- "${key[End]}"       end-of-line
+[[ -n "${key[Insert]}"    ]] && bindkey -- "${key[Insert]}"    overwrite-mode
+[[ -n "${key[Backspace]}" ]] && bindkey -- "${key[Backspace]}" backward-delete-char
+[[ -n "${key[Delete]}"    ]] && bindkey -- "${key[Delete]}"    delete-char
+[[ -n "${key[Up]}"        ]] && bindkey -- "${key[Up]}"        up-line-or-history
+[[ -n "${key[Down]}"      ]] && bindkey -- "${key[Down]}"      down-line-or-history
+[[ -n "${key[Left]}"      ]] && bindkey -- "${key[Left]}"      backward-char
+[[ -n "${key[Right]}"     ]] && bindkey -- "${key[Right]}"     forward-char
+[[ -n "${key[PageUp]}"    ]] && bindkey -- "${key[PageUp]}"    beginning-of-buffer-or-history
+[[ -n "${key[PageDown]}"  ]] && bindkey -- "${key[PageDown]}"  end-of-buffer-or-history
+[[ -n "${key[ShiftTab]}"  ]] && bindkey -- "${key[ShiftTab]}"  reverse-menu-complete
+
+# Finally, make sure the terminal is in application mode, when zle is
+# active. Only then are the values from $terminfo valid.
+if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
+    autoload -Uz add-zle-hook-widget
+    function zle_application_mode_start {
+        echoti smkx
+    }
+    function zle_application_mode_stop {
+        echoti rmkx
+    }
+    add-zle-hook-widget -Uz zle-line-init zle_application_mode_start
+    add-zle-hook-widget -Uz zle-line-finish zle_application_mode_stop
+fi
+### }}}2
+
+### Keybinding
+# give us access to ^Q
+stty -ixon
+
+# vi mode
+bindkey -v
+
+# handy keybindings
+bindkey "^A" beginning-of-line
+bindkey "^E" end-of-line
+bindkey "^P" history-search-backward
+bindkey "^Y" accept-and-hold
+bindkey "^N" history-search-forward
+bindkey "^Q" push-line-or-edit
+bindkey "^U" backward-kill-line
+bindkey "^F" forward-char
+bindkey "^B" backward-char
+
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey -M vicmd 'V' edit-command-line
+
+### key bindings }}}1
 
 ## history
 HISTFILE=~/.histfile
@@ -52,4 +296,4 @@ unsetopt autocd beep
 
 zstyle :compinstall filename '/home/quinoa42/.zshrc'
 
-# fast-theme ~/.zsh/gruvbox.ini
+# vim: ft=zsh:foldenable:foldmethod=marker
