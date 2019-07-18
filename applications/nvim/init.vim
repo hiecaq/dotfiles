@@ -94,6 +94,22 @@ endif " has("autocmd")
 " GENERAL END }}}
 
 " KEY MAPPINGS {{{
+set cedit=\<C-Y>
+" nnoremap q: <Nop>
+" nnoremap q/ <Nop>
+" nnoremap q? <Nop>
+" start of line
+cnoremap <C-A> <Home>
+inoremap <C-A> <esc>^i
+" back one character
+cnoremap <C-B> <Left>
+inoremap <C-B> <Left>
+" end of line
+cnoremap <C-E> <End>
+inoremap <C-E> <End>
+" forward one character
+cnoremap <C-F> <Right>
+inoremap <C-F> <Right>
 " set <Leader>
 nnoremap <space> <Nop>
 vnoremap <space> <Nop>
@@ -140,7 +156,7 @@ nmap <Leader>sA :spellr<CR>
 nnoremap <silent> <Leader>O  :<c-u>put! =repeat(nr2char(10), v:count1)<cr>'[
 nnoremap <silent> <Leader>o  :<c-u>put =repeat(nr2char(10), v:count1)<cr>
 " make the previous word uppercase
-inoremap <silent> <c-a><c-u> <esc>gUawea
+inoremap <silent> <A-u> <esc>gUawea
 " KEY MAPPINGS END }}}
 
 " PROVIDER {{{
@@ -207,9 +223,9 @@ endif
 " Neosnippet {{{2
 " Plugin key-mappings.
 " Note: It must be "imap" and "smap".  It uses <Plug> mappings.
-imap <C-F> <Plug>(neosnippet_expand_or_jump)
-smap <C-F> <Plug>(neosnippet_expand_or_jump)
-xmap <C-F> <Plug>(neosnippet_expand_target)
+imap <C-X> <Plug>(neosnippet_expand_or_jump)
+smap <C-X> <Plug>(neosnippet_expand_or_jump)
+xmap <C-X> <Plug>(neosnippet_expand_target)
 
 let g:neosnippet#enable_snipmate_compatibility=1
 " let g:neosnippet#disable_runtime_snippets= {
@@ -222,7 +238,8 @@ let g:neosnippet#enable_optional_arguments=&filetype ==# "python" ? 1 : 0
 
 " Defx  {{{2
 if has ("nvim") && has("python3")
-    nnoremap <silent> <leader>F :call lazy#Defx_toggle()<CR>
+    nnoremap <silent> <Leader>F :call lazy#Defx_toggle(getcwd())<CR>
+    nnoremap <silent> <Localleader>F :call lazy#Defx_toggle(proj#root())<CR>
 endif
 " Defx END }}}2
 
@@ -304,7 +321,8 @@ if has("nvim") && has("python3")
     nnoremap <silent> <Leader><space>  :<C-u>Denite -resume<CR>
     nnoremap <silent> <Leader>j :call execute('Denite -resume -cursor-pos=+1 -immediately')<CR>
     nnoremap <silent> <Leader>k :call execute('Denite -resume -cursor-pos=-1 -immediately')<CR>
-    nnoremap <silent> <Leader>df :call g:wrapper#DeniteFileRec(proj#root())<CR>
+    nnoremap <silent> <Leader>df :call g:wrapper#DeniteFileRec(getcwd())<CR>
+    nnoremap <silent> <Localleader>df :call g:wrapper#DeniteFileRec(proj#root())<CR>
     nnoremap <silent> <Leader>dj :<C-u>Denite jump<CR>
     nnoremap <silent> <Leader>dt :<C-u>Denite tag<CR>
     nnoremap <silent> <Leader>dg :<C-u>Denite grep<CR>

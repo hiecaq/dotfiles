@@ -1,1 +1,1 @@
-nnoremap <buffer> <silent> <Leader>do :call g:wrapper#TocLocationList()<cr>
+nnoremap <buffer> <silent> <localleader>do :call g:wrapper#TocLocationList()<cr>

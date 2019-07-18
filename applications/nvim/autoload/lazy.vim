@@ -34,11 +34,11 @@ function! g:lazy#LC_starts()
         setlocal formatexpr=LanguageClient#textDocument_rangeFormatting()
         nnoremap <buffer> <silent> K :call LanguageClient#textDocument_hover()<cr>
         nnoremap <buffer> <silent> gd :call LanguageClient#textDocument_definition()<CR>
-        nnoremap <buffer> <silent> <Leader>ds :<C-u>Denite documentSymbol<CR>
-        nnoremap <buffer> <silent> <Leader>dR :<C-u>Denite references<CR>
-        nnoremap <buffer> <silent> <Leader>dS :<C-u>Denite workspaceSymbol<CR>
-        nnoremap <buffer> <silent> <Leader>f :<C-u>Denite contextMenu<CR>
-        nnoremap <buffer> <silent> <Leader>R :call LanguageClient#textDocument_rename()<CR>
+        nnoremap <buffer> <silent> <Localleader>ds :<C-u>Denite documentSymbol<CR>
+        nnoremap <buffer> <silent> <Localleader>dR :<C-u>Denite references<CR>
+        nnoremap <buffer> <silent> <Localleader>dS :<C-u>Denite workspaceSymbol<CR>
+        nnoremap <buffer> <silent> <Localleader>f :<C-u>Denite contextMenu<CR>
+        nnoremap <buffer> <silent> <Localleader>R :call LanguageClient#textDocument_rename()<CR>
         if !s:loaded_lsp
             let s:loaded_lsp = 1
             set hidden
@@ -50,12 +50,12 @@ endfunction
 
 let s:loaded_defx = 0
 
-function! g:lazy#Defx_toggle()
+function! g:lazy#Defx_toggle(dir)
     if !s:loaded_defx
         packadd defx.nvim
         let s:loaded_defx = 1
     endif
-    call execute('Defx -split=floating -resume ' . proj#root())
+    call execute('Defx -split=floating -resume ' . a:dir)
 endfunction
 
 " vim: foldenable:foldmethod=marker
