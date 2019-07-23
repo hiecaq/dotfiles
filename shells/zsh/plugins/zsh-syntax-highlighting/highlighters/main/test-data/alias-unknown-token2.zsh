@@ -1,5 +1,6 @@
+#!/usr/bin/env zsh
 # -------------------------------------------------------------------------------------------------
-# Copyright (c) 2015 zsh-syntax-highlighting contributors
+# Copyright (c) 2019 zsh-syntax-highlighting contributors
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -27,10 +28,10 @@
 # vim: ft=zsh sw=2 ts=2 et
 # -------------------------------------------------------------------------------------------------
 
-alias x=command
-BUFFER='x ls'
+alias a='() { ls "$@" ; foo }'
+
+BUFFER='a '
 
 expected_region_highlight=(
-  "1 1 alias" # x
-  "3 4 command" # ls
+  '1 1 unknown-token' # a
 )

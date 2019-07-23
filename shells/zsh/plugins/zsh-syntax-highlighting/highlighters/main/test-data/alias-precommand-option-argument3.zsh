@@ -1,5 +1,6 @@
+#!/usr/bin/env zsh
 # -------------------------------------------------------------------------------------------------
-# Copyright (c) 2015 zsh-syntax-highlighting contributors
+# Copyright (c) 2019 zsh-syntax-highlighting contributors
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -27,10 +28,14 @@
 # vim: ft=zsh sw=2 ts=2 et
 # -------------------------------------------------------------------------------------------------
 
-alias x=command
-BUFFER='x ls'
+alias sudo_u='sudo -u'
+sudo(){}
+
+BUFFER='sudo_u phy1729 ls foo'
 
 expected_region_highlight=(
-  "1 1 alias" # x
-  "3 4 command" # ls
+  '1 6 alias' # sudo_u
+  '8 14 default' # phy1729
+  '16 17 command' # ls
+  '19 21 default' # foo
 )
