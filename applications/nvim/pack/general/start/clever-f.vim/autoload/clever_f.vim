@@ -15,10 +15,7 @@ let g:clever_f_mark_char               = get(g:, 'clever_f_mark_char', 1)
 let g:clever_f_repeat_last_char_inputs = get(g:, 'clever_f_repeat_last_char_inputs', ["\<CR>"])
 let g:clever_f_mark_direct             = get(g:, 'clever_f_mark_direct', 0)
 
-" below variables must be set before loading this script
-let g:clever_f_mark_cursor_color       = get(g:, 'clever_f_mark_cursor_color', 'Cursor')
-let g:clever_f_mark_char_color         = get(g:, 'clever_f_mark_char_color', 'CleverFDefaultLabel')
-let g:clever_f_mark_direct_color       = get(g:, 'clever_f_mark_direct_color', 'CleverFDefaultLabel')
+" below variable must be set before loading this script
 let g:clever_f_clean_labels_eagerly    = get(g:, 'clever_f_clean_labels_eagerly', 1)
 
 " highlight labels
@@ -28,14 +25,32 @@ augroup plugin-clever-f-highlight
 augroup END
 highlight default CleverFDefaultLabel ctermfg=red ctermbg=NONE cterm=bold,underline guifg=red guibg=NONE gui=bold,underline
 
+" Priority of highlight customization is:
+"   High:   When g:clever_f_*_color
+"   Middle: :highlight in a colorscheme
+"   Low:    Default highlights
+" When the variable is defined, it should be linked with :hi! since :hi does
+" not overwrite existing highlight group. (#50)
 if g:clever_f_mark_cursor
-    execute 'highlight link CleverFCursor' g:clever_f_mark_cursor_color
+    if exists('g:clever_f_mark_cursor_color')
+        execute 'highlight! link CleverFCursor' g:clever_f_mark_cursor_color
+    else
+        highlight link CleverFCursor Cursor
+    endif
 endif
 if g:clever_f_mark_char
-    execute 'highlight link CleverFChar' g:clever_f_mark_char_color
+    if exists('g:clever_f_mark_char_color')
+        execute 'highlight! link CleverFChar' g:clever_f_mark_char_color
+    else
+        highlight link CleverFChar CleverFDefaultLabel
+    endif
 endif
 if g:clever_f_mark_direct
-    execute 'highlight link CleverFDirect' g:clever_f_mark_direct_color
+    if exists('g:clever_f_mark_direct_color')
+        execute 'highlight! link CleverFDirect' g:clever_f_mark_direct_color
+    else
+        highlight link CleverFDirect CleverFDefaultLabel
+    endif
 endif
 
 if g:clever_f_clean_labels_eagerly
@@ -247,10 +262,13 @@ function! clever_f#find_with(map) abort
                 endfor
             endif
             if g:clever_f_hide_cursor_on_cmdline
-                if s:ON_NVIM && mode ==# 'no'
-                    " Do not preserve previous value at operator-pending mode on Neovim (#44)
-                    set guicursor&
-                else
+                " Set default value at first then restore (#49)
+                " For example, when the value is a:blinkon0, it does not affect cursor shape so cursor
+                " shape continues to disappear.
+                set guicursor&
+
+                " Note: Do not preserve previous value at operator-pending mode on Neovim (#44)
+                if !(s:ON_NVIM && mode ==# 'no') && &guicursor !=# guicursor_save
                     let &guicursor = guicursor_save
                 endif
                 if !s:ON_NVIM
