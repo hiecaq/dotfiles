@@ -396,6 +396,13 @@ let g:clever_f_fix_key_direction=1 " fix f to forward and F backword, tT etc.
 let g:clever_f_chars_match_any_signs="^" " use ^ to match all signs
 let g:clever_f_use_migemo=1 " enable migemo support
 let g:clever_f_mark_direct=1 " showing char that can be directly jumped to
+let g:clever_f_mark_cursor_color="CleverFCursor"
+
+augroup Clever_f_Color_Override
+    au!
+    autocmd VimEnter,ColorScheme * :hi! link CleverFDefaultLabel SneakLabel
+    autocmd VimEnter,ColorScheme * :hi! CleverFCursor guifg=#282828 ctermfg=black guibg=#ebdbb2 ctermbg=015
+augroup END
 " clever-f }}}2
 
 " sneak {{{2
@@ -407,11 +414,6 @@ let g:sneak#absolute_dir = 1 " s; forwards only and S, backwards only
 
 map s <Plug>Sneak_s
 map S <Plug>Sneak_S
-
-augroup Sneak_Color
-    au!
-    autocmd VimEnter,ColorScheme * :hi Sneak guifg=black ctermfg=black guibg=#FFE53D ctermbg=003
-augroup END
 " sneak END }}}2
 
 " vim-slash {{{2
@@ -478,10 +480,13 @@ if has("nvim-0.4.0")
     let g:LanguageClient_hoverPreview = "Always"
 endif
 
-hi! link ALEErrorSign GruvboxRedBold
-hi! link ALEWarningSign GruvboxYellowBold
-hi! link ALEInfoSign GruvboxBlueBold
-hi! link ALEHintSign GruvboxBlue
+augroup ALE_LSP_Color_Override
+    au!
+    autocmd VimEnter,ColorScheme * :hi! link ALEErrorSign GruvboxRedBold
+    autocmd VimEnter,ColorScheme * :hi! link ALEWarningSign GruvboxYellowBold
+    autocmd VimEnter,ColorScheme * :hi! link ALEInfoSign GruvboxBlueBold
+    autocmd VimEnter,ColorScheme * :hi! link ALEHintSign GruvboxBlue
+augroup END
 
 let g:LanguageClient_diagnosticsDisplay = {
     \   1: {
