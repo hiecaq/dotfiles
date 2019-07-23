@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:tyru/caw.vim.git
 	branch = master
-	commit = 05c6b113dd82d2ad4d424b696b14a2b89a337541
-	parent = f06a15468029002130f60b7d4145419c9a1d1370
+	commit = 59d1bbdec7d82740811806c4d4da1963089064a8
+	parent = a173ecc0f1c7a5f0ca9d6c8dd40ed5f4b2a140b8
 	method = merge
 	cmdver = 0.4.0
