@@ -18,9 +18,8 @@ class Kind(Base):
 
     def action_execute(self, context):
         target = context['targets'][0]
-        self._execute(context,
-                      target['action__command'],
-                      target.get('action__is_pause', False))
+        self._execute(context, target['action__command'],
+                      target.get('action__histadd', False))
 
     def action_edit(self, context):
         target = context['targets'][0]
@@ -29,13 +28,14 @@ class Kind(Base):
                              target['action__command'],
                              'command')
         self._execute(context, command,
-                      target.get('action__is_pause', False))
+                      target.get('action__histadd', False))
 
-    def _execute(self, context, command, is_pause):
+    def _execute(self, context, command, histadd):
         if not command:
             return
         if context['firstline'] != context['lastline']:
             command = '{},{}{}'.format(
                 context['firstline'], context['lastline'], command)
-        self.vim.call(
-            'denite#util#execute_command', command, is_pause)
+        self.vim.call('denite#util#execute_command', command, False)
+        if histadd:
+            self.vim.call('histadd', ':', command)

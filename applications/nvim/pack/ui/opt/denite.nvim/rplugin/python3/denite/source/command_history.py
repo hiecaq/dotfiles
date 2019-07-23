@@ -86,8 +86,8 @@ class Source(Base):
         return {
             'word': ':' + history[1],
             'action__command': history[1],
-            'action__is_pause': True,
             'source__index': int(history[0]),
+            'action__histadd': True,
         }
 
 

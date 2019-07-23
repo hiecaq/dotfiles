@@ -59,7 +59,6 @@ class Default(object):
 
         self._result = []
         context['sources_queue'] = [sources]
-        self._sources_history = []
 
         self._start_sources_queue(context)
 
@@ -90,10 +89,16 @@ class Default(object):
         if is_quit and post_action == 'open':
             # Re-open denite buffer
 
+            prev_cursor = self._cursor
+            cursor_candidate = self._get_cursor_candidate()
+
             self._init_buffer()
 
             self.redraw(False)
-            self._move_to_pos(self._cursor)
+
+            if cursor_candidate == self._get_candidate(prev_cursor):
+                # Restore the cursor
+                self._move_to_pos(prev_cursor)
 
             # Disable quit flag
             is_quit = False
@@ -465,9 +470,8 @@ class Default(object):
 
         self._vim.call('cursor', [prev_linenr, 0])
 
-        if self._updated and (
-                (self._is_async and self._context['reversed']) or
-                self._previous_text != self._context['input']):
+        if self._updated and (self._context['reversed'] or
+                              self._previous_text != self._context['input']):
             self._previous_text = self._context['input']
             self._init_cursor()
             self._move_to_pos(self._cursor)
@@ -690,9 +694,12 @@ class Default(object):
         clearmatch(self._vim)
 
     def _get_cursor_candidate(self):
-        if not self._candidates or self._cursor > len(self._candidates):
+        return self._get_candidate(self._cursor)
+
+    def _get_candidate(self, pos):
+        if not self._candidates or pos > len(self._candidates):
             return {}
-        return self._candidates[self._cursor - 1]
+        return self._candidates[pos - 1]
 
     def _get_selected_candidates(self):
         if not self._selected_candidates:
