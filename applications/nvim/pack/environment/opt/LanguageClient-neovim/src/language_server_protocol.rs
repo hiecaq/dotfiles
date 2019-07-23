@@ -251,9 +251,11 @@ impl LanguageClient {
     }
 
     fn apply_WorkspaceEdit(&self, edit: &WorkspaceEdit) -> Fallible<()> {
+        use self::{DocumentChangeOperation::*, ResourceOp::*};
+
         debug!("Begin apply WorkspaceEdit: {:?}", edit);
-        let filename = self.vim()?.get_filename(&Value::Null)?;
-        let position = self.vim()?.get_position(&Value::Null)?;
+        let mut filename = self.vim()?.get_filename(&Value::Null)?;
+        let mut position = self.vim()?.get_position(&Value::Null)?;
 
         if let Some(ref changes) = edit.document_changes {
             match changes {
@@ -264,10 +266,19 @@ impl LanguageClient {
                 }
                 DocumentChanges::Operations(ref ops) => {
                     for op in ops {
-                        if let DocumentChangeOperation::Edit(ref e) = op {
-                            self.apply_TextEdits(&e.text_document.uri.filepath()?, &e.edits)?;
+                        match op {
+                            Edit(ref e) => {
+                                self.apply_TextEdits(&e.text_document.uri.filepath()?, &e.edits)?
+                            }
+                            Op(ref rop) => match rop {
+                                Create(file) => {
+                                    filename = file.uri.filepath()?.to_string_lossy().into_owned();
+                                    position = Position::default();
+                                }
+                                Rename(_file) => bail!("file renaming not yet supported."),
+                                Delete(_file) => bail!("file deletion not yet supported."),
+                            },
                         }
-                        // TODO: handle ResourceOp.
                     }
                 }
             }
@@ -794,19 +805,28 @@ impl LanguageClient {
     }
 
     fn try_handle_command_by_client(&self, cmd: &Command) -> Fallible<bool> {
-        if !CommandsClient.contains(&cmd.command.as_str()) {
-            return Ok(false);
-        }
-
-        if cmd.command == "java.apply.workspaceEdit" {
-            if let Some(ref edits) = cmd.arguments {
-                for edit in edits {
-                    let edit: WorkspaceEdit = serde_json::from_value(edit.clone())?;
-                    self.apply_WorkspaceEdit(&edit)?;
+        match cmd.command.as_str() {
+            "java.apply.workspaceEdit" => {
+                if let Some(ref edits) = cmd.arguments {
+                    for edit in edits {
+                        let edit: WorkspaceEdit = serde_json::from_value(edit.clone())?;
+                        self.apply_WorkspaceEdit(&edit)?;
+                    }
                 }
             }
-        } else {
-            bail!("Not implemented: {}", cmd.command);
+            "rust-analyzer.applySourceChange" => {
+                if let Some(ref edits) = cmd.arguments {
+                    for edit in edits {
+                        let edit: WorkspaceEditWithCursor = serde_json::from_value(edit.clone())?;
+                        self.apply_WorkspaceEdit(&edit.workspaceEdit)?;
+                        self.vim()?.cursor(
+                            edit.cursorPosition.position.line + 1,
+                            edit.cursorPosition.position.character + 1,
+                        )?;
+                    }
+                }
+            }
+            _ => return Ok(false),
         }
 
         Ok(true)
@@ -1240,19 +1260,19 @@ impl LanguageClient {
 
         // Convert any Commands into CodeActions, so that the remainder of the handling can be
         // shared.
-        let actions = match response {
-            CodeActionResponse::Commands(commands) => commands
-                .into_iter()
-                .map(|command| CodeAction {
+        let actions: Vec<_> = response
+            .into_iter()
+            .map(|action_or_command| match action_or_command {
+                CodeActionOrCommand::Command(command) => CodeAction {
                     title: command.title.clone(),
                     kind: Some(command.command.clone()),
                     diagnostics: None,
                     edit: None,
                     command: Some(command),
-                })
-                .collect(),
-            CodeActionResponse::Actions(actions) => actions,
-        };
+                },
+                CodeActionOrCommand::CodeAction(action) => action,
+            })
+            .collect();
 
         let source: Vec<_> = actions
             .iter()
