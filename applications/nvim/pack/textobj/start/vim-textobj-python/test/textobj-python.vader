@@ -184,6 +184,8 @@ Execute (Decorator: function):
   let linenr = getpos(".")[1]
 "   debug call textobj#python#find_prev_decorators(linenr)
   AssertEqual linenr-1, textobj#python#find_prev_decorators(linenr)
+  " Move cursor back
+  /^def function_with_decorator(
   norm jvaf<cr>
   AssertEqual getline("."), "@decorator"
   AssertEqual getline("'>"), "pass"
@@ -206,6 +208,48 @@ Execute (Decorators: inner function from decorator):
   AssertEqual getline("."), "# function_with_decorators"
   AssertEqual getline("'>"), "pass"
 
+Execute (Decorators: inner function from decorators with multiple lines):
+  /^def function_with_multiline_decorators(
+  norm kvif<cr>
+  AssertEqual getline("."), "# function_with_multiline_decorators"
+  AssertEqual getline("'>"), "pass"
+
+Execute (Decorators: inner function from decorators with multiple lines (2)):
+  /^def function_with_multiline_decorators(
+  norm 2kvif<cr>
+  AssertEqual getline("."), "# function_with_multiline_decorators"
+  AssertEqual getline("'>"), "pass"
+
+Execute (Decorators: inner function from decorators with multiple lines (3)):
+  /^def function_with_multiline_decorators(
+  norm 9kvif<cr>
+  AssertEqual getline("."), "# function_with_multiline_decorators"
+  AssertEqual getline("'>"), "pass"
+
+Execute (Decorators: inner function from decorators with multiple lines (4)):
+  /^def function_with_multiline_decorators(
+  norm 10kvif<cr>
+  AssertEqual getline("."), "# function_with_multiline_decorators"
+  AssertEqual getline("'>"), "pass"
+
+Execute (Decorators: inner function from decorators with multiple lines (5)):
+  /^def function_with_multiline_decorators(
+  norm 11kvif<cr>
+  AssertEqual getline("."), "# function_with_multiline_decorators"
+  AssertEqual getline("'>"), "pass"
+
+Execute (Decorators: inner function from decorators with multiple lines (6)):
+  /^def function_with_multiline_decorators(
+  norm 12kvif<cr>
+  AssertEqual getline("."), "# function_with_multiline_decorators"
+  AssertEqual getline("'>"), "pass"
+
+Execute (Decorators: function with decorators with multiple lines):
+  /^def function_with_multiline_decorators(
+  norm kvaf<cr>
+  AssertEqual getline("."), "@decorator"
+  AssertEqual getline("'>"), "pass"
+
 Execute (Decorators: a function from decorator):
   /^def function_with_decorators(
   norm kvaf<cr>
@@ -216,6 +260,8 @@ Execute (Decorator: class):
   /^class ClassWithDecorator:
   let linenr = getpos(".")[1]
   AssertEqual linenr-1, textobj#python#find_prev_decorators(linenr)
+  " Move cursor back
+  /^class ClassWithDecorator:
   norm jvac<cr>
   AssertEqual getline("."), "@decorator"
   AssertEqual getline("'>"), "pass"
@@ -228,6 +274,48 @@ Execute (Decorators: class):
 
 Execute (Decorators: class from decorator):
   /^class ClassWithDecorators:
+  norm kvac<cr>
+  AssertEqual getline("."), "@decorator"
+  AssertEqual getline("'>"), "pass"
+
+Execute (Decorators: inner class from decorators with multiple lines):
+  /^class ClassWithMultilineDecorators:
+  norm kvic<cr>
+  AssertEqual getline("."), "# ClassWithMultilineDecorators"
+  AssertEqual getline("'>"), "pass"
+
+Execute (Decorators: inner class from decorators with multiple lines (2)):
+  /^class ClassWithMultilineDecorators:
+  norm 2kvic<cr>
+  AssertEqual getline("."), "# ClassWithMultilineDecorators"
+  AssertEqual getline("'>"), "pass"
+
+Execute (Decorators: inner class from decorators with multiple lines (3)):
+  /^class ClassWithMultilineDecorators:
+  norm 9kvic<cr>
+  AssertEqual getline("."), "# ClassWithMultilineDecorators"
+  AssertEqual getline("'>"), "pass"
+
+Execute (Decorators: inner class from decorators with multiple lines (4)):
+  /^class ClassWithMultilineDecorators:
+  norm 10kvic<cr>
+  AssertEqual getline("."), "# ClassWithMultilineDecorators"
+  AssertEqual getline("'>"), "pass"
+
+Execute (Decorators: inner class from decorators with multiple lines (5)):
+  /^class ClassWithMultilineDecorators:
+  norm 11kvic<cr>
+  AssertEqual getline("."), "# ClassWithMultilineDecorators"
+  AssertEqual getline("'>"), "pass"
+
+Execute (Decorators: inner class from decorators with multiple lines (6)):
+  /^class ClassWithMultilineDecorators:
+  norm 12kvic<cr>
+  AssertEqual getline("."), "# ClassWithMultilineDecorators"
+  AssertEqual getline("'>"), "pass"
+
+Execute (Decorators: class with decorators with multiple lines):
+  /^class ClassWithMultilineDecorators:
   norm kvac<cr>
   AssertEqual getline("."), "@decorator"
   AssertEqual getline("'>"), "pass"

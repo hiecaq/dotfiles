@@ -32,12 +32,29 @@ function! textobj#python#move_cursor_to_starting_line()
 endfunction
 
 function! textobj#python#find_defn_line(kwd)
-    " Find the defn line
-    let l:cur_line = getline('.')
-    while l:cur_line =~# '^\s*@'
-        normal! j
-        let l:cur_line = getline('.')
+
+    " Skip decorators
+    while getline('.') !~# '^\s*'.a:kwd.' '
+      " Avoid skipping decorator under the cursor
+      normal! $
+      let l:cur_pos = getpos('.')
+      let l:decorator = search('^\s*@.*(\?', 'bW')
+      if l:decorator == 0 
+        break
+      endif
+      " Match r-parent if any
+      normal! 0
+      normal! %
+      normal! j
+      let l:new_pos = getpos('.')
+      if  l:new_pos[1] <= l:cur_pos[1]
+        call setpos('.', l:cur_pos)
+        break
+      endif
     endwhile
+
+    let l:cur_line = getline('.')
+
     let l:cur_pos = getpos('.')
     if l:cur_line =~# '^\s*'.a:kwd.' '
         let l:defn_pos = l:cur_pos
@@ -73,24 +90,41 @@ endfunction
 function! textobj#python#find_prev_decorators(l)
     " Find the line with the first (valid) decorator above `line`, return the
     " current line, if there is none.
-    let linenr = a:l
+    let l:linenr = a:l
+    let l:line_ident = indent(l:linenr)
     while 1
-        let prev = prevnonblank(linenr-1)
-        if prev == 0 || prev != linenr-1
-            " Line is not above current one.
+        " Get the first not blank line
+        let l:prev = prevnonblank(l:linenr - 1)
+        if l:prev == 0
+            " There is not above current one.
             break
         endif
-        let prev_indent = indent(prev)
-        if prev_indent != indent(linenr)
-            " Line is not indented the same.
+
+        " Move cursor
+        let l:prev_pos = getpos('.')
+        let l:prev_pos[1] = l:prev
+        call setpos('.', l:prev_pos)
+
+        let l:prev_indent = indent(l:prev_pos[1])
+        if l:prev_indent < l:line_ident
+            " Indentention isn't valid for a decorator
             break
         endif
-        if getline(prev)[prev_indent] != "@"
+
+        " Match l-parent if any
+        normal! $
+        normal! %
+
+        let l:prev_pos = getpos('.')
+
+        " The decorator should be in the same level 
+        " as the original class/function.
+        if getline(l:prev_pos[1])[l:line_ident] != "@"
             break
         endif
-        let linenr = prev
+        let l:linenr = l:prev_pos[1]
     endwhile
-    return linenr
+    return l:linenr
 endfunction
 
 function! textobj#python#find_last_line(kwd, defn_pos, indent_level)

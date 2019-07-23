@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:bps/vim-textobj-python.git
 	branch = master
-	commit = 585c76d58f1a9c458c87471b072c9ad9eb159ae2
-	parent = f12d88a8b4373dc6548292870f4711b7757ae4f4
+	commit = 4f64415bc1401f7af973dd1eba3211f965001e20
+	parent = 400bacff194cf573f26f4637fd04c085ecfa65fd
 	method = merge
 	cmdver = 0.4.0
