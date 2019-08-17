@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:google/vim-jsonnet.git
 	branch = master
-	commit = b4d56c9024763d9fe1c0e9ce12e9f960bac944be
-	parent = d9155d5f4c6a248df89486b3fc95df4d82948dd3
+	commit = b7459b36e5465515f7cf81d0bb0e66e42a7c2eb5
+	parent = 42b0ab98c6c0e4d01730db26d5b26c36d6240a34
 	method = merge
 	cmdver = 0.4.0
