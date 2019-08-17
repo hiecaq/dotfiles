@@ -7,32 +7,13 @@ syntax enable
 
 nnoremap q :qall!<cr>
 
-let s:file = expand('<sfile>')
-execute 'nnoremap <silent> <space>r :source' s:file "\<cr>"
+" Use a more colorful colorscheme
+colorscheme morning
 
 let g:tex_flavor = 'latex'
+let g:vimtex_fold_enabled = 1
 let g:vimtex_echo_ignore_wait = 1
 let g:vimtex_view_automatic = 0
-let g:vimtex_syntax_minted = [
-      \ {
-      \   'lang' : 'c',
-      \ },
-      \ {
-      \   'lang' : 'cpp',
-      \   'environments' : ['cppcode', 'cppcode_test'],
-      \ },
-      \ {
-      \   'lang' : 'csharp',
-      \   'syntax' : 'cs'
-      \ },
-      \ {
-      \   'lang' : 'python',
-      \   'ignore' : [
-      \     'pythonEscape',
-      \     'pythonBEscape',
-      \   ],
-      \ }
-      \]
 
 function! SynNames()
   return join(map(synstack(line('.'), col('.')),
@@ -44,9 +25,4 @@ augroup Testing
   autocmd CursorMoved * echo SynNames()
 augroup END
 
-if has('vim_starting')
-  silent edit test-syntax.tex
-else
-  silent VimtexReload
-  redraw!
-endif
+silent edit test-syntax.tex

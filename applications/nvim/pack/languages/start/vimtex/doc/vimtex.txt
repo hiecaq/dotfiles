@@ -181,8 +181,8 @@ FEATURE OVERVIEW                                              *vimtex-features*
   - Support for `biblatex`/`natbib` package
   - Support for `cleveref` package
   - Support for `listings` package
-  - Nested syntax highlighting (`minted`, `dot2tex`, `lualatex`,
-    `gnuplottex`, `asymptote`, `pythontex`)
+  - Nested syntax highlighting for `dot2tex`, `lualatex`, `gnuplottex`,
+    `asymptote`, `pythontex`, `listings`, and `minted`
 - Support for multi-file project packages
   - `import`
   - `subfiles`
@@ -204,24 +204,6 @@ Vim version~
 <
   to one's `vimrc` file.  This might work, but issues due to older versions
   than the mentioned here will be ignored.
-
-Order of "syntax on" and "filetype plugin on"~
-                                                       *vimtex_syntax_filetype*
-  |vimtex| provides an `after/syntax/tex.vim` that improves syntax highlighting,
-  see |vimtex-syntax|. Some of the improvements require that the filetype
-  plugin has been loaded first. This means one must have the following lines
-  in the following order in ones `vimrc` file: >
-
-    filetype plugin indent on
-    syntax on
-<
-  Note: Many plugin managers, like |vim-plug|, will automatically add these
-        lines in the correct order.
-
-  Note: If you do not have a vimrc file, |defaults.vim| may be loaded and will
-        source the mentioned lines in the wrong order. If one wants to source
-        |defaults.vim|, it is suggested to do it manually and to add the lines
-        above in the correct order first.
 
 Compiler backend~
 
@@ -335,7 +317,7 @@ Tag navigation~
   files as necessary, e.g. |gutentags| [1].
 
   See |vimtex-faq-tags| and |vimtex-faq-tags-bibtex| for concrete examples.
-<
+
   [0]: https://ctags.io/
   [1]: https://github.com/ludovicchabant/vim-gutentags
 
@@ -349,7 +331,9 @@ Manipulate surrounding commands/delimiters/environments~
   `""`, `()`, `[]`, `{}`, and `<>`.  As such, the mappings from vimtex
   should work well together with, and as an extension of, `surround.vim`.
   Consider also the customization described under |vimtex-faq-surround|.
-  The mappings may be repeated with the dot command |.|.
+  The mappings may be repeated with the dot (|.|) command. See also
+  |g:vimtex_delim_list| if you are interested in customizing the delimiter
+  pairs that are recognized.
 
   A different possibility is to use `vim-sandwich` [1] (|sandwich.txt|) by
   Machakann, which may be considered a generalisation of `surround.vim` in
@@ -1189,6 +1173,23 @@ OPTIONS                                                        *vimtex-options*
   generated based on the `name` entry. The remaining four entries will remain
   the default value.
 
+  Some people may be interested in adding support for e.g. german or french
+  quotation marks. These may be added by extending the default `delim_tex`
+  entries, like this: >
+
+    let g:vimtex_delim_list = {
+        \ 'delim_tex' : {
+        \   'name' : [
+        \     ['[', ']'],
+        \     ['{', '}'],
+        \     ['\glq', '\grq'],
+        \     ['\glqq', '\grqq'],
+        \     ['\flq', '\frq'],
+        \     ['\flqq', '\frqq'],
+        \    ]
+        \  }
+        \}
+<
                                                          *g:vimtex#delim#lists*
                                                          *g:vimtex#delim#re*
   Note: This option is parsed on plugin initialization into a new variable,
@@ -1514,6 +1515,7 @@ OPTIONS                                                        *vimtex-options*
           \     'hypersetup',
           \     'tikzset',
           \     'pgfplotstableread',
+          \     'lstset',
           \   ],
           \ },
           \ 'cmd_single_opt' : {
@@ -1617,22 +1619,22 @@ OPTIONS                                                        *vimtex-options*
           \}
 
 *g:vimtex_indent_delims*
-  A dictionary that defines the list of opening and closing delimiters (in
-  regex form) that should add/reduce indents.
-
-  The dictionary has three keys:
+  A dictionary that specifies how to indent delimiters. The dictionary has
+  four keys:
 
     open~
-      List of regexes that defines opening delimiters that should add indents.
+      List of regexes for opening delimiters that should add indents.
 
     close~
-      List of regexes that defines closing delimiters that should reduce
-      indents.
+      List of regexes for closing delimiters that should reduce indents.
+
+    close_indented~
+      Set this to 1 if you want the line with the closing delimiter to stay
+      indented.
 
     include_modified_math~
-      Boolean (1 for True, 0 for False) that sets whether to indent on opening
-      and closing modified math delimiters such as `\left(` and `\right)`. If
-      this value is not set, it is assumed to be 1.
+      Set this to 0 if you do not want modified math delimiters such as
+      `\left(` and `\right)` to add/reduce indents.
 
   Note: Vimtex does not allow indents for parantheses only in math mode or any
         similar kind of context aware delimiter indents.
@@ -1642,8 +1644,9 @@ OPTIONS                                                        *vimtex-options*
 
   Default value: >
     let g:vimtex_indent_delims = {
-          \ 'open' : ['{', '\\\@<!\\\['],
-          \ 'close' : ['}', '\\\]'],
+          \ 'open' : ['{'],
+          \ 'close' : ['}'],
+          \ 'close_indented' : 0,
           \ 'include_modified_math' : 1,
           \}
 
@@ -1876,44 +1879,32 @@ OPTIONS                                                        *vimtex-options*
 
   Default value: 1.
 
-*g:vimtex_syntax_minted*
-  A list that contains dictionaries for each supported language.  A language
-  dictionary should be something similar to the following: >
+*g:vimtex_syntax_nested*
+  A dictionary for configuring nested syntaxes. Has two keys: `aliases` and
+  `ignored`.
 
-    {
-      'lang'    : NAME,
-      'syntax'  : SYNTAX-FILE-NAME,
-      'ignored' : IGNORED-GROUPS
-    }
-<
-  If the `syntax` entry is not present, then the `lang` entry is used as name of
-  the syntax file.  The `ignored` entry is also optional, and is used to name
-  syntax groups to ignore in the minted region.
+  The `aliases` key holds a dictionary of aliases, such as mapping `C` to `c`.
+  This is useful e.g. because the Vim syntax files are case sensitive.
 
-  Default value: []
+  The `ignored` key holds a dictionary of ignore lists for each language. This
+  is useful to ignore some groups that may conflict in e.g. the `\begin{...}`
+  or `\end{...}` part of the nested syntax regions.
 
-  Example for some languages: >
+  Default value: >
 
-    let g:vimtex_syntax_minted = [
-          \ {
-          \   'lang' : 'c',
-          \ },
-          \ {
-          \   'lang' : 'cpp',
-          \   'environments' : ['cppcode', 'cppcode_test'],
-          \ },
-          \ {
-          \   'lang' : 'csharp',
-          \   'syntax' : 'cs'
-          \ },
-          \ {
-          \   'lang' : 'python',
-          \   'ignore' : [
-          \     'pythonEscape',
-          \     'pythonBEscape',
-          \     ],
-          \ }
-          \]
+    let g:vimtex_syntax_nested = {
+        \ 'aliases' : {
+        \   'C' : 'c',
+        \   'csharp' : 'cs',
+        \ },
+        \ 'ignored' : {
+        \   'python' : [
+        \     'pythonEscape',
+        \     'pythonBEscape',
+        \     'pythonBytesEscape',
+        \   ]
+        \ }
+        \})
 
 *g:vimtex_texcount_custom_arg*
   Option that makes it possible to add custom arguments to `texcount` for
@@ -2450,8 +2441,10 @@ COMMANDS                                                      *vimtex-commands*
 
                                              *VimtexLog*
                                              *<plug>(vimtex-log)*
-:VimtexLog                Show message log with timestamps and traces from
-                          where the messages were raised.
+:VimtexLog                Open a scratch buffer to show message log with
+                          timestamps and traces from where the messages were
+                          raised. To close the log buffer, one may press `q`
+                          or `<esc>`.
 
                                              *VimtexCompile*
                                              *<plug>(vimtex-compile)*
@@ -3251,7 +3244,7 @@ To enable automatic completion with |youcompleteme|, use the following options: 
   if !exists('g:ycm_semantic_triggers')
     let g:ycm_semantic_triggers = {}
   endif
-  let g:ycm_semantic_triggers.tex = g:vimtex#re#youcompleteme
+  au VimEnter * let g:ycm_semantic_triggers.tex=g:vimtex#re#youcompleteme
 
 VimCompletesMe~
                                                           *vimtex-complete-vcm*
@@ -3328,9 +3321,8 @@ highlighting.  However, |vimtex| does add some minor improvements:
 - Support for `biblatex` and `natbib` package
 - Support for `cleveref` package
 - Improved highlighting of `listings` package
-- Nested syntax highlighting for `dot2tex`
 - Nested syntax highlighting for `dot2tex`, `lualatex`, `gnuplottex`,
-  `asymptote`, `pythontex`, and `minted` (see |g:vimtex_syntax_minted|)
+  `asymptote`, `pythontex`, `listings`, and `minted`
 
 Before enabling additional syntax highlighting, |vimtex| also checks the
 |g:tex_fast| variable (defined by |ft-tex-syntax|) that allows one to
@@ -3354,7 +3346,7 @@ Note: For people that are interested in improved conceal support, please check
 
 Associated settings:
   |g:vimtex_syntax_enabled|
-  |g:vimtex_syntax_minted|
+  |g:vimtex_syntax_nested|
 
 ==============================================================================
 NAVIGATION                                                  *vimtex-navigation*
@@ -3779,9 +3771,12 @@ ONLINE                                                 *vimtex-latexdoc-online*
 I recommend the LaTeX Wikibook [0] as a good source of documentation for
 LaTeX. One should also know about the Comprehensive TeX Archive Network, or
 CTAN [1], which is the central place for all kinds of material around TeX.
+The long-existing unofficial LaTeX(2e) reference manual (latexref) can be
+found online at [2].
 
 [0]: https://en.wikibooks.org/wiki/LaTeX
 [1]: https://ctan.org/
+[2]: https://latexref.xyz/
 
 ------------------------------------------------------------------------------
 OFFLINE                                               *vimtex-latexdoc-offline*
@@ -3802,7 +3797,8 @@ documentation pdf of this package. Note, though, that this assumes that the
 documentation is available offline, which it might not be (e.g. on Arch Linux
 it is not available through the texlive packages).
 
-The LaTeX refman [8] should also be mentioned as a relevant reference.
+The unofficial LaTeX(2e) reference manual (latexref) should also be mentioned,
+since it may be easily downloaded in various formats from [8].
 
 [0]: https://kapeli.com/dash
 [1]: https://zealdocs.org/
@@ -3812,7 +3808,7 @@ The LaTeX refman [8] should also be mentioned as a relevant reference.
 [5]: https://github.com/KabbAmine/zeavim.vim
 [6]: https://github.com/keith/investigate.vim
 [7]: https://www.tug.org/texdoc/doc/texdoc.pdf
-[8]: https://puszcza.gnu.org.ua/projects/latexrefman/
+[8]: https://latexref.xyz/dev
 
 ==============================================================================
 CODE STRUCTURE                                                    *vimtex-code*

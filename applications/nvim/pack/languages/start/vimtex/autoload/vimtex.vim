@@ -95,6 +95,7 @@ function! vimtex#init_options() abort " {{{1
         \     'hypersetup',
         \     'tikzset',
         \     'pgfplotstableread',
+        \     'lstset',
         \   ],
         \ },
         \ 'cmd_single_opt' : {
@@ -208,6 +209,22 @@ function! vimtex#init_options() abort " {{{1
   call s:init_option('vimtex_quickfix_autoclose_after_keystrokes', '0')
 
   call s:init_option('vimtex_syntax_enabled', 1)
+  call s:init_option('vimtex_syntax_nested', {
+        \ 'aliases' : {
+        \   'C' : 'c',
+        \   'csharp' : 'cs',
+        \ },
+        \ 'ignored' : {
+        \   'cs' : [
+        \     'csBraces',
+        \   ],
+        \   'python' : [
+        \     'pythonEscape',
+        \     'pythonBEscape',
+        \     'pythonBytesEscape',
+        \   ]
+        \ }
+        \})
 
   call s:init_option('vimtex_texcount_custom_arg', '')
 
@@ -301,15 +318,6 @@ endfunction
 
 " }}}1
 function! s:init_highlights() abort " {{{1
-  " Check for wrong load order for syntax vs filetype
-  if get(b:, 'current_syntax', '') ==# 'tex'
-    unsilent call vimtex#log#warning([
-          \ '"syntax on" seems to be applied before "filetype plugin on".',
-          \ 'This is suboptimal, because some syntax features require an initialized state.',
-          \ 'Please see ":help vimtex_syntax_filetype".'
-          \])
-  endif
-
   for [l:name, l:target] in [
         \ ['VimtexImapsArrow', 'Comment'],
         \ ['VimtexImapsLhs', 'ModeMsg'],
