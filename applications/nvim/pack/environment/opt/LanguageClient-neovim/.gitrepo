@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:autozimu/LanguageClient-neovim.git
 	branch = next
-	commit = e4478a4789805c66ce24ae786677ae557cd411da
-	parent = ca3d5f5582baa660cfc83ed85b25bf45630f7fed
+	commit = b5e3c287436498140b79e7f07cb3f4a655d790f0
+	parent = 016e540343e02bc70cc246fc3e7d72f039acee1a
 	method = merge
 	cmdver = 0.4.0

@@ -1080,7 +1080,12 @@ impl LanguageClient {
             0 => self.vim()?.echowarn("Not found!")?,
             1 => {
                 let loc = locations.get(0).ok_or_else(|| err_msg("Not found!"))?;
-                self.vim()?.edit(&goto_cmd, loc.uri.filepath()?)?;
+                let path = loc.uri.filepath()?.to_string_lossy().into_owned();
+                if path.starts_with("jdt://") {
+                    self.java_classFileContents(&json!({ "gotoCmd": goto_cmd, "uri": path }))?;
+                } else {
+                    self.vim()?.edit(&goto_cmd, path)?;
+                }
                 self.vim()?
                     .cursor(loc.range.start.line + 1, loc.range.start.character + 1)?;
                 let cur_file: String = self.vim()?.eval("expand('%')")?;
@@ -1861,21 +1866,26 @@ impl LanguageClient {
 
     pub fn window_showMessageRequest(&self, params: &Value) -> Fallible<Value> {
         info!("Begin {}", lsp::request::ShowMessageRequest::METHOD);
-        let msg_params: ShowMessageRequestParams = params.clone().to_lsp()?;
-        let msg_actions = msg_params.actions.unwrap_or_default();
-        let mut options = Vec::with_capacity(msg_actions.len() + 1);
-        options.push(msg_params.message);
-        options.extend(
-            msg_actions
-                .iter()
-                .enumerate()
-                .map(|(i, item)| format!("{}) {}", i + 1, item.title)),
-        );
-
         let mut v = Value::Null;
-        let index: Option<usize> = self.vim()?.rpcclient.call("s:inputlist", options)?;
-        if let Some(index) = index {
-            v = serde_json::to_value(msg_actions.get(index - 1))?;
+        let msg_params: ShowMessageRequestParams = params.clone().to_lsp()?;
+        let msg = format!("[{:?}] {}", msg_params.typ, msg_params.message);
+        let msg_actions = msg_params.actions.unwrap_or_default();
+        if msg_actions.is_empty() {
+            self.vim()?.echomsg(&msg)?;
+        } else {
+            let mut options = Vec::with_capacity(msg_actions.len() + 1);
+            options.push(msg);
+            options.extend(
+                msg_actions
+                    .iter()
+                    .enumerate()
+                    .map(|(i, item)| format!("{}) {}", i + 1, item.title)),
+            );
+
+            let index: Option<usize> = self.vim()?.rpcclient.call("s:inputlist", options)?;
+            if let Some(index) = index {
+                v = serde_json::to_value(msg_actions.get(index - 1))?;
+            }
         }
 
         info!("End {}", lsp::request::ShowMessageRequest::METHOD);
@@ -2431,8 +2441,20 @@ impl LanguageClient {
         let mut edits = vec![];
         if self.get(|state| state.completionPreferTextEdit)? {
             if let Some(edit) = lspitem.text_edit {
-                self.vim()?.command("undo")?;
-                edits.push(edit.clone());
+                // The text edit should be at the completion point, and deleting the partial text
+                // that the user had typed when the language server provided the completion.
+                //
+                // We want to tweak the edit so that it instead deletes the completion that we've
+                // already inserted.
+                //
+                // Check that we're not doing anything stupid before going ahead with this.
+                let mut edit = edit.clone();
+                edit.range.end.character =
+                    edit.range.start.character + completed_item.word.len() as u64;
+                if edit.range.end != position || edit.range.start.line != edit.range.end.line {
+                    return Ok(());
+                }
+                edits.push(edit);
             };
         }
         if let Some(aedits) = lspitem.additional_text_edits {
@@ -2973,6 +2995,27 @@ impl LanguageClient {
         let content: String = self
             .get_client(&Some(languageId.clone()))?
             .call(REQUEST__ClassFileContents, params)?;
+
+        let lines: Vec<String> = content
+            .lines()
+            .map(std::string::ToString::to_string)
+            .collect();
+
+        let goto_cmd = self
+            .vim()?
+            .get_goto_cmd(params)?
+            .unwrap_or_else(|| "edit".to_string());
+
+        let uri: String =
+            try_get("uri", params)?.ok_or_else(|| err_msg("uri not found in request!"))?;
+
+        self.vim()?
+            .rpcclient
+            .notify("s:Edit", json!([goto_cmd, uri]))?;
+
+        self.vim()?.setline(1, &lines)?;
+        self.vim()?
+            .command("setlocal buftype=nofile filetype=java noswapfile")?;
 
         info!("End {}", REQUEST__ClassFileContents);
         Ok(Value::String(content))
