@@ -6,17 +6,19 @@
 
 import argparse
 import shutil
+import typing
+
 from sys import executable, base_exec_prefix
 from pathlib import Path
 
 from denite.base.source import Base
 from denite.process import Process
-from denite.util import parse_command, abspath
+from denite.util import parse_command, abspath, Nvim, UserContext, Candidates
 
 
 class Source(Base):
 
-    def __init__(self, vim):
+    def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
 
         self.name = 'file/rec'
@@ -25,9 +27,9 @@ class Source(Base):
             'command': [],
             'cache_threshold': 10000,
         }
-        self._cache = {}
+        self._cache: typing.Dict[str, Candidates] = {}
 
-    def on_init(self, context):
+    def on_init(self, context: UserContext) -> None:
         """scantree.py command has special meaning, using the internal
         scantree.py Implementation"""
 
@@ -43,19 +45,19 @@ class Source(Base):
                     '-type', 'l', '-print', '-o', '-type', 'f', '-print']
             else:
                 self.vars['command'] = self.parse_command_for_scantree(
-                    ['scantree.py'])
+                    ['scantree.py', '--path', ':directory'])
 
         context['__proc'] = None
         directory = context['args'][0] if len(
             context['args']) > 0 else context['path']
         context['__directory'] = abspath(self.vim, directory)
 
-    def on_close(self, context):
+    def on_close(self, context: UserContext) -> None:
         if context['__proc']:
             context['__proc'].kill()
             context['__proc'] = None
 
-    def gather_candidates(self, context):
+    def gather_candidates(self, context: UserContext) -> Candidates:
         if not self.vars['command']:
             return []
 
@@ -85,7 +87,8 @@ class Source(Base):
         context['__current_candidates'] = []
         return self._async_gather_candidates(context, 0.5)
 
-    def _async_gather_candidates(self, context, timeout):
+    def _async_gather_candidates(self, context: UserContext,
+                                 timeout: float) -> Candidates:
         outs, errs = context['__proc'].communicate(timeout=timeout)
         if errs:
             self.error_message(context, errs)
@@ -102,7 +105,7 @@ class Source(Base):
             candidates = [{
                 'word': str(Path(x).relative_to(directory)),
                 'action__path': x,
-                } for x in outs if x != '']
+                } for x in outs if x != '' and directory in x]
         else:
             candidates = [{
                 'word': x,
@@ -118,13 +121,14 @@ class Source(Base):
         return candidates
 
     @staticmethod
-    def get_python_exe():
+    def get_python_exe() -> str:
         if 'py' in str(Path(executable).name):
             return executable
 
         for exe in ['python3', 'python']:
-            if shutil.which(exe) is not None:
-                return shutil.which(exe)
+            which = shutil.which(exe)
+            if which is not None:
+                return which
 
         for name in (Path(base_exec_prefix).joinpath(v) for v in [
                 'python3', 'python',
@@ -137,14 +141,15 @@ class Source(Base):
         # return sys.executable anyway. This may not work on windows
         return executable
 
-    def parse_command_for_scantree(self, cmd):
+    def parse_command_for_scantree(self,
+                                   cmd: typing.List[str]) -> typing.List[str]:
         """Given the user choice for --ignore get the corresponding value"""
 
         parser = argparse.ArgumentParser(description="parse scantree options")
         parser.add_argument('--ignore', type=str, default=None)
 
         # the first name on the list is 'scantree.py'
-        args = parser.parse_args(
+        (args, rest) = parser.parse_known_args(
             cmd[1:] if cmd and cmd[0] == 'scantree.py' else cmd)
         if args.ignore is None:
             ignore = self.vim.options['wildignore']
@@ -155,4 +160,4 @@ class Source(Base):
             'scantree.py')
 
         return [Source.get_python_exe(), str(scantree_py), '--ignore', ignore,
-                '--path', ':directory']
+                *rest]

@@ -1,13 +1,13 @@
 # ============================================================================
-# FILE: converter/relative_abbr.py
+# FILE: converter/tail_path.py
 # AUTHOR: Shougo Matsushita <Shougo.Matsu at gmail.com>
 # License: MIT license
 # ============================================================================
 
-from os.path import isabs
+from pathlib import Path
 
 from denite.base.filter import Base
-from denite.util import relpath, Nvim, UserContext, Candidates
+from denite.util import Nvim, UserContext, Candidates
 
 
 class Filter(Base):
@@ -15,13 +15,13 @@ class Filter(Base):
     def __init__(self, vim: Nvim) -> None:
         super().__init__(vim)
 
-        self.name = 'converter/relative_abbr'
-        self.description = 'convert candidate abbr to relative path'
+        self.name = 'converter/tail_path'
+        self.description = 'convert candidate tail path to word'
 
     def filter(self, context: UserContext) -> Candidates:
         for candidate in context['candidates']:
-            if isabs(candidate['word']):
-                candidate['abbr'] = relpath(
-                    self.vim,
-                    candidate.get('action__path', candidate['word']))
+            if 'abbr' not in candidate:
+                candidate['abbr'] = candidate['word']
+            candidate['word'] = Path(candidate.get(
+                'action__path', candidate['word'])).name
         return context['candidates']  # type: ignore

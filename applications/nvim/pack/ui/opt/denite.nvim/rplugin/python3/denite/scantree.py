@@ -10,11 +10,14 @@ from os.path import basename
 import argparse
 import fnmatch
 import time
+import typing
 
 DEFAULT_SKIP_LIST = ['.git', '.hg']
+SkipList = typing.Optional[typing.List[str]]
 
 
-def scantree(path_name, skip_list=None):
+def scantree(path_name: str, skip_list: SkipList = None,
+             types: str = 'f') -> typing.Generator[str, None, None]:
     """This function returns the files present in path_name, including the
     files present in subfolders.
 
@@ -28,14 +31,16 @@ def scantree(path_name, skip_list=None):
         for entry in (e for e in scandir(path_name)
                       if not is_ignored(e.path, skip_list)):
             if entry.is_dir(follow_symlinks=False):
-                yield from scantree(entry.path, skip_list)
-            else:
+                if 'd' in types:
+                    yield entry.path
+                yield from scantree(entry.path, skip_list, types)
+            elif 'f' in types:
                 yield entry.path
     except PermissionError:
         yield f'PermissionError reading {path_name}'
 
 
-def output_lines(lines):
+def output_lines(lines: typing.List[str]) -> None:
     try:
         sys.stdout.write(''.join(lines))
         sys.stdout.flush()
@@ -43,13 +48,13 @@ def output_lines(lines):
         pass
 
 
-def is_ignored(name, ignore_list):
+def is_ignored(name: str, ignore_list: typing.List[str]) -> bool:
     """checks if file name matches the ignore list"""
     name = basename(name)
-    return any(fnmatch.fnmatch(name, p) for p in ignore_list)
+    return bool(any(fnmatch.fnmatch(name, p) for p in ignore_list))
 
 
-def output_files():
+def output_files() -> None:
     """print the list of files to stdout"""
     parser = argparse.ArgumentParser()
     parser.add_argument('--path', type=str, default=curdir,
@@ -57,16 +62,20 @@ def output_files():
     parser.add_argument('--ignore', type=str,
                         help='command separated list of patterns to ignore',
                         default='.hg,.git')
+    parser.add_argument('--type', type=str, nargs='*',
+                        choices=['f', 'd'], default='f',
+                        help='output file types')
 
     args = parser.parse_args()
     ignore = list(set(args.ignore.split(',')))
+    types = ''.join(set(args.type))
     # later we can account for more paths
     for path_name in [args.path]:
         curr_list = []
         max_size = 40
         max_time_without_write = 0.005
         last_write_time = time.time()
-        for name in scantree(path_name, ignore):
+        for name in scantree(path_name, ignore, types):
             curr_list.append(name + '\n')
             if (len(curr_list) >= max_size or curr_list and
                     time.time() - last_write_time > max_time_without_write):
