@@ -549,7 +549,7 @@ vim-capslock <https://github.com/tpope/vim-capslock>
   let g:airline#extensions#capslock#enabled = 1
 
 -------------------------------------                    *airline-coc*
-coc <https://github.com/neoclide/coc>
+coc <https://github.com/neoclide/coc.nvim>
 
 * enable/disable coc integration >
   let g:airline#extensions#coc#enabled = 1
@@ -1092,6 +1092,12 @@ taboo.vim <https://github.com/gcmt/taboo.vim>
 * enable/disable taboo.vim integration >
   let g:airline#extensions#taboo#enabled = 1
 <
+-------------------------------------                        *airline-tabws*
+vim-tabws <https://github.com/s1341/vim-tabws>
+
+* enable/disable tabws integration >
+  let g:airline#extensions#tabws#enabled = 1
+<
 -------------------------------------                       *airline-tagbar*
 tagbar <https://github.com/majutsushi/tagbar>
 
@@ -1167,6 +1173,12 @@ virtualenv <https://github.com/jmcantrell/vim-virtualenv>
 * enable/disable virtualenv integration >
   let g:airline#extensions#virtualenv#enabled = 1
 <
+-------------------------------------                   *airline-vista*
+vista.vim <https://github.com/liuchngxu/vista.vim>
+
+* enable/disable vista integration >
+  let g:airline#extensions#vista#enabled = 1
+
 -------------------------------------                   *airline-whitespace*
 * enable/disable detection of whitespace errors. >
   let g:airline#extensions#whitespace#enabled = 1
