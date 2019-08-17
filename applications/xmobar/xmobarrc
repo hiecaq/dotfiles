@@ -4,8 +4,8 @@ Config { font = "xft:DejavuSansMono Nerd Font:size=8:bold:antialias=true,Noto Sa
        , border = NoBorder
        , bgColor = "black"
        , fgColor = "#ebdbb2"
-       , alpha = 0
-       , position = TopSize C 99 45
+       , alpha = 98
+       , position = TopSize C 100 45
        , textOffset = -1
        , iconOffset = -1
        , lowerOnStart = True
@@ -44,6 +44,6 @@ Config { font = "xft:DejavuSansMono Nerd Font:size=8:bold:antialias=true,Noto Sa
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ %disku%  %battery%  %thermal10%  %cpu%  %memory%  %wifi% %wlp2s0%  <fc=#fabd2f>%date%</fc>  %uname% "
+       , template = "   %StdinReader% }{ %disku%  %battery%  %thermal10%  %cpu%  %memory%  %wifi% %wlp2s0%  <fc=#fabd2f>%date%</fc>  %uname%    "
        }
 -- vim: ft=haskell :

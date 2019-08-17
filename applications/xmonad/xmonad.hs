@@ -19,7 +19,7 @@ main = (=<<) xmonad $ statusBar myBar myPP toggleStrutsKey $ withNavigation2DCon
         , modMask     = mod4Mask
         , borderWidth = 0
         , manageHook = manageDocks <+> manageHook desktopConfig
-        , layoutHook =  spacingRaw True (Border 0 0 10 10) True (Border 0 20 10 10) True $ avoidStruts $ layoutHook desktopConfig
+        , layoutHook =  spacingRaw True (Border 10 10 10 10) True (Border 10 10 10 10) True $ avoidStruts $ layoutHook desktopConfig
         -- , startupHook = myStartupHook
         , handleEventHook = handleEventHook desktopConfig <+> fullscreenEventHook
         , focusFollowsMouse = False
