@@ -10,6 +10,10 @@ import typing
 from pathlib import Path
 from pynvim import Nvim
 
+UserContext = typing.Dict[str, typing.Any]
+Candidate = typing.Dict[str, typing.Any]
+Candidates = typing.List[Candidate]
+
 
 def cd(vim: Nvim, path: str) -> None:
     vim.call('defx#util#cd', path)
@@ -24,6 +28,7 @@ def cwd_input(vim: Nvim, cwd: str, prompt: str,
     cd(vim, cwd)
 
     filename: str = vim_input(vim, prompt, text, completion)
+    filename = filename.strip()
 
     cd(vim, save_cwd)
 
