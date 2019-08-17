@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:zsh-users/zsh-syntax-highlighting.git
 	branch = master
-	commit = 8e78e9dbba673d2a6933b5e98045eabd04f554f5
-	parent = 9f6327f7ac98904b2168c455d4f9af1164b0e076
+	commit = 35c8690c0025ceef9584f64da86ced3a72ee32b6
+	parent = c1a878a5160d28f65ff2aa41a9740d376890b6da
 	method = merge
 	cmdver = 0.4.0
