@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:tpope/vim-markdown.git
 	branch = master
-	commit = 57c58269a2ac89680e7b216c2bcfbb7df1ec5e69
-	parent = d631d021300f12e760a3a89ac226b3ad07642b0e
+	commit = a2e123a288a72efe3f800c3a90736f9d2e48ebea
+	parent = 4eb976536e87b609149ba9ecd48cfdf2918b6b4a
 	method = merge
 	cmdver = 0.4.0
