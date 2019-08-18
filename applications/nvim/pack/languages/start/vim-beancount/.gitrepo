@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:nathangrigg/vim-beancount.git
+	branch = master
+	commit = 8054352c43168ece62094dfc8ec510e347e19e3c
+	parent = 08ffb08a1b24b642f2ae6ccd56eb3fd0de5ad60d
+	method = merge
+	cmdver = 0.4.0
