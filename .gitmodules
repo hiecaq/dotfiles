@@ -1,3 +1,0 @@
-[submodule "terminals/tpm"]
-	path = terminals/tpm
-	url = git@github.com:tmux-plugins/tpm.git
