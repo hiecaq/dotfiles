@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+cd "$QUINOA42_INSTALL_DIR"
+
+mkdir -p ~/.emacs.d
+_=$(link $QUINOA42_INSTALL_DIR/applications/emacs/init.el ~/.emacs.d/init.el)
+
+exit 0
