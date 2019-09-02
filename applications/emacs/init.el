@@ -1,5 +1,13 @@
+(set-language-environment "UTF-8")
+(prefer-coding-system 'utf-8-unix)
+(setq-default indent-tabs-mode nil)
+
+(setq url-proxy-services '(("no_proxy" . "^\\(localhost\\|10\\..*\\|192\\.168\\..*\\)")
+                           ("http" . "127.0.0.1:8118")
+                           ("https" . "127.0.0.1:8118")))
 (setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-                         ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
+                         ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+                         ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
 (setq package-enable-at-startup nil)
 (package-initialize) ;; You might already have this line
 
@@ -17,8 +25,8 @@
 
 (use-package org
   :bind (("C-c l" . org-store-link)
-	 ("C-c a" . org-agenda)
-	 ("C-c c" . org-capture)))
+         ("C-c a" . org-agenda)
+         ("C-c c" . org-capture)))
 
 (use-package evil
   :ensure t
@@ -47,9 +55,20 @@
   :config
   (ivy-mode 1))
 
+(use-package magit
+  :ensure t)
+
+(use-package evil-magit
+  :ensure t
+  :requires (evil magit))
+
 (use-package evil-snipe
   :ensure t
   :requires evil
+  :init
+  (evil-define-key 'visual evil-snipe-local-mode-map "z" 'evil-snipe-s)
+  (evil-define-key 'visual evil-snipe-local-mode-map "Z" 'evil-snipe-S)
+  (add-hook 'magit-mode-hook 'turn-off-evil-snipe-override-mode)
   :custom
   (evil-snipe-scope 'visible)
   (evil-snipe-repeat-scope 'whole-visible)
@@ -61,8 +80,8 @@
 (use-package evil-find-char-pinyin
   :ensure t
   :requires (evil evil-snipe)
-  ; :init
-  ; (setq evil-find-char-pinyin-only-simplified nil)
+                                        ; :init
+                                        ; (setq evil-find-char-pinyin-only-simplified nil)
   :config
   (evil-find-char-pinyin-toggle-snipe-integration t)
   (evil-find-char-pinyin-mode +1))
@@ -74,9 +93,9 @@
   (evilem-default-keybindings "SPC")
   (define-key evil-snipe-parent-transient-map (kbd "SPC")
     (evilem-create 'evil-snipe-repeat
-		   :bind ((evil-snipe-scope 'buffer)
-			  (evil-snipe-enable-highlight)
-			  (evil-snipe-enable-incremental-highlight)))))
+                   :bind ((evil-snipe-scope 'buffer)
+                          (evil-snipe-enable-highlight)
+                          (evil-snipe-enable-incremental-highlight)))))
 
 (use-package evil-org
   :ensure t
@@ -98,7 +117,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (swiper ivy evil-org evil-easymotion evil-find-char-pinyin evil-snipe paradox evil use-package))))
+    (evil-magit magit org swiper ivy evil-org evil-easymotion evil-find-char-pinyin evil-snipe paradox evil use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
