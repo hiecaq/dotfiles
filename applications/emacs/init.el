@@ -2,8 +2,24 @@
 (set-language-environment "UTF-8")
 (prefer-coding-system 'utf-8-unix)
 ;; ui
-(tool-bar-mode -1)
-(menu-bar-no-scroll-bar)
+(menu-bar-mode -1)
+
+(cond ((eq system-type 'windows-nt)
+       ;; windows specific
+       )
+      ((eq system-type 'gnu/linux)
+       ;; linux specific
+       ))
+(cond ((display-graphic-p)
+       ;; Graphical code goes here.
+       (blink-cursor-mode -1)
+       (scroll-bar-mode -1)
+       (tool-bar-mode -1)
+       )
+      (t
+       ;; Console-specific code
+       ))
+; (menu-bar-no-scroll-bar)
 (setq-default indent-tabs-mode nil)
 
 (setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
@@ -12,8 +28,14 @@
 (setq package-enable-at-startup nil)
 (package-initialize) ;; You might already have this line
 
+;; (setq use-package-always-demand t)
 (eval-when-compile
   (require 'use-package))
+
+(use-package general
+  :ensure t
+  :config
+  (general-evil-setup))
 
 (use-package gruvbox-theme
   :ensure t
@@ -30,9 +52,10 @@
   (paradox-enable))
 
 (use-package org
-  :bind (("C-c l" . org-store-link)
-         ("C-c a" . org-agenda)
-         ("C-c c" . org-capture)))
+  :general
+  ("C-c l"  'org-store-link)
+  ("C-c a"  'org-agenda)
+  ("C-c c"  'org-capture))
 
 (use-package ivy
   :ensure t
@@ -40,25 +63,20 @@
   (ivy-use-virtual-buffers t "add recent files/bookmarks to ivy-switch-buffer")
   (ivy-count-format "(%d/%d) " "the style for displaying current candidate count")
   ;; (enable-recursive-minibuffers t "allow minibuffer cmd in minibuffer")
-  :config
-  (ivy-mode 1))
+  )
 
 (use-package swiper
   :ensure t
+  :demand t
   :requires ivy
   :commands (swiper swiper-backward)
-  :bind (("C-s" . swiper))
-  :custom
-  (ivy-use-virtual-buffers t "add recent files/bookmarks to ivy-switch-buffer")
-  (ivy-count-format "(%d/%d) " "the style for displaying current candidate count")
-  :config
-  (ivy-mode 1))
+  :general ("C-s" 'swiper))
+
 
 (use-package counsel
   :ensure t
   :requires ivy
-  :config
-  (counsel-mode 1))
+  )
 
 (use-package ivy-rich
   :ensure t
@@ -70,17 +88,46 @@
 
 (use-package evil
   :ensure t
+  :demand t
+  :init
+  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+  (setq evil-want-keybinding nil)
+  (setq evil-disable-insert-state-bindings t)
+  :general
+  (general-nmap "C-j" 'evil-window-down)
+  (general-nmap "C-k" 'evil-window-up)
+  (general-nmap "C-h" 'evil-window-left)
+  (general-nmap "C-l" 'evil-window-right)
+  ([remap evil-emacs-state] 'evil-normal-state)
+  (general-nmap "/" 'swiper)
+  (general-nmap "?" 'swiper-backward)
   :config
-  (setcdr evil-insert-state-map nil)
-  (define-key evil-insert-state-map (read-kbd-macro evil-toggle-key) 'evil-normal-state)
-  (define-key evil-insert-state-map [escape] 'evil-normal-state)
-  (define-key evil-normal-state-map "/" 'swiper)
-  (define-key evil-normal-state-map "?" 'swiper-backward)
-  (define-key evil-normal-state-map "\C-j" 'evil-window-down)
-  (define-key evil-normal-state-map "\C-k" 'evil-window-up)
-  (define-key evil-normal-state-map "\C-h" 'evil-window-left)
-  (define-key evil-normal-state-map "\C-l" 'evil-window-right)
   (evil-mode 1))
+
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :custom
+  (evil-collection-setup-minibuffer t)
+  :config
+  (evil-collection-init 'minibuffer)
+  (evil-collection-init 'helm))
+
+(use-package helm-config
+  :general
+  ([remap find-file] 'helm-find-files)
+  ([remap occur] 'helm-occur)
+  ([remap list-buffers] 'helm-buffers-list)
+  ([remap dabbrev-expand] 'helm-dabbrev)
+  ([remap execute-extended-command] 'helm-M-x)
+  :init
+  (unless (boundp 'completion-in-region-function)
+    (general-def lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
+    (general-def emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point)))
+
+(use-package helm-mode
+  :config
+  (helm-mode 1))
 
 (use-package magit
   :ensure t)
@@ -91,10 +138,11 @@
 
 (use-package evil-snipe
   :ensure t
+  :demand t
   :requires evil
-  :init
-  (evil-define-key 'visual evil-snipe-local-mode-map "z" 'evil-snipe-s)
-  (evil-define-key 'visual evil-snipe-local-mode-map "Z" 'evil-snipe-S)
+  :general
+  (general-vmap evil-snipe-local-mode-map "z" 'evil-snipe-s)
+  (general-vmap 'visual evil-snipe-local-mode-map "Z" 'evil-snipe-S)
   :hook (magit-mode . turn-off-evil-snipe-override-mode)
   :custom
   (evil-snipe-scope 'visible)
@@ -116,13 +164,14 @@
 (use-package evil-easymotion
   :ensure t
   :requires (evil evil-snipe)
-  :config
-  (evilem-default-keybindings "SPC")
-  (define-key evil-snipe-parent-transient-map (kbd "SPC")
+  :general
+  (evil-snipe-parent-transient-map (kbd "SPC")
     (evilem-create 'evil-snipe-repeat
                    :bind ((evil-snipe-scope 'buffer)
                           (evil-snipe-enable-highlight)
-                          (evil-snipe-enable-incremental-highlight)))))
+                          (evil-snipe-enable-incremental-highlight))))
+  :config
+  (evilem-default-keybindings "SPC"))
 
 (use-package evil-org
   :ensure t
@@ -142,7 +191,8 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (ivy-rich counsel gruvbox-theme evil-magit magit org swiper ivy evil-org evil-easymotion evil-find-char-pinyin evil-snipe paradox evil use-package))))
+    (general evil-collection helm ivy-rich counsel gruvbox-theme evil-magit magit org swiper ivy evil-org evil-easymotion evil-find-char-pinyin evil-snipe paradox evil use-package)))
+ '(scroll-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
