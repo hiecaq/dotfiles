@@ -3,6 +3,7 @@
 #+PROPERTY: header-args:emacs-lisp :tangle (concat user-emacs-directory "init.el")
 #+STARTUP: indent
 #+LINK: github https://www.github.com/%s
+#+LINK: gitlab https://gitlab.com/%s
 
 * General Settings
 ** Coding and Languages
@@ -169,6 +170,16 @@ I'm currently using the emacs port of my vim era favorite, gruvbox:
     (load-theme 'gruvbox t))
 #+END_SRC
 * Key Bindings
+References:
+1. [[https://sam217pa.github.io/2016/09/23/keybindings-strategies-in-emacs/][Keybindings strategies in Emacs]] by Samuel Barreto.
+** Which-key
+[[github:justbur/emacs-which-key][which-key]] is a minor mode that hints you the keybindings prefixed with what you have typed when you get stucked.
+#+BEGIN_SRC emacs-lisp
+  (use-package which-key
+    :ensure t
+    :config
+    (which-key-mode +1))
+#+END_SRC
 ** General
 #+BEGIN_QUOTE
 A general is a leader. – onioncheese
@@ -179,10 +190,35 @@ There is not much config for general yet, besides enable it I simply turn on its
 #+BEGIN_SRC emacs-lisp
   (use-package general
     :ensure t
+    :after which-key
     :config
     (general-evil-setup))
 #+END_SRC
-** TODO use hydra or hercules.el 
+** Hercules                                                       :disabled:
+#+BEGIN_QUOTE
+An auto-magical, =which-key= based =hydra= banisher.
+...
+If only there was a way to make a =hydra= without having to list all the bindings explicitly…
+Kind of like =which-key=…
+#+END_QUOTE
+Did you get the idea what [[jjzmajic/hercules.el][hercules]] is used for? neither do I (at the first glance)! In short, by using the power of [[github:justbur/emacs-which-key][which-key]], =hercules= can build a =hydra= when given a keymap.
+
+This seems nice, however it has some problem: probably because it's new, there is no easy way to let the hydra die for every heads it has. Thus currently I'm not using hercules but =which-key= and =hydra= instead.
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package hercules
+    :ensure t
+    :after (general helm-config)
+    :config
+    (hercules-def
+     :show-funs #'org-babel-enter
+     :hide-funs '(org-babel-exit org-babel-tangle)
+     :keymap 'org-babel-map
+     :transient t
+     :config '(general-def
+                :prefix-map 'org-babel-map
+                "q" #'org-babel-exit))
+    (general-def org-mode-map "C-c C-v" #'org-babel-enter))
+#+END_SRC
 ** Evil
 It's name tells everything: the Extensible Vi Layer for Emacs, [[github:emacs-evil/evil][Evil]]. It works pretty well as a Vim simulation, much better than VsCode's or Intellij's. Besides, it is charming combination of Vim's model-based editing with Emacs' keymap system, to some extent, as a personal opinion, better than the native Vim on the model-based editing system.
 #+BEGIN_SRC emacs-lisp
@@ -190,17 +226,21 @@ It's name tells everything: the Extensible Vi Layer for Emacs, [[github:emacs-ev
     :ensure t
     :demand t
     :init
-    (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
-    (setq evil-want-keybinding nil)
-    (setq evil-disable-insert-state-bindings t)
+    (general-setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+    (general-setq evil-want-keybinding nil)
+    (general-setq evil-disable-insert-state-bindings t)
+    (general-setq evil-search-module 'evil-search)
     :general
     (general-nmap "C-j" 'evil-window-down)
     (general-nmap "C-k" 'evil-window-up)
     (general-nmap "C-h" 'evil-window-left)
     (general-nmap "C-l" 'evil-window-right)
     ([remap evil-emacs-state] 'evil-normal-state)
-    (general-nmap "/" 'swiper)
-    (general-nmap "?" 'swiper-backward)
+    ([remap evil-ex-search-forward] 'swiper)
+    ([remap evil-ex-search-backward] 'swiper-backward)
+    (general-create-definer my-leader-def
+      ;; :prefix my-leader
+      :prefix "SPC")
     :config
     (evil-mode 1))
 #+END_SRC
@@ -232,6 +272,30 @@ It's name tells everything: the Extensible Vi Layer for Emacs, [[github:emacs-ev
                     :bind ((evil-snipe-scope 'buffer)
                            (evil-snipe-enable-highlight)
                            (evil-snipe-enable-incremental-highlight))))
+    (my-leader-def 'normal
+      "-" '(:ignore t :which-key t)
+      "+" '(:ignore t :which-key t)
+      "j" '(:ignore t :which-key t)
+      "k" '(:ignore t :which-key t)
+      "[" '(:ignore t :which-key t)
+      "]" '(:ignore t :which-key t)
+      "(" '(:ignore t :which-key t)
+      ")" '(:ignore t :which-key t)
+      "*" '(:ignore t :which-key t)
+      "#" '(:ignore t :which-key t)
+      "e" '(:ignore t :which-key t)
+      "b" '(:ignore t :which-key t)
+      "w" '(:ignore t :which-key t)
+      "f" '(:ignore t :which-key t)
+      "t" '(:ignore t :which-key t)
+      "n" '(:ignore t :which-key t)
+      "E" '(:ignore t :which-key t)
+      "B" '(:ignore t :which-key t)
+      "W" '(:ignore t :which-key t)
+      "F" '(:ignore t :which-key t)
+      "T" '(:ignore t :which-key t)
+      "N" '(:ignore t :which-key t)
+      "g" '(:ignore t :which-key t))
     :config
     (evilem-default-keybindings "SPC"))
 #+END_SRC
@@ -351,10 +415,12 @@ this is only a facial overall summary of what [[https://orgmode.org][org-mode]] 
 Emacs shipped with a relatively old version of =org-mode=, but many MELPA packages depends on the nightly version, thus I'll usually get the newest one from its own archive via =package-install=.
 #+BEGIN_SRC emacs-lisp
   (use-package org
+    :hook (org-mode . visual-line-mode)
     :general
-    ("C-c l"  'org-store-link)
-    ("C-c a"  'org-agenda)
-    ("C-c c"  'org-capture))
+    (my-leader-def 'normal
+      "l"  'org-store-link
+      "a"  'org-agenda
+      "c"  'org-capture))
 #+END_SRC
 
 And of course, its Evil integration:
@@ -364,6 +430,10 @@ And of course, its Evil integration:
     :after (org evil)
     :hook
     (org-mode . evil-org-mode)
+    :general
+    (org-src-mode-map [remap evil-write] 'org-edit-src-save)
+    (general-nmap org-mode-map [remap evil-next-line] 'evil-next-visual-line)
+    (general-nmap org-mode-map [remap evil-previous-line] 'evil-previous-visual-line)
     :config
     (evil-org-set-key-theme)
     (require 'evil-org-agenda)
