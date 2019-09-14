@@ -1,0 +1,384 @@
+#+TITLE: quinoa42's dotEmacs
+#+PROPERTY: header-args :comments org :results silent
+#+PROPERTY: header-args:emacs-lisp :tangle (concat user-emacs-directory "init.el")
+#+STARTUP: indent
+#+LINK: github https://www.github.com/%s
+
+* General Settings
+** Coding and Languages
+Use Utf-8 as the default coding system.
+#+BEGIN_SRC emacs-lisp
+  (set-language-environment "UTF-8")
+  (prefer-coding-system 'utf-8-unix)
+#+END_SRC
+
+** Tangle =init.el=
+When there is no =init.el= tangled yet, run =C-c= on this block to generate the first =init.el=.
+#+BEGIN_SRC emacs-lisp
+  (let ((src (concat user-emacs-directory "readme.org"))
+        (dst (concat user-emacs-directory "init.el")))
+    (when (file-newer-than-file-p src dst)
+      (call-process
+       (concat invocation-directory invocation-name)
+       nil nil t
+       "-q" "--batch" "--eval" "(require 'ob-tangle)"
+       "--eval" (format "(org-babel-tangle-file \"%s\" \"%s\" 'emacs-lisp)" src dst)))
+    ;; (require 'bytecomp)
+    ;; (byte-recompile-file dst nil 0 t)
+    )
+#+END_SRC
+
+** Some helpful defaults
+I don't know if there is any who would like the wierd tab-space-hybird indent mode.
+#+BEGIN_SRC emacs-lisp
+  (setq-default indent-tabs-mode nil)
+#+END_SRC
+
+* Platform Specific
+This part contains code specific to platforms, usually UI or PATH related.
+
+Here is specific config for each OS:
+#+BEGIN_SRC emacs-lisp :noweb no-export
+  (cond ((eq system-type 'windows-nt)
+         <<Windows>>
+         )
+        ((eq system-type 'darwin)
+         <<MacOS>>
+         )
+        ((eq system-type 'gnu/linux)
+         <<Linux>>
+         ))
+#+END_SRC
+
+Here is specific config for each UI:
+#+BEGIN_SRC emacs-lisp :noweb no-export
+  (cond ((display-graphic-p)
+         <<Graphic>>
+         )
+        (t
+         <<Console>>
+         ))
+#+END_SRC
+
+** All platforms
+This is the code snippet that should be shared among all platforms.
+
+It is reasonable to just turn off menu bar because I want to go mouse-less.
+#+BEGIN_SRC emacs-lisp
+  (menu-bar-mode -1)
+#+END_SRC
+
+** MacOS
+:PROPERTIES:
+:header-args:emacs-lisp: :tangle no :noweb-ref MacOS
+:END:
+I don't have specific code for Mac yet.
+
+** Windows
+:PROPERTIES:
+:header-args:emacs-lisp: :tangle no :noweb-ref Windows
+:END:
+I don't have specific code for Windows yet.
+
+** Linux
+:PROPERTIES:
+:header-args:emacs-lisp: :tangle no :noweb-ref Linux
+:END:
+I don't have specific code for Linux yet.
+
+** GUI
+:PROPERTIES:
+:header-args:emacs-lisp: :tangle no :noweb-ref Graphic
+:END:
+Turn off blink cursor, scroll bar and tool bar:
+#+BEGIN_SRC emacs-lisp
+  (blink-cursor-mode -1)
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+#+END_SRC
+
+** TUI
+:PROPERTIES:
+:header-args:emacs-lisp: :tangle no :noweb-ref Console
+:END:
+I don't have specific code for TUI yet.
+
+* Package Management
+** Proxy, Archives and Mirrors
+I use my local proxy to speed up paradox:
+#+BEGIN_SRC emacs-lisp
+  (setq url-proxy-services '(("no_proxy" . "^\\(localhost\\|10\\..*\\|192\\.168\\..*\\)")
+                             ("http" . "127.0.0.1:8118")
+                             ("https" . "127.0.0.1:8118")))
+#+END_SRC
+
+And also, set package archive to include ELPA, MELPA and org's, with TUNA's mirror:
+#+BEGIN_SRC emacs-lisp
+  (setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+                           ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+                           ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
+#+END_SRC
+
+** Initialization
+From [[help:package-initialize]]:
+#+BEGIN_QUOTE
+If called as part of loading ‘user-init-file’, set
+‘package-enable-at-startup’ to nil, to prevent accidentally loading
+packages twice.
+#+END_QUOTE
+Thus, I use the following block to load packages:
+#+BEGIN_SRC emacs-lisp
+  (setq package-enable-at-startup nil)
+  (package-initialize)
+#+END_SRC
+
+** Use-package
+[[github:jwiegley/use-package][use-package]] is a wonderful package configuration helper (and not a package manager!). If it is not available in the current system, use =M-x package-install RET use-package RET= to fetch it from MELPA.
+
+Now load =use-package=:
+#+BEGIN_SRC emacs-lisp
+  (eval-when-compile
+    (require 'use-package))
+#+END_SRC
+
+Also, I'd like to turn on =use-package='s statistic recording to see if my config is correctly set up:
+#+BEGIN_SRC emacs-lisp
+  (setq use-package-compute-statistics t)
+#+END_SRC
+** Paradox
+[[github:Malabarba/paradox][Paradox]] is a modernlized emacs' package menu that supports displaying github stars along the entries, filtering and sorting, async installation, etc.
+
+I disabled the github integration because it doesn't seem to work on my machines.
+#+BEGIN_SRC emacs-lisp
+  (use-package paradox
+    :ensure t
+    :commands paradox-list-packages
+    :custom
+    (paradox-github-token t)
+    (paradox-automatically-star nil)
+    :config
+    (paradox-enable))
+#+END_SRC
+
+* Faces and Colors
+I'm currently using the emacs port of my vim era favorite, gruvbox:
+#+BEGIN_SRC emacs-lisp
+  (use-package gruvbox-theme
+    :ensure t
+    :config
+    (load-theme 'gruvbox t))
+#+END_SRC
+* Key Bindings
+** General
+#+BEGIN_QUOTE
+A general is a leader. – onioncheese
+#+END_QUOTE
+[[github:noctuid/general.el][General]] is a, well, general-purpose key-binding interface for emacs.
+
+There is not much config for general yet, besides enable it I simply turn on its [[*Evil][Evil]] integration:
+#+BEGIN_SRC emacs-lisp
+  (use-package general
+    :ensure t
+    :config
+    (general-evil-setup))
+#+END_SRC
+** TODO use hydra or hercules.el 
+** Evil
+It's name tells everything: the Extensible Vi Layer for Emacs, [[github:emacs-evil/evil][Evil]]. It works pretty well as a Vim simulation, much better than VsCode's or Intellij's. Besides, it is charming combination of Vim's model-based editing with Emacs' keymap system, to some extent, as a personal opinion, better than the native Vim on the model-based editing system.
+#+BEGIN_SRC emacs-lisp
+  (use-package evil
+    :ensure t
+    :demand t
+    :init
+    (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+    (setq evil-want-keybinding nil)
+    (setq evil-disable-insert-state-bindings t)
+    :general
+    (general-nmap "C-j" 'evil-window-down)
+    (general-nmap "C-k" 'evil-window-up)
+    (general-nmap "C-h" 'evil-window-left)
+    (general-nmap "C-l" 'evil-window-right)
+    ([remap evil-emacs-state] 'evil-normal-state)
+    (general-nmap "/" 'swiper)
+    (general-nmap "?" 'swiper-backward)
+    :config
+    (evil-mode 1))
+#+END_SRC
+*** evil-collection
+[[github:emacs-evil/evil-collection][evil-collection]] is a collection of helper functions / settings / etc for things native Evil does bad on.
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-collection
+    :after evil 
+    :ensure t
+    :custom
+    (evil-collection-setup-minibuffer t)
+    :config
+    (evil-collection-init 'info)
+    (evil-collection-init 'dired)
+    (evil-collection-init 'minibuffer)
+    (evil-collection-init 'helm))
+#+END_SRC
+*** evil-easymotion
+[[github:PythonNut/evil-easymotion][evil-easymotion]] is a Evil port of Vim's, well, =easymotion=, which basically works in a way that instead of numbering how many jumps needed, by prefixing motions with a leader key, we use visual hint to go to the place we want. I hadn't tried =easymotion= during my Vim era though, but I like it now. It also provides integration with [[*evil-snipe][evil-snipe]].
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-easymotion
+    :ensure t
+    :demand t
+    :after (evil evil-snipe)
+    :general
+    (evil-snipe-parent-transient-map
+     "SPC"
+     (evilem-create 'evil-snipe-repeat
+                    :bind ((evil-snipe-scope 'buffer)
+                           (evil-snipe-enable-highlight)
+                           (evil-snipe-enable-incremental-highlight))))
+    :config
+    (evilem-default-keybindings "SPC"))
+#+END_SRC
+*** evil-snipe
+[[github:hlissner/evil-snipe][evil-snipe]] is a Evil port of Vim's =clever-f= and =vim-sneak=. It currently does not support separating the scope for =f/F/t/T= from for =s/S=, which is a little bit annoying.
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-snipe
+    :ensure t
+    :demand t
+    :after evil
+    :general
+    (general-vmap evil-snipe-local-mode-map "z" 'evil-snipe-s)
+    (general-vmap 'visual evil-snipe-local-mode-map "Z" 'evil-snipe-S)
+    :hook (magit-mode . turn-off-evil-snipe-override-mode)
+    :custom
+    (evil-snipe-scope 'visible)
+    (evil-snipe-repeat-scope 'whole-visible)
+    (evil-snipe-spillover-scope 'whole-buffer)
+    :config
+    (evil-snipe-mode +1)
+    (evil-snipe-override-mode +1))
+#+END_SRC
+
+**** evil-find-char-pinyin
+[[github:cute-jumper/evil-find-char-pinyin][evil-find-char-pinyin]] is a helper plugin that allow =evil-snipe= to search for Chinese characters with their initial pinyins. For example, with this plugin =smt= could find 明天.
+
+This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for its integration with =evil-snipe='s motions.
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-find-char-pinyin
+    :ensure t
+    :after (evil evil-snipe)
+    :config
+    (evil-find-char-pinyin-toggle-snipe-integration t)
+    (evil-find-char-pinyin-mode +1))
+#+END_SRC
+* UI Enhance
+[[https://www.reddit.com/user/GummyKibble/][u/GummyKibble]] has a concise and wise [[https://www.reddit.com/r/emacs/comments/7vcrwo/helm_vs_ivy_what_are_the_differences_what_are_the/dtrc7v5/][comment]] on the comparison between Helm and Ivy:
+#+BEGIN_QUOTE
+...[T]o me, Helm feels like a replacement for the Emacs UI I’m used to, while Ivy feels like a refinement of it.
+#+END_QUOTE
+For me Helm fits me better because:
+1. I'm new to Emacs anyway, there is no such Emacs UI that I'm used to.
+2. During my Vim era I use Shougo's wonderful plugins Unite/Denite, which mimics the logic of Helm, so switching to Emacs with Helm mostly does not require switching my mind model for how to find things.
+3. Ivy is new compared with Helm, so it does not have as many add-ons available as Helm.
+** Helm
+[[github:emacs-helm/helm][Helm]] is a generic incremental completion and selection narrowing framework for Emacs, as what Denite is for [Neo]vim. I currently does not set Helm to be auto-installed, so just install it with =M-x package-install RET helm RET=.
+#+BEGIN_SRC emacs-lisp
+  (use-package helm-config
+    :demand t
+    :general
+    ([remap find-file] 'helm-find-files)
+    ([remap occur] 'helm-occur)
+    ([remap list-buffers] 'helm-buffers-list)
+    ([remap dabbrev-expand] 'helm-dabbrev)
+    ([remap execute-extended-command] 'helm-M-x)
+    :init
+    (unless (boundp 'completion-in-region-function)
+      (general-def lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
+      (general-def emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point)))
+#+END_SRC
+
+Turn on helm
+#+BEGIN_SRC emacs-lisp
+  (use-package helm-mode
+    :config
+    (helm-mode 1))
+#+END_SRC
+*** swiper-helm
+[[github:abo-abo/swiper-helm][swiper-helm]] is a Helm version of [[*swiper][swiper]]. That is, it use Helm as the backend instead of Ivy.
+#+BEGIN_SRC emacs-lisp
+  (use-package swiper-helm
+    :ensure t
+    :after (helm-config swiper)
+    :general ("C-s" 'swiper-helm))
+#+END_SRC
+** Ivy
+[[github:abo-abo/swiper#ivy][ivy]] is yet another generic incremental completion for Emacs.
+
+I don't use heavily on ivy anymore, but I still have it because its the dependency of swiper:
+#+BEGIN_SRC emacs-lisp
+  (use-package ivy
+    :custom
+    (ivy-count-format "(%d/%d) " "the style for displaying current candidate count")
+    ;; (enable-recursive-minibuffers t "allow minibuffer cmd in minibuffer")
+    )
+
+  ;; (use-package counsel
+  ;;   :ensure t
+  ;;   :requires ivy
+  ;;   )
+
+  ;; (use-package ivy-rich
+  ;;   :ensure t
+  ;;   :requires ivy
+  ;;   :init
+  ;;   (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+  ;;   :config
+  ;;   (ivy-rich-mode 1))
+#+END_SRC
+
+*** swiper
+[[github:swiper#swiper][swiper]] is an alternative to Emacs' builtin [[info:emacs#Basic%20Isearch][isearch]]. I use this over other alternatives because it has better integration by default with Evil's (or Vim's) search/substitution system.
+#+BEGIN_SRC emacs-lisp
+  (use-package swiper
+    :ensure t
+    :demand t
+    :after ivy
+    :commands (swiper swiper-backward))
+#+END_SRC
+* Org Mode
+From its website
+#+BEGIN_QUOTE
+Org mode is for keeping notes, maintaining TODO lists, planning projects, and authoring documents with a fast and effective plain-text system.
+#+END_QUOTE
+this is only a facial overall summary of what [[https://orgmode.org][org-mode]] is usually used for. It is so powerful that It is one of the reasons I switched from Neovim to Emacs.
+
+Emacs shipped with a relatively old version of =org-mode=, but many MELPA packages depends on the nightly version, thus I'll usually get the newest one from its own archive via =package-install=.
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :general
+    ("C-c l"  'org-store-link)
+    ("C-c a"  'org-agenda)
+    ("C-c c"  'org-capture))
+#+END_SRC
+
+And of course, its Evil integration:
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-org
+    :ensure t
+    :after (org evil)
+    :hook
+    (org-mode . evil-org-mode)
+    :config
+    (evil-org-set-key-theme)
+    (require 'evil-org-agenda)
+    (evil-org-agenda-set-keys))
+#+END_SRC
+* Magit
+[[github:magit/magit][magit]] is an Emacs interface to git, which provides not only commands to call but also a full GUI-like wrapper around git.
+#+BEGIN_SRC emacs-lisp
+  (use-package magit
+    :ensure t)
+#+END_SRC
+
+Its Evil integration:
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-magit
+    :ensure t
+    :after (evil magit))
+#+END_SRC
