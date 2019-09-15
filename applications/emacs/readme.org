@@ -194,7 +194,9 @@ There is not much config for general yet, besides enable it I simply turn on its
     :config
     (general-evil-setup))
 #+END_SRC
-** Hercules                                                       :disabled:
+** Hercules
+- Note taken on [2019-09-15 Sun 13:59] \\
+  It does not work too well with ~evil-window-map~, even if =which-key= is set to use minibuffer.
 #+BEGIN_QUOTE
 An auto-magical, =which-key= based =hydra= banisher.
 ...
@@ -202,22 +204,10 @@ If only there was a way to make a =hydra= without having to list all the binding
 Kind of like =which-key=…
 #+END_QUOTE
 Did you get the idea what [[jjzmajic/hercules.el][hercules]] is used for? neither do I (at the first glance)! In short, by using the power of [[github:justbur/emacs-which-key][which-key]], =hercules= can build a =hydra= when given a keymap.
-
-This seems nice, however it has some problem: probably because it's new, there is no easy way to let the hydra die for every heads it has. Thus currently I'm not using hercules but =which-key= and =hydra= instead.
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
   (use-package hercules
     :ensure t
-    :after (general helm-config)
-    :config
-    (hercules-def
-     :show-funs #'org-babel-enter
-     :hide-funs '(org-babel-exit org-babel-tangle)
-     :keymap 'org-babel-map
-     :transient t
-     :config '(general-def
-                :prefix-map 'org-babel-map
-                "q" #'org-babel-exit))
-    (general-def org-mode-map "C-c C-v" #'org-babel-enter))
+    :after general)
 #+END_SRC
 ** Evil
 It's name tells everything: the Extensible Vi Layer for Emacs, [[github:emacs-evil/evil][Evil]]. It works pretty well as a Vim simulation, much better than VsCode's or Intellij's. Besides, it is charming combination of Vim's model-based editing with Emacs' keymap system, to some extent, as a personal opinion, better than the native Vim on the model-based editing system.
@@ -420,7 +410,17 @@ Emacs shipped with a relatively old version of =org-mode=, but many MELPA packag
     (my-leader-def 'normal
       "l"  'org-store-link
       "a"  'org-agenda
-      "c"  'org-capture))
+      "c"  'org-capture)
+    :config
+    (hercules-def
+     :show-funs #'org-babel-enter
+     :hide-funs '(org-babel-exit org-babel-tangle)
+     :keymap 'org-babel-map
+     :transient t
+     :config '(general-def
+                :prefix-map 'org-babel-map
+                "q" #'org-babel-exit))
+    (general-def org-mode-map "C-c C-v" #'org-babel-enter))
 #+END_SRC
 
 And of course, its Evil integration:
