@@ -5,6 +5,14 @@
 #+LINK: github https://www.github.com/%s
 #+LINK: gitlab https://gitlab.com/%s
 
+Here is a list of blogs / configurations that I've grabbed code from or absorbed ideas from. All of them worth reading.
++ [[https://github.com/zzamboni/dot-emacs/blob/master/init.org][zzamboni's Emacs config file]]
++ [[https://github.com/rafadc/emacs.d/blob/master/settings.org][Rafa’s Emacs settings file]]
++ [[https://ladicle.com/post/config/][Ladicle's Emacs Configuration]]
++ [[https://jamiecollinson.com/blog/my-emacs-config/][Jamie Collinson's Emacs Config]]
++ [[https://github.com/munen/emacs.d/blob/master/configuration.org][munen's Emacs configuration]]
++ [[https://karl-voit.at/2017/06/03/emacs-org/][Karl Voit's Emacs Configuration In Org-mode]] and the [[https://github.com/novoid/dot-emacs][repo]]
+
 * General Settings
 ** Coding and Languages
 Use Utf-8 as the default coding system.
@@ -211,6 +219,9 @@ Did you get the idea what [[jjzmajic/hercules.el][hercules]] is used for? neithe
 #+END_SRC
 ** Evil
 It's name tells everything: the Extensible Vi Layer for Emacs, [[github:emacs-evil/evil][Evil]]. It works pretty well as a Vim simulation, much better than VsCode's or Intellij's. Besides, it is charming combination of Vim's model-based editing with Emacs' keymap system, to some extent, as a personal opinion, better than the native Vim on the model-based editing system.
+
+References:
++ [[https://github.com/noctuid/evil-guide][evil-guide]] by noctuid
 #+BEGIN_SRC emacs-lisp
   (use-package evil
     :ensure t
@@ -332,6 +343,10 @@ For me Helm fits me better because:
 3. Ivy is new compared with Helm, so it does not have as many add-ons available as Helm.
 ** Helm
 [[github:emacs-helm/helm][Helm]] is a generic incremental completion and selection narrowing framework for Emacs, as what Denite is for [Neo]vim. I currently does not set Helm to be auto-installed, so just install it with =M-x package-install RET helm RET=.
+
+References:
++ [[https://github.com/thierryvolpiatto/emacs-tv-config/blob/master/init-helm.el][thierryvolpiatto's helm config]].
++ [[https://tuhdo.github.io/helm-intro.html][A Package in a league of its own: =Helm=]] by Tu Do (tuhdo)
 #+BEGIN_SRC emacs-lisp
   (use-package helm-config
     :demand t
@@ -403,42 +418,129 @@ Org mode is for keeping notes, maintaining TODO lists, planning projects, and au
 this is only a facial overall summary of what [[https://orgmode.org][org-mode]] is usually used for. It is so powerful that It is one of the reasons I switched from Neovim to Emacs.
 
 Emacs shipped with a relatively old version of =org-mode=, but many MELPA packages depends on the nightly version, thus I'll usually get the newest one from its own archive via =package-install=.
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :noweb yes
   (use-package org
-    :hook (org-mode . visual-line-mode)
+    :pin org
+    :ensure t
+    :demand t
+    :custom-face
+    (variable-pitch ((t (:family "Sans serif" :weight normal))))
+    (fixed-pitch ((t (:family "monospace"))))
+    :hook
+    (org-mode . visual-line-mode)
+    (org-mode . variable-pitch-mode)
+    :init
+    <<org-mode-init>>
     :general
-    (my-leader-def 'normal
-      "l"  'org-store-link
-      "a"  'org-agenda
-      "c"  'org-capture)
+    <<org-mode-general>>
     :config
-    (hercules-def
-     :show-funs #'org-babel-enter
-     :hide-funs '(org-babel-exit org-babel-tangle)
-     :keymap 'org-babel-map
-     :transient t
-     :config '(general-def
-                :prefix-map 'org-babel-map
-                "q" #'org-babel-exit))
-    (general-def org-mode-map "C-c C-v" #'org-babel-enter))
+    <<org-mode-config>>)
 #+END_SRC
 
-And of course, its Evil integration:
-#+BEGIN_SRC emacs-lisp
+** general keybindings
+Global keybindings as recommended in [[https://orgmode.org/manual/Activation.html#Activation][Org Manual]]:
+#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref org-mode-general
+  (my-leader-def 'normal
+    "l"  'org-store-link
+    "a"  'org-agenda
+    "c"  'org-capture)
+#+END_SRC
+
+And of course, =org-mode='s Evil integration:
+#+BEGIN_SRC emacs-lisp :noweb yes
   (use-package evil-org
     :ensure t
     :after (org evil)
     :hook
-    (org-mode . evil-org-mode)
+    (org-mode . (lambda () (evil-org-mode 1)))
     :general
-    (org-src-mode-map [remap evil-write] 'org-edit-src-save)
-    (general-nmap org-mode-map [remap evil-next-line] 'evil-next-visual-line)
-    (general-nmap org-mode-map [remap evil-previous-line] 'evil-previous-visual-line)
+    <<evil-org-general>>
     :config
     (evil-org-set-key-theme)
     (require 'evil-org-agenda)
     (evil-org-agenda-set-keys))
 #+END_SRC
+
+Here are some evil-specific bindings:
+#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref evil-org-general
+  (org-src-mode-map [remap evil-write] 'org-edit-src-save)
+  (general-nmap org-mode-map [remap evil-next-line] 'evil-next-visual-line)
+  (general-nmap org-mode-map [remap evil-previous-line] 'evil-previous-visual-line)
+#+END_SRC
+** babel
+References:
++ [[https://orgmode.org/worg/org-contrib/babel/intro.html][Babel: Introduction]] in worg/org-contrib
++ [[https://orgmode.org/manual/Working-with-Source-Code.html#Working-with-Source-Code][Working with Source Code]] from =org-mode='s manual
++ [[https://howardism.org/Technical/Emacs/literate-programming-tutorial.html][Introduction to Literate Programming]] by Howard Abrams
+I declared a hydra for =org-babel= to make things easier:
+#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref org-mode-config
+  (hercules-def
+   :show-funs #'org-babel-enter
+   :hide-funs '(org-babel-exit org-babel-tangle)
+   :keymap 'org-babel-map
+   :transient t
+   :config '(general-def
+              :prefix-map 'org-babel-map
+              "q" #'org-babel-exit))
+  (general-def org-mode-map "C-c C-v" #'org-babel-enter)
+#+END_SRC
+** style and faces
+This part of code is basically grabbed from [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][Beautifying Org Mode in Emacs]] by zzamboni.
+
+Hide ===, =~= and other emphasis markers, and fontify src block natively:
+#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-hide-emphasis-markers t)
+  (general-setq org-src-fontify-natively t)
+#+END_SRC
+
+Use =org-bullets= to replace =*= with some cool unicode symbol:
+#+begin_src emacs-lisp
+  (use-package org-bullets
+    :after org
+    :hook
+    (org-mode . (lambda () (org-bullets-mode 1))))
+#+end_src
+
+Use different font-size for headers, use sans-serif for non-code-like parts (powered by Emacs!), while still keeping code-like part using monospace font. 
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-config
+  (when (display-graphic-p)
+    (let* ((variable-tuple
+            (cond 
+             ((x-list-fonts   "Lucida Grande")   '(:font   "Lucida Grande"))
+             ((x-list-fonts   "Verdana")         '(:font   "Verdana"))
+             ((x-family-fonts "Sans Serif")      '(:family "Sans Serif"))
+             (nil (warn "Cannot find a Sans Serif Font."))))
+           (base-font-color (face-foreground 'default nil 'default))
+           (headline       `(:inherit default :weight bold )))
+
+      (custom-theme-set-faces
+       'user
+       `(org-level-8        ((t (,@headline ,@variable-tuple))))
+       `(org-level-7        ((t (,@headline ,@variable-tuple))))
+       `(org-level-6        ((t (,@headline ,@variable-tuple))))
+       `(org-level-5        ((t (,@headline ,@variable-tuple))))
+       `(org-level-4        ((t (,@headline ,@variable-tuple :height 1.1))))
+       `(org-level-3        ((t (,@headline ,@variable-tuple :height 1.25))))
+       `(org-level-2        ((t (,@headline ,@variable-tuple :height 1.5))))
+       `(org-level-1        ((t (,@headline ,@variable-tuple :height 1.75))))
+       `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))
+       `(variable-pitch ((t ,@variable-tuple :weight light)))
+       `(fixed-pitch ((t ( :font "DejaVuSansMono Nerd Font Mono" :weight normal :height 1.0 :width normal))))))
+    (custom-theme-set-faces
+     'user
+     '(org-block                 ((t (:inherit fixed-pitch))))
+     '(org-document-info         ((t (:foreground "dark orange"))))
+     '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+     '(org-link                  ((t (:foreground "royal blue" :underline t))))
+     '(org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+     '(org-property-value        ((t (:inherit fixed-pitch))) t)
+     '(org-block-begin-line      ((t (:inherit fixed-pitch :weight bold))) t)
+     '(org-block-end-line        ((t (:inherit fixed-pitch :weight bold))) t)
+     '(org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+     '(org-tag                   ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
+     '(org-verbatim              ((t (:inherit (shadow fixed-pitch)))))
+     '(org-indent                ((t (:inherit (org-hide fixed-pitch)))))))
+#+end_src
 * Magit
 [[github:magit/magit][magit]] is an Emacs interface to git, which provides not only commands to call but also a full GUI-like wrapper around git.
 #+BEGIN_SRC emacs-lisp
