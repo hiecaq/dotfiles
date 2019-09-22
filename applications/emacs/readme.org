@@ -17,14 +17,14 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
 * General Settings
 ** Coding and Languages
 Use Utf-8 as the default coding system.
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (set-language-environment "UTF-8")
   (prefer-coding-system 'utf-8-unix)
-#+END_SRC
+#+end_src
 
 ** Tangle =init.el=
 When there is no =init.el= tangled yet, run =C-c= on this block to generate the first =init.el=.
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (let ((src (concat user-emacs-directory "readme.org"))
         (dst (concat user-emacs-directory "init.el")))
     (when (file-newer-than-file-p src dst)
@@ -36,19 +36,19 @@ When there is no =init.el= tangled yet, run =C-c= on this block to generate the 
     ;; (require 'bytecomp)
     ;; (byte-recompile-file dst nil 0 t)
     )
-#+END_SRC
+#+end_src
 
 ** Some helpful defaults
 I don't know if there is any who would like the wierd tab-space-hybird indent mode.
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq-default indent-tabs-mode nil)
-#+END_SRC
+#+end_src
 
 * Platform Specific
 This part contains code specific to platforms, usually UI or PATH related.
 
 Here is specific config for each OS:
-#+BEGIN_SRC emacs-lisp :noweb no-export
+#+begin_src emacs-lisp :noweb no-export
   (cond ((eq system-type 'windows-nt)
          <<Windows>>
          )
@@ -58,25 +58,26 @@ Here is specific config for each OS:
         ((eq system-type 'gnu/linux)
          <<Linux>>
          ))
-#+END_SRC
+#+end_src
 
 Here is specific config for each UI:
-#+BEGIN_SRC emacs-lisp :noweb no-export
+#+begin_src emacs-lisp :noweb no-export
   (cond ((display-graphic-p)
          <<Graphic>>
          )
         (t
          <<Console>>
          ))
-#+END_SRC
+#+end_src
 
 ** All platforms
 This is the code snippet that should be shared among all platforms.
 
 It is reasonable to just turn off menu bar because I want to go mouse-less.
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (menu-bar-mode -1)
-#+END_SRC
+  (column-number-mode 1)
+#+end_src
 
 ** MacOS
 :PROPERTIES:
@@ -101,14 +102,14 @@ I don't have specific code for Linux yet.
 :header-args:emacs-lisp: :tangle no :noweb-ref Graphic
 :END:
 Turn off blink cursor, scroll bar and tool bar:
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (blink-cursor-mode -1)
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
-#+END_SRC
+#+end_src
 
 Setting faces:
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (set-face-attribute 'default nil :height 140)
   (set-face-attribute 'default nil :font "DejaVuSansMono Nerd Font")
   (set-face-attribute 'variable-pitch nil :weight 'normal :inherit 'default)
@@ -118,7 +119,7 @@ Setting faces:
       ((x-family-fonts "Sans Serif")      (set-face-attribute 'variable-pitch nil :family "Sans Serif"))
       (nil (warn "Cannot find a Sans Serif Font.")))
   (set-face-attribute 'fixed-pitch nil :inherit 'default)
-#+END_SRC
+#+end_src
 
 ** TUI
 :PROPERTIES:
@@ -129,50 +130,50 @@ I don't have specific code for TUI yet.
 * Package Management
 ** Proxy, Archives and Mirrors
 I use my local proxy to speed up paradox:
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq url-proxy-services '(("no_proxy" . "^\\(localhost\\|10\\..*\\|192\\.168\\..*\\)")
                              ("http" . "127.0.0.1:8118")
                              ("https" . "127.0.0.1:8118")))
-#+END_SRC
+#+end_src
 
 And also, set package archive to include ELPA, MELPA and org's, with TUNA's mirror:
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
                            ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
                            ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
-#+END_SRC
+#+end_src
 
 ** Initialization
 From [[help:package-initialize]]:
-#+BEGIN_QUOTE
+#+begin_quote
 If called as part of loading ‘user-init-file’, set
 ‘package-enable-at-startup’ to nil, to prevent accidentally loading
 packages twice.
-#+END_QUOTE
+#+end_quote
 Thus, I use the following block to load packages:
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq package-enable-at-startup nil)
   (package-initialize)
-#+END_SRC
+#+end_src
 
 ** Use-package
 [[github:jwiegley/use-package][use-package]] is a wonderful package configuration helper (and not a package manager!). If it is not available in the current system, use =M-x package-install RET use-package RET= to fetch it from MELPA.
 
 Now load =use-package=:
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (eval-when-compile
     (require 'use-package))
-#+END_SRC
+#+end_src
 
 Also, I'd like to turn on =use-package='s statistic recording to see if my config is correctly set up:
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq use-package-compute-statistics t)
-#+END_SRC
+#+end_src
 ** Paradox
 [[github:Malabarba/paradox][Paradox]] is a modernlized emacs' package menu that supports displaying github stars along the entries, filtering and sorting, async installation, etc.
 
 I disabled the github integration because it doesn't seem to work on my machines.
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package paradox
     :ensure t
     :commands paradox-list-packages
@@ -181,36 +182,36 @@ I disabled the github integration because it doesn't seem to work on my machines
     (paradox-automatically-star nil)
     :config
     (paradox-enable))
-#+END_SRC
+#+end_src
 
 * Colors
 I'm currently using the emacs port of my vim era favorite, gruvbox:
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package gruvbox-theme
     :ensure t
     :config
     (load-theme 'gruvbox t))
-#+END_SRC
+#+end_src
 
 * Key Bindings
 References:
 1. [[https://sam217pa.github.io/2016/09/23/keybindings-strategies-in-emacs/][Keybindings strategies in Emacs]] by Samuel Barreto.
 ** Which-key
 [[github:justbur/emacs-which-key][which-key]] is a minor mode that hints you the keybindings prefixed with what you have typed when you get stucked.
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package which-key
     :ensure t
     :config
     (which-key-mode +1))
-#+END_SRC
+#+end_src
 ** General
-#+BEGIN_QUOTE
+#+begin_quote
 A general is a leader. – onioncheese
-#+END_QUOTE
+#+end_quote
 [[github:noctuid/general.el][General]] is a, well, general-purpose key-binding interface for emacs.
 
 There is not much config for general yet, besides enable it I simply turn on its [[*Evil][Evil]] integration:
-#+BEGIN_SRC emacs-lisp :noweb yes
+#+begin_src emacs-lisp :noweb yes
   (use-package general
     :ensure t
     :after which-key
@@ -218,28 +219,28 @@ There is not much config for general yet, besides enable it I simply turn on its
     (general-evil-setup)
     <<general-config>>
     )
-#+END_SRC
+#+end_src
 ** Hercules
 - Note taken on [2019-09-15 Sun 13:59] \\
   It does not work too well with ~evil-window-map~, even if =which-key= is set to use minibuffer.
-#+BEGIN_QUOTE
+#+begin_quote
 An auto-magical, =which-key= based =hydra= banisher.
 ...
 If only there was a way to make a =hydra= without having to list all the bindings explicitly…
 Kind of like =which-key=…
-#+END_QUOTE
+#+end_quote
 Did you get the idea what [[jjzmajic/hercules.el][hercules]] is used for? neither do I (at the first glance)! In short, by using the power of [[github:justbur/emacs-which-key][which-key]], =hercules= can build a =hydra= when given a keymap.
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package hercules
     :ensure t
     :after general)
-#+END_SRC
+#+end_src
 ** Evil
 It's name tells everything: the Extensible Vi Layer for Emacs, [[github:emacs-evil/evil][Evil]]. It works pretty well as a Vim simulation, much better than VsCode's or Intellij's. Besides, it is charming combination of Vim's model-based editing with Emacs' keymap system, to some extent, as a personal opinion, better than the native Vim on the model-based editing system.
 
 References:
 + [[https://github.com/noctuid/evil-guide][evil-guide]] by noctuid
-#+BEGIN_SRC emacs-lisp :noweb yes
+#+begin_src emacs-lisp :noweb yes
   (use-package evil
     :ensure t
     :demand t
@@ -249,51 +250,51 @@ References:
     <<evil-mode-general>>
     :config
     (evil-mode 1))
-#+END_SRC
+#+end_src
 
 I don't want to use Vim's insert mode bindings in insert state:
-#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref evil-mode-init
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-init
   (general-setq evil-disable-insert-state-bindings t)
-#+END_SRC
+#+end_src
 
 Then, given that I'm using emacs' bindings in insert state, there is no point to use the emacs state which is so hard to escape from:
-#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref evil-mode-general
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-general
   ([remap evil-emacs-state] 'evil-normal-state)
-#+END_SRC
+#+end_src
 
 [[github:christoomey/vim-tmux-navigator][vim-tmux-navigator]]-like window control:
-#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref evil-mode-general
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-general
   (general-nmap "C-j" 'evil-window-down)
   (general-nmap "C-k" 'evil-window-up)
   (general-nmap "C-h" 'evil-window-left)
   (general-nmap "C-l" 'evil-window-right)
-#+END_SRC
+#+end_src
 It's okay to rebind =C-h= because =<F1>= basically does the same thing.
 
 =swiper= has a nice evil integration such that =/= =?= can be replaced with ~'swiper~ ~'swiper-backward~ respectively:
-#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref evil-mode-general
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-general
   ([remap evil-ex-search-forward] 'swiper)
   ([remap evil-ex-search-backward] 'swiper-backward)
-#+END_SRC
+#+end_src
 
  Somehow =n/N= only jump backward with swiper unless this is set:
-#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref evil-mode-init
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-init
   (general-setq evil-search-module 'evil-search)
-#+END_SRC
+#+end_src
 
 I use =C-c= as my =leader=:
-#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref general-config
+#+begin_src emacs-lisp :tangle no :noweb-ref general-config
   (general-create-definer my/leader-def
     ;; :prefix my-leader
     :prefix "C-c")
-#+END_SRC
+#+end_src
 This is a trick where I remap =SPC= to =C-c=, my leader key. In this way, I wrapped all the mode-defined =C-c= prefixed keybindings (they are not _supposed_ to do so btw) as if they were my leader key prefixed, so that when I type =SPC=, =which-key= will show up all of them.
-#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref evil-mode-general
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-general
   (general-nvmap "SPC" (general-simulate-key "C-c"))
-#+END_SRC
+#+end_src
 
 Bring my two of my old vim keybindings back, which open newline above/below current line without entering insert state:
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defun my/insert-line-below ()
     "Insert an empty line below the current line."
     (interactive)
@@ -307,17 +308,17 @@ Bring my two of my old vim keybindings back, which open newline above/below curr
       (end-of-line 0)
       (open-line 1)
       (next-line))
-#+END_SRC
+#+end_src
 I use =<leader>o= and =<leader>O= for them because they are close to =o= and =O= respectively:
-#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref evil-mode-general
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-general
   (my/leader-def 'normal
     "o" '(my/insert-line-below :which-key t)
     "O" '(my/insert-line-above :which-key t))
-#+END_SRC
+#+end_src
 
 *** evil-collection
 [[github:emacs-evil/evil-collection][evil-collection]] is a collection of helper functions / settings / etc for things native Evil does bad on.
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package evil-collection
     :after evil 
     :ensure t
@@ -328,18 +329,18 @@ I use =<leader>o= and =<leader>O= for them because they are close to =o= and =O=
     (evil-collection-init 'dired)
     (evil-collection-init 'minibuffer)
     (evil-collection-init 'helm))
-#+END_SRC
+#+end_src
 
 #+begin_quote
 =evil-collection= assumes ~evil-want-keybinding~ is set to =nil= and ~evil-want-integration~ is set to =t= before loading =evil= and =evil-collection=.
 #+end_quote
-#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref evil-mode-init
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-init
   (general-setq evil-want-integration t)
   (general-setq evil-want-keybinding nil)
-#+END_SRC
+#+end_src
 *** evil-easymotion
 [[github:PythonNut/evil-easymotion][evil-easymotion]] is a Evil port of Vim's, well, =easymotion=, which basically works in a way that instead of numbering how many jumps needed, by prefixing motions with a leader key, we use visual hint to go to the place we want. I hadn't tried =easymotion= during my Vim era though, but I like it now. It also provides integration with [[*evil-snipe][evil-snipe]].
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package evil-easymotion
     :ensure t
     :demand t
@@ -367,10 +368,10 @@ I use =<leader>o= and =<leader>O= for them because they are close to =o= and =O=
       "n" '(evilem-motion-search-next :which-key t)
       "N" '(evilem-motion-search-previous :which-key t)
       "g" '(:ignore t :which-key t)))
-#+END_SRC
+#+end_src
 *** evil-snipe
 [[github:hlissner/evil-snipe][evil-snipe]] is a Evil port of Vim's =clever-f= and =vim-sneak=. It currently does not support separating the scope for =f/F/t/T= from for =s/S=, which is a little bit annoying.
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package evil-snipe
     :ensure t
     :demand t
@@ -386,25 +387,25 @@ I use =<leader>o= and =<leader>O= for them because they are close to =o= and =O=
     :config
     (evil-snipe-mode +1)
     (evil-snipe-override-mode +1))
-#+END_SRC
+#+end_src
 
 **** evil-find-char-pinyin
 [[github:cute-jumper/evil-find-char-pinyin][evil-find-char-pinyin]] is a helper plugin that allow =evil-snipe= to search for Chinese characters with their initial pinyins. For example, with this plugin =smt= could find 明天.
 
 This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for its integration with =evil-snipe='s motions.
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package evil-find-char-pinyin
     :ensure t
     :after (evil evil-snipe)
     :config
     (evil-find-char-pinyin-toggle-snipe-integration t)
     (evil-find-char-pinyin-mode +1))
-#+END_SRC
+#+end_src
 * UI Enhance
 [[https://www.reddit.com/user/GummyKibble/][u/GummyKibble]] has a concise and wise [[https://www.reddit.com/r/emacs/comments/7vcrwo/helm_vs_ivy_what_are_the_differences_what_are_the/dtrc7v5/][comment]] on the comparison between Helm and Ivy:
-#+BEGIN_QUOTE
+#+begin_quote
 ...[T]o me, Helm feels like a replacement for the Emacs UI I’m used to, while Ivy feels like a refinement of it.
-#+END_QUOTE
+#+end_quote
 For me Helm fits me better because:
 1. I'm new to Emacs anyway, there is no such Emacs UI that I'm used to.
 2. During my Vim era I use Shougo's wonderful plugins Unite/Denite, which mimics the logic of Helm, so switching to Emacs with Helm mostly does not require switching my mind model for how to find things.
@@ -415,7 +416,7 @@ For me Helm fits me better because:
 References:
 + [[https://github.com/thierryvolpiatto/emacs-tv-config/blob/master/init-helm.el][thierryvolpiatto's helm config]].
 + [[https://tuhdo.github.io/helm-intro.html][A Package in a league of its own: =Helm=]] by Tu Do (tuhdo)
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package helm-config
     :demand t
     :general
@@ -428,27 +429,27 @@ References:
     (unless (boundp 'completion-in-region-function)
       (general-def lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
       (general-def emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point)))
-#+END_SRC
+#+end_src
 
 Turn on helm
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package helm-mode
     :config
     (helm-mode 1))
-#+END_SRC
+#+end_src
 *** swiper-helm
 [[github:abo-abo/swiper-helm][swiper-helm]] is a Helm version of [[*swiper][swiper]]. That is, it use Helm as the backend instead of Ivy.
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package swiper-helm
     :ensure t
     :after (helm-config swiper)
     :general ("C-s" 'swiper-helm))
-#+END_SRC
+#+end_src
 ** Ivy
 [[github:abo-abo/swiper#ivy][ivy]] is yet another generic incremental completion for Emacs.
 
 I don't use heavily on ivy anymore, but I still have it because its the dependency of swiper:
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package ivy
     :custom
     (ivy-count-format "(%d/%d) " "the style for displaying current candidate count")
@@ -467,26 +468,83 @@ I don't use heavily on ivy anymore, but I still have it because its the dependen
   ;;   (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
   ;;   :config
   ;;   (ivy-rich-mode 1))
-#+END_SRC
+#+end_src
 
 *** swiper
 [[github:swiper#swiper][swiper]] is an alternative to Emacs' builtin [[info:emacs#Basic%20Isearch][isearch]]. I use this over other alternatives because it has better integration by default with Evil's (or Vim's) search/substitution system.
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package swiper
     :ensure t
     :demand t
     :after ivy
+    :general
+    (general-imap ivy-minibuffer-map "C-p" 'ivy-previous-line)
+    (general-imap ivy-minibuffer-map "C-n" 'ivy-next-line)
     :commands (swiper swiper-backward))
-#+END_SRC
+#+end_src
+* Templates
+Templates are always good time savers.
+Reference:
+[[http://www.howardism.org/Technical/Emacs/templates-tutorial.html][Having Emacs Type for You]] by Howard Abrams
+** Yasnippet
+[[github:joaotavora/yasnippet][yasnippet]] is a template system for Emacs.
+#+begin_src emacs-lisp
+  (use-package yasnippet
+    :ensure t
+    :demand t
+    :config
+    (yas-global-mode 1))
+#+end_src
+
+* Completion
+By completion I mean general text/code autocompletion, as Vim's =deoplete=.
+** Company
+[[https://company-mode.github.io/][company]] seems the most widely-used text completion framework among the Emacs ecosystem.
+#+begin_src emacs-lisp
+  (use-package company
+    :ensure t
+    :demand t
+    :init
+    (general-setq company-auto-complete t)
+    (general-setq company-auto-complete-chars '(32 40 41 46))
+    (general-setq company-require-match nil)
+    (general-setq company-idle-delay nil)
+    :general
+    (general-unbind company-active-map
+      "M-n"
+      "M-p")
+    (company-active-map "C-n" 'company-select-next
+                        "C-p" 'company-select-previous
+                        "C-h" 'company-quickhelp-manual-begin
+                        "ESC" 'company-abort)
+    (general-imap
+      "C-n" 'company-select-next
+      "C-p" 'company-select-previous)
+    :config
+    (global-company-mode))
+#+end_src
+
+** Company-quickhelp
+[[github:expez/company-quickhelp][company-quickhelp]] is an add-on for =company= that make use of =popup-el=, which will show doc for current selected entry in a popup view.
+#+begin_src emacs-lisp
+  (use-package company-quickhelp
+    :ensure t
+    :after company
+    :init
+    (general-setq company-quickhelp-delay nil)
+    :config
+    (company-quickhelp-mode))
+#+end_src
+
 * Org Mode
 From its website
-#+BEGIN_QUOTE
+#+begin_quote
 Org mode is for keeping notes, maintaining TODO lists, planning projects, and authoring documents with a fast and effective plain-text system.
-#+END_QUOTE
+#+end_quote
 this is only a facial overall summary of what [[https://orgmode.org][org-mode]] is usually used for. It is so powerful that It is one of the reasons I switched from Neovim to Emacs.
 
 Emacs shipped with a relatively old version of =org-mode=, but many MELPA packages depends on the nightly version, thus I'll usually get the newest one from its own archive via =package-install=.
-#+BEGIN_SRC emacs-lisp :noweb yes
+#+begin_src emacs-lisp :noweb yes
   (use-package org
     :pin org
     :ensure t
@@ -502,19 +560,19 @@ Emacs shipped with a relatively old version of =org-mode=, but many MELPA packag
     <<org-mode-face>>
     :config
     <<org-mode-config>>)
-#+END_SRC
+#+end_src
 
 ** general keybindings
 Global keybindings as recommended in [[https://orgmode.org/manual/Activation.html#Activation][Org Manual]]:
-#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref org-mode-general
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-general
   (my/leader-def 'normal
     "l"  'org-store-link
     "a"  'org-agenda
     "c"  'org-capture)
-#+END_SRC
+#+end_src
 
 And of course, =org-mode='s Evil integration:
-#+BEGIN_SRC emacs-lisp :noweb yes
+#+begin_src emacs-lisp :noweb yes
   (use-package evil-org
     :ensure t
     :after (org evil)
@@ -528,21 +586,21 @@ And of course, =org-mode='s Evil integration:
     (evil-org-set-key-theme)
     (require 'evil-org-agenda)
     (evil-org-agenda-set-keys))
-#+END_SRC
+#+end_src
 
 Here are some evil-specific bindings:
-#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref evil-org-general
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-org-general
   (org-src-mode-map [remap evil-write] 'org-edit-src-save)
   (general-nmap org-mode-map [remap evil-next-line] 'evil-next-visual-line)
   (general-nmap org-mode-map [remap evil-previous-line] 'evil-previous-visual-line)
-#+END_SRC
+#+end_src
 ** babel
 References:
 + [[https://orgmode.org/worg/org-contrib/babel/intro.html][Babel: Introduction]] in worg/org-contrib
 + [[https://orgmode.org/manual/Working-with-Source-Code.html#Working-with-Source-Code][Working with Source Code]] from =org-mode='s manual
 + [[https://howardism.org/Technical/Emacs/literate-programming-tutorial.html][Introduction to Literate Programming]] by Howard Abrams
 I declared a hydra for =org-babel= to make things easier:
-#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref org-mode-config
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-config
   (hercules-def
    :show-funs #'org-babel-enter
    :hide-funs '(org-babel-exit org-babel-tangle)
@@ -552,16 +610,16 @@ I declared a hydra for =org-babel= to make things easier:
               :prefix-map 'org-babel-map
               "q" #'org-babel-exit))
   (general-def org-mode-map "C-c C-v" #'org-babel-enter)
-#+END_SRC
+#+end_src
 ** style and faces
 This part of code is basically grabbed from [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][Beautifying Org Mode in Emacs]] by zzamboni.
 
 Hide ===, =~= and other emphasis markers, and fontify src block natively:
-#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref org-mode-init
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
   (general-setq org-hide-emphasis-markers t)
   (general-setq org-src-fontify-natively t)
   (general-setq org-tags-column 0)
-#+END_SRC
+#+end_src
 
 Use =org-bullets= to replace =*= with some cool unicode symbol. This seems super slow on Windows.
 #+begin_src emacs-lisp :tangle (unless (eq system-type 'windows-nt) (concat user-emacs-directory "init.el"))
@@ -600,14 +658,15 @@ Use different font-size for headers, use sans-serif for non-code-like parts (pow
 #+end_src
 * Magit
 [[github:magit/magit][magit]] is an Emacs interface to git, which provides not only commands to call but also a full GUI-like wrapper around git.
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package magit
     :ensure t)
-#+END_SRC
+#+end_src
 
 Its Evil integration:
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package evil-magit
     :ensure t
     :after (evil magit))
-#+END_SRC
+#+end_src
+
