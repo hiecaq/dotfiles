@@ -2,8 +2,9 @@
 #+PROPERTY: header-args :comments org :results silent
 #+PROPERTY: header-args:emacs-lisp :tangle (concat user-emacs-directory "init.el")
 #+STARTUP: indent
-#+LINK: github https://www.github.com/%s
 #+LINK: gitlab https://gitlab.com/%s
+#+LINK: github https://www.github.com/%s
+
 
 Here is a list of blogs / configurations that I've grabbed code from or absorbed ideas from. All of them worth reading.
 + [[https://github.com/zzamboni/dot-emacs/blob/master/init.org][zzamboni's Emacs config file]]
@@ -106,6 +107,19 @@ Turn off blink cursor, scroll bar and tool bar:
   (tool-bar-mode -1)
 #+END_SRC
 
+Setting faces:
+#+BEGIN_SRC emacs-lisp
+  (set-face-attribute 'default nil :height 140)
+  (set-face-attribute 'default nil :font "DejaVuSansMono Nerd Font")
+  (set-face-attribute 'variable-pitch nil :weight 'normal :inherit 'default)
+  (cond
+      ((x-list-fonts   "Lucida Grande")   (set-face-attribute 'variable-pitch nil :font   "Lucida Grande"))
+      ((x-list-fonts   "Verdana")         (set-face-attribute 'variable-pitch nil :font   "Verdana"))
+      ((x-family-fonts "Sans Serif")      (set-face-attribute 'variable-pitch nil :family "Sans Serif"))
+      (nil (warn "Cannot find a Sans Serif Font.")))
+  (set-face-attribute 'fixed-pitch nil :inherit 'default)
+#+END_SRC
+
 ** TUI
 :PROPERTIES:
 :header-args:emacs-lisp: :tangle no :noweb-ref Console
@@ -169,7 +183,7 @@ I disabled the github integration because it doesn't seem to work on my machines
     (paradox-enable))
 #+END_SRC
 
-* Faces and Colors
+* Colors
 I'm currently using the emacs port of my vim era favorite, gruvbox:
 #+BEGIN_SRC emacs-lisp
   (use-package gruvbox-theme
@@ -177,6 +191,7 @@ I'm currently using the emacs port of my vim era favorite, gruvbox:
     :config
     (load-theme 'gruvbox t))
 #+END_SRC
+
 * Key Bindings
 References:
 1. [[https://sam217pa.github.io/2016/09/23/keybindings-strategies-in-emacs/][Keybindings strategies in Emacs]] by Samuel Barreto.
@@ -239,9 +254,10 @@ References:
     ([remap evil-emacs-state] 'evil-normal-state)
     ([remap evil-ex-search-forward] 'swiper)
     ([remap evil-ex-search-backward] 'swiper-backward)
+    (general-nvmap "SPC" (general-simulate-key "C-c"))
     (general-create-definer my-leader-def
       ;; :prefix my-leader
-      :prefix "SPC")
+      :prefix "C-c")
     :config
     (evil-mode 1))
 #+END_SRC
@@ -273,32 +289,22 @@ References:
                     :bind ((evil-snipe-scope 'buffer)
                            (evil-snipe-enable-highlight)
                            (evil-snipe-enable-incremental-highlight))))
-    (my-leader-def 'normal
-      "-" '(:ignore t :which-key t)
-      "+" '(:ignore t :which-key t)
+    (my-leader-def 'motion
+      "j" (evilem-create 'next-line)
       "j" '(:ignore t :which-key t)
+      "k" (evilem-create 'previous-line)
       "k" '(:ignore t :which-key t)
-      "[" '(:ignore t :which-key t)
-      "]" '(:ignore t :which-key t)
-      "(" '(:ignore t :which-key t)
-      ")" '(:ignore t :which-key t)
-      "*" '(:ignore t :which-key t)
-      "#" '(:ignore t :which-key t)
-      "e" '(:ignore t :which-key t)
-      "b" '(:ignore t :which-key t)
-      "w" '(:ignore t :which-key t)
-      "f" '(:ignore t :which-key t)
-      "t" '(:ignore t :which-key t)
-      "n" '(:ignore t :which-key t)
-      "E" '(:ignore t :which-key t)
-      "B" '(:ignore t :which-key t)
-      "W" '(:ignore t :which-key t)
-      "F" '(:ignore t :which-key t)
-      "T" '(:ignore t :which-key t)
-      "N" '(:ignore t :which-key t)
-      "g" '(:ignore t :which-key t))
-    :config
-    (evilem-default-keybindings "SPC"))
+      "e" '(evilem-motion-forward-word-end :which-key t)
+      "E" '(evilem-motion-forward-WORD-end :which-key t)
+      "g e" '(evilem-motion-backward-word-end :which-key t)
+      "g E" '(evilem-motion-backward-WORD-end :which-key t)
+      "w" '(evilem-motion-forward-word-begin :which-key t)
+      "W" '(evilem-motion-forward-WORD-begin :which-key t)
+      "b" '(evilem-motion-backward-word-begin :which-key t)
+      "B" '(evilem-motion-backward-WORD-begin :which-key t)
+      "n" '(evilem-motion-search-next :which-key t)
+      "N" '(evilem-motion-search-previous :which-key t)
+      "g" '(:ignore t :which-key t)))
 #+END_SRC
 *** evil-snipe
 [[github:hlissner/evil-snipe][evil-snipe]] is a Evil port of Vim's =clever-f= and =vim-sneak=. It currently does not support separating the scope for =f/F/t/T= from for =s/S=, which is a little bit annoying.
@@ -423,9 +429,6 @@ Emacs shipped with a relatively old version of =org-mode=, but many MELPA packag
     :pin org
     :ensure t
     :demand t
-    :custom-face
-    (variable-pitch ((t (:family "Sans serif" :weight normal))))
-    (fixed-pitch ((t (:family "monospace"))))
     :hook
     (org-mode . visual-line-mode)
     (org-mode . variable-pitch-mode)
@@ -433,6 +436,8 @@ Emacs shipped with a relatively old version of =org-mode=, but many MELPA packag
     <<org-mode-init>>
     :general
     <<org-mode-general>>
+    :custom-face
+    <<org-mode-face>>
     :config
     <<org-mode-config>>)
 #+END_SRC
@@ -453,8 +458,10 @@ And of course, =org-mode='s Evil integration:
     :after (org evil)
     :hook
     (org-mode . (lambda () (evil-org-mode 1)))
+    (org-agenda-mode . (lambda () (evil-org-mode 1)))
     :general
     <<evil-org-general>>
+    :commands org-agenda
     :config
     (evil-org-set-key-theme)
     (require 'evil-org-agenda)
@@ -491,55 +498,43 @@ Hide ===, =~= and other emphasis markers, and fontify src block natively:
 #+BEGIN_SRC emacs-lisp :tangle no :noweb-ref org-mode-init
   (general-setq org-hide-emphasis-markers t)
   (general-setq org-src-fontify-natively t)
+  (general-setq org-tags-column 0)
 #+END_SRC
 
-Use =org-bullets= to replace =*= with some cool unicode symbol:
-#+begin_src emacs-lisp
+Use =org-bullets= to replace =*= with some cool unicode symbol. This seems super slow on Windows.
+#+begin_src emacs-lisp :tangle (unless (eq system-type 'windows-nt) (concat user-emacs-directory "init.el"))
   (use-package org-bullets
+    :ensure t
     :after org
     :hook
     (org-mode . (lambda () (org-bullets-mode 1))))
 #+end_src
 
 Use different font-size for headers, use sans-serif for non-code-like parts (powered by Emacs!), while still keeping code-like part using monospace font. 
-#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-config
-  (when (display-graphic-p)
-    (let* ((variable-tuple
-            (cond 
-             ((x-list-fonts   "Lucida Grande")   '(:font   "Lucida Grande"))
-             ((x-list-fonts   "Verdana")         '(:font   "Verdana"))
-             ((x-family-fonts "Sans Serif")      '(:family "Sans Serif"))
-             (nil (warn "Cannot find a Sans Serif Font."))))
-           (base-font-color (face-foreground 'default nil 'default))
-           (headline       `(:inherit default :weight bold )))
-
-      (custom-theme-set-faces
-       'user
-       `(org-level-8        ((t (,@headline ,@variable-tuple))))
-       `(org-level-7        ((t (,@headline ,@variable-tuple))))
-       `(org-level-6        ((t (,@headline ,@variable-tuple))))
-       `(org-level-5        ((t (,@headline ,@variable-tuple))))
-       `(org-level-4        ((t (,@headline ,@variable-tuple :height 1.1))))
-       `(org-level-3        ((t (,@headline ,@variable-tuple :height 1.25))))
-       `(org-level-2        ((t (,@headline ,@variable-tuple :height 1.5))))
-       `(org-level-1        ((t (,@headline ,@variable-tuple :height 1.75))))
-       `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))
-       `(variable-pitch ((t ,@variable-tuple :weight light)))
-       `(fixed-pitch ((t ( :font "DejaVuSansMono Nerd Font Mono" :weight normal :height 1.0 :width normal))))))
-    (custom-theme-set-faces
-     'user
-     '(org-block                 ((t (:inherit fixed-pitch))))
-     '(org-document-info         ((t (:foreground "dark orange"))))
-     '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
-     '(org-link                  ((t (:foreground "royal blue" :underline t))))
-     '(org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-     '(org-property-value        ((t (:inherit fixed-pitch))) t)
-     '(org-block-begin-line      ((t (:inherit fixed-pitch :weight bold))) t)
-     '(org-block-end-line        ((t (:inherit fixed-pitch :weight bold))) t)
-     '(org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-     '(org-tag                   ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
-     '(org-verbatim              ((t (:inherit (shadow fixed-pitch)))))
-     '(org-indent                ((t (:inherit (org-hide fixed-pitch)))))))
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-face
+  (org-level-8               ((t (:inherit variable-pitch :weight bold))))
+  (org-level-7               ((t (:inherit org-level-8))))
+  (org-level-6               ((t (:inherit org-level-8))))
+  (org-level-5               ((t (:inherit org-level-8))))
+  (org-level-4               ((t (:inherit org-level-8 :height 1.1))))
+  (org-level-3               ((t (:inherit org-level-8 :height 1.25))))
+  (org-level-2               ((t (:inherit org-level-8 :height 1.5))))
+  (org-level-1               ((t (:inherit org-level-8 :height 1.75))))
+  (org-document-title        ((t (:inherit org-level-8 :height 2.0 :underline nil))))
+  (org-block                 ((t (:inherit fixed-pitch))))
+  (org-document-info         ((t (:foreground "dark orange"))))
+  (org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+  (org-link                  ((t (:underline t))))
+  (org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+  (org-property-value        ((t (:inherit fixed-pitch))))
+  (org-table                 ((t (:inherit fixed-pitch))))
+  (org-block-begin-line      ((t (:inherit fixed-pitch :weight bold))))
+  (org-block-end-line        ((t (:inherit fixed-pitch :weight bold))))
+  (org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+  (org-tag                   ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
+  (org-verbatim              ((t (:inherit (shadow fixed-pitch)))))
+  (org-code                  ((t (:inherit (shadow fixed-pitch)))))
+  (org-indent                ((t (:inherit (org-hide fixed-pitch)))))
 #+end_src
 * Magit
 [[github:magit/magit][magit]] is an Emacs interface to git, which provides not only commands to call but also a full GUI-like wrapper around git.
