@@ -210,12 +210,14 @@ A general is a leader. – onioncheese
 [[github:noctuid/general.el][General]] is a, well, general-purpose key-binding interface for emacs.
 
 There is not much config for general yet, besides enable it I simply turn on its [[*Evil][Evil]] integration:
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :noweb yes
   (use-package general
     :ensure t
     :after which-key
     :config
-    (general-evil-setup))
+    (general-evil-setup)
+    <<general-config>>
+    )
 #+END_SRC
 ** Hercules
 - Note taken on [2019-09-15 Sun 13:59] \\
@@ -237,30 +239,82 @@ It's name tells everything: the Extensible Vi Layer for Emacs, [[github:emacs-ev
 
 References:
 + [[https://github.com/noctuid/evil-guide][evil-guide]] by noctuid
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :noweb yes
   (use-package evil
     :ensure t
     :demand t
     :init
-    (general-setq evil-want-integration t) ;; This is optional since it's already set to t by default.
-    (general-setq evil-want-keybinding nil)
-    (general-setq evil-disable-insert-state-bindings t)
-    (general-setq evil-search-module 'evil-search)
+    <<evil-mode-init>>
     :general
-    (general-nmap "C-j" 'evil-window-down)
-    (general-nmap "C-k" 'evil-window-up)
-    (general-nmap "C-h" 'evil-window-left)
-    (general-nmap "C-l" 'evil-window-right)
-    ([remap evil-emacs-state] 'evil-normal-state)
-    ([remap evil-ex-search-forward] 'swiper)
-    ([remap evil-ex-search-backward] 'swiper-backward)
-    (general-nvmap "SPC" (general-simulate-key "C-c"))
-    (general-create-definer my-leader-def
-      ;; :prefix my-leader
-      :prefix "C-c")
+    <<evil-mode-general>>
     :config
     (evil-mode 1))
 #+END_SRC
+
+I don't want to use Vim's insert mode bindings in insert state:
+#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref evil-mode-init
+  (general-setq evil-disable-insert-state-bindings t)
+#+END_SRC
+
+Then, given that I'm using emacs' bindings in insert state, there is no point to use the emacs state which is so hard to escape from:
+#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref evil-mode-general
+  ([remap evil-emacs-state] 'evil-normal-state)
+#+END_SRC
+
+[[github:christoomey/vim-tmux-navigator][vim-tmux-navigator]]-like window control:
+#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref evil-mode-general
+  (general-nmap "C-j" 'evil-window-down)
+  (general-nmap "C-k" 'evil-window-up)
+  (general-nmap "C-h" 'evil-window-left)
+  (general-nmap "C-l" 'evil-window-right)
+#+END_SRC
+It's okay to rebind =C-h= because =<F1>= basically does the same thing.
+
+=swiper= has a nice evil integration such that =/= =?= can be replaced with ~'swiper~ ~'swiper-backward~ respectively:
+#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref evil-mode-general
+  ([remap evil-ex-search-forward] 'swiper)
+  ([remap evil-ex-search-backward] 'swiper-backward)
+#+END_SRC
+
+ Somehow =n/N= only jump backward with swiper unless this is set:
+#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref evil-mode-init
+  (general-setq evil-search-module 'evil-search)
+#+END_SRC
+
+I use =C-c= as my =leader=:
+#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref general-config
+  (general-create-definer my/leader-def
+    ;; :prefix my-leader
+    :prefix "C-c")
+#+END_SRC
+This is a trick where I remap =SPC= to =C-c=, my leader key. In this way, I wrapped all the mode-defined =C-c= prefixed keybindings (they are not _supposed_ to do so btw) as if they were my leader key prefixed, so that when I type =SPC=, =which-key= will show up all of them.
+#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref evil-mode-general
+  (general-nvmap "SPC" (general-simulate-key "C-c"))
+#+END_SRC
+
+Bring my two of my old vim keybindings back, which open newline above/below current line without entering insert state:
+#+BEGIN_SRC emacs-lisp
+  (defun my/insert-line-below ()
+    "Insert an empty line below the current line."
+    (interactive)
+      (end-of-line)
+      (open-line 1)
+      (next-line))
+
+  (defun my/insert-line-above ()
+    "Insert an empty line above the current line."
+    (interactive)
+      (end-of-line 0)
+      (open-line 1)
+      (next-line))
+#+END_SRC
+I use =<leader>o= and =<leader>O= for them because they are close to =o= and =O= respectively:
+#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref evil-mode-general
+  (my/leader-def 'normal
+    "o" '(my/insert-line-below :which-key t)
+    "O" '(my/insert-line-above :which-key t))
+#+END_SRC
+
 *** evil-collection
 [[github:emacs-evil/evil-collection][evil-collection]] is a collection of helper functions / settings / etc for things native Evil does bad on.
 #+BEGIN_SRC emacs-lisp
@@ -274,6 +328,14 @@ References:
     (evil-collection-init 'dired)
     (evil-collection-init 'minibuffer)
     (evil-collection-init 'helm))
+#+END_SRC
+
+#+begin_quote
+=evil-collection= assumes ~evil-want-keybinding~ is set to =nil= and ~evil-want-integration~ is set to =t= before loading =evil= and =evil-collection=.
+#+end_quote
+#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref evil-mode-init
+  (general-setq evil-want-integration t)
+  (general-setq evil-want-keybinding nil)
 #+END_SRC
 *** evil-easymotion
 [[github:PythonNut/evil-easymotion][evil-easymotion]] is a Evil port of Vim's, well, =easymotion=, which basically works in a way that instead of numbering how many jumps needed, by prefixing motions with a leader key, we use visual hint to go to the place we want. I hadn't tried =easymotion= during my Vim era though, but I like it now. It also provides integration with [[*evil-snipe][evil-snipe]].
@@ -289,7 +351,7 @@ References:
                     :bind ((evil-snipe-scope 'buffer)
                            (evil-snipe-enable-highlight)
                            (evil-snipe-enable-incremental-highlight))))
-    (my-leader-def 'motion
+    (my/leader-def 'motion
       "j" (evilem-create 'next-line)
       "j" '(:ignore t :which-key t)
       "k" (evilem-create 'previous-line)
@@ -445,7 +507,7 @@ Emacs shipped with a relatively old version of =org-mode=, but many MELPA packag
 ** general keybindings
 Global keybindings as recommended in [[https://orgmode.org/manual/Activation.html#Activation][Org Manual]]:
 #+BEGIN_SRC emacs-lisp :tangle no :noweb-ref org-mode-general
-  (my-leader-def 'normal
+  (my/leader-def 'normal
     "l"  'org-store-link
     "a"  'org-agenda
     "c"  'org-capture)
