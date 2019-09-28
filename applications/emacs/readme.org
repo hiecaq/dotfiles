@@ -1,9 +1,9 @@
-#+TITLE: quinoa42's dotEmacs
-#+PROPERTY: header-args :comments org :results silent
-#+PROPERTY: header-args:emacs-lisp :tangle (concat user-emacs-directory "init.el")
-#+STARTUP: indent
-#+LINK: gitlab https://gitlab.com/%s
-#+LINK: github https://www.github.com/%s
+#+title: quinoa42's dotEmacs
+#+property: header-args :comments org :results silent
+#+property: header-args:emacs-lisp :tangle (concat user-emacs-directory "init.el")
+#+startup: indent
+#+link: gitlab https://gitlab.com/%s
+#+link: github https://www.github.com/%s
 
 
 Here is a list of blogs / configurations that I've grabbed code from or absorbed ideas from. All of them worth reading.
@@ -31,6 +31,8 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
   - [[#initialization][Initialization]]
   - [[#use-package][Use-package]]
   - [[#paradox][Paradox]]
+- [[#miscs][Miscs]]
+  - [[#xdg][Xdg]]
 - [[#colors][Colors]]
 - [[#key-bindings][Key Bindings]]
   - [[#which-key][Which-key]]
@@ -40,6 +42,7 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
 - [[#ui-enhance][UI Enhance]]
   - [[#helm][Helm]]
   - [[#ivy][Ivy]]
+  - [[#undo-tree][Undo-tree]]
 - [[#templates][Templates]]
   - [[#yasnippet][Yasnippet]]
 - [[#completion][Completion]]
@@ -83,6 +86,19 @@ When there is no =init.el= tangled yet, run =C-c= on this block to generate the 
 I don't know if there is any who would like the wierd tab-space-hybird indent mode.
 #+begin_src emacs-lisp
   (setq-default indent-tabs-mode nil)
+#+end_src
+
+If this is set to =nil=, hard link to the edited file will point to the backup file after backup process.
+#+begin_src emacs-lisp
+  (setq backup-by-copying t)
+#+end_src
+
+Version-controlled backup:
+#+begin_src emacs-lisp
+  (setq version-control t
+        delete-old-versions t
+        kept-new-versions 6
+        kept-old-versions 2)
 #+end_src
 
 * Platform Specific
@@ -223,6 +239,23 @@ I disabled the github integration because it doesn't seem to work on my machines
     (paradox-automatically-star nil)
     :config
     (paradox-enable))
+#+end_src
+
+* Miscs
+** Xdg
+Start from Emacs 26, we hav buit-in suport for =xdg=.
+Then it will be reasonble to put those annoying but extremely helpful stuff into xdg cache:
+#+begin_src emacs-lisp
+  (use-package xdg
+    :config
+    (let ((backup-dir (concat (xdg-data-home) "/emacs/backup/"))
+          (autosave-dir (concat (xdg-cache-home) "/emacs/autosave/")))
+      (mkdir backup-dir t)
+      (mkdir autosave-dir t)
+      (setq backup-directory-alist
+            `(("." . ,backup-dir)))
+      (setq auto-save-file-name-transforms
+            `((".*" ,autosave-dir t)))))
 #+end_src
 
 * Colors
@@ -367,6 +400,7 @@ I use =<leader>o= and =<leader>O= for them because they are close to =o= and =O=
     (evil-collection-setup-minibuffer t)
     :config
     (evil-collection-init 'info)
+    (evil-collection-init 'custom)
     (evil-collection-init 'dired)
     (evil-collection-init 'minibuffer)
     (evil-collection-init 'helm))
@@ -523,6 +557,25 @@ I don't use heavily on ivy anymore, but I still have it because its the dependen
     (general-imap ivy-minibuffer-map "C-n" 'ivy-next-line)
     :commands (swiper swiper-backward))
 #+end_src
+** Undo-tree
+[[https://www.emacswiki.org/emacs/UndoTree][undo-tree]] provides a visualization for the undo history. It is a prereq for [[*Evil][Evil]].
+#+begin_src emacs-lisp
+  (use-package undo-tree
+    :ensure t
+    :demand t
+    :init
+    (general-setq undo-tree-visualizer-timestamps nil)
+    (general-setq undo-tree-visualizer-lazy-drawing t)
+    (general-setq undo-tree-visualizer-relative-timestamps nil)
+    :general
+    (general-mmap undo-tree-visualizer-mode-map
+      "t" 'undo-tree-visualizer-toggle-timestamps)
+    (my/leader-def 'normal
+      "u" 'undo-tree-visualize)
+    :config
+    (global-undo-tree-mode +1))
+#+end_src
+
 * Templates
 Templates are always good time savers.
 Reference:
@@ -633,11 +686,6 @@ Enforce todo dependencies (i.e. children block their parent)
 I found that usually I have something to say when I closing a task, for example a link to the reproduction note. Thus I'd like to have closing note by default.
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
   (general-setq org-log-done 'note)
-#+end_src
-
-Display =\lambda= etc as their unicode symbols (this works pretty well with embeded LaTeX symbol:
-#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
-  (general-setq org-pretty-entities t)
 #+end_src
 
 Todo state keywords. There are basically two types:
@@ -778,6 +826,11 @@ Hide ===, =~= and other emphasis markers, and fontify src block natively:
   (general-setq org-hide-emphasis-markers t)
   (general-setq org-src-fontify-natively t)
   (general-setq org-tags-column 0)
+#+end_src
+
+Display =\lambda= etc as their unicode symbols (this works pretty well with embeded LaTeX symbol:
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-pretty-entities t)
 #+end_src
 
 Use =org-bullets= to replace =*= with some cool unicode symbol. This seems super slow on Windows.
