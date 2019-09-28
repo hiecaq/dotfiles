@@ -14,6 +14,47 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
 + [[https://github.com/munen/emacs.d/blob/master/configuration.org][munen's Emacs configuration]]
 + [[https://karl-voit.at/2017/06/03/emacs-org/][Karl Voit's Emacs Configuration In Org-mode]] and the [[https://github.com/novoid/dot-emacs][repo]]
 
+* Table of Contents :TOC:
+- [[#general-settings][General Settings]]
+  - [[#coding-and-languages][Coding and Languages]]
+  - [[#tangle-initel][Tangle =init.el=]]
+  - [[#some-helpful-defaults][Some helpful defaults]]
+- [[#platform-specific][Platform Specific]]
+  - [[#all-platforms][All platforms]]
+  - [[#macos][MacOS]]
+  - [[#windows][Windows]]
+  - [[#linux][Linux]]
+  - [[#gui][GUI]]
+  - [[#tui][TUI]]
+- [[#package-management][Package Management]]
+  - [[#proxy-archives-and-mirrors][Proxy, Archives and Mirrors]]
+  - [[#initialization][Initialization]]
+  - [[#use-package][Use-package]]
+  - [[#paradox][Paradox]]
+- [[#colors][Colors]]
+- [[#key-bindings][Key Bindings]]
+  - [[#which-key][Which-key]]
+  - [[#general][General]]
+  - [[#hercules][Hercules]]
+  - [[#evil][Evil]]
+- [[#ui-enhance][UI Enhance]]
+  - [[#helm][Helm]]
+  - [[#ivy][Ivy]]
+- [[#templates][Templates]]
+  - [[#yasnippet][Yasnippet]]
+- [[#completion][Completion]]
+  - [[#company][Company]]
+  - [[#company-quickhelp][Company-quickhelp]]
+- [[#org-mode][Org Mode]]
+  - [[#general-settings-1][general settings]]
+  - [[#general-keybindings][general keybindings]]
+  - [[#babel][babel]]
+  - [[#org-brain][org-brain]]
+  - [[#deft][deft]]
+  - [[#toc-org][toc-org]]
+  - [[#style-and-faces][style and faces]]
+- [[#magit][Magit]]
+
 * General Settings
 ** Coding and Languages
 Use Utf-8 as the default coding system.
@@ -488,14 +529,31 @@ Reference:
 [[http://www.howardism.org/Technical/Emacs/templates-tutorial.html][Having Emacs Type for You]] by Howard Abrams
 ** Yasnippet
 [[github:joaotavora/yasnippet][yasnippet]] is a template system for Emacs.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :noweb yes
   (use-package yasnippet
     :ensure t
     :demand t
+    :general
+    <<yasnippet-mode-general>>
     :config
     (yas-global-mode 1))
 #+end_src
 
+I don't want the default ~yas-minor-mode-map~'s =C-c &= bindings because they conflict with ~org-marking-goto~. Thus I unbind & rebind them into =<leader> y=.
+#+begin_src emacs-lisp :tangle no :noweb-ref yasnippet-mode-general
+  (general-unbind yas-minor-mode-map
+    "C-c & C-n"
+    "C-c & C-s"
+    "C-c & C-v"
+    "C-c &"
+    "C-c")
+  (my/leader-def
+    :states '(normal visual insert)
+    :keymaps 'yas-minor-mode-map
+    "y n" 'yas-new-snippet
+    "y s" 'yas-insert-snippet
+    "y v" 'yas-visit-snippet-file)
+#+end_src
 * Completion
 By completion I mean general text/code autocompletion, as Vim's =deoplete=.
 ** Company
@@ -561,7 +619,51 @@ Emacs shipped with a relatively old version of =org-mode=, but many MELPA packag
     :config
     <<org-mode-config>>)
 #+end_src
+** general settings
+Turn on =org-indent=, aka clean view by default:
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-startup-indented t)
+#+end_src
 
+Enforce todo dependencies (i.e. children block their parent)
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-enforce-todo-dependencies t)
+#+end_src
+
+I found that usually I have something to say when I closing a task, for example a link to the reproduction note. Thus I'd like to have closing note by default.
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-log-done 'note)
+#+end_src
+
+Display =\lambda= etc as their unicode symbols (this works pretty well with embeded LaTeX symbol:
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-pretty-entities t)
+#+end_src
+
+Todo state keywords. There are basically two types:
++ normal tasks
++ bugfix
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-todo-keywords
+                '((sequence "TODO(t)" "WAIT(w@/@)" "|" "DONE(d!)")
+                  (sequence "ISSUE(i)" "BUG(b@)" "KNOWNCAUSE(k@)" "BLOCKED(l@/@)" "RFC(r@/@)" "|" "MERGED(m!)")
+                  ("|" "CANCELED(c@)")))
+#+end_src
+
+Now finally, the list of files/directories I want my agenda to track:
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-agenda-files (quote ("~/documents/tracking")))
+#+end_src
+
+And a default note file for templates that does not specify a target file:
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-default-notes-file "~/documents/tracking/notes.org")
+#+end_src
+
+Archive things into an archive directory:
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-archive-location "~/documents/archive/%s_archive::* Archived")
+#+end_src
 ** general keybindings
 Global keybindings as recommended in [[https://orgmode.org/manual/Activation.html#Activation][Org Manual]]:
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-general
@@ -610,6 +712,63 @@ I declared a hydra for =org-babel= to make things easier:
               :prefix-map 'org-babel-map
               "q" #'org-babel-exit))
   (general-def org-mode-map "C-c C-v" #'org-babel-enter)
+#+end_src
+** org-brain
+[[github:Kungsgeten/org-brain][org-brain]] implements concept mapping for org mode, and is also a tool to build my own personal wiki. 
+
+Enable tracking org heading links using globally unique uids. This is a must-have even without =org-brain=, because org mode won't fix the broken links when you refile/archive some subtrees to a different file.
+#+begin_src emacs-lisp
+  (use-package org-id
+    :init
+    (general-setq org-id-track-globally t))
+#+end_src
+
+Now load =org-brain=:
+#+begin_src emacs-lisp :noweb yes
+  (use-package org-brain
+    :ensure t
+    :after (evil org)
+    :init
+    (general-setq org-brain-path "~/documents")
+    (general-setq org-brain-title-max-length 30)
+    <<org-brain-mode-init>>
+    :general
+    <<org-brain-mode-general>>
+    :custom-face
+    <<org-brain-mode-face>>
+    )
+#+end_src
+
+=org-brain='s keymap conflicts with evil's normal state, so before manually setting the keymaps it might worth simply using emacs-state by default:
+#+begin_src emacs-lisp :tangle no :noweb-ref org-brain-mode-init
+  (evil-set-initial-state 'org-brain-visualize-mode 'emacs)
+#+end_src
+
+Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won't be over-sized):
+#+begin_src emacs-lisp :tangle no :noweb-ref org-brain-mode-face
+  (org-brain-title ((t (:inherit org-level-8))))
+#+end_src
+** deft
+[[https://jblevins.org/projects/deft/][deft]] is not directly related to org mode, but a general purpose plain-text note browser. It works nicely with [[org-brain]] and [[Org Mode]]. 
+#+begin_src emacs-lisp
+  (use-package deft
+    :ensure t
+    :commands (deft)
+    :general
+    (my/leader-def 'normal
+      "d" 'deft)
+    :init
+    (general-setq deft-directory org-brain-path)
+    (general-setq deft-recursive t)
+    (general-setq deft-extensions '("org")))
+#+end_src
+** toc-org
+[[github:snosov1/toc-org][toc-org]] will automatically update the content of the first heading with a =:TOC:= tag in an org file to show an up-to-date TOC whenever the file is saved. Handy!
+#+begin_src emacs-lisp
+  (use-package toc-org
+    :ensure t
+    :after org
+    :hook (org-mode . toc-org-mode))
 #+end_src
 ** style and faces
 This part of code is basically grabbed from [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][Beautifying Org Mode in Emacs]] by zzamboni.
