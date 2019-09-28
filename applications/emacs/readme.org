@@ -51,6 +51,7 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
 - [[#org-mode][Org Mode]]
   - [[#general-settings-1][general settings]]
   - [[#general-keybindings][general keybindings]]
+  - [[#task-management][task management]]
   - [[#babel][babel]]
   - [[#org-brain][org-brain]]
   - [[#deft][deft]]
@@ -688,30 +689,11 @@ I found that usually I have something to say when I closing a task, for example 
   (general-setq org-log-done 'note)
 #+end_src
 
-Todo state keywords. There are basically two types:
-+ normal tasks
-+ bugfix
+Put newer note at the top:
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
-  (general-setq org-todo-keywords
-                '((sequence "TODO(t)" "WAIT(w@/@)" "|" "DONE(d!)")
-                  (sequence "ISSUE(i)" "BUG(b@)" "KNOWNCAUSE(k@)" "BLOCKED(l@/@)" "RFC(r@/@)" "|" "MERGED(m!)")
-                  ("|" "CANCELED(c@)")))
+  (general-setq org-reverse-note-order t)
 #+end_src
 
-Now finally, the list of files/directories I want my agenda to track:
-#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
-  (general-setq org-agenda-files (quote ("~/documents/tracking")))
-#+end_src
-
-And a default note file for templates that does not specify a target file:
-#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
-  (general-setq org-default-notes-file "~/documents/tracking/notes.org")
-#+end_src
-
-Archive things into an archive directory:
-#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
-  (general-setq org-archive-location "~/documents/archive/%s_archive::* Archived")
-#+end_src
 ** general keybindings
 Global keybindings as recommended in [[https://orgmode.org/manual/Activation.html#Activation][Org Manual]]:
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-general
@@ -743,6 +725,38 @@ Here are some evil-specific bindings:
   (org-src-mode-map [remap evil-write] 'org-edit-src-save)
   (general-nmap org-mode-map [remap evil-next-line] 'evil-next-visual-line)
   (general-nmap org-mode-map [remap evil-previous-line] 'evil-previous-visual-line)
+#+end_src
+** task management
+I generally follow the GTD way as my task management system.
+reference:
++ [[https://hamberg.no/gtd/][GTD in 15 minutes – A Pragmatic Guide to Getting Things Done]] by Erlend Hamberg
++ [[http://www.members.optusnet.com.au/~charles57/GTD/][Emacs, org-mode and Getting Things Done (GTD)]] by Charles Cave
+
+Todo state keywords. The todo state is simple:
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-todo-keywords
+                '((sequence "TODO(t!)" "ENGAGE(e!)" "WAIT(w@/@)" "|" "DONE(d!)")
+                  ("|" "CANCELED(c@)")))
+#+end_src
+
+Now finally, =org-directory= that will be used to look for capture templates:
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-directory "~/documents/tracking")
+#+end_src
+
+And the list of files/directories I want my agenda to track:
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-agenda-files (quote ("~/documents/tracking")))
+#+end_src
+
+And a default note file for templates that does not specify a target file:
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-default-notes-file "~/documents/tracking/notes.org")
+#+end_src
+
+Archive things into an archive directory:
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-archive-location "~/documents/archive/%s_archive::* Archived")
 #+end_src
 ** babel
 References:
