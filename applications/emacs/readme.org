@@ -671,7 +671,8 @@ Emacs shipped with a relatively old version of =org-mode=, but many MELPA packag
     :custom-face
     <<org-mode-face>>
     :config
-    <<org-mode-config>>)
+    <<org-mode-config>>
+    )
 #+end_src
 ** general settings
 Turn on =org-indent=, aka clean view by default:
@@ -769,11 +770,10 @@ I declared a hydra for =org-babel= to make things easier:
    :show-funs #'org-babel-enter
    :hide-funs '(org-babel-exit org-babel-tangle)
    :keymap 'org-babel-map
-   :transient t
-   :config '(general-def
-              :prefix-map 'org-babel-map
-              "q" #'org-babel-exit))
+   :transient t)
   (general-def org-mode-map "C-c C-v" #'org-babel-enter)
+  (general-def :prefix-map 'org-babel-map
+              "q" #'org-babel-exit)
 #+end_src
 ** org-brain
 [[github:Kungsgeten/org-brain][org-brain]] implements concept mapping for org mode, and is also a tool to build my own personal wiki. 
