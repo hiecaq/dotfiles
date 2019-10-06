@@ -33,6 +33,7 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
   - [[#paradox][Paradox]]
 - [[#miscs][Miscs]]
   - [[#xdg][Xdg]]
+  - [[#editorconfig][Editorconfig]]
 - [[#colors][Colors]]
 - [[#key-bindings][Key Bindings]]
   - [[#which-key][Which-key]]
@@ -43,17 +44,19 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
   - [[#helm][Helm]]
   - [[#ivy][Ivy]]
   - [[#undo-tree][Undo-tree]]
-- [[#templates][Templates]]
-  - [[#yasnippet][Yasnippet]]
 - [[#completion][Completion]]
   - [[#company][Company]]
   - [[#company-quickhelp][Company-quickhelp]]
+- [[#templates][Templates]]
+  - [[#yasnippet][Yasnippet]]
+  - [[#yankpad][Yankpad]]
 - [[#org-mode][Org Mode]]
   - [[#general-settings-1][general settings]]
   - [[#general-keybindings][general keybindings]]
   - [[#task-management][task management]]
   - [[#babel][babel]]
   - [[#org-brain][org-brain]]
+  - [[#org-board][org-board]]
   - [[#deft][deft]]
   - [[#toc-org][toc-org]]
   - [[#style-and-faces][style and faces]]
@@ -102,6 +105,12 @@ Version-controlled backup:
         kept-old-versions 2)
 #+end_src
 
+4-space indentation:
+#+begin_src emacs-lisp
+  (setq-default tab-width 4)
+  (defvaralias 'c-basic-offset 'tab-width)
+  (defvaralias 'cperl-indent-level 'tab-width)
+#+end_src
 * Platform Specific
 This part contains code specific to platforms, usually UI or PATH related.
 
@@ -227,6 +236,7 @@ Also, I'd like to turn on =use-package='s statistic recording to see if my confi
 #+begin_src emacs-lisp
   (setq use-package-compute-statistics t)
 #+end_src
+
 ** Paradox
 [[github:Malabarba/paradox][Paradox]] is a modernlized emacs' package menu that supports displaying github stars along the entries, filtering and sorting, async installation, etc.
 
@@ -257,6 +267,17 @@ Then it will be reasonble to put those annoying but extremely helpful stuff into
             `(("." . ,backup-dir)))
       (setq auto-save-file-name-transforms
             `((".*" ,autosave-dir t)))))
+#+end_src
+
+** Editorconfig
+[[https://editorconfig.org/][editorconfig]] is a very handy tool that standardize how different editors should behave according to different language, including tab width, trailing space and so on. It is not only helpful for team to maintain a codestyle standard, but also a handful tool for people use several different editors / computers, like I do.
+
+[[github:editorconfig/editorconfig-emacs][editorconfig-emacs]] implements its own =editorconfig= core, so It's logical to assume that it works on any platform.
+#+begin_src emacs-lisp
+  (use-package editorconfig
+    :ensure t
+    :config
+    (editorconfig-mode 1))
 #+end_src
 
 * Colors
@@ -352,6 +373,11 @@ It's okay to rebind =C-h= because =<F1>= basically does the same thing.
   ([remap evil-ex-search-backward] 'swiper-backward)
 #+end_src
 
+When =visual-line-mode= is set (especially in =org-mode=), I want Vim to behave as visual lines are normal lines (i.e. bind =j= to =gj= etc)
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-init
+  (general-setq evil-respect-visual-line-mode t)
+#+end_src
+
  Somehow =n/N= only jump backward with swiper unless this is set:
 #+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-init
   (general-setq evil-search-module 'evil-search)
@@ -395,7 +421,7 @@ I use =<leader>o= and =<leader>O= for them because they are close to =o= and =O=
 [[github:emacs-evil/evil-collection][evil-collection]] is a collection of helper functions / settings / etc for things native Evil does bad on.
 #+begin_src emacs-lisp
   (use-package evil-collection
-    :after evil 
+    :after evil
     :ensure t
     :custom
     (evil-collection-setup-minibuffer t)
@@ -577,37 +603,6 @@ I don't use heavily on ivy anymore, but I still have it because its the dependen
     (global-undo-tree-mode +1))
 #+end_src
 
-* Templates
-Templates are always good time savers.
-Reference:
-[[http://www.howardism.org/Technical/Emacs/templates-tutorial.html][Having Emacs Type for You]] by Howard Abrams
-** Yasnippet
-[[github:joaotavora/yasnippet][yasnippet]] is a template system for Emacs.
-#+begin_src emacs-lisp :noweb yes
-  (use-package yasnippet
-    :ensure t
-    :demand t
-    :general
-    <<yasnippet-mode-general>>
-    :config
-    (yas-global-mode 1))
-#+end_src
-
-I don't want the default ~yas-minor-mode-map~'s =C-c &= bindings because they conflict with ~org-marking-goto~. Thus I unbind & rebind them into =<leader> y=.
-#+begin_src emacs-lisp :tangle no :noweb-ref yasnippet-mode-general
-  (general-unbind yas-minor-mode-map
-    "C-c & C-n"
-    "C-c & C-s"
-    "C-c & C-v"
-    "C-c &"
-    "C-c")
-  (my/leader-def
-    :states '(normal visual insert)
-    :keymaps 'yas-minor-mode-map
-    "y n" 'yas-new-snippet
-    "y s" 'yas-insert-snippet
-    "y v" 'yas-visit-snippet-file)
-#+end_src
 * Completion
 By completion I mean general text/code autocompletion, as Vim's =deoplete=.
 ** Company
@@ -648,6 +643,54 @@ By completion I mean general text/code autocompletion, as Vim's =deoplete=.
     (company-quickhelp-mode))
 #+end_src
 
+* Templates
+Templates are always good time savers.
+Reference:
+[[http://www.howardism.org/Technical/Emacs/templates-tutorial.html][Having Emacs Type for You]] by Howard Abrams
+** Yasnippet
+[[github:joaotavora/yasnippet][yasnippet]] is a template system for Emacs.
+#+begin_src emacs-lisp :noweb yes
+  (use-package yasnippet
+    :ensure t
+    :demand t
+    :general
+    <<yasnippet-mode-general>>
+    :config
+    (yas-global-mode +1))
+#+end_src
+
+I don't want the default ~yas-minor-mode-map~'s =C-c &= bindings because they conflict with ~org-marking-goto~. Thus I unbind & rebind them into =<leader> y=.
+NOTE: I'm using =yankpad= now instead of directly using =yasnippet=, so I commented these bindings out.
+#+begin_src emacs-lisp :tangle no :noweb-ref yasnippet-mode-general
+  (general-unbind yas-minor-mode-map
+    "C-c & C-n"
+    "C-c & C-s"
+    "C-c & C-v"
+    "C-c &"
+    "C-c")
+  ;; (my/leader-def
+  ;;   :states '(normal visual insert)
+  ;;   :keymaps 'yas-minor-mode-map
+  ;;   "y n" 'yas-new-snippet
+  ;;   "y s" 'yas-insert-snippet
+  ;;   "y v" 'yas-visit-snippet-file)
+#+end_src
+
+** Yankpad
+[[github:Kungsgeten/yankpad][yankpad]] is a cool package that expand snippets written in [[*Org Mode][org mode]] and optionally use [[*Yasnippet][yasnippet]] as the backend.
+#+begin_src emacs-lisp
+  (use-package yankpad
+    :ensure t
+    :demand t
+    :init
+    (general-setq yankpad-file (concat user-emacs-directory "yankpad.org"))
+    :general
+    (my/leader-def '(normal visual)
+      "y" 'yankpad-insert)
+    (my/leader-def 'insert
+      "y" 'yankpad-expand))
+#+end_src
+
 * Org Mode
 From its website
 #+begin_quote
@@ -674,6 +717,7 @@ Emacs shipped with a relatively old version of =org-mode=, but many MELPA packag
     <<org-mode-config>>
     )
 #+end_src
+
 ** general settings
 Turn on =org-indent=, aka clean view by default:
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
@@ -724,8 +768,6 @@ And of course, =org-mode='s Evil integration:
 Here are some evil-specific bindings:
 #+begin_src emacs-lisp :tangle no :noweb-ref evil-org-general
   (org-src-mode-map [remap evil-write] 'org-edit-src-save)
-  (general-nmap org-mode-map [remap evil-next-line] 'evil-next-visual-line)
-  (general-nmap org-mode-map [remap evil-previous-line] 'evil-previous-visual-line)
 #+end_src
 ** task management
 I generally follow the GTD way as my task management system.
@@ -736,9 +778,20 @@ reference:
 Todo state keywords. The todo state is simple:
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
   (general-setq org-todo-keywords
-                '((sequence "TODO(t!)" "ENGAGE(e!)" "WAIT(w@/@)" "|" "DONE(d!)")
+                '((sequence "TODO(t!)" "ENGAGE(e!)" "WAIT(w@/@)" "|" "DONE(d@)")
                   ("|" "CANCELED(c@)")))
 #+end_src
+
+Log into a =LOGBOOK= drawer so that things are folded when we want to read about outcome descriptions
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-log-into-drawer t)
+#+end_src
+
+When refiling, log down a timestamp:
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-log-refile t)
+#+end_src
+
 
 Now finally, =org-directory= that will be used to look for capture templates:
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
@@ -752,13 +805,31 @@ And the list of files/directories I want my agenda to track:
 
 And a default note file for templates that does not specify a target file:
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
-  (general-setq org-default-notes-file "~/documents/tracking/notes.org")
+  (general-setq org-default-notes-file "~/documents/tracking/inbox.org")
 #+end_src
 
 Archive things into an archive directory:
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
   (general-setq org-archive-location "~/documents/archive/%s_archive::* Archived")
 #+end_src
+
+As GTD requires, I want to refile elements to maybe list or next action list:
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-refile-targets (quote (("maybe.org" :maxlevel . 2)
+                                           ("tasks.org" :level . 1))))
+#+end_src
+
+Caputre templates that helps reduce boilerplate:
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-capture-templates
+                '(("t" "Todo" entry (file+headline "inbox.org" "Tasks")
+                   "* TODO %?\n:LOGBOOK:\n- with context %a at %U\n:END:\n")
+                  ("b" "Board" entry (file+headline "~/documents/board/board.org" "Uncategorized")
+                   "* %?\n:PROPERTIES:\n:URL: %^C\n:END:\n:LOGBOOK:\n- Entered at %U\n:END:\n")
+                  ("n" "Note" entry (file+headline "inbox.org" "Notes")
+                   "* %?\n:LOGBOOK:\n- Entered at %U\n:END:\n%x")))
+#+end_src
+
 ** babel
 References:
 + [[https://orgmode.org/worg/org-contrib/babel/intro.html][Babel: Introduction]] in worg/org-contrib
@@ -775,8 +846,16 @@ I declared a hydra for =org-babel= to make things easier:
   (general-def :prefix-map 'org-babel-map
               "q" #'org-babel-exit)
 #+end_src
+
+*** ob-dot
+=org-babel= integration with =dot= language, i.e the language used in [[https://graphviz.org/][graphviz]]:
+#+begin_src emacs-lisp
+  (use-package ob-dot
+    :after org)
+#+end_src
+
 ** org-brain
-[[github:Kungsgeten/org-brain][org-brain]] implements concept mapping for org mode, and is also a tool to build my own personal wiki. 
+[[github:Kungsgeten/org-brain][org-brain]] implements concept mapping for org mode, and is also a tool to build my own personal wiki.
 
 Enable tracking org heading links using globally unique uids. This is a must-have even without =org-brain=, because org mode won't fix the broken links when you refile/archive some subtrees to a different file.
 #+begin_src emacs-lisp
@@ -810,8 +889,22 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
 #+begin_src emacs-lisp :tangle no :noweb-ref org-brain-mode-face
   (org-brain-title ((t (:inherit org-level-8))))
 #+end_src
+
+** org-board
+[[github:scallywag/org-board][org-board]] is a helper package that archives web pages locally via =wget=. It enable my personal wiki to save web content so that I can review / grab things later.
+#+begin_src emacs-lisp
+  (use-package org-board
+    :ensure t
+    :after org
+    :init
+    (general-setq org-board-wget-switches
+                  '("--page-requisites" "--adjust-extension" "--convert-links"))
+    (general-setq org-board-archive-date-format 'hyphenate)
+    :ensure t)
+#+end_src
+
 ** deft
-[[https://jblevins.org/projects/deft/][deft]] is not directly related to org mode, but a general purpose plain-text note browser. It works nicely with [[org-brain]] and [[Org Mode]]. 
+[[https://jblevins.org/projects/deft/][deft]] is not directly related to org mode, but a general purpose plain-text note browser. It works nicely with [[org-brain]] and [[Org Mode]].
 #+begin_src emacs-lisp
   (use-package deft
     :ensure t
@@ -824,6 +917,7 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
     (general-setq deft-recursive t)
     (general-setq deft-extensions '("org")))
 #+end_src
+
 ** toc-org
 [[github:snosov1/toc-org][toc-org]] will automatically update the content of the first heading with a =:TOC:= tag in an org file to show an up-to-date TOC whenever the file is saved. Handy!
 #+begin_src emacs-lisp
@@ -832,6 +926,7 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
     :after org
     :hook (org-mode . toc-org-mode))
 #+end_src
+
 ** style and faces
 This part of code is basically grabbed from [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][Beautifying Org Mode in Emacs]] by zzamboni.
 
@@ -856,7 +951,7 @@ Use =org-bullets= to replace =*= with some cool unicode symbol. This seems super
     (org-mode . (lambda () (org-bullets-mode 1))))
 #+end_src
 
-Use different font-size for headers, use sans-serif for non-code-like parts (powered by Emacs!), while still keeping code-like part using monospace font. 
+Use different font-size for headers, use sans-serif for non-code-like parts (powered by Emacs!), while still keeping code-like part using monospace font.
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-face
   (org-level-8               ((t (:inherit variable-pitch :weight bold))))
   (org-level-7               ((t (:inherit org-level-8))))
@@ -895,4 +990,3 @@ Its Evil integration:
     :ensure t
     :after (evil magit))
 #+end_src
-
