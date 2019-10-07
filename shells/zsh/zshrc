@@ -6,7 +6,7 @@ autoload -Uz compinit promptinit
 
 ### completion {{{1
 
-compinit
+compinit -d ${XDG_CACHE_HOME:-~/.cache}/.zcompdump
 # tab-selectable completion menu
 zstyle ':completion:*' menu select
 # gentoo-wiki suggested fancy completion prompts
@@ -270,7 +270,7 @@ bindkey -M vicmd 'V' edit-command-line
 ### key bindings }}}1
 
 ## history
-HISTFILE=~/.histfile
+HISTFILE=${XDG_DATA_HOME:-~/.local/share}/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
 setopt inc_append_history
