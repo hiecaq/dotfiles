@@ -60,6 +60,8 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
   - [[#deft][deft]]
   - [[#toc-org][toc-org]]
   - [[#style-and-faces][style and faces]]
+- [[#language-specific][Language specific]]
+  - [[#plantuml][plantuml]]
 - [[#magit][Magit]]
 
 * General Settings
@@ -854,6 +856,18 @@ I declared a hydra for =org-babel= to make things easier:
     :after org)
 #+end_src
 
+*** ob-plantuml
+=org-babel= integration with =plantuml=.
+#+begin_src emacs-lisp
+  (use-package ob-plantuml
+    :after org
+    :init
+    (when (eq system-type 'gnu/linux)
+      (general-setq org-plantuml-jar-path "/usr/share/java/plantuml/plantuml.jar"))
+    (add-to-list
+     'org-src-lang-modes '("plantuml" . plantuml)))
+#+end_src
+
 ** org-brain
 [[github:Kungsgeten/org-brain][org-brain]] implements concept mapping for org mode, and is also a tool to build my own personal wiki.
 
@@ -977,6 +991,20 @@ Use different font-size for headers, use sans-serif for non-code-like parts (pow
   (org-code                  ((t (:inherit (shadow fixed-pitch)))))
   (org-indent                ((t (:inherit (org-hide fixed-pitch)))))
 #+end_src
+
+* Language specific
+** plantuml
+[[http://plantuml.com/][plantuml]] is a language / tool that draws sequence diagram, class dependency diagram and so on with text instructions.
+
+[[skuro/plantuml-mode][plantuml-mode]]:
+#+begin_src emacs-lisp
+  (use-package plantuml-mode
+    :ensure t
+    :init
+    (when (eq system-type 'gnu/linux)
+      (general-setq plantuml-default-exec-mode 'executable)))
+#+end_src
+
 * Magit
 [[github:magit/magit][magit]] is an Emacs interface to git, which provides not only commands to call but also a full GUI-like wrapper around git.
 #+begin_src emacs-lisp
