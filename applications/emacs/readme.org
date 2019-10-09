@@ -62,6 +62,7 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
   - [[#style-and-faces][style and faces]]
 - [[#language-specific][Language specific]]
   - [[#plantuml][plantuml]]
+  - [[#beancount][beancount]]
 - [[#magit][Magit]]
 
 * General Settings
@@ -549,6 +550,26 @@ Turn on helm
     :after (helm-config swiper)
     :general ("C-s" 'swiper-helm))
 #+end_src
+*** helm-gtags
+[[https://www.gnu.org/software/global/][GNU GLOBAL]] is a source code tagging system that recognize references and that can also use =ctags= as a backend.
+Using =universal ctags=, it would be like this:
+#+begin_src sh
+gtags --gtagslabel=new-ctags
+#+end_src
+
+Anyway, [[github:syohex/emacs-helm-gtags][emacs-helm-gtags]] is a helm interface for =GNU GLOBAL=.
+#+begin_src emacs-lisp
+  (use-package helm-gtags
+    :hook
+    ((c-mode c++-mode asm-mode) . helm-gtags-mode)
+    :general
+    (general-nmap "C-]" 'helm-gtags-dwim)
+    (general-nmap "gd" 'helm-gtags-dwim)
+    (general-nmap "gR" 'helm-gtags-select)
+    (general-nmap "gr" 'helm-gtags-tags-in-this-function)
+    (general-nmap "C-t" 'helm-gtags-previous-history)
+    (general-nmap "C-S-t" 'helm-gtags-next-history))
+#+end_src
 ** Ivy
 [[github:abo-abo/swiper#ivy][ivy]] is yet another generic incremental completion for Emacs.
 
@@ -1003,6 +1024,23 @@ Use different font-size for headers, use sans-serif for non-code-like parts (pow
     :init
     (when (eq system-type 'gnu/linux)
       (general-setq plantuml-default-exec-mode 'executable)))
+#+end_src
+
+** beancount
+[[http://furius.ca/beancount/][beancount]] is a plain-text double-entry counting tool.
+as of this [[https://bitbucket.org/blais/beancount/pull-requests/115][PR]] and discussion [[https://groups.google.com/forum/#!searchin/beancount/major$20mode%257Csort:date/beancount/zLtd9XF3ALQ/f3BCurRqCQAJ][here]] and [[https://groups.google.com/d/topic/beancount/B1YA2n7r8SE/discussion][here]], =beancount= is no longer compatible with =org-mode=, because it runs its own major mode.
+
+reference:
++ [[https://lwn.net/Articles/751874/][Counting beans—and more—with Beancount]] by Jake Edge
++ [[https://alexjj.com/blog/2016/managing-my-personal-finances-with-beancount/][Managing my personal finances with beancount]] by Alex Johnstone
++ [[https://aumayr.github.io/beancount-docs-static/index.html][Beancount Documentation]]
+#+begin_src emacs-lisp
+  (use-package beancount
+    :load-path "/usr/elisp/"
+    :mode ("\\.beancount\\'" . beancount-mode)
+    :init
+    (add-hook 'beancount-mode-hook #'outline-minor-mode)
+    (defvaralias 'beancount-transaction-indent 'tab-width))
 #+end_src
 
 * Magit
