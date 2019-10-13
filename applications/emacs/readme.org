@@ -40,6 +40,7 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
   - [[#general][General]]
   - [[#hercules][Hercules]]
   - [[#evil][Evil]]
+- [[#spell-checking][Spell Checking]]
 - [[#ui-enhance][UI Enhance]]
   - [[#helm][Helm]]
   - [[#ivy][Ivy]]
@@ -54,6 +55,7 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
 - [[#code][Code]]
   - [[#projectile][Projectile]]
   - [[#flycheck][flycheck]]
+  - [[#lsp-mode][lsp-mode]]
 - [[#org-mode][Org Mode]]
   - [[#general-settings-1][general settings]]
   - [[#general-keybindings][general keybindings]]
@@ -66,6 +68,7 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
   - [[#style-and-faces][style and faces]]
 - [[#language-specific][Language specific]]
   - [[#plantuml][plantuml]]
+  - [[#rust][rust]]
   - [[#beancount][beancount]]
 - [[#magit][Magit]]
 
@@ -126,6 +129,7 @@ General programming set up:
               (setq truncate-lines t)
               (display-line-numbers-mode 1)))
 #+end_src
+
 * Platform Specific
 This part contains code specific to platforms, usually UI or PATH related.
 
@@ -177,7 +181,7 @@ I don't have specific code for Windows yet.
 :PROPERTIES:
 :header-args:emacs-lisp: :tangle no :noweb-ref Linux
 :END:
-I don't have specific code for Linux yet.
+Turn on spell checks
 
 ** GUI
 :PROPERTIES:
@@ -315,6 +319,7 @@ References:
     :config
     (which-key-mode +1))
 #+end_src
+
 ** General
 #+begin_quote
 A general is a leader. – onioncheese
@@ -331,6 +336,7 @@ There is not much config for general yet, besides enable it I simply turn on its
     <<general-config>>
     )
 #+end_src
+
 ** Hercules
 - Note taken on [2019-09-15 Sun 13:59] \\
   It does not work too well with ~evil-window-map~, even if =which-key= is set to use minibuffer.
@@ -445,7 +451,10 @@ I use =<leader>o= and =<leader>O= for them because they are close to =o= and =O=
     (evil-collection-init 'custom)
     (evil-collection-init 'dired)
     (evil-collection-init 'minibuffer)
-    (evil-collection-init 'helm))
+    (evil-collection-init 'helm)
+    (evil-collection-init 'flycheck)
+    (evil-collection-init 'magit)
+    (evil-collection-init 'which-key))
 #+end_src
 
 #+begin_quote
@@ -486,6 +495,7 @@ I use =<leader>o= and =<leader>O= for them because they are close to =o= and =O=
       "N" '(evilem-motion-search-previous :which-key t)
       "g" '(:ignore t :which-key t)))
 #+end_src
+
 *** evil-snipe
 [[github:hlissner/evil-snipe][evil-snipe]] is a Evil port of Vim's =clever-f= and =vim-sneak=. It currently does not support separating the scope for =f/F/t/T= from for =s/S=, which is a little bit annoying.
 #+begin_src emacs-lisp
@@ -518,6 +528,25 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
     (evil-find-char-pinyin-toggle-snipe-integration t)
     (evil-find-char-pinyin-mode +1))
 #+end_src
+
+* Spell Checking
+Emacs comes with its own spell checking mode (=ispell.el=)...
+#+begin_src emacs-lisp
+  (use-package ispell
+    :if (eq system-type 'gnu/linux)
+    :init
+    (general-setq ispell-program-name "aspell"))
+#+end_src
+
+... and its own on-the-fly spell checker(=flyspell=, which uses =ispell.el= as the backend).
+#+begin_src emacs-lisp
+  (use-package flyspell
+    :if (eq system-type 'gnu/linux)
+    :hook
+    (text-mode . flyspell-mode)
+    (prog-mode . flyspell-prog-mode))
+#+end_src
+
 * UI Enhance
 [[https://www.reddit.com/user/GummyKibble/][u/GummyKibble]] has a concise and wise [[https://www.reddit.com/r/emacs/comments/7vcrwo/helm_vs_ivy_what_are_the_differences_what_are_the/dtrc7v5/][comment]] on the comparison between Helm and Ivy:
 #+begin_quote
@@ -682,7 +711,7 @@ By completion I mean general text/code autocompletion, as Vim's =deoplete=.
     (general-setq company-auto-complete t)
     (general-setq company-auto-complete-chars '(32 40 41 46))
     (general-setq company-require-match nil)
-    (general-setq company-idle-delay nil)
+    (general-setq company-idle-delay 0.6)
     :general
     (general-unbind company-active-map
       "M-n"
@@ -798,10 +827,62 @@ Its =treemacs= integration that provides a helper function to add =projectile= p
 ** flycheck
 [[github:flycheck/flycheck][flycheck]] is a async syntax checking framework for Emacs, as =ALE= for Vim.
 #+begin_src emacs-lisp
-(use-package flycheck
-  :ensure t
-  :config
-  (global-flycheck-mode +1))
+  (use-package flycheck
+    :ensure t
+    :config
+    (global-flycheck-mode +1))
+#+end_src
+
+** lsp-mode
+[[github:emacs-lsp/lsp-mode][lsp-mode]] is Emacs' client/library for the Language Server Protocol. It integrates with Emacs' ecosystem heavily.
+
+#+begin_src emacs-lisp
+  (use-package lsp-mode
+    :ensure t
+    :hook
+    ((python-mode rust-mode) . lsp-deferred)
+    :commands (lsp lsp-deferred)
+    :init
+    (general-setq lsp-prefer-flymake nil)
+    (general-setq lsp-session-file (expand-file-name "emacs/lsp-session-v1" (xdg-cache-home)))
+    (general-setq lsp-keep-workspace-alive nil)
+    (general-setq lsp-auto-guess-root t))
+#+end_src
+
+*** lsp-ui
+[[github:emacs-lsp/lsp-ui][lsp-ui]] is the high-level UI module for =lsp-mode=.
+
+Based on [[https://github.com/emacs-lsp/lsp-ui/pull/208][this]] PR, there is no need to set up anything because =lsp-mode= will load =lsp-ui= itself.
+#+begin_src emacs-lisp
+  (use-package lsp-ui
+    :ensure t
+    :commands lsp-ui-mode)
+#+end_src
+
+*** company-lsp
+[[github:tigersoldier/company-lsp][company-lsp]], as the name suggests, is the =company= backend for =lsp-mode=.
+#+begin_src emacs-lisp
+  (use-package company-lsp
+    :ensure t
+    :after (lsp-mode company)
+    :config
+    (push 'company-lsp company-backends))
+#+end_src
+
+*** lsp-treemacs
+[[github:emacs-lsp/lsp-treemacs][lsp-treemacs]] display =lsp-mode= linting and symbols in a tree structure, using =treemacs= as the frontend.
+#+begin_src emacs-lisp
+  (use-package lsp-treemacs
+    :ensure t
+    :after (lsp-mode treemacs))
+#+end_src
+
+*** helm-lsp
+[[github:emacs-lsp/helm-lsp][helm-lsp]] provides two helper =helm= commands for =lsp-mode= that list workspace symbols.
+#+begin_src emacs-lisp
+  (use-package helm-lsp
+    :ensure t
+    :after lsp-mode)
 #+end_src
 
 * Org Mode
@@ -905,7 +986,6 @@ When refiling, log down a timestamp:
   (general-setq org-log-refile t)
 #+end_src
 
-
 Now finally, =org-directory= that will be used to look for capture templates:
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
   (general-setq org-directory "~/documents/tracking")
@@ -986,7 +1066,8 @@ Enable tracking org heading links using globally unique uids. This is a must-hav
 #+begin_src emacs-lisp
   (use-package org-id
     :init
-    (general-setq org-id-track-globally t))
+    (general-setq org-id-track-globally t)
+    (general-setq org-id-locations-file (expand-file-name "emacs/org-id-locations" (xdg-data-home))))
 #+end_src
 
 Now load =org-brain=:
@@ -1068,8 +1149,9 @@ Display =\lambda= etc as their unicode symbols (this works pretty well with embe
 #+end_src
 
 Use =org-bullets= to replace =*= with some cool unicode symbol. This seems super slow on Windows.
-#+begin_src emacs-lisp :tangle (unless (eq system-type 'windows-nt) (expand-file-name "init.el" user-emacs-directory))
+#+begin_src emacs-lisp
   (use-package org-bullets
+    :if (memq window-system '(mac ns))
     :ensure t
     :after org
     :hook
@@ -1111,9 +1193,16 @@ Use different font-size for headers, use sans-serif for non-code-like parts (pow
 #+begin_src emacs-lisp
   (use-package plantuml-mode
     :ensure t
+    :mode "\\.uml\\'"
     :init
     (when (eq system-type 'gnu/linux)
       (general-setq plantuml-default-exec-mode 'executable)))
+#+end_src
+
+** rust
+#+begin_src emacs-lisp
+  (use-package rust-mode
+    :ensure t)
 #+end_src
 
 ** beancount
