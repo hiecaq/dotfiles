@@ -1,6 +1,6 @@
 #+title: quinoa42's dotEmacs
 #+property: header-args :comments org :results silent
-#+property: header-args:emacs-lisp :tangle (concat user-emacs-directory "init.el")
+#+property: header-args:emacs-lisp :tangle (expand-file-name "init.el" user-emacs-directory)
 #+startup: indent
 #+link: gitlab https://gitlab.com/%s
 #+link: github https://www.github.com/%s
@@ -44,12 +44,16 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
   - [[#helm][Helm]]
   - [[#ivy][Ivy]]
   - [[#undo-tree][Undo-tree]]
+  - [[#treemacs][Treemacs]]
 - [[#completion][Completion]]
   - [[#company][Company]]
   - [[#company-quickhelp][Company-quickhelp]]
 - [[#templates][Templates]]
   - [[#yasnippet][Yasnippet]]
   - [[#yankpad][Yankpad]]
+- [[#code][Code]]
+  - [[#projectile][Projectile]]
+  - [[#flycheck][flycheck]]
 - [[#org-mode][Org Mode]]
   - [[#general-settings-1][general settings]]
   - [[#general-keybindings][general keybindings]]
@@ -76,8 +80,8 @@ Use Utf-8 as the default coding system.
 ** Tangle =init.el=
 When there is no =init.el= tangled yet, run =C-c= on this block to generate the first =init.el=.
 #+begin_src emacs-lisp
-  (let ((src (concat user-emacs-directory "readme.org"))
-        (dst (concat user-emacs-directory "init.el")))
+  (let ((src (expand-file-name "readme.org" user-emacs-directory))
+        (dst (expand-file-name "init.el" user-emacs-directory)))
     (when (file-newer-than-file-p src dst)
       (call-process
        (concat invocation-directory invocation-name)
@@ -113,6 +117,14 @@ Version-controlled backup:
   (setq-default tab-width 4)
   (defvaralias 'c-basic-offset 'tab-width)
   (defvaralias 'cperl-indent-level 'tab-width)
+#+end_src
+
+General programming set up:
+#+begin_src emacs-lisp
+  (add-hook 'prog-mode-hook
+            (lambda ()
+              (setq truncate-lines t)
+              (display-line-numbers-mode 1)))
 #+end_src
 * Platform Specific
 This part contains code specific to platforms, usually UI or PATH related.
@@ -262,8 +274,8 @@ Then it will be reasonble to put those annoying but extremely helpful stuff into
 #+begin_src emacs-lisp
   (use-package xdg
     :config
-    (let ((backup-dir (concat (xdg-data-home) "/emacs/backup/"))
-          (autosave-dir (concat (xdg-cache-home) "/emacs/autosave/")))
+    (let ((backup-dir (expand-file-name "emacs/backup/" (xdg-data-home)))
+          (autosave-dir (expand-file-name "emacs/autosave/" (xdg-cache-home))))
       (mkdir backup-dir t)
       (mkdir autosave-dir t)
       (setq backup-directory-alist
@@ -626,6 +638,38 @@ I don't use heavily on ivy anymore, but I still have it because its the dependen
     (global-undo-tree-mode +1))
 #+end_src
 
+** Treemacs
+[[github:Alexander-Miller/treemacs][treemacs]] is a tree layout explorer for files and many things else (tags, for example). It provides integration into many other popular packages in the ecosystem.
+#+begin_src emacs-lisp
+  (use-package treemacs
+    :ensure t
+    :defer t
+    :general
+    (my/leader-def 'normal
+      "t r" 'treemacs
+      "t b" 'treemacs-bookmark
+      "t f" 'treemacs-find-file
+      "t t" 'treemacs-find-tag)
+    :init
+    (general-setq treemacs-persist-file (expand-file-name "emacs/treemacs-persist" (xdg-data-home)))
+    (general-setq treemacs-last-error-persist-file (expand-file-name "emacs/treemacs-persist-at-last-error" (xdg-cache-home)))
+    :config
+    (treemacs-filewatch-mode t)
+    (pcase (cons (not (null (executable-find "git")))
+                 (not (null treemacs-python-executable)))
+      (`(t . t)
+       (treemacs-git-mode 'deferred))
+      (`(t . _)
+       (treemacs-git-mode 'simple))))
+#+end_src
+
+Its evil integration:
+#+begin_src emacs-lisp
+  (use-package treemacs-evil
+    :ensure t
+    :after (treemacs evil))
+#+end_src
+
 * Completion
 By completion I mean general text/code autocompletion, as Vim's =deoplete=.
 ** Company
@@ -706,12 +750,58 @@ NOTE: I'm using =yankpad= now instead of directly using =yasnippet=, so I commen
     :ensure t
     :demand t
     :init
-    (general-setq yankpad-file (concat user-emacs-directory "yankpad.org"))
+    (general-setq yankpad-file (expand-file-name "yankpad.org" user-emacs-directory))
     :general
     (my/leader-def '(normal visual)
       "y" 'yankpad-insert)
     (my/leader-def 'insert
       "y" 'yankpad-expand))
+#+end_src
+
+* Code
+** Projectile
+#+begin_quote
+[[github:bbatsov/projectile][projectile]] is a project interaction library for Emacs.
+#+end_quote
+
+#+begin_src emacs-lisp
+  (use-package projectile
+    :defer 10
+    :ensure t
+    :commands (projectile-mode projectile-command-map)
+    :general
+    (my/leader-def 'normal
+      "p" 'projectile-command-map)
+    :init
+    (general-setq projectile-cache-file (expand-file-name "emacs/projectile.cache" (xdg-cache-home)))
+    (general-setq projectile-known-projects-file (expand-file-name "emacs/projectile-bookmarks.eld" (xdg-data-home)))
+    :config
+    (projectile-mode +1))
+#+end_src
+
+Replace the wierd default interface with =helm= by using [[github:bbatsov/helm-projectile][helm-projectile]]
+#+begin_src emacs-lisp
+  (use-package helm-projectile
+    :after projectile
+    :ensure t
+    :config
+    (helm-projectile-on))
+#+end_src
+
+Its =treemacs= integration that provides a helper function to add =projectile= projects to =treemacs=:
+#+begin_src emacs-lisp
+  (use-package treemacs-projectile
+    :ensure t
+    :after treemacs projectile)
+#+end_src
+
+** flycheck
+[[github:flycheck/flycheck][flycheck]] is a async syntax checking framework for Emacs, as =ALE= for Vim.
+#+begin_src emacs-lisp
+(use-package flycheck
+  :ensure t
+  :config
+  (global-flycheck-mode +1))
 #+end_src
 
 * Org Mode
@@ -978,7 +1068,7 @@ Display =\lambda= etc as their unicode symbols (this works pretty well with embe
 #+end_src
 
 Use =org-bullets= to replace =*= with some cool unicode symbol. This seems super slow on Windows.
-#+begin_src emacs-lisp :tangle (unless (eq system-type 'windows-nt) (concat user-emacs-directory "init.el"))
+#+begin_src emacs-lisp :tangle (unless (eq system-type 'windows-nt) (expand-file-name "init.el" user-emacs-directory))
   (use-package org-bullets
     :ensure t
     :after org
@@ -1055,4 +1145,11 @@ Its Evil integration:
   (use-package evil-magit
     :ensure t
     :after (evil magit))
+#+end_src
+
+Its =treemacs= integration that notifies =treemacs=' =filewatch-mode= of status changes:
+#+begin_src emacs-lisp
+  (use-package treemacs-magit
+    :ensure t
+    :after (treemacs magit))
 #+end_src
