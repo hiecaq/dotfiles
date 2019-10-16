@@ -529,6 +529,21 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
     (evil-find-char-pinyin-mode +1))
 #+end_src
 
+*** evil-args
+[[github:wcsmith/evil-args][evil-args]] defines a new textobj for function arguments, and some other helpful functions.
+#+begin_src emacs-lisp
+  (use-package evil-args
+    :ensure t
+    :general
+    (general-def 'evil-inner-text-objects-map "," 'evil-inner-arg)
+    (general-def 'evil-outer-text-objects-map "," 'evil-outer-arg)
+    (general-nmap "]," 'evil-forward-arg)
+    (general-nmap "[," 'evil-backward-arg)
+    (general-mmap "]," 'evil-forward-arg)
+    (general-mmap "[," 'evil-backward-arg)
+    (general-nmap "go" 'evil-jump-out-args))
+#+end_src
+
 * Spell Checking
 Emacs comes with its own spell checking mode (=ispell.el=)...
 #+begin_src emacs-lisp
