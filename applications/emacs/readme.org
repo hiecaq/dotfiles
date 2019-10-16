@@ -308,6 +308,22 @@ I'm currently using the emacs port of my vim era favorite, gruvbox:
     (load-theme 'gruvbox t))
 #+end_src
 
+Add / custom the =hi-lock-faces= ('cause =#000000= is too hard to read on my screen):
+#+begin_src emacs-lisp
+  (use-package hi-lock
+    :commands hi-lock-mode
+    :custom-face
+    (hi-black-b               ((t (:background "#fdf4c1"))))
+    (hi-black-hb              ((t (:background "#fabd2f" :height 1.0))))
+    :init
+    (defface hi-purple-b
+      '((t (:foreground "#d3869b" :weight bold)))
+      "Face for hi-lock mode"
+      :group 'hi-lock-faces)
+    :config
+    (push "hi-purple-b" hi-lock-face-defaults))
+#+end_src
+
 * Key Bindings
 References:
 1. [[https://sam217pa.github.io/2016/09/23/keybindings-strategies-in-emacs/][Keybindings strategies in Emacs]] by Samuel Barreto.
