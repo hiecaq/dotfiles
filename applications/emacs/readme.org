@@ -2,8 +2,6 @@
 #+property: header-args :comments org :results silent
 #+property: header-args:emacs-lisp :tangle (expand-file-name "init.el" user-emacs-directory)
 #+startup: indent
-#+link: gitlab https://gitlab.com/%s
-#+link: github https://www.github.com/%s
 
 
 Here is a list of blogs / configurations that I've grabbed code from or absorbed ideas from. All of them worth reading.
@@ -243,7 +241,7 @@ Thus, I use the following block to load packages:
 #+end_src
 
 ** Use-package
-[[github:jwiegley/use-package][use-package]] is a wonderful package configuration helper (and not a package manager!). If it is not available in the current system, use =M-x package-install RET use-package RET= to fetch it from MELPA.
+[[https://github.com/jwiegley/use-package][use-package]] is a wonderful package configuration helper (and not a package manager!). If it is not available in the current system, use =M-x package-install RET use-package RET= to fetch it from MELPA.
 
 Now load =use-package=:
 #+begin_src emacs-lisp
@@ -257,9 +255,9 @@ Also, I'd like to turn on =use-package='s statistic recording to see if my confi
 #+end_src
 
 ** Paradox
-[[github:Malabarba/paradox][Paradox]] is a modernlized emacs' package menu that supports displaying github stars along the entries, filtering and sorting, async installation, etc.
+[[https://github.com/Malabarba/paradox][Paradox]] is a modernized Emacs' package menu that supports displaying GitHub stars along the entries, filtering and sorting, async installation, etc.
 
-I disabled the github integration because it doesn't seem to work on my machines.
+I disabled the GitHub integration because it doesn't seem to work on my machines.
 #+begin_src emacs-lisp
   (use-package paradox
     :ensure t
@@ -291,7 +289,7 @@ Then it will be reasonble to put those annoying but extremely helpful stuff into
 ** Editorconfig
 [[https://editorconfig.org/][editorconfig]] is a very handy tool that standardize how different editors should behave according to different language, including tab width, trailing space and so on. It is not only helpful for team to maintain a codestyle standard, but also a handful tool for people use several different editors / computers, like I do.
 
-[[github:editorconfig/editorconfig-emacs][editorconfig-emacs]] implements its own =editorconfig= core, so It's logical to assume that it works on any platform.
+[[https://github.com/editorconfig/editorconfig-emacs][editorconfig-emacs]] implements its own =editorconfig= core, so It's logical to assume that it works on any platform.
 #+begin_src emacs-lisp
   (use-package editorconfig
     :ensure t
@@ -328,7 +326,7 @@ Add / custom the =hi-lock-faces= ('cause =#000000= is too hard to read on my scr
 References:
 1. [[https://sam217pa.github.io/2016/09/23/keybindings-strategies-in-emacs/][Keybindings strategies in Emacs]] by Samuel Barreto.
 ** Which-key
-[[github:justbur/emacs-which-key][which-key]] is a minor mode that hints you the keybindings prefixed with what you have typed when you get stucked.
+[[https://github.com/justbur/emacs-which-key][which-key]] is a minor mode that hints you the keybindings prefixed with what you have typed when you get stucked.
 #+begin_src emacs-lisp
   (use-package which-key
     :ensure t
@@ -340,7 +338,7 @@ References:
 #+begin_quote
 A general is a leader. – onioncheese
 #+end_quote
-[[github:noctuid/general.el][General]] is a, well, general-purpose key-binding interface for emacs.
+[[https://github.com/noctuid/general.el][General]] is a, well, general-purpose key-binding interface for emacs.
 
 There is not much config for general yet, besides enable it I simply turn on its [[*Evil][Evil]] integration:
 #+begin_src emacs-lisp :noweb yes
@@ -362,14 +360,14 @@ An auto-magical, =which-key= based =hydra= banisher.
 If only there was a way to make a =hydra= without having to list all the bindings explicitly…
 Kind of like =which-key=…
 #+end_quote
-Did you get the idea what [[jjzmajic/hercules.el][hercules]] is used for? neither do I (at the first glance)! In short, by using the power of [[github:justbur/emacs-which-key][which-key]], =hercules= can build a =hydra= when given a keymap.
+Did you get the idea what [[https://gitlab.com/jjzmajic/hercules.el][hercules]] is used for? neither do I (at the first glance)! In short, by using the power of [[https://github.com/justbur/emacs-which-key][which-key]], =hercules= can build a =hydra= when given a keymap.
 #+begin_src emacs-lisp
   (use-package hercules
     :ensure t
     :after general)
 #+end_src
 ** Evil
-It's name tells everything: the Extensible Vi Layer for Emacs, [[github:emacs-evil/evil][Evil]]. It works pretty well as a Vim simulation, much better than VsCode's or Intellij's. Besides, it is charming combination of Vim's model-based editing with Emacs' keymap system, to some extent, as a personal opinion, better than the native Vim on the model-based editing system.
+It's name tells everything: the Extensible Vi Layer for Emacs, [[https://github.com/emacs-evil/evil][Evil]]. It works pretty well as a Vim simulation, much better than VsCode's or Intellij's. Besides, it is charming combination of Vim's model-based editing with Emacs' keymap system, to some extent, as a personal opinion, better than the native Vim on the model-based editing system.
 
 References:
 + [[https://github.com/noctuid/evil-guide][evil-guide]] by noctuid
@@ -395,7 +393,7 @@ Then, given that I'm using emacs' bindings in insert state, there is no point to
   ([remap evil-emacs-state] 'evil-normal-state)
 #+end_src
 
-[[github:christoomey/vim-tmux-navigator][vim-tmux-navigator]]-like window control:
+[[https://github.com/christoomey/vim-tmux-navigator][vim-tmux-navigator]]-like window control:
 #+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-general
   (general-nmap "C-j" 'evil-window-down)
   (general-nmap "C-k" 'evil-window-up)
@@ -455,7 +453,7 @@ I use =<leader>o= and =<leader>O= for them because they are close to =o= and =O=
 #+end_src
 
 *** evil-collection
-[[github:emacs-evil/evil-collection][evil-collection]] is a collection of helper functions / settings / etc for things native Evil does bad on.
+[[https://github.com/emacs-evil/evil-collection][evil-collection]] is a collection of helper functions / settings / etc for things native Evil does bad on.
 #+begin_src emacs-lisp
   (use-package evil-collection
     :after evil
@@ -481,7 +479,7 @@ I use =<leader>o= and =<leader>O= for them because they are close to =o= and =O=
   (general-setq evil-want-keybinding nil)
 #+end_src
 *** evil-easymotion
-[[github:PythonNut/evil-easymotion][evil-easymotion]] is a Evil port of Vim's, well, =easymotion=, which basically works in a way that instead of numbering how many jumps needed, by prefixing motions with a leader key, we use visual hint to go to the place we want. I hadn't tried =easymotion= during my Vim era though, but I like it now. It also provides integration with [[*evil-snipe][evil-snipe]].
+[[https://github.com/PythonNut/evil-easymotion][evil-easymotion]] is a Evil port of Vim's, well, =easymotion=, which basically works in a way that instead of numbering how many jumps needed, by prefixing motions with a leader key, we use visual hint to go to the place we want. I hadn't tried =easymotion= during my Vim era though, but I like it now. It also provides integration with [[*evil-snipe][evil-snipe]].
 #+begin_src emacs-lisp
   (use-package evil-easymotion
     :ensure t
@@ -513,7 +511,7 @@ I use =<leader>o= and =<leader>O= for them because they are close to =o= and =O=
 #+end_src
 
 *** evil-snipe
-[[github:hlissner/evil-snipe][evil-snipe]] is a Evil port of Vim's =clever-f= and =vim-sneak=. It currently does not support separating the scope for =f/F/t/T= from for =s/S=, which is a little bit annoying.
+[[https://github.com/hlissner/evil-snipe][evil-snipe]] is a Evil port of Vim's =clever-f= and =vim-sneak=. It currently does not support separating the scope for =f/F/t/T= from for =s/S=, which is a little bit annoying.
 #+begin_src emacs-lisp
   (use-package evil-snipe
     :ensure t
@@ -533,7 +531,7 @@ I use =<leader>o= and =<leader>O= for them because they are close to =o= and =O=
 #+end_src
 
 **** evil-find-char-pinyin
-[[github:cute-jumper/evil-find-char-pinyin][evil-find-char-pinyin]] is a helper plugin that allow =evil-snipe= to search for Chinese characters with their initial pinyins. For example, with this plugin =smt= could find 明天.
+[[https://github.com/cute-jumper/evil-find-char-pinyin][evil-find-char-pinyin]] is a helper plugin that allow =evil-snipe= to search for Chinese characters with their initial pinyins. For example, with this plugin =smt= could find 明天.
 
 This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for its integration with =evil-snipe='s motions.
 #+begin_src emacs-lisp
@@ -546,7 +544,7 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
 #+end_src
 
 *** evil-args
-[[github:wcsmith/evil-args][evil-args]] defines a new textobj for function arguments, and some other helpful functions.
+[[https://github.com/wcsmith/evil-args][evil-args]] defines a new textobj for function arguments, and some other helpful functions.
 #+begin_src emacs-lisp
   (use-package evil-args
     :ensure t
@@ -588,7 +586,7 @@ For me Helm fits me better because:
 2. During my Vim era I use Shougo's wonderful plugins Unite/Denite, which mimics the logic of Helm, so switching to Emacs with Helm mostly does not require switching my mind model for how to find things.
 3. Ivy is new compared with Helm, so it does not have as many add-ons available as Helm.
 ** Helm
-[[github:emacs-helm/helm][Helm]] is a generic incremental completion and selection narrowing framework for Emacs, as what Denite is for [Neo]vim. I currently does not set Helm to be auto-installed, so just install it with =M-x package-install RET helm RET=.
+[[https://github.com/emacs-helm/helm][Helm]] is a generic incremental completion and selection narrowing framework for Emacs, as what Denite is for [Neo]vim. I currently does not set Helm to be auto-installed, so just install it with =M-x package-install RET helm RET=.
 
 References:
 + [[https://github.com/thierryvolpiatto/emacs-tv-config/blob/master/init-helm.el][thierryvolpiatto's helm config]].
@@ -615,7 +613,7 @@ Turn on helm
     (helm-mode 1))
 #+end_src
 *** swiper-helm
-[[github:abo-abo/swiper-helm][swiper-helm]] is a Helm version of [[*swiper][swiper]]. That is, it use Helm as the backend instead of Ivy.
+[[https://github.com/abo-abo/swiper-helm][swiper-helm]] is a Helm version of [[*swiper][swiper]]. That is, it use Helm as the backend instead of Ivy.
 #+begin_src emacs-lisp
   (use-package swiper-helm
     :ensure t
@@ -629,7 +627,7 @@ Using =universal ctags=, it would be like this:
 gtags --gtagslabel=new-ctags
 #+end_src
 
-Anyway, [[github:syohex/emacs-helm-gtags][emacs-helm-gtags]] is a helm interface for =GNU GLOBAL=.
+Anyway, [[https://github.com/syohex/emacs-helm-gtags][emacs-helm-gtags]] is a helm interface for =GNU GLOBAL=.
 #+begin_src emacs-lisp
   (use-package helm-gtags
     :hook
@@ -643,7 +641,7 @@ Anyway, [[github:syohex/emacs-helm-gtags][emacs-helm-gtags]] is a helm interface
     (general-nmap "C-S-t" 'helm-gtags-next-history))
 #+end_src
 ** Ivy
-[[github:abo-abo/swiper#ivy][ivy]] is yet another generic incremental completion for Emacs.
+[[https://github.com/abo-abo/swiper#ivy][ivy]] is yet another generic incremental completion for Emacs.
 
 I don't use heavily on ivy anymore, but I still have it because its the dependency of swiper:
 #+begin_src emacs-lisp
@@ -668,7 +666,7 @@ I don't use heavily on ivy anymore, but I still have it because its the dependen
 #+end_src
 
 *** swiper
-[[github:swiper#swiper][swiper]] is an alternative to Emacs' builtin [[info:emacs#Basic%20Isearch][isearch]]. I use this over other alternatives because it has better integration by default with Evil's (or Vim's) search/substitution system.
+[[https://github.com/swiper#swiper][swiper]] is an alternative to Emacs' builtin [[info:emacs#Basic%20Isearch][isearch]]. I use this over other alternatives because it has better integration by default with Evil's (or Vim's) search/substitution system.
 #+begin_src emacs-lisp
   (use-package swiper
     :ensure t
@@ -699,7 +697,7 @@ I don't use heavily on ivy anymore, but I still have it because its the dependen
 #+end_src
 
 ** Treemacs
-[[github:Alexander-Miller/treemacs][treemacs]] is a tree layout explorer for files and many things else (tags, for example). It provides integration into many other popular packages in the ecosystem.
+[[https://github.com/Alexander-Miller/treemacs][treemacs]] is a tree layout explorer for files and many things else (tags, for example). It provides integration into many other popular packages in the ecosystem.
 #+begin_src emacs-lisp
   (use-package treemacs
     :ensure t
@@ -759,7 +757,7 @@ By completion I mean general text/code autocompletion, as Vim's =deoplete=.
 #+end_src
 
 ** Company-quickhelp
-[[github:expez/company-quickhelp][company-quickhelp]] is an add-on for =company= that make use of =popup-el=, which will show doc for current selected entry in a popup view.
+[[https://github.com/expez/company-quickhelp][company-quickhelp]] is an add-on for =company= that make use of =popup-el=, which will show doc for current selected entry in a popup view.
 #+begin_src emacs-lisp
   (use-package company-quickhelp
     :ensure t
@@ -775,7 +773,7 @@ Templates are always good time savers.
 Reference:
 [[http://www.howardism.org/Technical/Emacs/templates-tutorial.html][Having Emacs Type for You]] by Howard Abrams
 ** Yasnippet
-[[github:joaotavora/yasnippet][yasnippet]] is a template system for Emacs.
+[[https://github.com/joaotavora/yasnippet][yasnippet]] is a template system for Emacs.
 #+begin_src emacs-lisp :noweb yes
   (use-package yasnippet
     :ensure t
@@ -804,7 +802,7 @@ NOTE: I'm using =yankpad= now instead of directly using =yasnippet=, so I commen
 #+end_src
 
 ** Yankpad
-[[github:Kungsgeten/yankpad][yankpad]] is a cool package that expand snippets written in [[*Org Mode][org mode]] and optionally use [[*Yasnippet][yasnippet]] as the backend.
+[[https://github.com/Kungsgeten/yankpad][yankpad]] is a cool package that expand snippets written in [[*Org Mode][org mode]] and optionally use [[*Yasnippet][yasnippet]] as the backend.
 #+begin_src emacs-lisp
   (use-package yankpad
     :ensure t
@@ -821,7 +819,7 @@ NOTE: I'm using =yankpad= now instead of directly using =yasnippet=, so I commen
 * Code
 ** Projectile
 #+begin_quote
-[[github:bbatsov/projectile][projectile]] is a project interaction library for Emacs.
+[[https://github.com/bbatsov/projectile][projectile]] is a project interaction library for Emacs.
 #+end_quote
 
 #+begin_src emacs-lisp
@@ -839,7 +837,7 @@ NOTE: I'm using =yankpad= now instead of directly using =yasnippet=, so I commen
     (projectile-mode +1))
 #+end_src
 
-Replace the wierd default interface with =helm= by using [[github:bbatsov/helm-projectile][helm-projectile]]
+Replace the wierd default interface with =helm= by using [[https://github.com/bbatsov/helm-projectile][helm-projectile]]
 #+begin_src emacs-lisp
   (use-package helm-projectile
     :after projectile
@@ -856,7 +854,7 @@ Its =treemacs= integration that provides a helper function to add =projectile= p
 #+end_src
 
 ** flycheck
-[[github:flycheck/flycheck][flycheck]] is a async syntax checking framework for Emacs, as =ALE= for Vim.
+[[https://github.com/flycheck/flycheck][flycheck]] is a async syntax checking framework for Emacs, as =ALE= for Vim.
 #+begin_src emacs-lisp
   (use-package flycheck
     :ensure t
@@ -865,7 +863,7 @@ Its =treemacs= integration that provides a helper function to add =projectile= p
 #+end_src
 
 ** lsp-mode
-[[github:emacs-lsp/lsp-mode][lsp-mode]] is Emacs' client/library for the Language Server Protocol. It integrates with Emacs' ecosystem heavily.
+[[https://github.com/emacs-lsp/lsp-mode][lsp-mode]] is Emacs' client/library for the Language Server Protocol. It integrates with Emacs' ecosystem heavily.
 
 #+begin_src emacs-lisp
   (use-package lsp-mode
@@ -881,7 +879,7 @@ Its =treemacs= integration that provides a helper function to add =projectile= p
 #+end_src
 
 *** lsp-ui
-[[github:emacs-lsp/lsp-ui][lsp-ui]] is the high-level UI module for =lsp-mode=.
+[[https://github.com/emacs-lsp/lsp-ui][lsp-ui]] is the high-level UI module for =lsp-mode=.
 
 Based on [[https://github.com/emacs-lsp/lsp-ui/pull/208][this]] PR, there is no need to set up anything because =lsp-mode= will load =lsp-ui= itself.
 #+begin_src emacs-lisp
@@ -891,7 +889,7 @@ Based on [[https://github.com/emacs-lsp/lsp-ui/pull/208][this]] PR, there is no 
 #+end_src
 
 *** company-lsp
-[[github:tigersoldier/company-lsp][company-lsp]], as the name suggests, is the =company= backend for =lsp-mode=.
+[[https://github.com/tigersoldier/company-lsp][company-lsp]], as the name suggests, is the =company= backend for =lsp-mode=.
 #+begin_src emacs-lisp
   (use-package company-lsp
     :ensure t
@@ -901,7 +899,7 @@ Based on [[https://github.com/emacs-lsp/lsp-ui/pull/208][this]] PR, there is no 
 #+end_src
 
 *** lsp-treemacs
-[[github:emacs-lsp/lsp-treemacs][lsp-treemacs]] display =lsp-mode= linting and symbols in a tree structure, using =treemacs= as the frontend.
+[[https://github.com/emacs-lsp/lsp-treemacs][lsp-treemacs]] display =lsp-mode= linting and symbols in a tree structure, using =treemacs= as the frontend.
 #+begin_src emacs-lisp
   (use-package lsp-treemacs
     :ensure t
@@ -909,7 +907,7 @@ Based on [[https://github.com/emacs-lsp/lsp-ui/pull/208][this]] PR, there is no 
 #+end_src
 
 *** helm-lsp
-[[github:emacs-lsp/helm-lsp][helm-lsp]] provides two helper =helm= commands for =lsp-mode= that list workspace symbols.
+[[https://github.com/emacs-lsp/helm-lsp][helm-lsp]] provides two helper =helm= commands for =lsp-mode= that list workspace symbols.
 #+begin_src emacs-lisp
   (use-package helm-lsp
     :ensure t
@@ -949,7 +947,7 @@ Turn on =org-indent=, aka clean view by default:
   (general-setq org-startup-indented t)
 #+end_src
 
-Enforce todo dependencies (i.e. children block their parent)
+Enforce to-do dependencies (i.e. children block their parent)
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
   (general-setq org-enforce-todo-dependencies t)
 #+end_src
@@ -1091,7 +1089,7 @@ I declared a hydra for =org-babel= to make things easier:
 #+end_src
 
 ** org-brain
-[[github:Kungsgeten/org-brain][org-brain]] implements concept mapping for org mode, and is also a tool to build my own personal wiki.
+[[https://github.com/Kungsgeten/org-brain][org-brain]] implements concept mapping for org mode, and is also a tool to build my own personal wiki.
 
 Enable tracking org heading links using globally unique uids. This is a must-have even without =org-brain=, because org mode won't fix the broken links when you refile/archive some subtrees to a different file.
 #+begin_src emacs-lisp
@@ -1128,7 +1126,7 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
 #+end_src
 
 ** org-board
-[[github:scallywag/org-board][org-board]] is a helper package that archives web pages locally via =wget=. It enable my personal wiki to save web content so that I can review / grab things later.
+[[https://github.com/scallywag/org-board][org-board]] is a helper package that archives web pages locally via =wget=. It enable my personal wiki to save web content so that I can review / grab things later.
 #+begin_src emacs-lisp
   (use-package org-board
     :ensure t
@@ -1156,7 +1154,7 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
 #+end_src
 
 ** toc-org
-[[github:snosov1/toc-org][toc-org]] will automatically update the content of the first heading with a =:TOC:= tag in an org file to show an up-to-date TOC whenever the file is saved. Handy!
+[[https://github.com/snosov1/toc-org][toc-org]] will automatically update the content of the first heading with a =:TOC:= tag in an org file to show an up-to-date TOC whenever the file is saved. Handy!
 #+begin_src emacs-lisp
   (use-package toc-org
     :ensure t
@@ -1281,7 +1279,7 @@ reference:
 #+end_src
 
 * Magit
-[[github:magit/magit][magit]] is an Emacs interface to git, which provides not only commands to call but also a full GUI-like wrapper around git.
+[[https://github.com/magit/magit][magit]] is an Emacs interface to git, which provides not only commands to call but also a full GUI-like wrapper around git.
 #+begin_src emacs-lisp
   (use-package magit
     :ensure t)
