@@ -1216,6 +1216,33 @@ Use different font-size for headers, use sans-serif for non-code-like parts (pow
   (org-indent                ((t (:inherit (org-hide fixed-pitch)))))
 #+end_src
 
+8 levels of headings are sometimes not enough for me, thus I define several more levels:
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (defface org-level-9
+        '((t (:inherit org-level-8 :height 1.0 :foreground "#83a598")))
+        "Face used for level 9 headlines."
+        :group 'org-faces)
+  (defface org-level-10
+        '((t (:inherit org-level-8 :height 1.0 :foreground "#fabd2f")))
+        "Face used for level 10 headlines."
+        :group 'org-faces)
+  (defface org-level-11
+        '((t (:inherit org-level-8 :height 1.0 :foreground "#d3869b")))
+        "Face used for level 11 headlines."
+        :group 'org-faces)
+  (defface org-level-12
+        '((t (:inherit org-level-8 :height 1.0 :foreground "#fb4933")))
+        "Face used for level 12 headlines."
+        :group 'org-faces)
+  (general-setq org-level-faces (append org-level-faces (list 'org-level-9 'org-level-10 'org-level-11 'org-level-12)))
+  (general-setq org-n-level-faces (length org-level-faces))
+#+end_src
+
+The main reason I add more level faces is that I don't want the large first levels to show up again at level more than 8. Thus it is also reasonable to turn of level cycling:
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-cycle-level-faces nil)
+#+end_src
+
 * Language specific
 ** plantuml
 [[http://plantuml.com/][plantuml]] is a language / tool that draws sequence diagram, class dependency diagram and so on with text instructions.
