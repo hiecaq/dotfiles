@@ -43,6 +43,7 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
   - [[#helm][Helm]]
   - [[#ivy][Ivy]]
   - [[#undo-tree][Undo-tree]]
+  - [[#ggtags][ggtags]]
   - [[#treemacs][Treemacs]]
 - [[#completion][Completion]]
   - [[#company][Company]]
@@ -51,6 +52,7 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
   - [[#yasnippet][Yasnippet]]
   - [[#yankpad][Yankpad]]
 - [[#code][Code]]
+  - [[#xref][xref]]
   - [[#projectile][Projectile]]
   - [[#flycheck][flycheck]]
   - [[#lsp-mode][lsp-mode]]
@@ -467,6 +469,7 @@ I use =<leader>o= and =<leader>O= for them because they are close to =o= and =O=
     (evil-collection-init 'minibuffer)
     (evil-collection-init 'helm)
     (evil-collection-init 'flycheck)
+    (evil-collection-init 'xref)
     (evil-collection-init 'magit)
     (evil-collection-init 'which-key))
 #+end_src
@@ -600,7 +603,10 @@ References:
     ([remap list-buffers] 'helm-buffers-list)
     ([remap dabbrev-expand] 'helm-dabbrev)
     ([remap execute-extended-command] 'helm-M-x)
+    ([remap imenu] 'helm-imenu)
+    (general-nmap "gO" 'helm-semantic-or-imenu)
     :init
+    (general-setq helm-command-prefix-key "C-c h")
     (unless (boundp 'completion-in-region-function)
       (general-def lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
       (general-def emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point)))
@@ -621,15 +627,10 @@ Turn on helm
     :general ("C-s" 'swiper-helm))
 #+end_src
 *** helm-gtags
-[[https://www.gnu.org/software/global/][GNU GLOBAL]] is a source code tagging system that recognize references and that can also use =ctags= as a backend.
-Using =universal ctags=, it would be like this:
-#+begin_src sh
-gtags --gtagslabel=new-ctags
-#+end_src
-
-Anyway, [[https://github.com/syohex/emacs-helm-gtags][emacs-helm-gtags]] is a helm interface for =GNU GLOBAL=.
+[[https://github.com/syohex/emacs-helm-gtags][emacs-helm-gtags]] is a helm interface for =GNU GLOBAL=.
 #+begin_src emacs-lisp
   (use-package helm-gtags
+    :disabled
     :hook
     ((c-mode c++-mode asm-mode) . helm-gtags-mode)
     :general
@@ -694,6 +695,24 @@ I don't use heavily on ivy anymore, but I still have it because its the dependen
       "u" 'undo-tree-visualize)
     :config
     (global-undo-tree-mode +1))
+#+end_src
+
+** ggtags
+[[https://www.gnu.org/software/global/][GNU GLOBAL]] is a source code tagging system that recognize references and that can also use =ctags= as a backend.
+Using =universal ctags=, it would be like this:
+#+begin_src sh
+gtags --gtagslabel=new-ctags
+#+end_src
+[[https://github.com/leoliu/ggtags][ggtags]] is an Emacs interface to GLOBAL. Different from =helm-gtags=, it integrates into Emacs' own ecosystem like =xref= and =eldoc=.
+#+begin_src emacs-lisp
+  (use-package ggtags
+    :ensure t
+    :hook
+    ((c-mode c++-mode asm-mode) . ggtags-mode)
+    :general
+    (general-nmap "gs" 'ggtags-find-other-symbol)
+    :init
+    (general-setq ggtags-extra-args (list "--gtagslabel=new-ctags")))
 #+end_src
 
 ** Treemacs
@@ -817,6 +836,24 @@ NOTE: I'm using =yankpad= now instead of directly using =yasnippet=, so I commen
 #+end_src
 
 * Code
+** xref
+=xref= is an Emacs built-in cross referencing browsing package.
+#+begin_quote
+This file provides a somewhat generic infrastructure for cross referencing commands, in particular "find-definition".
+#+end_quote
+
+#+begin_src emacs-lisp
+  (use-package xref
+    :init
+    (general-setq xref-prompt-for-identifier nil)
+    :general
+    (general-nmap "gr" 'xref-find-references)
+    (general-nmap "C-w ]" 'xref-find-definitions-other-window)
+    (general-nmap "C-w C-]" 'xref-find-definitions-other-window)
+    (general-nmap "C-w g C-]" 'xref-find-definitions-other-window)
+    (general-nmap "C-w g ]" 'xref-find-definitions-other-window))
+#+end_src
+
 ** Projectile
 #+begin_quote
 [[https://github.com/bbatsov/projectile][projectile]] is a project interaction library for Emacs.
@@ -1271,6 +1308,7 @@ reference:
 + [[https://aumayr.github.io/beancount-docs-static/index.html][Beancount Documentation]]
 #+begin_src emacs-lisp
   (use-package beancount
+    :if (eq system-type 'gnu/linux)
     :load-path "/usr/elisp/"
     :mode ("\\.beancount\\'" . beancount-mode)
     :init
