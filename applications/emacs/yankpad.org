@@ -1,0 +1,75 @@
+* c-mode
+:PROPERTIES:
+:INCLUDE:  Curly brace
+:END:
+Generally I use OTBS for my own code in curly braced language, including =C=.
+** main: main :src:
+OTBS style main
+#+begin_src c
+  int main(int argc, char *argv[]) {
+      $0
+  }
+#+end_src
+
+* Curly brace
+** if: curly braced if :src:wrap:
+#+begin_src c
+  if ($1) {
+      $0
+  }
+#+end_src
+
+** ife: curly braced if else :src:wrap:
+#+begin_src c
+  if ($1) {
+      $2
+  } else {
+      $0
+  }
+#+end_src
+
+** for: curly braced for loop :src:wrap:
+#+begin_src c
+  for (${1:int i = 0}; ${2}; ${3:++i}) {
+      $0
+  }
+#+end_src
+
+** while: curly braced while loop :src:wrap:
+#+begin_src c
+  while (${1:1}) {
+      $0
+  }
+#+end_src
+
+** dowhile: curly braced do while loop :src:wrap:
+#+begin_src c
+  do {
+      $0
+  } while (${1:1})
+#+end_src
+
+* org-mode
+** ex: example
+#+begin_example
+$0
+#+end_example
+
+** quo: quote :wrap:
+#+begin_quote
+$0
+#+end_quote
+
+** elisp: elisp src block
+#+begin_src emacs-lisp$1
+$0
+#+end_src
+
+** dot: graphviz dot src block
+#+begin_src dot$1
+$0
+#+end_src
+
+* Default :global:
+** lorem: lorem ipsum
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
