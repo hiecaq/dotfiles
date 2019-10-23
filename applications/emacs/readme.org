@@ -175,13 +175,25 @@ I don't have specific code for Mac yet.
 :PROPERTIES:
 :header-args:emacs-lisp: :tangle no :noweb-ref Windows
 :END:
-I don't have specific code for Windows yet.
+Said to be a way to make Emacs faster on windows (by running GC less often)
+#+begin_src emacs-lisp
+  (setq gc-cons-threshold (* 512 1024 1024))
+  (setq gc-cons-percentage 0.5)
+  (run-with-idle-timer 5 t #'garbage-collect)
+#+end_src
 
+Also, the default font for Chinese slow down Emacs terribly on Windows:
+
+#+begin_src emacs-lisp
+  (when (eq window-system 'w32)
+    (dolist (charset '(kana han cjk-misc bopomofo))
+      (set-fontset-font t charset (font-spec :family "微软雅黑"))))
+#+end_src
 ** Linux
 :PROPERTIES:
 :header-args:emacs-lisp: :tangle no :noweb-ref Linux
 :END:
-Turn on spell checks
+I don't have specific code for Mac yet.
 
 ** GUI
 :PROPERTIES:
@@ -561,6 +573,55 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
     (general-nmap "go" 'evil-jump-out-args))
 #+end_src
 
+*** evil-visualstar
+[[https://github.com/bling/evil-visualstar][evil-visualstar]] allow using =*= =#= on all visual selection.
+#+begin_src emacs-lisp
+  (use-package evil-visualstar
+    :ensure t
+    :after evil
+    :config
+    (global-evil-visualstar-mode))
+#+end_src
+
+*** evil-matchit
+[[https://github.com/redguardtoo/evil-matchit][evil-matchit]] is the port of, well, =matchit=. It also provides two text objects, namely =a%= and =i%=.
+#+begin_src emacs-lisp
+  (use-package evil-matchit
+    :after evil
+    :ensure t
+    :config
+    (global-evil-matchit-mode 1))
+#+end_src
+*** evil-lion
+[[https://github.com/edkolev/evil-lion][evil-lion]] defines an alignment operator.
+#+begin_src emacs-lisp
+  (use-package evil-lion
+    :ensure t
+    :general
+    (general-nvmap "ga" 'evil-lion-left)
+    (general-nvmap "gA" 'evil-lion-right))
+#+end_src
+
+*** evil-replace-with-register
+[[https://github.com/Dewdrops/evil-ReplaceWithRegister][evil-replace-with-register]] defines a =rplace= operator.
+#+begin_src emacs-lisp
+  (use-package evil-replace-with-register
+    :ensure t
+    :general
+    (general-nvmap "_" 'evil-replace-with-register)
+    (general-nvmap "_" 'evil-replace-with-register))
+#+end_src
+
+*** evil-numbers
+[[https://github.com/cofi/evil-numbers][evil-numbers]] takes =c-a= back (and can be mapped to different states!).
+#+begin_src emacs-lisp
+  (use-package evil-numbers
+    :ensure t
+    :general
+    (general-nvmap "C-a" 'evil-numbers/inc-at-pt)
+    (general-nvmap "C-S-a" 'evil-numbers/dec-at-pt))
+#+end_src
+
 * Spell Checking
 Emacs comes with its own spell checking mode (=ispell.el=)...
 #+begin_src emacs-lisp
@@ -598,12 +659,12 @@ References:
   (use-package helm-config
     :demand t
     :general
-    ([remap find-file] 'helm-find-files)
-    ([remap occur] 'helm-occur)
-    ([remap list-buffers] 'helm-buffers-list)
-    ([remap dabbrev-expand] 'helm-dabbrev)
+    ([remap find-file]                'helm-find-files)
+    ([remap occur]                    'helm-occur)
+    ([remap list-buffers]             'helm-buffers-list)
+    ([remap dabbrev-expand]           'helm-dabbrev)
     ([remap execute-extended-command] 'helm-M-x)
-    ([remap imenu] 'helm-imenu)
+    ([remap imenu]                    'helm-imenu)
     (general-nmap "gO" 'helm-semantic-or-imenu)
     :init
     (general-setq helm-command-prefix-key "C-c h")
