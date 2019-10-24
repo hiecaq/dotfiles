@@ -212,9 +212,10 @@ Setting faces:
   (set-face-attribute 'default nil :font "DejaVuSansMono Nerd Font")
   (set-face-attribute 'variable-pitch nil :weight 'normal :inherit 'default)
   (cond
-      ((x-list-fonts   "Lucida Grande")   (set-face-attribute 'variable-pitch nil :font   "Lucida Grande"))
-      ((x-list-fonts   "Verdana")         (set-face-attribute 'variable-pitch nil :font   "Verdana"))
-      ((x-family-fonts "Sans Serif")      (set-face-attribute 'variable-pitch nil :family "Sans Serif"))
+      ((x-family-fonts  "Latin Modern Math") (set-face-attribute 'variable-pitch nil :family "Latin Modern Math"))
+      ((x-list-fonts   "Lucida Grande")      (set-face-attribute 'variable-pitch nil :font   "Lucida Grande"))
+      ((x-list-fonts   "Verdana")            (set-face-attribute 'variable-pitch nil :font   "Verdana"))
+      ((x-family-fonts "Sans Serif")         (set-face-attribute 'variable-pitch nil :family "Sans Serif"))
       (nil (warn "Cannot find a Sans Serif Font.")))
   (set-face-attribute 'fixed-pitch nil :inherit 'default)
 #+end_src
@@ -617,9 +618,50 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
 #+begin_src emacs-lisp
   (use-package evil-numbers
     :ensure t
+    :after evil
     :general
     (general-nvmap "C-a" 'evil-numbers/inc-at-pt)
     (general-nvmap "C-S-a" 'evil-numbers/dec-at-pt))
+#+end_src
+
+*** evil-surround
+[[https://github.com/emacs-evil/evil-surround][evil-surround]] defines operators that change/add/delete delimiters around a text object.
+#+begin_src emacs-lisp
+  (use-package evil-surround
+    :ensure t
+    :after evil
+    :config
+    (global-evil-surround-mode 1))
+#+end_src
+
+*** evil-string-inflection
+[[https://github.com/ninrod/evil-string-inflection][evil-string-inflection]] provides an operator that toggle a textobj between =PascalCase=, =camalcase=, =dash-case=, =snake_case= and  =SYMBOL_CASE=. Unfortunately it does not provide a way to disable the default bindings, so I have to unbind it manually.
+#+begin_src emacs-lisp
+  (use-package evil-string-inflection
+    :ensure t
+    :after evil
+    :general
+    (general-unbind 'normal "g~")
+    (general-nmap "g~" 'evil-invert-case)
+    (general-nmap "g-" 'evil-operator-string-inflection))
+#+end_src
+
+*** evil-commentary
+[[https://github.com/linktohack/evil-commentary][evil-commentary]] defines operators for commenting.
+#+begin_src emacs-lisp
+  (use-package evil-commentary
+    :ensure t
+    :after evil
+    :config
+    (evil-commentary-mode))
+#+end_src
+
+*** evil-textobj-line
+[[https://github.com/syohex/evil-textobj-line][evil-textobj-line]] defines text objects for a single line.
+#+begin_src emacs-lisp
+  (use-package evil-textobj-line
+    :ensure t
+    :after evil)
 #+end_src
 
 * Spell Checking
@@ -764,6 +806,7 @@ Using =universal ctags=, it would be like this:
 #+begin_src sh
 gtags --gtagslabel=new-ctags
 #+end_src
+
 [[https://github.com/leoliu/ggtags][ggtags]] is an Emacs interface to GLOBAL. Different from =helm-gtags=, it integrates into Emacs' own ecosystem like =xref= and =eldoc=.
 #+begin_src emacs-lisp
   (use-package ggtags
