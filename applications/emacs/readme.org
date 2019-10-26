@@ -42,9 +42,11 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
 - [[#ui-enhance][UI Enhance]]
   - [[#helm][Helm]]
   - [[#ivy][Ivy]]
+  - [[#highlight-indent-guides][highlight-indent-guides]]
   - [[#undo-tree][Undo-tree]]
   - [[#ggtags][ggtags]]
   - [[#treemacs][Treemacs]]
+  - [[#telephone-line][Telephone-line]]
 - [[#completion][Completion]]
   - [[#company][Company]]
   - [[#company-quickhelp][Company-quickhelp]]
@@ -87,11 +89,10 @@ When there is no =init.el= tangled yet, run =C-c= on this block to generate the 
   (let ((src (expand-file-name "readme.org" user-emacs-directory))
         (dst (expand-file-name "init.el" user-emacs-directory)))
     (when (file-newer-than-file-p src dst)
-      (call-process
-       (concat invocation-directory invocation-name)
-       nil nil t
-       "-q" "--batch" "--eval" "(require 'ob-tangle)"
-       "--eval" (format "(org-babel-tangle-file \"%s\" \"%s\" 'emacs-lisp)" src dst)))
+      (call-process (concat invocation-directory invocation-name)
+                    nil nil t
+                    "-q" "--batch" "--eval" "(require 'ob-tangle)"
+                    "--eval" (format "(org-babel-tangle-file \"%s\" \"%s\" 'emacs-lisp)" src dst)))
     ;; (require 'bytecomp)
     ;; (byte-recompile-file dst nil 0 t)
     )
@@ -823,6 +824,20 @@ I don't use heavily on ivy anymore, but I still have it because its the dependen
     (general-imap ivy-minibuffer-map "C-n" 'ivy-next-line)
     :commands (swiper swiper-backward))
 #+end_src
+** highlight-indent-guides
+[[https://github.com/DarthFennec/highlight-indent-guides][highlight-indent-guides]] shows indent guides (with =font lock=)!
+#+begin_src emacs-lisp
+  (use-package highlight-indent-guides
+    :if (display-graphic-p)
+    :ensure t
+    :after company-box
+    :hook (prog-mode . highlight-indent-guides-mode)
+    :init
+    (general-setq highlight-indent-guides-responsive 'top)
+    (general-setq highlight-indent-guides-method 'character)
+    (general-setq highlight-indent-guides-character ?│))
+#+end_src
+
 ** Undo-tree
 [[https://www.emacswiki.org/emacs/UndoTree][undo-tree]] provides a visualization for the undo history. It is a prereq for [[*Evil][Evil]].
 #+begin_src emacs-lisp
@@ -891,6 +906,43 @@ Its evil integration:
   (use-package treemacs-evil
     :ensure t
     :after (treemacs evil))
+#+end_src
+
+** Telephone-line
+Reference:
+1. [[https://github.com/dbordak/telephone-line/blob/master/configuration.org][Configuration.org]]
+2. [[https://github.com/dbordak/telephone-line/blob/master/examples.org][examples.org]]
+3. [[https://github.com/dbordak/telephone-line/blob/master/telephone-line-segments.el][telephone-line-segments.org]]
+#+begin_src emacs-lisp
+  (use-package telephone-line
+    :ensure t
+    :init
+    (general-setq telephone-line-lhs
+                  '((evil . (telephone-line-evil-tag-segment))
+                    (accent . (telephone-line-vc-segment
+                               telephone-line-erc-modified-channels-segment
+                               telephone-line-process-segment))
+                    (nil . (telephone-line-projectile-segment
+                            telephone-line-buffer-segment))))
+    (general-setq telephone-line-rhs
+                  '((nil . (telephone-line-flycheck-segment
+                            telephone-line-misc-info-segment))
+                    (accent . (telephone-line-major-mode-segment))
+                    (evil (telephone-line-airline-position-segment))))
+    :custom-face
+    (telephone-line-evil-normal      ((t (:inherit telephone-line-evil :foreground "#d5c4a1" :background "#665c54"))))
+    (telephone-line-evil-insert      ((t (:inherit telephone-line-evil :foreground "#282828" :background "#83a598"))))
+    (telephone-line-evil-replace     ((t (:inherit telephone-line-evil :foreground "#282828" :background "#8ec07c"))))
+    (telephone-line-evil-visual      ((t (:inherit telephone-line-evil :foreground "#282828" :background "#fe8019"))))
+    (telephone-line-evil-operator    ((t (:inherit telephone-line-evil :foreground "#282828" :background "#fabd2f"))))
+    (telephone-line-evil-emacs       ((t (:inherit telephone-line-evil :foreground "#282828" :background "#d3869b"))))
+    (telephone-line-evil-motion      ((t (:inherit telephone-line-evil :foreground "#282828" :background "#b8bb26"))))
+    (telephone-line-accent-inactive  ((t (:inherit mode-line-inactive  :foreground "#ebdbb2" :background "#282828"))))
+    (telephone-line-accent-active    ((t (:inherit mode-line           :foreground "#ebdbb2" :background "#282828" :weight bold))))
+    (telephone-line-projectile       ((t (:inherit mode-line           :foreground "#83a598" :weight     bold))))
+    (telephone-line-unimportant      ((t (:inherit mode-line           :foreground "#7c6f64"))))
+    :config
+    (telephone-line-mode +1))
 #+end_src
 
 * Completion
