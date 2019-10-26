@@ -48,6 +48,7 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
 - [[#completion][Completion]]
   - [[#company][Company]]
   - [[#company-quickhelp][Company-quickhelp]]
+  - [[#company-box][Company-box]]
 - [[#templates][Templates]]
   - [[#yasnippet][Yasnippet]]
   - [[#yankpad][Yankpad]]
@@ -565,8 +566,8 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
   (use-package evil-args
     :ensure t
     :general
-    (general-def 'evil-inner-text-objects-map "," 'evil-inner-arg)
-    (general-def 'evil-outer-text-objects-map "," 'evil-outer-arg)
+    (evil-inner-text-objects-map "," 'evil-inner-arg)
+    (evil-outer-text-objects-map "," 'evil-outer-arg)
     (general-nmap "]," 'evil-forward-arg)
     (general-nmap "[," 'evil-backward-arg)
     (general-mmap "]," 'evil-forward-arg)
@@ -664,6 +665,21 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
     :after evil)
 #+end_src
 
+*** evil-textobj-indent
+[[https://github.com/TheBB/evil-indent-plus][evil-indent-plus]] defines text objects for block of code that has same/higher indentation.
+#+begin_src emacs-lisp
+  (use-package evil-indent-plus
+    :ensure t
+    :after evil
+    :general
+    (evil-inner-text-objects-map "i" 'evil-indent-plus-i-indent)
+    (evil-outer-text-objects-map "i" 'evil-indent-plus-a-indent)
+    (evil-inner-text-objects-map "I" 'evil-indent-plus-i-indent-up)
+    (evil-outer-text-objects-map "I" 'evil-indent-plus-a-indent-up)
+    (evil-inner-text-objects-map "J" 'evil-indent-plus-i-indent-up-down)
+    (evil-outer-text-objects-map "J" 'evil-indent-plus-a-indent-up-down))
+#+end_src
+
 * Spell Checking
 Emacs comes with its own spell checking mode (=ispell.el=)...
 #+begin_src emacs-lisp
@@ -721,6 +737,7 @@ Turn on helm
     :config
     (helm-mode 1))
 #+end_src
+
 *** swiper-helm
 [[https://github.com/abo-abo/swiper-helm][swiper-helm]] is a Helm version of [[*swiper][swiper]]. That is, it use Helm as the backend instead of Ivy.
 #+begin_src emacs-lisp
@@ -729,6 +746,7 @@ Turn on helm
     :after (helm-config swiper)
     :general ("C-s" 'swiper-helm))
 #+end_src
+
 *** helm-gtags
 [[https://github.com/syohex/emacs-helm-gtags][emacs-helm-gtags]] is a helm interface for =GNU GLOBAL=.
 #+begin_src emacs-lisp
@@ -743,6 +761,30 @@ Turn on helm
     (general-nmap "gr" 'helm-gtags-tags-in-this-function)
     (general-nmap "C-t" 'helm-gtags-previous-history)
     (general-nmap "C-S-t" 'helm-gtags-next-history))
+#+end_src
+
+*** helm and ag/rg
+=helm-do-grep-ag= supports using =ag= and =rg= by itself, so technically =helm-rg= and =helm-ag= are not necessary.
+But, [[https://github.com/cosmicexplorer/helm-rg][helm-rg]] is used by =helm-projectile= for some reason (and there seems no way to delegate it to use =helm-do-grep-ag=, thus
+#+begin_src emacs-lisp
+  (use-package helm-rg
+    :if (executable-find "rg")
+    :ensure t
+    :init
+    (progn
+      (general-setq helm-grep-ag-command "rg --color=always --colors 'match:fg:black' --colors 'match:bg:yellow' --smart-case --no-heading --line-number %s %s %s")
+      (general-setq helm-grep-ag-pipe-cmd-switches '("--colors 'match:fg:black'" "--colors 'match:bg:yellow'"))))
+#+end_src
+
+and also fallback to [[https://github.com/syohex/emacs-helm-ag][helm-ag]] if =rg= is not available:
+#+begin_src emacs-lisp
+  (use-package helm-ag
+    :if (and (executable-find "ag") (not (executable-find "rg")))
+    :ensure t
+    :init
+    (progn
+      (general-setq helm-grep-ag-command "ag --line-numbers -S --hidden --color --color-match '31;43' --nogroup %s %s %s")
+      (general-setq helm-grep-ag-pipe-cmd-switches '("--color-match '31;43'"))))
 #+end_src
 ** Ivy
 [[https://github.com/abo-abo/swiper#ivy][ivy]] is yet another generic incremental completion for Emacs.
@@ -883,12 +925,24 @@ By completion I mean general text/code autocompletion, as Vim's =deoplete=.
 [[https://github.com/expez/company-quickhelp][company-quickhelp]] is an add-on for =company= that make use of =popup-el=, which will show doc for current selected entry in a popup view.
 #+begin_src emacs-lisp
   (use-package company-quickhelp
+    :unless (display-graphic-p)
     :ensure t
     :after company
     :init
     (general-setq company-quickhelp-delay nil)
     :config
     (company-quickhelp-mode))
+#+end_src
+
+** Company-box
+[[https://github.com/sebastiencs/company-box][company-box]] is a frontend for =company= that does not use popup (thus it doesn't screw up with different font size) and show icons for each candidate.
+#+begin_src emacs-lisp
+  (use-package company-box
+    :if (display-graphic-p)
+    :ensure t
+    :after company
+    :hook
+    (company-mode . company-box-mode))
 #+end_src
 
 * Templates
