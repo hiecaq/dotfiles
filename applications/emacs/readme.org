@@ -31,6 +31,8 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
   - [[#paradox][Paradox]]
 - [[#miscs][Miscs]]
   - [[#xdg][Xdg]]
+  - [[#bookmark][Bookmark]]
+  - [[#recentf][Recentf]]
   - [[#editorconfig][Editorconfig]]
 - [[#colors][Colors]]
 - [[#key-bindings][Key Bindings]]
@@ -283,6 +285,24 @@ Then it will be reasonble to put those annoying but extremely helpful stuff into
             `(("." . ,backup-dir)))
       (setq auto-save-file-name-transforms
             `((".*" ,autosave-dir t)))))
+#+end_src
+
+** Bookmark
+Emacs has its own =bookmark= system built-in:
+#+begin_src emacs-lisp
+  (use-package bookmark
+    :defer t
+    :init
+    (setq bookmark-default-file (expand-file-name "emacs/bookmarks" (xdg-data-home))))
+#+end_src
+
+** Recentf
+=recentf= (also a built-in) saves recent file list.
+#+begin_src emacs-lisp
+  (use-package recentf
+    :defer t
+    :init
+    (setq recentf-save-file (expand-file-name "emacs/recentf" (xdg-cache-home))))
 #+end_src
 
 ** Editorconfig
