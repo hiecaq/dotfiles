@@ -80,6 +80,9 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
 
 * General Settings
 ** Coding and Languages
+:PROPERTIES:
+:ID:       14ff9134-235e-4869-a707-321c4fcde890
+:END:
 Use Utf-8 as the default coding system.
 #+begin_src emacs-lisp
   (set-language-environment "UTF-8")
@@ -87,6 +90,9 @@ Use Utf-8 as the default coding system.
 #+end_src
 
 ** Tangle =init.el=
+:PROPERTIES:
+:ID:       04a28cd7-8055-4140-9dd4-dffd431231a5
+:END:
 When there is no =init.el= tangled yet, run =C-c= on this block to generate the first =init.el=.
 #+begin_src emacs-lisp
   (let ((src (expand-file-name "readme.org" user-emacs-directory))
@@ -102,6 +108,9 @@ When there is no =init.el= tangled yet, run =C-c= on this block to generate the 
 #+end_src
 
 ** Some helpful defaults
+:PROPERTIES:
+:ID:       374eeea8-3283-4a4c-8d3f-36bf6961cd09
+:END:
 It is reasonable to just turn off menu bar because I want to go mouse-less.
 #+begin_src emacs-lisp
   (menu-bar-mode -1)
@@ -142,6 +151,9 @@ General programming set up:
 #+end_src
 
 * Emacs as a server
+:PROPERTIES:
+:ID:       61824a41-57c9-48ac-bae6-cedbc44da756
+:END:
 One of the most disadvantage of Emacs compared with Vim is its startup time. Running Emacs as a server improves this to a really usable level.
 #+begin_src emacs-lisp
   (require 'server)
@@ -155,6 +167,9 @@ This part contains code specific to platforms, usually UI or PATH related.
 I don't have specific code for Mac yet.
 
 ** Windows
+:PROPERTIES:
+:ID:       b5dcf790-fb48-4680-8a26-85ef67d843c8
+:END:
 Said to be a way to make Emacs faster on windows (by running GC less often)
 #+begin_src emacs-lisp
   (when (eq system-type 'windows-nt)
@@ -174,6 +189,9 @@ Also, the default font for Chinese slow down Emacs terribly on Windows:
 I don't have specific code for Linux yet.
 
 ** GUI
+:PROPERTIES:
+:ID:       d23b3e41-cc43-4bb2-b8a2-5416dcb2d51c
+:END:
 Turn off blink cursor, scroll bar and tool bar:
 #+begin_src emacs-lisp
   (ignore-errors
@@ -182,7 +200,7 @@ Turn off blink cursor, scroll bar and tool bar:
     (tool-bar-mode -1))
 #+end_src
 
-Setting faces:
+Setting faces. Technically this should be done in the =TRUE= branch for all cases, but ~(x-*-fonts)~ functions are not available in TUI Emacs, including =systemd=-started Emacs daemon.
 #+begin_src emacs-lisp
   (set-face-attribute 'default nil :height 140)
   (set-face-attribute 'variable-pitch nil :weight 'normal :inherit 'default)
@@ -214,6 +232,9 @@ I don't have specific code for TUI yet.
 
 * Package Management
 ** Proxy, Archives and Mirrors
+:PROPERTIES:
+:ID:       2c1d99d3-a92e-4a54-b57b-cf9efc53614c
+:END:
 I use my local proxy to speed up paradox:
 #+begin_src emacs-lisp
   (setq url-proxy-services '(("no_proxy" . "^\\(localhost\\|10\\..*\\|192\\.168\\..*\\)")
@@ -229,6 +250,9 @@ And also, set package archive to include ELPA, MELPA and org's, with TUNA's mirr
 #+end_src
 
 ** Initialization
+:PROPERTIES:
+:ID:       64f5e5fa-eb93-49f8-a8f1-29f066928f18
+:END:
 From [[help:package-initialize]]:
 #+begin_quote
 If called as part of loading ‘user-init-file’, set
@@ -242,6 +266,9 @@ Thus, I use the following block to load packages:
 #+end_src
 
 ** Use-package
+:PROPERTIES:
+:ID:       ca44886f-149b-4ae2-943b-294d1dcb2124
+:END:
 [[https://github.com/jwiegley/use-package][use-package]] is a wonderful package configuration helper (and not a package manager!). If it is not available in the current system, use =M-x package-install RET use-package RET= to fetch it from MELPA.
 
 Now load =use-package=:
@@ -256,6 +283,9 @@ Also, I'd like to turn on =use-package='s statistic recording to see if my confi
 #+end_src
 
 ** Paradox
+:PROPERTIES:
+:ID:       396cdffd-c2d5-4d81-b3a4-36881f2a4f18
+:END:
 [[https://github.com/Malabarba/paradox][Paradox]] is a modernized Emacs' package menu that supports displaying GitHub stars along the entries, filtering and sorting, async installation, etc.
 
 I disabled the GitHub integration because it doesn't seem to work on my machines.
@@ -272,6 +302,9 @@ I disabled the GitHub integration because it doesn't seem to work on my machines
 
 * Miscs
 ** Xdg
+:PROPERTIES:
+:ID:       2c578dcc-dc8f-4fb4-9c2c-ffcc801f26cc
+:END:
 Start from Emacs 26, we hav buit-in suport for =xdg=.
 Then it will be reasonble to put those annoying but extremely helpful stuff into xdg cache:
 #+begin_src emacs-lisp
@@ -288,6 +321,9 @@ Then it will be reasonble to put those annoying but extremely helpful stuff into
 #+end_src
 
 ** Bookmark
+:PROPERTIES:
+:ID:       502a93ca-e951-4997-a852-adfdd7ec1ef8
+:END:
 Emacs has its own =bookmark= system built-in:
 #+begin_src emacs-lisp
   (use-package bookmark
@@ -297,6 +333,9 @@ Emacs has its own =bookmark= system built-in:
 #+end_src
 
 ** Recentf
+:PROPERTIES:
+:ID:       146b71f4-ad6d-4237-a750-6394c3a0d412
+:END:
 =recentf= (also a built-in) saves recent file list.
 #+begin_src emacs-lisp
   (use-package recentf
@@ -306,6 +345,9 @@ Emacs has its own =bookmark= system built-in:
 #+end_src
 
 ** Editorconfig
+:PROPERTIES:
+:ID:       9819e1df-7346-4ea6-80ba-6ef4b79a9f77
+:END:
 [[https://editorconfig.org/][editorconfig]] is a very handy tool that standardize how different editors should behave according to different language, including tab width, trailing space and so on. It is not only helpful for team to maintain a codestyle standard, but also a handful tool for people use several different editors / computers, like I do.
 
 [[https://github.com/editorconfig/editorconfig-emacs][editorconfig-emacs]] implements its own =editorconfig= core, so It's logical to assume that it works on any platform.
@@ -317,6 +359,9 @@ Emacs has its own =bookmark= system built-in:
 #+end_src
 
 * Colors
+:PROPERTIES:
+:ID:       e5d438ab-32ff-4055-91da-37c3452c13d2
+:END:
 I'm currently using the emacs port of my vim era favorite, gruvbox:
 #+begin_src emacs-lisp
   (use-package gruvbox-theme
@@ -345,6 +390,9 @@ Add / custom the =hi-lock-faces= ('cause =#000000= is too hard to read on my scr
 References:
 1. [[https://sam217pa.github.io/2016/09/23/keybindings-strategies-in-emacs/][Keybindings strategies in Emacs]] by Samuel Barreto.
 ** Which-key
+:PROPERTIES:
+:ID:       d460fdfe-0d92-4467-9b14-a6b84f571bd3
+:END:
 [[https://github.com/justbur/emacs-which-key][which-key]] is a minor mode that hints you the keybindings prefixed with what you have typed when you get stucked.
 #+begin_src emacs-lisp
   (use-package which-key
@@ -354,6 +402,9 @@ References:
 #+end_src
 
 ** General
+:PROPERTIES:
+:ID:       e68a82f5-46d7-48d3-8bc7-8ba995c14334
+:END:
 #+begin_quote
 A general is a leader. – onioncheese
 #+end_quote
@@ -371,6 +422,9 @@ There is not much config for general yet, besides enable it I simply turn on its
 #+end_src
 
 ** Hercules
+:PROPERTIES:
+:ID:       a33f4f15-14c0-49b8-b77f-cf5b516ec7e2
+:END:
 - Note taken on [2019-09-15 Sun 13:59] \\
   It does not work too well with ~evil-window-map~, even if =which-key= is set to use minibuffer.
 #+begin_quote
@@ -385,7 +439,11 @@ Did you get the idea what [[https://gitlab.com/jjzmajic/hercules.el][hercules]] 
     :ensure t
     :after general)
 #+end_src
+
 ** Evil
+:PROPERTIES:
+:ID:       22507af5-1468-4b97-887a-dd2ea550b291
+:END:
 It's name tells everything: the Extensible Vi Layer for Emacs, [[https://github.com/emacs-evil/evil][Evil]]. It works pretty well as a Vim simulation, much better than VsCode's or Intellij's. Besides, it is charming combination of Vim's model-based editing with Emacs' keymap system, to some extent, as a personal opinion, better than the native Vim on the model-based editing system.
 
 References:
@@ -471,7 +529,21 @@ I use =<leader>o= and =<leader>O= for them because they are close to =o= and =O=
     "O" '(my/insert-line-above :which-key t))
 #+end_src
 
+Use =C-d= as frame key, mimics =C-w= as window key. =d= stands for =display=. Hope this could persuade people and myself. I choose =C-d= because =C-u= is (heavily) used by Emacs itself by default and Evil as a result did not bind =C-u= by default, so it's reasonable to not have Vim's =C-d= functionality alone.
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-general
+  (general-nmap "C-d" (general-simulate-key "C-x 5"))
+  (general-nmap "C-x 5 q" 'delete-frame)
+  (general-nmap "C-x 5 o" 'delete-other-frames)
+  (general-nmap "C-x 5 C-d" 'other-frame)
+  (general-nmap "C-x 5 s" 'make-frame-command)
+  (general-nmap "C-x 5 v" 'make-frame-command)
+  (general-nmap "C-x 5 g d" 'xref-find-definitions-other-frame)
+#+end_src
+
 *** evil-collection
+:PROPERTIES:
+:ID:       d27d2449-c4b8-402f-9cc7-14d841c8310f
+:END:
 [[https://github.com/emacs-evil/evil-collection][evil-collection]] is a collection of helper functions / settings / etc for things native Evil does bad on.
 #+begin_src emacs-lisp
   (use-package evil-collection
@@ -499,6 +571,9 @@ I use =<leader>o= and =<leader>O= for them because they are close to =o= and =O=
   (general-setq evil-want-keybinding nil)
 #+end_src
 *** evil-easymotion
+:PROPERTIES:
+:ID:       8b8695a1-497f-493f-834e-469d46f973bd
+:END:
 [[https://github.com/PythonNut/evil-easymotion][evil-easymotion]] is a Evil port of Vim's, well, =easymotion=, which basically works in a way that instead of numbering how many jumps needed, by prefixing motions with a leader key, we use visual hint to go to the place we want. I hadn't tried =easymotion= during my Vim era though, but I like it now. It also provides integration with [[*evil-snipe][evil-snipe]].
 #+begin_src emacs-lisp
   (use-package evil-easymotion
@@ -531,6 +606,9 @@ I use =<leader>o= and =<leader>O= for them because they are close to =o= and =O=
 #+end_src
 
 *** evil-snipe
+:PROPERTIES:
+:ID:       79ee4ff9-fa20-43e3-b1ef-0b4c2cc5aa46
+:END:
 [[https://github.com/hlissner/evil-snipe][evil-snipe]] is a Evil port of Vim's =clever-f= and =vim-sneak=. It currently does not support separating the scope for =f/F/t/T= from for =s/S=, which is a little bit annoying.
 #+begin_src emacs-lisp
   (use-package evil-snipe
@@ -551,6 +629,9 @@ I use =<leader>o= and =<leader>O= for them because they are close to =o= and =O=
 #+end_src
 
 **** evil-find-char-pinyin
+:PROPERTIES:
+:ID:       aab1027a-f493-4e6f-81d5-c674f5aef968
+:END:
 [[https://github.com/cute-jumper/evil-find-char-pinyin][evil-find-char-pinyin]] is a helper plugin that allow =evil-snipe= to search for Chinese characters with their initial pinyins. For example, with this plugin =smt= could find 明天.
 
 This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for its integration with =evil-snipe='s motions.
@@ -564,6 +645,9 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
 #+end_src
 
 *** evil-args
+:PROPERTIES:
+:ID:       33f62ef4-5de3-47c7-b8df-a1ed32c84a7e
+:END:
 [[https://github.com/wcsmith/evil-args][evil-args]] defines a new textobj for function arguments, and some other helpful functions.
 #+begin_src emacs-lisp
   (use-package evil-args
@@ -579,6 +663,9 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
 #+end_src
 
 *** evil-visualstar
+:PROPERTIES:
+:ID:       bc7ae0dc-fb22-469d-8945-3ad5882797c6
+:END:
 [[https://github.com/bling/evil-visualstar][evil-visualstar]] allow using =*= =#= on all visual selection.
 #+begin_src emacs-lisp
   (use-package evil-visualstar
@@ -589,6 +676,9 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
 #+end_src
 
 *** evil-matchit
+:PROPERTIES:
+:ID:       6de51012-d850-4c82-8d1b-46818dad97d4
+:END:
 [[https://github.com/redguardtoo/evil-matchit][evil-matchit]] is the port of, well, =matchit=. It also provides two text objects, namely =a%= and =i%=.
 #+begin_src emacs-lisp
   (use-package evil-matchit
@@ -598,6 +688,9 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
     (global-evil-matchit-mode 1))
 #+end_src
 *** evil-lion
+:PROPERTIES:
+:ID:       8528dc9d-6b90-45ce-9106-f593088550f1
+:END:
 [[https://github.com/edkolev/evil-lion][evil-lion]] defines an alignment operator.
 #+begin_src emacs-lisp
   (use-package evil-lion
@@ -608,6 +701,9 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
 #+end_src
 
 *** evil-replace-with-register
+:PROPERTIES:
+:ID:       29c88dad-0bdf-4079-8911-605ff511bfb2
+:END:
 [[https://github.com/Dewdrops/evil-ReplaceWithRegister][evil-replace-with-register]] defines a =rplace= operator.
 #+begin_src emacs-lisp
   (use-package evil-replace-with-register
@@ -618,6 +714,9 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
 #+end_src
 
 *** evil-numbers
+:PROPERTIES:
+:ID:       ec7f557c-a2b7-45b9-b631-0f710564654c
+:END:
 [[https://github.com/cofi/evil-numbers][evil-numbers]] takes =c-a= back (and can be mapped to different states!).
 #+begin_src emacs-lisp
   (use-package evil-numbers
@@ -629,6 +728,9 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
 #+end_src
 
 *** evil-surround
+:PROPERTIES:
+:ID:       09674316-521a-4b52-8dcc-c652e5f1449a
+:END:
 [[https://github.com/emacs-evil/evil-surround][evil-surround]] defines operators that change/add/delete delimiters around a text object.
 #+begin_src emacs-lisp
   (use-package evil-surround
@@ -639,6 +741,9 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
 #+end_src
 
 *** evil-string-inflection
+:PROPERTIES:
+:ID:       edf27bb5-9dca-45fd-877b-5c8ea13c7a1b
+:END:
 [[https://github.com/ninrod/evil-string-inflection][evil-string-inflection]] provides an operator that toggle a textobj between =PascalCase=, =camalcase=, =dash-case=, =snake_case= and  =SYMBOL_CASE=. Unfortunately it does not provide a way to disable the default bindings, so I have to unbind it manually.
 #+begin_src emacs-lisp
   (use-package evil-string-inflection
@@ -651,6 +756,9 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
 #+end_src
 
 *** evil-commentary
+:PROPERTIES:
+:ID:       b8c7593b-610c-4664-a59a-2b0eee6f11b8
+:END:
 [[https://github.com/linktohack/evil-commentary][evil-commentary]] defines operators for commenting.
 #+begin_src emacs-lisp
   (use-package evil-commentary
@@ -661,6 +769,9 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
 #+end_src
 
 *** evil-textobj-line
+:PROPERTIES:
+:ID:       6dade961-46b7-4570-a083-c5629b1e1e4b
+:END:
 [[https://github.com/syohex/evil-textobj-line][evil-textobj-line]] defines text objects for a single line.
 #+begin_src emacs-lisp
   (use-package evil-textobj-line
@@ -669,6 +780,9 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
 #+end_src
 
 *** evil-textobj-indent
+:PROPERTIES:
+:ID:       0b53353f-2ebf-4171-b30f-71bb7a71bc2b
+:END:
 [[https://github.com/TheBB/evil-indent-plus][evil-indent-plus]] defines text objects for block of code that has same/higher indentation.
 #+begin_src emacs-lisp
   (use-package evil-indent-plus
@@ -684,6 +798,9 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
 #+end_src
 
 * Spell Checking
+:PROPERTIES:
+:ID:       80c61feb-eaae-40e2-9093-8320d9142b7b
+:END:
 Emacs comes with its own spell checking mode (=ispell.el=)...
 #+begin_src emacs-lisp
   (use-package ispell
@@ -711,6 +828,9 @@ For me Helm fits me better because:
 2. During my Vim era I use Shougo's wonderful plugins Unite/Denite, which mimics the logic of Helm, so switching to Emacs with Helm mostly does not require switching my mind model for how to find things.
 3. Ivy is new compared with Helm, so it does not have as many add-ons available as Helm.
 ** Helm
+:PROPERTIES:
+:ID:       9894d186-0b49-42af-9688-c7a66aa0ad1c
+:END:
 [[https://github.com/emacs-helm/helm][Helm]] is a generic incremental completion and selection narrowing framework for Emacs, as what Denite is for [Neo]vim. I currently does not set Helm to be auto-installed, so just install it with =M-x package-install RET helm RET=.
 
 References:
@@ -742,6 +862,9 @@ Turn on helm
 #+end_src
 
 *** swiper-helm
+:PROPERTIES:
+:ID:       cac3d2c0-ba81-48ec-b452-547abf32b634
+:END:
 [[https://github.com/abo-abo/swiper-helm][swiper-helm]] is a Helm version of [[*swiper][swiper]]. That is, it use Helm as the backend instead of Ivy.
 #+begin_src emacs-lisp
   (use-package swiper-helm
@@ -751,6 +874,9 @@ Turn on helm
 #+end_src
 
 *** helm-gtags
+:PROPERTIES:
+:ID:       31f53bd4-5287-492d-8aad-743b456cdb24
+:END:
 [[https://github.com/syohex/emacs-helm-gtags][emacs-helm-gtags]] is a helm interface for =GNU GLOBAL=.
 #+begin_src emacs-lisp
   (use-package helm-gtags
@@ -767,6 +893,9 @@ Turn on helm
 #+end_src
 
 *** helm and ag/rg
+:PROPERTIES:
+:ID:       6fac86d5-0e69-44e3-8d2e-a58409a83f48
+:END:
 =helm-do-grep-ag= supports using =ag= and =rg= by itself, so technically =helm-rg= and =helm-ag= are not necessary.
 But, [[https://github.com/cosmicexplorer/helm-rg][helm-rg]] is used by =helm-projectile= for some reason (and there seems no way to delegate it to use =helm-do-grep-ag=, thus
 #+begin_src emacs-lisp
@@ -790,6 +919,9 @@ and also fallback to [[https://github.com/syohex/emacs-helm-ag][helm-ag]] if =rg
       (general-setq helm-grep-ag-pipe-cmd-switches '("--color-match '31;43'"))))
 #+end_src
 ** Ivy
+:PROPERTIES:
+:ID:       cf83b9a0-533b-4f4a-962a-3ce8de95a2af
+:END:
 [[https://github.com/abo-abo/swiper#ivy][ivy]] is yet another generic incremental completion for Emacs.
 
 I don't use heavily on ivy anymore, but I still have it because its the dependency of swiper:
@@ -815,6 +947,9 @@ I don't use heavily on ivy anymore, but I still have it because its the dependen
 #+end_src
 
 *** swiper
+:PROPERTIES:
+:ID:       f9894319-0d69-4dbf-9307-f7265d73d7ee
+:END:
 [[https://github.com/swiper#swiper][swiper]] is an alternative to Emacs' builtin [[info:emacs#Basic%20Isearch][isearch]]. I use this over other alternatives because it has better integration by default with Evil's (or Vim's) search/substitution system.
 #+begin_src emacs-lisp
   (use-package swiper
@@ -827,6 +962,9 @@ I don't use heavily on ivy anymore, but I still have it because its the dependen
     :commands (swiper swiper-backward))
 #+end_src
 ** highlight-indent-guides
+:PROPERTIES:
+:ID:       62d5d35d-9049-45bf-b9c7-fb1318e65765
+:END:
 [[https://github.com/DarthFennec/highlight-indent-guides][highlight-indent-guides]] shows indent guides (with =font lock=)!
 #+begin_src emacs-lisp
   (use-package highlight-indent-guides
@@ -839,6 +977,9 @@ I don't use heavily on ivy anymore, but I still have it because its the dependen
 #+end_src
 
 ** Undo-tree
+:PROPERTIES:
+:ID:       20ad2920-90c2-49e0-9d8b-575cf7b1b4b6
+:END:
 [[https://www.emacswiki.org/emacs/UndoTree][undo-tree]] provides a visualization for the undo history. It is a prereq for [[*Evil][Evil]].
 #+begin_src emacs-lisp
   (use-package undo-tree
@@ -858,6 +999,9 @@ I don't use heavily on ivy anymore, but I still have it because its the dependen
 #+end_src
 
 ** ggtags
+:PROPERTIES:
+:ID:       4464070d-964e-44c9-a85d-ec311986b6e9
+:END:
 [[https://www.gnu.org/software/global/][GNU GLOBAL]] is a source code tagging system that recognize references and that can also use =ctags= as a backend.
 Using =universal ctags=, it would be like this:
 #+begin_src sh
@@ -877,6 +1021,9 @@ gtags --gtagslabel=new-ctags
 #+end_src
 
 ** Treemacs
+:PROPERTIES:
+:ID:       268a6d7d-8a58-4677-aac9-fdab2252e6f0
+:END:
 [[https://github.com/Alexander-Miller/treemacs][treemacs]] is a tree layout explorer for files and many things else (tags, for example). It provides integration into many other popular packages in the ecosystem.
 #+begin_src emacs-lisp
   (use-package treemacs
@@ -909,6 +1056,9 @@ Its evil integration:
 #+end_src
 
 ** Telephone-line
+:PROPERTIES:
+:ID:       624b928e-5bb1-4597-82da-361ed4919af9
+:END:
 Reference:
 1. [[https://github.com/dbordak/telephone-line/blob/master/configuration.org][Configuration.org]]
 2. [[https://github.com/dbordak/telephone-line/blob/master/examples.org][examples.org]]
@@ -946,6 +1096,9 @@ Reference:
 #+end_src
 
 ** with-editor
+:PROPERTIES:
+:ID:       f4ce129a-b11a-4cce-b6a2-199f856d9d23
+:END:
 [[https://github.com/magit/with-editor][with-editor]] ensure child processes of Emacs know how to call Emacs.
 #+begin_src emacs-lisp
   (use-package with-editor
@@ -962,6 +1115,9 @@ Reference:
 * Completion
 By completion I mean general text/code autocompletion, as Vim's =deoplete=.
 ** Company
+:PROPERTIES:
+:ID:       4a064f96-4f38-416a-ade5-95662c12afb5
+:END:
 [[https://company-mode.github.io/][company]] seems the most widely-used text completion framework among the Emacs ecosystem.
 #+begin_src emacs-lisp
   (use-package company
@@ -988,6 +1144,9 @@ By completion I mean general text/code autocompletion, as Vim's =deoplete=.
 #+end_src
 
 ** Company-quickhelp
+:PROPERTIES:
+:ID:       a5c838c2-f097-44e8-89fd-773c284348fe
+:END:
 [[https://github.com/expez/company-quickhelp][company-quickhelp]] is an add-on for =company= that make use of =popup-el=, which will show doc for current selected entry in a popup view.
 #+begin_src emacs-lisp
   (use-package company-quickhelp
@@ -1001,6 +1160,9 @@ By completion I mean general text/code autocompletion, as Vim's =deoplete=.
 #+end_src
 
 ** Company-box
+:PROPERTIES:
+:ID:       9c4212fa-ad1b-423f-bac6-2161e8b989ba
+:END:
 [[https://github.com/sebastiencs/company-box][company-box]] is a frontend for =company= that does not use popup (thus it doesn't screw up with different font size) and show icons for each candidate.
 #+begin_src emacs-lisp
   (use-package company-box
@@ -1015,6 +1177,9 @@ Templates are always good time savers.
 Reference:
 [[http://www.howardism.org/Technical/Emacs/templates-tutorial.html][Having Emacs Type for You]] by Howard Abrams
 ** Yasnippet
+:PROPERTIES:
+:ID:       db5656d1-0cc2-42e7-a90d-3a72cf2eb529
+:END:
 [[https://github.com/joaotavora/yasnippet][yasnippet]] is a template system for Emacs.
 #+begin_src emacs-lisp :noweb yes
   (use-package yasnippet
@@ -1044,6 +1209,9 @@ NOTE: I'm using =yankpad= now instead of directly using =yasnippet=, so I commen
 #+end_src
 
 ** Yankpad
+:PROPERTIES:
+:ID:       f9d763bf-9f47-4b02-99bb-2bc8b8ecdee4
+:END:
 [[https://github.com/Kungsgeten/yankpad][yankpad]] is a cool package that expand snippets written in [[*Org Mode][org mode]] and optionally use [[*Yasnippet][yasnippet]] as the backend.
 #+begin_src emacs-lisp
   (use-package yankpad
@@ -1060,6 +1228,9 @@ NOTE: I'm using =yankpad= now instead of directly using =yasnippet=, so I commen
 
 * Code
 ** xref
+:PROPERTIES:
+:ID:       fb8a9709-6e96-493f-8089-864e66ade5ca
+:END:
 =xref= is an Emacs built-in cross referencing browsing package.
 #+begin_quote
 This file provides a somewhat generic infrastructure for cross referencing commands, in particular "find-definition".
@@ -1078,6 +1249,9 @@ This file provides a somewhat generic infrastructure for cross referencing comma
 #+end_src
 
 ** Projectile
+:PROPERTIES:
+:ID:       888fabc8-1499-4960-8b5c-8575d4cbc4f5
+:END:
 #+begin_quote
 [[https://github.com/bbatsov/projectile][projectile]] is a project interaction library for Emacs.
 #+end_quote
@@ -1114,6 +1288,9 @@ Its =treemacs= integration that provides a helper function to add =projectile= p
 #+end_src
 
 ** flycheck
+:PROPERTIES:
+:ID:       9e77c0ef-f36c-4db9-af00-e7fd0056e4c8
+:END:
 [[https://github.com/flycheck/flycheck][flycheck]] is a async syntax checking framework for Emacs, as =ALE= for Vim.
 #+begin_src emacs-lisp
   (use-package flycheck
@@ -1123,6 +1300,9 @@ Its =treemacs= integration that provides a helper function to add =projectile= p
 #+end_src
 
 ** lsp-mode
+:PROPERTIES:
+:ID:       c122cb12-cd67-4a5b-936d-b9e1264d45da
+:END:
 [[https://github.com/emacs-lsp/lsp-mode][lsp-mode]] is Emacs' client/library for the Language Server Protocol. It integrates with Emacs' ecosystem heavily.
 
 #+begin_src emacs-lisp
@@ -1139,6 +1319,9 @@ Its =treemacs= integration that provides a helper function to add =projectile= p
 #+end_src
 
 *** lsp-ui
+:PROPERTIES:
+:ID:       49e5d348-b9e1-4a30-8d58-e10207e5ee8f
+:END:
 [[https://github.com/emacs-lsp/lsp-ui][lsp-ui]] is the high-level UI module for =lsp-mode=.
 
 Based on [[https://github.com/emacs-lsp/lsp-ui/pull/208][this]] PR, there is no need to set up anything because =lsp-mode= will load =lsp-ui= itself.
@@ -1149,6 +1332,9 @@ Based on [[https://github.com/emacs-lsp/lsp-ui/pull/208][this]] PR, there is no 
 #+end_src
 
 *** company-lsp
+:PROPERTIES:
+:ID:       bf451a45-b616-46a3-a579-001fe0f8609a
+:END:
 [[https://github.com/tigersoldier/company-lsp][company-lsp]], as the name suggests, is the =company= backend for =lsp-mode=.
 #+begin_src emacs-lisp
   (use-package company-lsp
@@ -1159,6 +1345,9 @@ Based on [[https://github.com/emacs-lsp/lsp-ui/pull/208][this]] PR, there is no 
 #+end_src
 
 *** lsp-treemacs
+:PROPERTIES:
+:ID:       362ac97c-0fc6-44b9-a21f-f928d61d1982
+:END:
 [[https://github.com/emacs-lsp/lsp-treemacs][lsp-treemacs]] display =lsp-mode= linting and symbols in a tree structure, using =treemacs= as the frontend.
 #+begin_src emacs-lisp
   (use-package lsp-treemacs
@@ -1167,6 +1356,9 @@ Based on [[https://github.com/emacs-lsp/lsp-ui/pull/208][this]] PR, there is no 
 #+end_src
 
 *** helm-lsp
+:PROPERTIES:
+:ID:       ad1b7b16-5d75-45d0-9e4e-4fcf32570fd8
+:END:
 [[https://github.com/emacs-lsp/helm-lsp][helm-lsp]] provides two helper =helm= commands for =lsp-mode= that list workspace symbols.
 #+begin_src emacs-lisp
   (use-package helm-lsp
@@ -1175,6 +1367,9 @@ Based on [[https://github.com/emacs-lsp/lsp-ui/pull/208][this]] PR, there is no 
 #+end_src
 
 * Org Mode
+:PROPERTIES:
+:ID:       80ced8bb-ea09-4aa0-95f7-7058430a4593
+:END:
 From its website
 #+begin_quote
 Org mode is for keeping notes, maintaining TODO lists, planning projects, and authoring documents with a fast and effective plain-text system.
@@ -1223,6 +1418,9 @@ Put newer note at the top:
 #+end_src
 
 ** general keybindings
+:PROPERTIES:
+:ID:       76ee1d2e-fd76-4462-97e6-645d000c3b97
+:END:
 Global keybindings as recommended in [[https://orgmode.org/manual/Activation.html#Activation][Org Manual]]:
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-general
   (my/leader-def 'normal
@@ -1330,6 +1528,9 @@ I declared a hydra for =org-babel= to make things easier:
 #+end_src
 
 *** ob-dot
+:PROPERTIES:
+:ID:       20491c78-bb78-4952-af5c-c799768f6053
+:END:
 =org-babel= integration with =dot= language, i.e the language used in [[https://graphviz.org/][graphviz]]:
 #+begin_src emacs-lisp
   (use-package ob-dot
@@ -1337,6 +1538,9 @@ I declared a hydra for =org-babel= to make things easier:
 #+end_src
 
 *** ob-plantuml
+:PROPERTIES:
+:ID:       c19723bc-ffc7-4a58-a8cf-af5b6add8b9b
+:END:
 =org-babel= integration with =plantuml=.
 #+begin_src emacs-lisp
   (use-package ob-plantuml
@@ -1349,6 +1553,9 @@ I declared a hydra for =org-babel= to make things easier:
 #+end_src
 
 ** org-brain
+:PROPERTIES:
+:ID:       b42b471f-b82d-4190-bd90-0c2dadcc5e05
+:END:
 [[https://github.com/Kungsgeten/org-brain][org-brain]] implements concept mapping for org mode, and is also a tool to build my own personal wiki.
 
 Enable tracking org heading links using globally unique uids. This is a must-have even without =org-brain=, because org mode won't fix the broken links when you refile/archive some subtrees to a different file.
@@ -1356,6 +1563,7 @@ Enable tracking org heading links using globally unique uids. This is a must-hav
   (use-package org-id
     :init
     (general-setq org-id-track-globally t)
+    (general-setq org-id-link-to-org-use-id t)
     (general-setq org-id-locations-file (expand-file-name "emacs/org-id-locations" (xdg-data-home))))
 #+end_src
 
@@ -1386,6 +1594,9 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
 #+end_src
 
 ** org-board
+:PROPERTIES:
+:ID:       2afb0c7f-ced0-47fd-b1ae-68e718eb85d5
+:END:
 [[https://github.com/scallywag/org-board][org-board]] is a helper package that archives web pages locally via =wget=. It enable my personal wiki to save web content so that I can review / grab things later.
 #+begin_src emacs-lisp
   (use-package org-board
@@ -1399,6 +1610,9 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
 #+end_src
 
 ** deft
+:PROPERTIES:
+:ID:       f7e7fd0f-9577-40d4-a716-f018cc4b2036
+:END:
 [[https://jblevins.org/projects/deft/][deft]] is not directly related to org mode, but a general purpose plain-text note browser. It works nicely with [[org-brain]] and [[Org Mode]].
 #+begin_src emacs-lisp
   (use-package deft
@@ -1408,12 +1622,16 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
     (my/leader-def 'normal
       "d" 'deft)
     :init
+    (general-setq deft-auto-save-interval 0) ;; turn off
     (general-setq deft-directory org-brain-path)
     (general-setq deft-recursive t)
     (general-setq deft-extensions '("org")))
 #+end_src
 
 ** toc-org
+:PROPERTIES:
+:ID:       b3b5f1fe-d133-48fc-a515-2f55476fe7fc
+:END:
 [[https://github.com/snosov1/toc-org][toc-org]] will automatically update the content of the first heading with a =:TOC:= tag in an org file to show an up-to-date TOC whenever the file is saved. Handy!
 #+begin_src emacs-lisp
   (use-package toc-org
@@ -1423,6 +1641,9 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
 #+end_src
 
 ** style and faces
+:PROPERTIES:
+:ID:       036849c5-9cf8-407a-a65f-dfa103a0b826
+:END:
 This part of code is basically grabbed from [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][Beautifying Org Mode in Emacs]] by zzamboni.
 
 Hide ===, =~= and other emphasis markers, and fontify src block natively:
@@ -1503,6 +1724,9 @@ The main reason I add more level faces is that I don't want the large first leve
 
 * Language specific
 ** plantuml
+:PROPERTIES:
+:ID:       6b639b16-8473-4766-8b75-3905062d8316
+:END:
 [[http://plantuml.com/][plantuml]] is a language / tool that draws sequence diagram, class dependency diagram and so on with text instructions.
 
 [[skuro/plantuml-mode][plantuml-mode]]:
@@ -1516,12 +1740,18 @@ The main reason I add more level faces is that I don't want the large first leve
 #+end_src
 
 ** rust
+:PROPERTIES:
+:ID:       401f698f-26ed-483f-955a-0798670e39c4
+:END:
 #+begin_src emacs-lisp
   (use-package rust-mode
     :ensure t)
 #+end_src
 
 ** beancount
+:PROPERTIES:
+:ID:       a0d60e7c-0536-46d8-90ae-b54ae9a1cfd6
+:END:
 [[http://furius.ca/beancount/][beancount]] is a plain-text double-entry counting tool.
 as of this [[https://bitbucket.org/blais/beancount/pull-requests/115][PR]] and discussion [[https://groups.google.com/forum/#!searchin/beancount/major$20mode%257Csort:date/beancount/zLtd9XF3ALQ/f3BCurRqCQAJ][here]] and [[https://groups.google.com/d/topic/beancount/B1YA2n7r8SE/discussion][here]], =beancount= is no longer compatible with =org-mode=, because it runs its own major mode.
 
@@ -1540,6 +1770,9 @@ reference:
 #+end_src
 
 * Magit
+:PROPERTIES:
+:ID:       be8f32a7-b990-4a66-9a88-fc5d3f6c4c74
+:END:
 [[https://github.com/magit/magit][magit]] is an Emacs interface to git, which provides not only commands to call but also a full GUI-like wrapper around git.
 #+begin_src emacs-lisp
   (use-package magit
