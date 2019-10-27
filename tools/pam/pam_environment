@@ -1,7 +1,8 @@
 XDG_CONFIG_HOME DEFAULT=@{HOME}/.config
 XDG_DATA_HOME DEFAULT=@{HOME}/.local/share
+XDG_CACHE_HOME DEFAULT=@{HOME}/.cache
 # editor
-VISUAL DEFAULT=nvim
+VISUAL DEFAULT="emacsclient -c"
 EDITOR DEFAULT=${VISUAL}
 # Some directories
 DOTFILES DEFAULT=@{HOME}/.dotfiles
