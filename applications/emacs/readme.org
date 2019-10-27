@@ -17,8 +17,8 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
   - [[#coding-and-languages][Coding and Languages]]
   - [[#tangle-initel][Tangle =init.el=]]
   - [[#some-helpful-defaults][Some helpful defaults]]
+- [[#emacs-as-a-server][Emacs as a server]]
 - [[#platform-specific][Platform Specific]]
-  - [[#all-platforms][All platforms]]
   - [[#macos][MacOS]]
   - [[#windows][Windows]]
   - [[#linux][Linux]]
@@ -47,6 +47,7 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
   - [[#ggtags][ggtags]]
   - [[#treemacs][Treemacs]]
   - [[#telephone-line][Telephone-line]]
+  - [[#with-editor][with-editor]]
 - [[#completion][Completion]]
   - [[#company][Company]]
   - [[#company-quickhelp][Company-quickhelp]]
@@ -99,6 +100,12 @@ When there is no =init.el= tangled yet, run =C-c= on this block to generate the 
 #+end_src
 
 ** Some helpful defaults
+It is reasonable to just turn off menu bar because I want to go mouse-less.
+#+begin_src emacs-lisp
+  (menu-bar-mode -1)
+  (column-number-mode 1)
+#+end_src
+
 I don't know if there is any who would like the wierd tab-space-hybird indent mode.
 #+begin_src emacs-lisp
   (setq-default indent-tabs-mode nil)
@@ -132,100 +139,75 @@ General programming set up:
               (display-line-numbers-mode 1)))
 #+end_src
 
+* Emacs as a server
+One of the most disadvantage of Emacs compared with Vim is its startup time. Running Emacs as a server improves this to a really usable level.
+#+begin_src emacs-lisp
+  (require 'server)
+  (unless (server-running-p)
+    (server-start))
+#+end_src
+
 * Platform Specific
 This part contains code specific to platforms, usually UI or PATH related.
-
-Here is specific config for each OS:
-#+begin_src emacs-lisp :noweb no-export
-  (cond ((eq system-type 'windows-nt)
-         <<Windows>>
-         )
-        ((eq system-type 'darwin)
-         <<MacOS>>
-         )
-        ((eq system-type 'gnu/linux)
-         <<Linux>>
-         ))
-#+end_src
-
-Here is specific config for each UI:
-#+begin_src emacs-lisp :noweb no-export
-  (cond ((display-graphic-p)
-         <<Graphic>>
-         )
-        (t
-         <<Console>>
-         ))
-#+end_src
-
-** All platforms
-This is the code snippet that should be shared among all platforms.
-
-It is reasonable to just turn off menu bar because I want to go mouse-less.
-#+begin_src emacs-lisp
-  (menu-bar-mode -1)
-  (column-number-mode 1)
-#+end_src
-
 ** MacOS
-:PROPERTIES:
-:header-args:emacs-lisp: :tangle no :noweb-ref MacOS
-:END:
 I don't have specific code for Mac yet.
 
 ** Windows
-:PROPERTIES:
-:header-args:emacs-lisp: :tangle no :noweb-ref Windows
-:END:
 Said to be a way to make Emacs faster on windows (by running GC less often)
 #+begin_src emacs-lisp
-  (setq gc-cons-threshold (* 512 1024 1024))
-  (setq gc-cons-percentage 0.5)
-  (run-with-idle-timer 5 t #'garbage-collect)
+  (when (eq system-type 'windows-nt)
+    (setq gc-cons-threshold (* 512 1024 1024))
+    (setq gc-cons-percentage 0.5)
+    (run-with-idle-timer 5 t #'garbage-collect))
 #+end_src
 
 Also, the default font for Chinese slow down Emacs terribly on Windows:
-
 #+begin_src emacs-lisp
   (when (eq window-system 'w32)
     (dolist (charset '(kana han cjk-misc bopomofo))
-      (set-fontset-font t charset (font-spec :family "微软雅黑"))))
+      (set-fontset-font t charset (font-spec :family "Microsoft Yahei"))))
 #+end_src
+
 ** Linux
-:PROPERTIES:
-:header-args:emacs-lisp: :tangle no :noweb-ref Linux
-:END:
-I don't have specific code for Mac yet.
+I don't have specific code for Linux yet.
 
 ** GUI
-:PROPERTIES:
-:header-args:emacs-lisp: :tangle no :noweb-ref Graphic
-:END:
 Turn off blink cursor, scroll bar and tool bar:
 #+begin_src emacs-lisp
-  (blink-cursor-mode -1)
-  (scroll-bar-mode -1)
-  (tool-bar-mode -1)
+  (ignore-errors
+    (blink-cursor-mode -1)
+    (scroll-bar-mode -1)
+    (tool-bar-mode -1))
 #+end_src
 
 Setting faces:
 #+begin_src emacs-lisp
   (set-face-attribute 'default nil :height 140)
-  (set-face-attribute 'default nil :font "DejaVuSansMono Nerd Font")
   (set-face-attribute 'variable-pitch nil :weight 'normal :inherit 'default)
-  (cond
-      ((x-family-fonts  "Latin Modern Math") (set-face-attribute 'variable-pitch nil :family "Latin Modern Math"))
-      ((x-list-fonts   "Lucida Grande")      (set-face-attribute 'variable-pitch nil :font   "Lucida Grande"))
-      ((x-list-fonts   "Verdana")            (set-face-attribute 'variable-pitch nil :font   "Verdana"))
-      ((x-family-fonts "Sans Serif")         (set-face-attribute 'variable-pitch nil :family "Sans Serif"))
-      (nil (warn "Cannot find a Sans Serif Font.")))
+  (if (display-graphic-p)
+      (progn ;; TRUE: try fallback
+        (cond
+         ((x-family-fonts "Latin Modern Math")        (set-face-attribute 'variable-pitch nil :family "Latin Modern Math"))
+         ((x-list-fonts   "Lucida Grande")            (set-face-attribute 'variable-pitch nil :font   "Lucida Grande"))
+         ((x-list-fonts   "Verdana")                  (set-face-attribute 'variable-pitch nil :font   "Verdana"))
+         ((x-family-fonts "Sans Serif")               (set-face-attribute 'variable-pitch nil :family "Sans Serif"))
+         (nil (warn "Cannot find a Sans Serif Font.")))
+        (cond
+         ((x-list-fonts   "DejaVuSansMono Nerd Font") (set-face-attribute 'default nil        :font   "DejaVuSansMono Nerd Font"))
+         ((x-family-fonts "Consolas")                 (set-face-attribute 'default nil        :family "Consolas"))
+         ((x-family-fonts "Monospace")                (set-face-attribute 'default nil        :family "Monospace"))
+         (nil (warn "Cannot find a Mono Font."))))
+    (progn ;; FALSE: hard coded based on system
+      (when (eq system-type 'gnu/linux)
+        (set-face-attribute 'default nil :font "DejaVuSansMono Nerd Font")
+        (set-face-attribute 'variable-pitch nil :family "Latin Modern Math"))
+      (when (eq system-type 'windows-nt)
+        (set-face-attribute 'default nil :font "Consolas")
+        (set-face-attribute 'variable-pitch nil :family "Microsoft Yahei"))))
   (set-face-attribute 'fixed-pitch nil :inherit 'default)
 #+end_src
 
 ** TUI
-:PROPERTIES:
-:header-args:emacs-lisp: :tangle no :noweb-ref Console
-:END:
 I don't have specific code for TUI yet.
 
 * Package Management
@@ -828,9 +810,7 @@ I don't use heavily on ivy anymore, but I still have it because its the dependen
 [[https://github.com/DarthFennec/highlight-indent-guides][highlight-indent-guides]] shows indent guides (with =font lock=)!
 #+begin_src emacs-lisp
   (use-package highlight-indent-guides
-    :if (display-graphic-p)
     :ensure t
-    :after company-box
     :hook (prog-mode . highlight-indent-guides-mode)
     :init
     (general-setq highlight-indent-guides-responsive 'top)
@@ -945,6 +925,20 @@ Reference:
     (telephone-line-mode +1))
 #+end_src
 
+** with-editor
+[[https://github.com/magit/with-editor][with-editor]] ensure child processes of Emacs know how to call Emacs.
+#+begin_src emacs-lisp
+  (use-package with-editor
+    :ensure t
+    :general
+    ([remap async-shell-command] 'with-editor-async-shell-command)
+    ([remap shell-command] 'with-editor-shell-command)
+    :hook
+    (shell-mode . with-editor-export-editor)
+    (term-exec  . with-editor-export-editor)
+    (eshell-mode . with-editor-export-editor))
+#+end_src
+
 * Completion
 By completion I mean general text/code autocompletion, as Vim's =deoplete=.
 ** Company
@@ -990,11 +984,10 @@ By completion I mean general text/code autocompletion, as Vim's =deoplete=.
 [[https://github.com/sebastiencs/company-box][company-box]] is a frontend for =company= that does not use popup (thus it doesn't screw up with different font size) and show icons for each candidate.
 #+begin_src emacs-lisp
   (use-package company-box
-    :if (display-graphic-p)
     :ensure t
     :after company
     :hook
-    (company-mode . company-box-mode))
+    (company-mode . (lambda () (when (display-graphic-p) (company-box-mode)))))
 #+end_src
 
 * Templates
