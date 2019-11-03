@@ -2,7 +2,12 @@
 #+property: header-args :comments org :results silent
 #+property: header-args:emacs-lisp :tangle (expand-file-name "init.el" user-emacs-directory)
 #+startup: indent
-
+#+hugo_base_dir: ../
+#+hugo_auto_set_lastmod: t
+#+hugo_section: ./
+#+hugo_tags: Emacs
+#+hugo_level_offset: 1
+#+date: 2019-10-28
 
 Here is a list of blogs / configurations that I've grabbed code from or absorbed ideas from. All of them worth reading.
 + [[https://github.com/zzamboni/dot-emacs/blob/master/init.org][zzamboni's Emacs config file]]
@@ -12,7 +17,11 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
 + [[https://github.com/munen/emacs.d/blob/master/configuration.org][munen's Emacs configuration]]
 + [[https://karl-voit.at/2017/06/03/emacs-org/][Karl Voit's Emacs Configuration In Org-mode]] and the [[https://github.com/novoid/dot-emacs][repo]]
 
-* Table of Contents :TOC:
+This file might be out of sync. The newest version is available [[https://github.com/quinoa42/dotfiles/tree/master/applications/emacs][here]].
+
+#+toc: headlines 2
+
+* Table of Contents :TOC:noexport:
 - [[#general-settings][General Settings]]
   - [[#coding-and-languages][Coding and Languages]]
   - [[#tangle-initel][Tangle =init.el=]]
@@ -71,6 +80,7 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
   - [[#org-board][org-board]]
   - [[#deft][deft]]
   - [[#toc-org][toc-org]]
+  - [[#ox-hugo][ox-hugo]]
   - [[#style-and-faces][style and faces]]
 - [[#language-specific][Language specific]]
   - [[#plantuml][plantuml]]
@@ -150,6 +160,10 @@ General programming set up:
               (display-line-numbers-mode 1)))
 #+end_src
 
+Turn off lockfiles. They cannot be moved to a different directory, and they consistently screw up with file watchers and version control systems, so it'd be just easier to turn this feature off.
+#+begin_src emacs-lisp
+  (setq create-lockfiles nil)
+#+end_src
 * Emacs as a server
 :PROPERTIES:
 :ID:       61824a41-57c9-48ac-bae6-cedbc44da756
@@ -253,7 +267,7 @@ And also, set package archive to include ELPA, MELPA and org's, with TUNA's mirr
 :PROPERTIES:
 :ID:       64f5e5fa-eb93-49f8-a8f1-29f066928f18
 :END:
-From [[help:package-initialize]]:
+From [[help:package-initialize][package-initialize help page]]:
 #+begin_quote
 If called as part of loading ‘user-init-file’, set
 ‘package-enable-at-startup’ to nil, to prevent accidentally loading
@@ -1640,6 +1654,13 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
     :hook (org-mode . toc-org-mode))
 #+end_src
 
+** ox-hugo
+[[https://ox-hugo.scripter.co/][ox-hugo]] basically add a =ox= (=org-export=) backend that exports to [[https://gohugo.io/][Hugo]]-compatible Markdown (Blackfriday) with YAML or TOML front-matter.
+#+begin_src emacs-lisp
+  (use-package ox-hugo
+    :ensure t
+    :after ox)
+#+end_src
 ** style and faces
 :PROPERTIES:
 :ID:       036849c5-9cf8-407a-a65f-dfa103a0b826
@@ -1729,7 +1750,7 @@ The main reason I add more level faces is that I don't want the large first leve
 :END:
 [[http://plantuml.com/][plantuml]] is a language / tool that draws sequence diagram, class dependency diagram and so on with text instructions.
 
-[[skuro/plantuml-mode][plantuml-mode]]:
+[[https://github.com/skuro/plantuml-mode][plantuml-mode]]:
 #+begin_src emacs-lisp
   (use-package plantuml-mode
     :ensure t
