@@ -83,6 +83,8 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#ox-hugo][ox-hugo]]
   - [[#style-and-faces][style and faces]]
 - [[#language-specific][Language specific]]
+  - [[#dot][dot]]
+  - [[#c-and-c][C and C++]]
   - [[#plantuml][plantuml]]
   - [[#rust][rust]]
   - [[#beancount][beancount]]
@@ -148,7 +150,6 @@ Version-controlled backup:
 4-space indentation:
 #+begin_src emacs-lisp
   (setq-default tab-width 4)
-  (defvaralias 'c-basic-offset 'tab-width)
   (defvaralias 'cperl-indent-level 'tab-width)
 #+end_src
 
@@ -1516,7 +1517,7 @@ As GTD requires, I want to refile elements to maybe list or next action list:
 Caputre templates that helps reduce boilerplate:
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
   (general-setq org-capture-templates
-                '(("t" "Todo" entry (file+headline "inbox.org" "Tasks")
+                '(("t" "Todo" entry (file+headline "inbox.org" "Todos")
                    "* TODO %?\n:LOGBOOK:\n- with context %a at %U\n:END:\n")
                   ("b" "Board" entry (file+headline "~/documents/board/board.org" "Uncategorized")
                    "* %?\n:PROPERTIES:\n:URL: %^C\n:END:\n:LOGBOOK:\n- Entered at %U\n:END:\n")
@@ -1548,7 +1549,10 @@ I declared a hydra for =org-babel= to make things easier:
 =org-babel= integration with =dot= language, i.e the language used in [[https://graphviz.org/][graphviz]]:
 #+begin_src emacs-lisp
   (use-package ob-dot
-    :after org)
+    :after org
+    :init
+    (add-to-list
+     'org-src-lang-modes '("dot" . graphviz-dot-mode)))
 #+end_src
 
 *** ob-plantuml
@@ -1655,6 +1659,9 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
 #+end_src
 
 ** ox-hugo
+:PROPERTIES:
+:ID:       283fbee0-2718-4f54-896b-5cbdf7859635
+:END:
 [[https://ox-hugo.scripter.co/][ox-hugo]] basically add a =ox= (=org-export=) backend that exports to [[https://gohugo.io/][Hugo]]-compatible Markdown (Blackfriday) with YAML or TOML front-matter.
 #+begin_src emacs-lisp
   (use-package ox-hugo
@@ -1744,6 +1751,46 @@ The main reason I add more level faces is that I don't want the large first leve
 #+end_src
 
 * Language specific
+** dot
+:PROPERTIES:
+:ID:       79a32e59-ef93-43bd-a677-01b01f6af39c
+:END:
+Emacs does not come with dot language support out of the box. [[http://users.skynet.be/ppareit/projects/graphviz-dot-mode/graphviz-dot-mode.html][graphviz-dot-mode]] to the rescue!
+#+begin_src emacs-lisp
+  (use-package graphviz-dot-mode
+    :ensure t)
+#+end_src
+** C and C++
+:PROPERTIES:
+:ID:       1bb8e5ad-9735-4fc2-8133-e3fe62e030db
+:END:
+Indent using 1 level:
+#+begin_src emacs-lisp
+  (defvaralias 'c-continued-statement-offset 'tab-width)
+  (defvaralias 'c-basic-offset 'tab-width)
+#+end_src
+
+Fix indentations. See the help page of ~c-offsets-alist~ for details.
+#+begin_src emacs-lisp
+  (defun my/c-mode ()
+    (c-set-offset 'arglist-intro '+)
+    (c-set-offset 'arglist-cont '+)
+    (c-set-offset 'arglist-cont-nonempty '+)
+    (c-set-offset 'brace-list-intro '+)
+    (c-set-offset 'substatement-open 0)
+    (c-set-offset 'arglist-close 0))
+  (add-hook 'c-mode-hook 'my/c-mode)
+#+end_src
+*** ccls
+[[https://github.com/MaskRay/ccls][ccls]] is a maintained fork of =cquery=, a language server implementation for C/C++. It provides some extra features beyond the language server protocol, and its author is an Emacs user, so there is a help package available:
+#+begin_src emacs-lisp
+  (use-package ccls
+    :hook ((c-mode c++-mode objc-mode cuda-mode) .
+           (lambda () (require 'ccls) (lsp-deferred)))
+    :init
+    (general-setq flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc)))
+#+end_src
+
 ** plantuml
 :PROPERTIES:
 :ID:       6b639b16-8473-4766-8b75-3905062d8316
