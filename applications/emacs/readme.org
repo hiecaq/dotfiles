@@ -500,6 +500,13 @@ It's okay to rebind =C-h= because =<F1>= basically does the same thing.
   ([remap evil-ex-search-backward] 'swiper-backward)
 #+end_src
 
+My UHK's keybinding is designed for using with Vim, so my Alt is really far far away from where I would normally position my fingers. Since I did not bind =S-s= =S-x= in my =xmonad= config, it's reasonable to bind these to their Meta relatives:
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-general
+  (when (eq system-type 'gnu/linux)
+    (general-nvmap "s-s" (general-simulate-key "M-s"))
+    (general-nvmap "s-x" (general-simulate-key "M-x")))
+#+end_src
+
 When =visual-line-mode= is set (especially in =org-mode=), I want Vim to behave as visual lines are normal lines (i.e. bind =j= to =gj= etc)
 #+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-init
   (general-setq evil-respect-visual-line-mode t)
@@ -1782,6 +1789,9 @@ Fix indentations. See the help page of ~c-offsets-alist~ for details.
   (add-hook 'c-mode-hook 'my/c-mode)
 #+end_src
 *** ccls
+:PROPERTIES:
+:ID:       10cfbc64-de37-4a40-9f44-738fb936b596
+:END:
 [[https://github.com/MaskRay/ccls][ccls]] is a maintained fork of =cquery=, a language server implementation for C/C++. It provides some extra features beyond the language server protocol, and its author is an Emacs user, so there is a help package available:
 #+begin_src emacs-lisp
   (use-package ccls
