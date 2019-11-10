@@ -1075,7 +1075,8 @@ gtags --gtagslabel=new-ctags
     (general-setq treemacs-persist-file (expand-file-name "emacs/treemacs-persist" (xdg-data-home)))
     (general-setq treemacs-last-error-persist-file (expand-file-name "emacs/treemacs-persist-at-last-error" (xdg-cache-home)))
     :config
-    (treemacs-filewatch-mode t)
+    (treemacs-filewatch-mode +1)
+    (treemacs-follow-mode 0)
     (pcase (cons (not (null (executable-find "git")))
                  (not (null treemacs-python-executable)))
       (`(t . t)
