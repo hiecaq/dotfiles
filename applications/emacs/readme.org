@@ -66,6 +66,7 @@ This file might be out of sync. The newest version is available [[https://github
 - [[#templates][Templates]]
   - [[#yasnippet][Yasnippet]]
   - [[#yankpad][Yankpad]]
+  - [[#auto-insert][Auto-insert]]
 - [[#code][Code]]
   - [[#xref][xref]]
   - [[#projectile][Projectile]]
@@ -165,6 +166,19 @@ Turn off lockfiles. They cannot be moved to a different directory, and they cons
 #+begin_src emacs-lisp
   (setq create-lockfiles nil)
 #+end_src
+
+A helper function that create a filename from basename and extension:
+#+begin_src emacs-lisp
+  (defun my/filename-with-extension (base ext)
+    "build a filename with basename and extension."
+    (let ((base (if base base ""))
+          (ext (if ext ext "")))
+      (pcase (list base ext)
+        (`("" "") (throw 'illegal t))
+        (`("" ,e) e)
+        (`(,b "") b)
+        (`(,b ,e) (format "%s.%s" b e)))))
+#+end_src
 * Emacs as a server
 :PROPERTIES:
 :ID:       61824a41-57c9-48ac-bae6-cedbc44da756
@@ -228,13 +242,13 @@ Setting faces. Technically this should be done in the =TRUE= branch for all case
          ((x-family-fonts "Sans Serif")               (set-face-attribute 'variable-pitch nil :family "Sans Serif"))
          (nil (warn "Cannot find a Sans Serif Font.")))
         (cond
-         ((x-list-fonts   "DejaVuSansMono Nerd Font") (set-face-attribute 'default nil        :font   "DejaVuSansMono Nerd Font"))
+         ((x-family-fonts "DejaVuSansMono Nerd Font") (set-face-attribute 'default nil        :family "DejaVuSansMono Nerd Font"))
          ((x-family-fonts "Consolas")                 (set-face-attribute 'default nil        :family "Consolas"))
          ((x-family-fonts "Monospace")                (set-face-attribute 'default nil        :family "Monospace"))
          (nil (warn "Cannot find a Mono Font."))))
     (progn ;; FALSE: hard coded based on system
       (when (eq system-type 'gnu/linux)
-        (set-face-attribute 'default nil :font "DejaVuSansMono Nerd Font")
+        (set-face-attribute 'default nil        :family "DejaVuSansMono Nerd Font")
         (set-face-attribute 'variable-pitch nil :family "Latin Modern Math"))
       (when (eq system-type 'windows-nt)
         (set-face-attribute 'default nil :font "Consolas")
@@ -1248,6 +1262,28 @@ NOTE: I'm using =yankpad= now instead of directly using =yasnippet=, so I commen
       "y" 'yankpad-expand))
 #+end_src
 
+** Auto-insert
+:PROPERTIES:
+:ID:       97e11f90-97f9-4e20-9979-c5e05d04c3ce
+:END:
+#+begin_src emacs-lisp
+  (defun my/auto-insert-yankpad()
+    "replace buffer content with expanded yankpad snippet."
+    (let ((str (substring (buffer-substring-no-properties (point-min) (point-max))
+                         0 -1)))
+      (erase-buffer)
+      (yankpad-insert-from-current-category str)))
+
+  (use-package autoinsert
+    :init
+    ;; Don't want to be prompted before insertion:
+    (setq auto-insert-query nil)
+    (setq auto-insert-directory (locate-user-emacs-file "templates"))
+    :config
+    (define-auto-insert "\\.h$" ["header.h" my/auto-insert-yankpad])
+    (auto-insert-mode 1))
+#+end_src
+
 * Code
 ** xref
 :PROPERTIES:
@@ -1777,7 +1813,7 @@ Indent using 1 level:
   (defvaralias 'c-basic-offset 'tab-width)
 #+end_src
 
-Fix indentations. See the help page of ~c-offsets-alist~ for details.
+Fix indentations. See the help page of ~c-offsets-alist~ for details. When in doubt, use =C-c C-s= to see the fallback order at the cursor position, and =C-c C-o= to quickly try a different value.
 #+begin_src emacs-lisp
   (defun my/c-mode ()
     (c-set-offset 'arglist-intro '+)
@@ -1785,9 +1821,21 @@ Fix indentations. See the help page of ~c-offsets-alist~ for details.
     (c-set-offset 'arglist-cont-nonempty '+)
     (c-set-offset 'brace-list-intro '+)
     (c-set-offset 'substatement-open 0)
+    (c-set-offset 'inextern-lang 0)
     (c-set-offset 'arglist-close 0))
   (add-hook 'c-mode-hook 'my/c-mode)
 #+end_src
+
+A helper function that convert a header file's name to a =_HEADER_H_= macro:
+#+begin_src emacs-lisp
+  (defun my/c-header-filename-macro ()
+      "convert header filename.h to __FILENAME_H__"
+    (let* ((filename  (file-name-nondirectory (buffer-file-name)))
+           (basename  (file-name-sans-extension filename))
+           (extension (file-name-extension filename)))
+      (format "_%s_%s_" (upcase basename) (upcase extension))))
+#+end_src
+
 *** ccls
 :PROPERTIES:
 :ID:       10cfbc64-de37-4a40-9f44-738fb936b596

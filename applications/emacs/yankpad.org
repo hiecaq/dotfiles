@@ -3,12 +3,47 @@
 :INCLUDE:  Curly brace
 :END:
 Generally I use OTBS for my own code in curly braced language, including =C=.
+** stru: typedef struct :src:
+typedef an anonymous struct with a named alias.
+#+begin_src c
+  typedef struct {
+      $0
+  } ${1:Stru};
+#+end_src
+
+** enum: typedef enum :src:
+Using the enum name both after the =enum= keyword and as the =typedef= alias make it compatible with both C and C++.
+#+begin_src c
+  typedef enum ${1:Enum} {
+      $0
+  } $1;
+#+end_src
+
 ** main: main :src:
 OTBS style main
 #+begin_src c
   int main(int argc, char *argv[]) {
       $0
   }
+#+end_src
+
+** C header :src:
+C header that can be linked by C++.
+#+begin_src c
+  #ifndef `(my/c-header-filename-macro)`
+  #define `(my/c-header-filename-macro)`
+
+  #ifdef __cplusplus
+  extern "C" {
+  #endif
+
+  $0
+
+  #ifdef __cplusplus
+  }
+  #endif
+
+  #endif  /* `(my/c-header-filename-macro)` */
 #+end_src
 
 * Curly brace
