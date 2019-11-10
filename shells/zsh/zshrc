@@ -133,7 +133,6 @@ autoload -Uz mproxy
 ###### proxy }}}2
 
 ###### fzf {{{2
-[[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
 
 _gen_fzf_default_opts() {
     local base03="234"
@@ -221,6 +220,7 @@ zle -N edit-command-line
 bindkey -M vicmd 'V' edit-command-line
 
 [[ -f /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
+[[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
 ### key bindings }}}1
 
 ### key bindings {{{1
