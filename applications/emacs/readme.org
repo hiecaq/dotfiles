@@ -179,6 +179,7 @@ A helper function that create a filename from basename and extension:
         (`(,b "") b)
         (`(,b ,e) (format "%s.%s" b e)))))
 #+end_src
+
 * Emacs as a server
 :PROPERTIES:
 :ID:       61824a41-57c9-48ac-bae6-cedbc44da756
@@ -1080,7 +1081,7 @@ gtags --gtagslabel=new-ctags
     (pcase (cons (not (null (executable-find "git")))
                  (not (null treemacs-python-executable)))
       (`(t . t)
-       (treemacs-git-mode 'deferred))
+       (treemacs-git-mode 'extended))
       (`(t . _)
        (treemacs-git-mode 'simple))))
 #+end_src
@@ -1804,6 +1805,7 @@ Emacs does not come with dot language support out of the box. [[http://users.sky
   (use-package graphviz-dot-mode
     :ensure t)
 #+end_src
+
 ** C and C++
 :PROPERTIES:
 :ID:       1bb8e5ad-9735-4fc2-8133-e3fe62e030db
@@ -1837,6 +1839,15 @@ A helper function that convert a header file's name to a =_HEADER_H_= macro:
       (format "_%s_%s_" (upcase basename) (upcase extension))))
 #+end_src
 
+A helper function that get a =c/cpp= file's corresponding conventional header file name:
+#+begin_src emacs-lisp
+  (defun my/c-header-filename-to-this ()
+      "convert header filename.{c,cpp} to filename.h"
+    (let* ((filename  (file-name-nondirectory (buffer-file-name)))
+           (basename  (file-name-sans-extension filename)))
+      (my/filename-with-extension basename "h")))
+#+end_src
+
 *** ccls
 :PROPERTIES:
 :ID:       10cfbc64-de37-4a40-9f44-738fb936b596
@@ -1847,7 +1858,7 @@ A helper function that convert a header file's name to a =_HEADER_H_= macro:
     :hook ((c-mode c++-mode objc-mode cuda-mode) .
            (lambda () (require 'ccls) (lsp-deferred)))
     :init
-    (general-setq flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc)))
+    (general-setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc)))
 #+end_src
 
 ** plantuml

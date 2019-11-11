@@ -3,6 +3,16 @@
 :INCLUDE:  Curly brace
 :END:
 Generally I use OTBS for my own code in curly braced language, including =C=.
+** inc: include self-defined header files :src:
+#+begin_src c
+  #include "${1:`(my/c-header-filename-to-this)`}"$0
+#+end_src
+
+** incl: include library :src:
+#+begin_src c
+  #include <${1:stdio.h}>$0
+#+end_src
+
 ** stru: typedef struct :src:
 typedef an anonymous struct with a named alias.
 #+begin_src c
@@ -30,8 +40,8 @@ OTBS style main
 ** C header :src:
 C header that can be linked by C++.
 #+begin_src c
-  #ifndef `(my/c-header-filename-macro)`
-  #define `(my/c-header-filename-macro)`
+  #ifndef ${1:`(my/c-header-filename-macro)`}
+  #define $1
 
   #ifdef __cplusplus
   extern "C" {
@@ -43,7 +53,7 @@ C header that can be linked by C++.
   }
   #endif
 
-  #endif  /* `(my/c-header-filename-macro)` */
+  #endif  /* $1 */
 #+end_src
 
 * Curly brace
