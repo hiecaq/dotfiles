@@ -89,6 +89,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#plantuml][plantuml]]
   - [[#rust][rust]]
   - [[#beancount][beancount]]
+  - [[#cmake][CMake]]
 - [[#magit][Magit]]
 
 * General Settings
@@ -1905,6 +1906,17 @@ reference:
     :init
     (add-hook 'beancount-mode-hook #'outline-minor-mode)
     (defvaralias 'beancount-transaction-indent 'tab-width))
+#+end_src
+
+** CMake
+:PROPERTIES:
+:ID:       f062614a-4de0-4ebb-8d43-04ac218ba3dd
+:END:
+[[https://gitlab.kitware.com/cmake/cmake][cmake]] is the most (in)famous C/C++ build source generator.
+#+begin_src emacs-lisp
+  (use-package cmake-mode
+    :ensure t
+    :mode ("\\'CMakeLists\\.txt\\'" . cmake-mode))
 #+end_src
 
 * Magit
