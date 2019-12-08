@@ -542,6 +542,8 @@ I use =C-c= as my =leader=:
 This is a trick where I remap =SPC= to =C-c=, my leader key. In this way, I wrapped all the mode-defined =C-c= prefixed keybindings (they are not _supposed_ to do so btw) as if they were my leader key prefixed, so that when I type =SPC=, =which-key= will show up all of them.
 #+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-general
   (general-nvmap "SPC" (general-simulate-key "C-c"))
+  (my/leader-def '(normal visual)
+    "SPC" (general-simulate-key "C-c C-c"))
 #+end_src
 
 Bring my two of my old vim keybindings back, which open newline above/below current line without entering insert state:
@@ -1356,6 +1358,8 @@ Its =treemacs= integration that provides a helper function to add =projectile= p
 #+begin_src emacs-lisp
   (use-package flycheck
     :ensure t
+    :custom
+    (flycheck-keymap-prefix (kbd "C-c *"))
     :config
     (global-flycheck-mode +1))
 #+end_src
@@ -1763,6 +1767,7 @@ Use different font-size for headers, use sans-serif for non-code-like parts (pow
   (org-block-begin-line      ((t (:inherit fixed-pitch :weight bold))))
   (org-block-end-line        ((t (:inherit fixed-pitch :weight bold))))
   (org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+  (org-drawer                ((t (:inherit (font-lock-comment-face fixed-pitch)))))
   (org-tag                   ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
   (org-verbatim              ((t (:inherit (shadow fixed-pitch)))))
   (org-code                  ((t (:inherit (shadow fixed-pitch)))))
