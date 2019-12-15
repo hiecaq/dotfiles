@@ -1,1 +1,2 @@
 applications/nvim/pack/* linguist-vendored
+applications/emacs/elisp/* linguist-vendored
