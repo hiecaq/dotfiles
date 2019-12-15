@@ -77,6 +77,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#general-settings-1][general settings]]
   - [[#general-keybindings][general keybindings]]
   - [[#task-management][task management]]
+  - [[#holidays-and-anniversaries][holidays and anniversaries]]
   - [[#babel][babel]]
   - [[#org-brain][org-brain]]
   - [[#org-board][org-board]]
@@ -1602,17 +1603,17 @@ Caputre templates that helps reduce boilerplate:
                    "* %?\n:LOGBOOK:\n- Entered at %U\n:END:\n%x")))
 #+end_src
 
-#+begin_src emacs-lisp :tangle no :noweb-ref org-model-init
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
   (general-setq org-agenda-compact-blocks t)
 #+end_src
 
 I schedule things in a sense that I don't want to think about it until that time. If something is "going to happen" at some time and I need to prepare for it, I directly use angle-braced timestamp. Thus this setting help me fulfill this need:
-#+begin_src emacs-lisp :tangle no :noweb-ref org-model-init
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
   (general-setq org-agenda-todo-ignore-scheduled 'future)
 #+end_src
 
 To use GTD styles in my org-mode workflow, it's necessary to have those agenda views:
-#+begin_src emacs-lisp :tangle no :noweb-ref org-model-init
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
     (general-setq org-agenda-custom-commands
           '(("n" "Getting things done!"
              ((todo "ENGAGE")
@@ -1651,6 +1652,28 @@ To use GTD styles in my org-mode workflow, it's necessary to have those agenda v
              ((org-agenda-sorting-strategy '(tag-up priority-down))
               (org-agenda-entry-types '(org-agenda-entry-types '(:deadline :timestamp :sexp)))))))
 #+end_src
+** holidays and anniversaries
+Given that org-mode show a day/month/year agenda view depending on my choice, why not also show those important days on the view?
+
+Emacs has built-in =calendar= mode and =diary= mode, according to [[https://orgmode.org/manual/Weekly_002fdaily-agenda.html#Weekly_002fdaily-agenda][Org mode manual]], it's good enough to add this snippet to my GTD org file:
+#+begin_src org
+  * Holidays
+    :PROPERTIES:
+    :CATEGORY: Holiday
+    :END:
+  %%(org-calendar-holiday)   ; special function for holiday names
+#+end_src
+=calendar= mode needs some configuration to fit my needs:
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (use-package calendar
+    :init
+    (general-setq calendar-chinese-all-holidays-flag t)
+    (general-setq holiday-hebrew-holidays nil)
+    (general-setq holiday-islamic-holidays nil)
+    (general-setq holiday-solar-holidays nil)
+    (general-setq holiday-bahai-holidays nil))
+#+end_src
+
 ** babel
 References:
 + [[https://orgmode.org/worg/org-contrib/babel/intro.html][Babel: Introduction]] in worg/org-contrib
@@ -1696,6 +1719,39 @@ I declared a hydra for =org-babel= to make things easier:
      'org-src-lang-modes '("plantuml" . plantuml)))
 #+end_src
 
+*** ob-ditaa
+:PROPERTIES:
+:ID:       91162b94-9993-42ac-9884-0e07e221d410
+:END:
+#+begin_src emacs-lisp
+  (use-package ob-ditaa
+    :after org
+    :init
+    (when (eq system-type 'gnu/linux)
+      (general-setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0.11.jar")))
+#+end_src
+
+Ditaa basically use the built-in =artist= mode, which behave strangely in Evil insert/normal state. I don't want to be in Emacs state all the time, thus I have the following configuration to make it more usable:
+#+begin_src emacs-lisp
+  (use-package artist
+    :demand t
+    :init
+    (defmacro my/artist-move (move-active move-inactive)
+      `(lambda (&optional n)
+         (interactive "p")
+         (if artist-key-is-drawing
+             (,move-active n)
+           (,move-inactive n))))
+    :general
+    (general-nmap artist-mode-map
+      "RET" 'artist-key-set-point
+      "j" (my/artist-move artist-next-line     picture-move-down)
+      "k" (my/artist-move artist-previous-line picture-move-up)
+      "h" (my/artist-move artist-backward-char picture-backward-column)
+      "l" (my/artist-move artist-forward-char  picture-forward-column))
+    (my/leader-def 'normal 'artist-mode-map
+      "SPC" (general-simulate-key "C-c C-a")))
+#+end_src
 ** org-brain
 :PROPERTIES:
 :ID:       b42b471f-b82d-4190-bd90-0c2dadcc5e05
