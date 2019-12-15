@@ -40,6 +40,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#paradox][Paradox]]
 - [[#miscs][Miscs]]
   - [[#xdg][Xdg]]
+  - [[#easypg][EasyPG]]
   - [[#bookmark][Bookmark]]
   - [[#recentf][Recentf]]
   - [[#editorconfig][Editorconfig]]
@@ -90,6 +91,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#rust][rust]]
   - [[#beancount][beancount]]
   - [[#cmake][CMake]]
+  - [[#textinfo][TextInfo]]
 - [[#magit][Magit]]
 
 * General Settings
@@ -349,6 +351,29 @@ Then it will be reasonble to put those annoying but extremely helpful stuff into
             `(("." . ,backup-dir)))
       (setq auto-save-file-name-transforms
             `((".*" ,autosave-dir t)))))
+#+end_src
+
+** EasyPG
+:PROPERTIES:
+:ID:       a8f1b34a-3392-4307-896b-0c9161a9e9d9
+:END:
+From EmacsWiki:
+#+begin_quote
+=EasyPG= is an all-in-one GnuPG interface for Emacs.
+#+end_quote
+#+begin_quote
+Note that easy-pg consists of two different kind of modules, one is a library (epg.el) and the others are applications (epa-*.el). Auto-encryption (epa-file.el) is a part of the latter. As the docs says “The EasyPG Library dares to disable passphrase caching”, that is intended behavior. Caveat user, if you start using the library directly. ;)
+#+end_quote
+Helpful references, including the Emacs Wiki page where the above quotes are from:
+- [[https://orgmode.org/worg/org-tutorials/encrypting-files.html][Encrypting org Files.]] on Worg
+- [[https://emacs.stackexchange.com/questions/7230/how-to-automatically-encrypt-orgmode-files][How to automatically encrypt orgmode files?]] on Emacs Stack Exchange
+- [[https://www.emacswiki.org/emacs/EasyPG][Easy PG]] on Emacs Wiki
+- [[https://www.emacswiki.org/emacs/AutoEncryption][Auto Encryption]] on Emacs Wiki
+- [[https://www.emacswiki.org/emacs/GnuPG][GnuPG]] on Emacs Wiki
+#+begin_src emacs-lisp
+  (use-package 'epa-file
+    :config
+    (epa-file-enable))
 #+end_src
 
 ** Bookmark
@@ -1545,12 +1570,14 @@ Now finally, =org-directory= that will be used to look for capture templates:
 
 And the list of files/directories I want my agenda to track:
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-agenda-file-regexp "\\`[^.].*\\.org\\(\\.gpg\\)?\\'")
   (general-setq org-agenda-files (quote ("~/documents/tracking")))
 #+end_src
+Notice that I also includes all =*.org.gpg= files, because I'd like to sync my GTD files around, encrypted.
 
 And a default note file for templates that does not specify a target file:
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
-  (general-setq org-default-notes-file "~/documents/tracking/inbox.org")
+  (general-setq org-default-notes-file "~/documents/tracking/inbox.org.gpg")
 #+end_src
 
 Archive things into an archive directory:
@@ -1560,21 +1587,70 @@ Archive things into an archive directory:
 
 As GTD requires, I want to refile elements to maybe list or next action list:
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
-  (general-setq org-refile-targets (quote (("maybe.org" :maxlevel . 2)
-                                           ("tasks.org" :level . 1))))
+  (general-setq org-refile-targets (quote (("maybe.org.gpg" :level . 1)
+                                           ("tasks.org.gpg" :level . 1))))
 #+end_src
 
 Caputre templates that helps reduce boilerplate:
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
   (general-setq org-capture-templates
-                '(("t" "Todo" entry (file+headline "inbox.org" "Todos")
+                '(("t" "Todo" entry (file+headline "inbox.org.gpg" "Todos")
                    "* TODO %?\n:LOGBOOK:\n- with context %a at %U\n:END:\n")
                   ("b" "Board" entry (file+headline "~/documents/board/board.org" "Uncategorized")
                    "* %?\n:PROPERTIES:\n:URL: %^C\n:END:\n:LOGBOOK:\n- Entered at %U\n:END:\n")
-                  ("n" "Note" entry (file+headline "inbox.org" "Notes")
+                  ("n" "Note" entry (file+headline "inbox.org.gpg" "Notes")
                    "* %?\n:LOGBOOK:\n- Entered at %U\n:END:\n%x")))
 #+end_src
 
+#+begin_src emacs-lisp :tangle no :noweb-ref org-model-init
+  (general-setq org-agenda-compact-blocks t)
+#+end_src
+
+I schedule things in a sense that I don't want to think about it until that time. If something is "going to happen" at some time and I need to prepare for it, I directly use angle-braced timestamp. Thus this setting help me fulfill this need:
+#+begin_src emacs-lisp :tangle no :noweb-ref org-model-init
+  (general-setq org-agenda-todo-ignore-scheduled 'future)
+#+end_src
+
+To use GTD styles in my org-mode workflow, it's necessary to have those agenda views:
+#+begin_src emacs-lisp :tangle no :noweb-ref org-model-init
+    (general-setq org-agenda-custom-commands
+          '(("n" "Getting things done!"
+             ((todo "ENGAGE")
+              (agenda "current week"
+               ((org-agenda-entry-types '(:deadline :timestamp :sexp))
+                (org-agenda-files '("~/documents/tracking"))))
+              (todo "TODO")
+              (todo "WAIT"))
+             ((org-agenda-files '("~/documents/tracking/tasks.org.gpg"))))
+            ("i" "Inbox & Maybe"
+             ((todo "TODO|WAIT"
+                    ((org-agenda-files '("~/documents/tracking/inbox.org.gpg"))))
+              (agenda "this two week"
+                      ((org-agenda-span 14)))
+              (todo "TODO|WAIT"
+                    ((org-agenda-files '("~/documents/tracking/maybe.org.gpg")))))
+             ((org-agenda-sorting-strategy '(tag-up priority-down))
+              (org-agenda-entry-types '(org-agenda-entry-types '(:deadline :timestamp :sexp)))))
+            ("g" . "Todolist")
+            ("gt" "Todos"
+             ((tags-todo "+CATEGORY=\"Todo\"")
+              (agenda "this two week"
+                      ((org-agenda-span 14))))
+             ((org-agenda-sorting-strategy '(tag-up priority-down))
+              (org-agenda-entry-types '(org-agenda-entry-types '(:deadline :timestamp :sexp)))))
+            ("gl" "Learn"
+             ((tags-todo "+CATEGORY=\"Learn\"")
+              (agenda "this two week"
+                      ((org-agenda-span 14))))
+             ((org-agenda-sorting-strategy '(tag-up priority-down))
+              (org-agenda-entry-types '(org-agenda-entry-types '(:deadline :timestamp :sexp)))))
+            ("ge" "Entertainments"
+             ((tags-todo "+CATEGORY=\"Entertain\"")
+              (agenda "this two week"
+                      ((org-agenda-span 14))))
+             ((org-agenda-sorting-strategy '(tag-up priority-down))
+              (org-agenda-entry-types '(org-agenda-entry-types '(:deadline :timestamp :sexp)))))))
+#+end_src
 ** babel
 References:
 + [[https://orgmode.org/worg/org-contrib/babel/intro.html][Babel: Introduction]] in worg/org-contrib
@@ -1922,6 +1998,16 @@ reference:
   (use-package cmake-mode
     :ensure t
     :mode ("\\'CMakeLists\\.txt\\'" . cmake-mode))
+#+end_src
+
+** TextInfo
+:PROPERTIES:
+:ID:       4e24aac9-492b-427a-bbde-4bf158c077b0
+:END:
+[[https://www.emacswiki.org/emacs/InfoPlus][Info+]] provides enhanced features for Info Mode. Stuff viewable in Info Mode including documentation of =glibc= , of Gnu coreutils, and of course of Emacs.
+#+begin_src emacs-lisp
+  (use-package info+
+    :load-path "~/.emacs.d/elisp/")
 #+end_src
 
 * Magit
