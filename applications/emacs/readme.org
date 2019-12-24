@@ -81,6 +81,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#babel][babel]]
   - [[#org-brain][org-brain]]
   - [[#org-board][org-board]]
+  - [[#org-noter][org-noter]]
   - [[#deft][deft]]
   - [[#toc-org][toc-org]]
   - [[#ox-hugo][ox-hugo]]
@@ -92,8 +93,12 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#rust][rust]]
   - [[#beancount][beancount]]
   - [[#cmake][CMake]]
+  - [[#latex][Latex]]
   - [[#textinfo][TextInfo]]
-- [[#magit][Magit]]
+  - [[#yaml][Yaml]]
+- [[#tools][Tools]]
+  - [[#magit][Magit]]
+  - [[#pdf-tools][Pdf Tools]]
 
 * General Settings
 ** Coding and Languages
@@ -217,6 +222,12 @@ Also, the default font for Chinese slow down Emacs terribly on Windows:
   (when (eq window-system 'w32)
     (dolist (charset '(kana han cjk-misc bopomofo))
       (set-fontset-font t charset (font-spec :family "Microsoft Yahei"))))
+#+end_src
+
+Always prefer msys2 libraries:
+#+begin_src emacs-lisp
+  (when (eq window-system 'w32)
+    (setenv "PATH" (concat "C:\\msys64\\mingw64\\bin;" (getenv "PATH"))))
 #+end_src
 
 ** Linux
@@ -372,7 +383,7 @@ Helpful references, including the Emacs Wiki page where the above quotes are fro
 - [[https://www.emacswiki.org/emacs/AutoEncryption][Auto Encryption]] on Emacs Wiki
 - [[https://www.emacswiki.org/emacs/GnuPG][GnuPG]] on Emacs Wiki
 #+begin_src emacs-lisp
-  (use-package 'epa-file
+  (use-package epa-file
     :config
     (epa-file-enable))
 #+end_src
@@ -1546,6 +1557,7 @@ I generally follow the GTD way as my task management system.
 reference:
 + [[https://hamberg.no/gtd/][GTD in 15 minutes – A Pragmatic Guide to Getting Things Done]] by Erlend Hamberg
 + [[http://www.members.optusnet.com.au/~charles57/GTD/][Emacs, org-mode and Getting Things Done (GTD)]] by Charles Cave
++ [[http://doc.norang.ca/org-mode.html][Org Mode - Organize Your Life In Plain Text!]] by Bernt Hansen
 
 Todo state keywords. The todo state is simple:
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
@@ -1723,6 +1735,7 @@ I declared a hydra for =org-babel= to make things easier:
 :PROPERTIES:
 :ID:       91162b94-9993-42ac-9884-0e07e221d410
 :END:
+[[http://ditaa.sourceforge.net/][ditaa]] basically turns your ascii art into the corresponding fancy diagrams, especially those that cannot be expressed using plantuml.
 #+begin_src emacs-lisp
   (use-package ob-ditaa
     :after org
@@ -1752,6 +1765,7 @@ Ditaa basically use the built-in =artist= mode, which behave strangely in Evil i
     (my/leader-def 'normal 'artist-mode-map
       "SPC" (general-simulate-key "C-c C-a")))
 #+end_src
+
 ** org-brain
 :PROPERTIES:
 :ID:       b42b471f-b82d-4190-bd90-0c2dadcc5e05
@@ -1807,6 +1821,28 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
                   '("--page-requisites" "--adjust-extension" "--convert-links"))
     (general-setq org-board-archive-date-format 'hyphenate)
     :ensure t)
+#+end_src
+
+** org-noter
+:PROPERTIES:
+:ID:       2e92f199-a9f3-459e-8ca7-cb41e09f3686
+:END:
+[[https://github.com/weirdNox/org-noter][org-noter]] is a synchronized document annotator, in Org mode.
+#+begin_src emacs-lisp
+  (use-package org-noter
+    :ensure t
+    :demand t
+    :general
+    (general-nmap org-noter-doc-mode-map
+      "i" 'org-noter-insert-note
+      "I" 'org-noter-insert-precise-note
+      "C-c q" 'org-noter-kill-session
+      "gp" 'org-noter-sync-current-page-or-chapter
+      "gn" 'org-noter-sync-current-note)
+    (general-nmap org-noter-notes-mode-map
+      "C-c q" 'org-noter-kill-session
+      "gn" 'org-noter-sync-current-note
+      "gp" 'org-noter-sync-current-page-or-chapter))
 #+end_src
 
 ** deft
@@ -1866,6 +1902,11 @@ Hide ===, =~= and other emphasis markers, and fontify src block natively:
 Display =\lambda= etc as their unicode symbols (this works pretty well with embeded LaTeX symbol:
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
   (general-setq org-pretty-entities t)
+#+end_src
+
+Latex Preview is too small under hidpi, so
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-format-latex-options (plist-put org-format-latex-options :scale 3.0))
 #+end_src
 
 Use =org-bullets= to replace =*= with some cool unicode symbol. This seems super slow on Windows.
@@ -2056,6 +2097,20 @@ reference:
     :mode ("\\'CMakeLists\\.txt\\'" . cmake-mode))
 #+end_src
 
+** Latex
+#+begin_quote
+[[https://www.gnu.org/software/auctex/][AUCTeX]] is an extensible package for writing and formatting TeX files in GNU Emacs.
+#+end_quote
+#+begin_src emacs-lisp
+  (use-package tex
+    :ensure auctex
+    :init
+    (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
+    (general-setq TeX-auto-save t)
+    (general-setq TeX-parse-self t)
+    (general-setq preview-scale-function 3.0))
+#+end_src
+
 ** TextInfo
 :PROPERTIES:
 :ID:       4e24aac9-492b-427a-bbde-4bf158c077b0
@@ -2066,7 +2121,18 @@ reference:
     :load-path "~/.emacs.d/elisp/")
 #+end_src
 
-* Magit
+** Yaml
+:PROPERTIES:
+:ID:       19693f2a-8a15-4032-992a-1eee32fb4e40
+:END:
+#+begin_src emacs-lisp
+  (use-package yaml-mode
+    :ensure t
+    :mode "\\.yml\\'")
+#+end_src
+
+* Tools
+** Magit
 :PROPERTIES:
 :ID:       be8f32a7-b990-4a66-9a88-fc5d3f6c4c74
 :END:
@@ -2088,4 +2154,16 @@ Its =treemacs= integration that notifies =treemacs=' =filewatch-mode= of status 
   (use-package treemacs-magit
     :ensure t
     :after (treemacs magit))
+#+end_src
+** Pdf Tools
+:PROPERTIES:
+:ID:       e3611754-5851-4110-8d1f-83bb580c6322
+:END:
+[[https://github.com/politza/pdf-tools][pdf-tools]] is basically a front-end of poppler for Emacs, turning Emacs into a sane Pdf viewer.
+#+begin_src emacs-lisp
+  (use-package pdf-tools
+    :ensure t
+    :config
+    (pdf-loader-install)
+    (evil-collection-pdf-setup))
 #+end_src
