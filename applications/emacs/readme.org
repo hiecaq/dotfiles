@@ -617,6 +617,11 @@ Use =C-d= as frame key, mimics =C-w= as window key. =d= stands for =display=. Ho
   (general-nmap "C-x 5 g d" 'xref-find-definitions-other-frame)
 #+end_src
 
+Run =.= on all selected lines in visual mode:
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-general
+  (general-vmap "." (general-simulate-key ":normal . RET"))
+#+end_src
+
 *** evil-collection
 :PROPERTIES:
 :ID:       d27d2449-c4b8-402f-9cc7-14d841c8310f
@@ -1430,7 +1435,12 @@ Based on [[https://github.com/emacs-lsp/lsp-ui/pull/208][this]] PR, there is no 
 #+begin_src emacs-lisp
   (use-package lsp-ui
     :ensure t
-    :commands lsp-ui-mode)
+    :commands lsp-ui-mode
+    :init
+    (general-setq lsp-ui-doc-enable nil)
+    (add-hook 'lsp-ui-mode-hook
+              (lambda ()
+                (general-setq-local evil-lookup-func #'lsp-ui-doc-glance))))
 #+end_src
 
 *** company-lsp
@@ -2098,6 +2108,9 @@ reference:
 #+end_src
 
 ** Latex
+:PROPERTIES:
+:ID:       033cdaea-4576-44c6-870e-e5c2460beb92
+:END:
 #+begin_quote
 [[https://www.gnu.org/software/auctex/][AUCTeX]] is an extensible package for writing and formatting TeX files in GNU Emacs.
 #+end_quote
