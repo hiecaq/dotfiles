@@ -99,6 +99,7 @@ This file might be out of sync. The newest version is available [[https://github
 - [[#tools][Tools]]
   - [[#magit][Magit]]
   - [[#pdf-tools][Pdf Tools]]
+  - [[#vterm][Vterm]]
 
 * General Settings
 ** Coding and Languages
@@ -187,6 +188,15 @@ A helper function that create a filename from basename and extension:
         (`("" ,e) e)
         (`(,b "") b)
         (`(,b ,e) (format "%s.%s" b e)))))
+#+end_src
+
+Ignore more boring files/directories:
+#+begin_src emacs-lisp
+  (push ".ccls-cache/" completion-ignored-extensions)
+  (push "tags" completion-ignored-extensions)
+  (push "GPATH" completion-ignored-extensions)
+  (push "GRTAGS" completion-ignored-extensions)
+  (push "GTAGS" completion-ignored-extensions)
 #+end_src
 
 * Emacs as a server
@@ -570,6 +580,11 @@ When =visual-line-mode= is set (especially in =org-mode=), I want Vim to behave 
   (general-setq evil-search-module 'evil-search)
 #+end_src
 
+Wrapped search is terrible when you want to go through all instances.
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-init
+  (general-setq evil-search-wrap nil)
+#+end_src
+
 I use =C-c= as my =leader=:
 #+begin_src emacs-lisp :tangle no :noweb-ref general-config
   (general-create-definer my/leader-def
@@ -769,6 +784,7 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
     :config
     (global-evil-matchit-mode 1))
 #+end_src
+
 *** evil-lion
 :PROPERTIES:
 :ID:       8528dc9d-6b90-45ce-9106-f593088550f1
@@ -930,7 +946,9 @@ References:
     ([remap imenu]                    'helm-imenu)
     (general-nmap "gO" 'helm-semantic-or-imenu)
     :init
+    (general-setq helm-display-function #'helm-display-buffer-in-own-frame)
     (general-setq helm-command-prefix-key "C-c h")
+    (general-setq helm-ff-skip-boring-files t)
     (unless (boundp 'completion-in-region-function)
       (general-def lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
       (general-def emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point)))
@@ -1372,6 +1390,7 @@ This file provides a somewhat generic infrastructure for cross referencing comma
     :init
     (general-setq projectile-cache-file (expand-file-name "emacs/projectile.cache" (xdg-cache-home)))
     (general-setq projectile-known-projects-file (expand-file-name "emacs/projectile-bookmarks.eld" (xdg-data-home)))
+    (general-setq projectile-globally-ignored-directories (append '(".ccls-cache") projectile-globally-ignored-directories))
     :config
     (projectile-mode +1))
 #+end_src
@@ -2168,6 +2187,7 @@ Its =treemacs= integration that notifies =treemacs=' =filewatch-mode= of status 
     :ensure t
     :after (treemacs magit))
 #+end_src
+
 ** Pdf Tools
 :PROPERTIES:
 :ID:       e3611754-5851-4110-8d1f-83bb580c6322
@@ -2179,4 +2199,18 @@ Its =treemacs= integration that notifies =treemacs=' =filewatch-mode= of status 
     :config
     (pdf-loader-install)
     (evil-collection-pdf-setup))
+#+end_src
+
+** Vterm
+:PROPERTIES:
+:ID:       1fce06ec-3a63-4c68-9e3d-9510e096a279
+:END:
+[[https://github.com/akermu/emacs-libvterm][emacs-libvterm]] is, guess what, a [[https://github.com/neovim/libvterm][libvterm]] binding for Emacs!
+#+begin_src emacs-lisp
+  (use-package vterm
+    :ensure t
+    :init
+    (general-setq vterm-term-environment-variable "xterm-256color-italic")
+    :config
+    (evil-collection-vterm-setup))
 #+end_src

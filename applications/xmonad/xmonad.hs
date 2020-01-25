@@ -7,6 +7,7 @@ import XMonad.Hooks.SetWMName
 import XMonad.Util.EZConfig(additionalKeysP)
 import XMonad.Actions.Navigation2D
 import XMonad.Layout.Spacing
+import XMonad.Hooks.ManageHelpers
 import qualified XMonad.StackSet as W
 
 myTerm :: String
@@ -18,7 +19,7 @@ main = (=<<) xmonad $ statusBar myBar myPP toggleStrutsKey $ withNavigation2DCon
         { terminal    = myTerm
         , modMask     = mod4Mask
         , borderWidth = 0
-        , manageHook = manageDocks <+> manageHook desktopConfig
+        , manageHook = myManageHooks <+> manageDocks <+> manageHook desktopConfig
         , layoutHook =  spacingRaw True (Border 10 10 10 10) True (Border 10 10 10 10) True $ avoidStruts $ layoutHook desktopConfig
         -- , startupHook = myStartupHook
         , handleEventHook = handleEventHook desktopConfig <+> fullscreenEventHook
@@ -103,6 +104,11 @@ myNavigation2DConfig :: Navigation2DConfig -- {{{1
 myNavigation2DConfig = def
     { defaultTiledNavigation = sideNavigation
     , layoutNavigation = [("Full", centerNavigation)] }
+-- }}}1
+
+-- new Window callbacks {{{1
+myManageHooks = composeAll [ title =? "Helm" --> doCenterFloat
+                           ]
 -- }}}1
 
 -- vim: foldenable:foldmethod=marker
