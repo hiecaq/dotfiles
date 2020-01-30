@@ -60,6 +60,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#treemacs][Treemacs]]
   - [[#telephone-line][Telephone-line]]
   - [[#with-editor][with-editor]]
+  - [[#origami][Origami]]
 - [[#completion][Completion]]
   - [[#company][Company]]
   - [[#company-quickhelp][Company-quickhelp]]
@@ -649,6 +650,7 @@ Run =.= on all selected lines in visual mode:
     :custom
     (evil-collection-setup-minibuffer t)
     :config
+    (evil-collection-init 'compile)
     (evil-collection-init 'info)
     (evil-collection-init 'custom)
     (evil-collection-init 'dired)
@@ -1135,6 +1137,11 @@ gtags --gtagslabel=new-ctags
       "t b" 'treemacs-bookmark
       "t f" 'treemacs-find-file
       "t t" 'treemacs-find-tag)
+    (evil-treemacs-state-map
+      "C-j" 'evil-window-down
+      "C-k" 'evil-window-up
+      "C-h" 'evil-window-left
+      "C-l" 'evil-window-right)
     :init
     (general-setq treemacs-persist-file (expand-file-name "emacs/treemacs-persist" (xdg-data-home)))
     (general-setq treemacs-last-error-persist-file (expand-file-name "emacs/treemacs-persist-at-last-error" (xdg-cache-home)))
@@ -1211,6 +1218,17 @@ Reference:
     (shell-mode . with-editor-export-editor)
     (term-exec  . with-editor-export-editor)
     (eshell-mode . with-editor-export-editor))
+#+end_src
+
+** Origami
+:PROPERTIES:
+:ID:       33d8fc1a-c433-41fc-b9e5-a2b4571dc68b
+:END:
+[[https://github.com/gregsexton/origami.el][origami]] provides code folding for Emacs, and is also an optional dependencies for Evil's =zo=-ish family.
+#+begin_src emacs-lisp
+  (use-package origami
+    :ensure t
+    :hook (prog-mode . origami-mode))
 #+end_src
 
 * Completion
@@ -1438,6 +1456,8 @@ Its =treemacs= integration that provides a helper function to add =projectile= p
     ((python-mode rust-mode) . lsp-deferred)
     :commands (lsp lsp-deferred)
     :init
+    (general-setq lsp-enable-indentation nil)
+    (general-setq lsp-keymap-prefix "C-c L")
     (general-setq lsp-prefer-flymake nil)
     (general-setq lsp-session-file (expand-file-name "emacs/lsp-session-v1" (xdg-cache-home)))
     (general-setq lsp-keep-workspace-alive nil)
@@ -1495,6 +1515,19 @@ Based on [[https://github.com/emacs-lsp/lsp-ui/pull/208][this]] PR, there is no 
   (use-package helm-lsp
     :ensure t
     :after lsp-mode)
+#+end_src
+
+*** lsp-origami
+:PROPERTIES:
+:ID:       a8723ecd-3fc5-4170-90d4-b1995825ccd9
+:END:
+#+begin_quote
+[[https://github.com/emacs-lsp/lsp-origami][lsp-origami]] provides support for [[id:33d8fc1a-c433-41fc-b9e5-a2b4571dc68b][origami]] using language server protocol’s =textDocument/foldingRange= functionality.
+#+end_quote
+#+begin_src emacs-lisp
+  (use-package lsp-origami
+    :ensure t
+    :hook ((c-mode c++-mode asm-mode) . lsp-origami-mode))
 #+end_src
 
 * Org Mode
@@ -2091,7 +2124,9 @@ A helper function that get a =c/cpp= file's corresponding conventional header fi
 :END:
 #+begin_src emacs-lisp
   (use-package rust-mode
-    :ensure t)
+    :ensure t
+    :init
+    (general-setq lsp-rust-server 'lsp))
 #+end_src
 
 ** beancount
