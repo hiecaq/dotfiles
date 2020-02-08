@@ -9,6 +9,7 @@ import XMonad.Actions.Navigation2D
 import XMonad.Layout.Spacing
 import XMonad.Hooks.ManageHelpers
 import qualified XMonad.StackSet as W
+import XMonad.Actions.CycleWS
 
 myTerm :: String
 myTerm = "alacritty"
@@ -24,31 +25,44 @@ main = (=<<) xmonad $ statusBar myBar myPP toggleStrutsKey $ withNavigation2DCon
         -- , startupHook = myStartupHook
         , handleEventHook = handleEventHook desktopConfig <+> fullscreenEventHook
         , focusFollowsMouse = False
-        } `additionalKeysP` -- {{{2
-        [ ("M-h", windowGo L False)
-        , ("M-l", windowGo R False)
-        , ("M-j", windowGo D False)
-        , ("M-k", windowGo U False)
-        , ("M-S-h", windowSwap L False)
-        , ("M-S-l", windowSwap R False)
-        , ("M-S-j", windowSwap D False)
-        , ("M-S-k", windowSwap U False)
-        , ("M-m", do -- go borderless!
-            sendMessage ToggleStruts
-            toggleWindowSpacingEnabled
-            toggleScreenSpacingEnabled
-          )
-        , ("M-<Return>", spawn myTerm)
-        , ("M-n", windows W.focusDown)
-        , ("M-p", windows W.focusUp  )
-        , ("M--", sendMessage Shrink) -- %! Shrink the master area
-        , ("M-=", sendMessage Expand) -- %! Expand the master area
-        , ("M-.", sendMessage (IncMasterN 1)) -- %! Increment the number of windows in the master area
-        , ("M-,", sendMessage (IncMasterN (-1))) -- %! Deincrement the number of windows in the master area
-        , ("M-v", windows W.focusMaster)
-        , ("M-S-v", windows W.swapMaster)
-        ] -- }}}2
+        } `additionalKeysP` myKeys
 -- }}}1
+
+myWorkspaces :: [String]
+myWorkspaces = ["1","2","3","4","5","6","7","8","9"]
+
+myKeys :: [(String, X ())] -- {{{1
+myKeys = [ ("M-h", windowGo L False)
+         , ("M-l", windowGo R False)
+         , ("M-j", windowGo D False)
+         , ("M-k", windowGo U False)
+         , ("M-S-h", windowSwap L False)
+         , ("M-S-l", windowSwap R False)
+         , ("M-S-j", windowSwap D False)
+         , ("M-S-k", windowSwap U False)
+         , ("M-m", do -- go borderless!
+             sendMessage ToggleStruts
+             toggleWindowSpacingEnabled
+             toggleScreenSpacingEnabled
+           )
+         , ("M-<Return>", spawn myTerm)
+         , ("M-n", windows W.focusDown)
+         , ("M-p", windows W.focusUp  )
+         , ("M--", sendMessage Shrink) -- %! Shrink the master area
+         , ("M-=", sendMessage Expand) -- %! Expand the master area
+         , ("M-.", sendMessage (IncMasterN 1)) -- %! Increment the number of windows in the master area
+         , ("M-,", sendMessage (IncMasterN (-1))) -- %! Deincrement the number of windows in the master area
+         , ("M-v", windows W.focusMaster)
+         , ("M-S-v", windows W.swapMaster)
+         , ("M-C-n", nextScreen)
+         , ("M-C-p", prevScreen)
+         ] ++
+             [ (otherModMasks ++ "M-" ++ [key], action tag)
+           | (tag, key) <- zip myWorkspaces "123456789"
+             , (otherModMasks, action) <- [ ("", windows . W.view)
+                                          , ("S-", windows . W.shift) ]
+             ]
+        -- }}}1
 
 -- come from https://github.com/mpv-player/mpv/issues/888#issuecomment-53065149
 fullscreenFix :: XConfig a -> XConfig a -- {{{1
