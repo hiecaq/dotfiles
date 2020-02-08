@@ -115,6 +115,186 @@ $0
 $0
 #+end_src
 
+* rust-mode
+** rst: rust result :src:wrap::
+#+begin_src rust
+  Result<$0>
+#+end_src
+
+** opt: rust option :src:wrap::
+#+begin_src rust
+  Option<$0>
+#+end_src
+
+** as: explicit type annotation :src:wrap:
+#+begin_src rust
+  <${1:Self} as $2>::$0
+#+end_src
+
+** stru: rust struct :src:wrap:
+#+begin_src rust
+  struct $1${2: {
+      $0
+  }}
+#+end_src
+
+** enum: rust enum :src:wrap:
+#+begin_src rust
+  enum $1 {
+      $0
+  }
+#+end_src
+
+** tfn: rust test fn block :src:
+#+begin_src rust
+  #[test]
+  fn $1()${2: -> Result<(), ${3:Error}>} {
+      $0
+  }
+#+end_src
+
+** test: rust test block :src::
+#+begin_src rust
+  #[cfg(test)]
+  mod tests {
+      use super::*;
+
+      $0
+  }
+#+end_src
+
+** let: rust let binding :src:wrap::
+#+begin_src rust
+  let $1 = $0;
+#+end_src
+
+** default: impl default :src:wrap:
+#+begin_src rust
+  impl Default for $1 {
+      #[must_use]
+      fn default() -> Self {
+          ${2:Self {
+              $0
+          }}
+      }
+  }
+#+end_src
+
+** blk: block with semi column :src:wrap:
+#+begin_src rust
+  {
+      $0
+  };
+#+end_src
+
+** bl: block :src:wrap:
+#+begin_src rust
+  {
+      $0
+  }
+#+end_src
+
+** derive: derive macro :src:
+#+begin_src rust
+  #[derive(${1:Debug}$2)]
+#+end_src
+
+** cls: rust closure :src:wrap:
+#+begin_src rust
+  |$1| {
+      $0
+  }
+#+end_src
+
+** cl: rust inline closure :src:wrap:
+#+begin_src rust
+  |$1| $0
+#+end_src
+
+** dbg: rust dbg! macro :src:wrap:
+#+begin_src rust
+  dbg!($0)
+#+end_src
+
+** impl: rust impl block :src:wrap:
+#+begin_src rust
+  impl $1${2: for $3} {
+      $0
+  }
+#+end_src
+
+** fnS: rust consuming method :src:wrap:
+#+begin_src rust
+  fn $1(self${2:})${3: -> $4} {
+      $0
+  }
+#+end_src
+
+** fnms: rust mutable method :src:wrap:
+#+begin_src rust
+  fn $1(&mut self${2:})${3: -> $4} {
+      $0
+  }
+#+end_src
+
+** fns: rust method :src:wrap:
+#+begin_src rust
+  fn $1(&self${2:})${3: -> $4} {
+      $0
+  }
+#+end_src
+
+** fn: rust private function :src:wrap:
+#+begin_src rust
+  fn $1($2)${3: -> $4} {
+      $0
+  }
+#+end_src
+
+** ifl: rust if let matching :src:wrap:
+#+begin_src rust
+  if let $1 = $2 {
+      $0
+  }
+#+end_src
+
+** ife: rust if else :src:wrap:
+#+begin_src rust
+  if $1 {
+      $2
+  } else {
+      $0
+  }
+#+end_src
+
+** match: rust pattern matching :src:wrap:
+#+begin_src rust
+  match $1 {
+      $0
+  }
+#+end_src
+
+** loop: rust loop :src:wrap:
+#+begin_src rust
+  loop {
+      $0
+  }
+#+end_src
+
+** for: rust for :src:wrap:
+#+begin_src rust
+  for $1 in $2 {
+      $0
+  }
+#+end_src
+
+** if: rust if :src:wrap:
+#+begin_src rust
+  if $1 {
+      $0
+  }
+#+end_src
+
 * Default :global:
 ** lorem: lorem ipsum
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
