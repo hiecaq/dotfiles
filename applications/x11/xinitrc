@@ -53,7 +53,7 @@ if [[ -f $userwallpaper ]] && (hash feh 2>/dev/null); then
 fi
 
 if [[ -f $usercomptonconfig ]] && (hash compton 2>/dev/null); then
-    compton --config "$usercomptonconfig" -b
+    picom --config "$usercomptonconfig" -b
 fi
 
 if (hash fcitx 2>/dev/null); then
