@@ -46,6 +46,8 @@ myKeys = [ ("M-h", windowGo L False)
              toggleScreenSpacingEnabled
            )
          , ("M-<Return>", spawn myTerm)
+         , ("M-e", spawn "emacsclient -nc")
+         , ("M-f", spawn "launch firefox-developer-edition")
          , ("M-n", windows W.focusDown)
          , ("M-p", windows W.focusUp  )
          , ("M--", sendMessage Shrink) -- %! Shrink the master area
