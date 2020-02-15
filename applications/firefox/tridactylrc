@@ -19,12 +19,18 @@ sanitise tridactyllocal tridactylsync
 "
 " Binds
 "
+bind --mode=ex          <C-n>   ex.next_completion
+bind --mode=ex          <C-p>   ex.prev_completion
 
 " Comment toggler for Reddit and Hacker News
 " bind ;c hint -c [class*="expand"],[class="togg"]
 
 bind ;d hint -W exclaim_quiet tmux new-window -d -n aria2c aria2c
 bind ;m composite hint -pipe * innerHTML | yank
+
+" right click
+command hint_focus hint -;
+bind ;C composite hint_focus; !s xdotool key Menu
 
 " Only hint search results on Google
 bindurl www.google.com f hint -Jc .rc > .r > a
@@ -41,7 +47,7 @@ bindurl www.google.com F hint -Jtc .rc>.r>a
 " Misc settings
 "
 set browser firefox-developer-edition
-set editorcmd tmux new-window -n firefox 'nvim -f %f; tmux wait-for -S firefox-neww-done' \; wait-for firefox-neww-done
+set editorcmd emacsclient -c
 
 " set editorcmd to suckless terminal, or use the defaults on other platforms
 " js tri.browserBg.runtime.getPlatformInfo().then(os=>{const editorcmd = os.os=="linux" ? "st vim" : "auto"; tri.config.set("editorcmd", editorcmd)})
@@ -74,6 +80,9 @@ set searchurls.crate https://crates.io/search?q=
 " autocmd DocStart ^http(s?)://www.reddit.com js tri.excmds.urlmodify("-t", "www", "old")
 " Mosquito nets won't make themselves
 autocmd DocStart ^http(s?)://www.amazon.com js tri.excmds.urlmodify("-t", "www", "smile")
+
+" Colorscheme
+colors base16-gruvbox-dark-medium
 
 " This will have to do until someone writes us a nice syntax file :)
 " vim: set filetype=vim:

@@ -51,7 +51,7 @@
 }
 
 #completions table {    font-size: 0.8rem;
-    font-weight: 200;
+    font-weight: 500;
     border-spacing: 0;
     table-layout: fixed;
     padding: 1rem;
@@ -70,7 +70,7 @@
     background: var(--tridactyl-bg);
     display: inline-block;
     font-size: unset;
-    font-weight: 200;
+    font-weight: 500;
     overflow: hidden;
     width: 100%;
     border-top: unset;
@@ -117,7 +117,7 @@
 }
 
 #completions .sectionHeader {    background: unset;
-    font-weight: 200;
+    font-weight: 500;
     border-bottom: unset;
     padding: 1rem !important;
     padding-left: unset;

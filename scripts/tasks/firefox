@@ -2,6 +2,8 @@
 
 cd "$QUINOA42_INSTALL_DIR"
 
-_=$(link $QUINOA42_INSTALL_DIR/applications/firefox/tridactylrc ~/.tridactylrc)
+mkdir -p ~/.config
+
+_=$(link $QUINOA42_INSTALL_DIR/applications/firefox ~/.config/tridactyl)
 
 exit 0
