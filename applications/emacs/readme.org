@@ -638,6 +638,31 @@ Run =.= on all selected lines in visual mode:
   (general-vmap "." (general-simulate-key ":normal . RET"))
 #+end_src
 
+Run =@q= on all selected lines in visual mode:
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-general
+  (general-vmap "Q" (general-simulate-key ":normal @q RET"))
+#+end_src
+
+Get =]p= and =[p= back, which basically paste stuff while making them indented with current lines. I missed them so much!
+Also, add the common =gp= binding which visually select the last pasted content.
+I have a macro for this:
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-init
+  (defmacro my/indented-paste (paste-func)
+    `(lambda (count &optional register yank-handler)
+       (interactive "*P<x>")
+       (evil-with-single-undo
+         (,paste-func count register yank-handler)
+         (evil-indent (alist-get ?\[ evil-markers-alist)
+                      (alist-get ?\] evil-markers-alist)))))
+#+end_src
+
+Their bindings:
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-general
+  (general-nmap "gp" (general-simulate-key "`[v`]"))
+  (general-nmap "[p" (my/indented-paste evil-paste-before))
+  (general-nmap "]p" (my/indented-paste evil-paste-after))
+#+end_src
+
 *** evil-collection
 :PROPERTIES:
 :ID:       d27d2449-c4b8-402f-9cc7-14d841c8310f
