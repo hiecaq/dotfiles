@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:bezmi/base16-tridactyl.git
+	branch = master
+	commit = 092a88c2233c10a1b28cad647b2bf3fd667aaa84
+	parent = 8756207950bfe74b6aca0716a493b6d3d846cb8f
+	method = merge
+	cmdver = 0.4.1
