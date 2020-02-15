@@ -1973,6 +1973,7 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
     :ensure t
     :after ox)
 #+end_src
+
 ** style and faces
 :PROPERTIES:
 :ID:       036849c5-9cf8-407a-a65f-dfa103a0b826
@@ -1986,9 +1987,9 @@ Hide ===, =~= and other emphasis markers, and fontify src block natively:
   (general-setq org-tags-column 0)
 #+end_src
 
-Display =\lambda= etc as their unicode symbols (this works pretty well with embeded LaTeX symbol:
+Display =\lambda= etc as their unicode symbols (this works pretty well with embeded LaTeX symbol). I turned this feature off because subscript =_= is annoying and I don't need pretty-entries most of the time, plus it's easy to toggle it just in time using ~org-toggle-pretty-entries~.
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
-  (general-setq org-pretty-entities t)
+  (general-setq org-pretty-entities nil)
 #+end_src
 
 Latex Preview is too small under hidpi, so
@@ -2029,6 +2030,7 @@ Use different font-size for headers, use sans-serif for non-code-like parts (pow
   (org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))
   (org-drawer                ((t (:inherit (font-lock-comment-face fixed-pitch)))))
   (org-tag                   ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
+  (org-checkbox              ((t (:inherit fixed-pitch :weight bold))))
   (org-verbatim              ((t (:inherit (shadow fixed-pitch)))))
   (org-code                  ((t (:inherit (shadow fixed-pitch)))))
   (org-indent                ((t (:inherit (org-hide fixed-pitch)))))
@@ -2273,4 +2275,17 @@ Its =treemacs= integration that notifies =treemacs=' =filewatch-mode= of status 
     (general-setq vterm-term-environment-variable "xterm-256color-italic")
     :config
     (evil-collection-vterm-setup))
+#+end_src
+
+[[https://github.com/jixiuf/vterm-toggle][vterm-toggle]] provides handy commands to toggle between vterm buffers and previous buffers.
+#+begin_src emacs-lisp
+  (use-package vterm-toggle
+    :ensure t
+    :init
+    (general-setq vterm-toggle-fullscreen-p nil)
+    (add-to-list 'display-buffer-alist
+                 '((lambda(bufname _) (with-current-buffer bufname (equal major-mode 'vterm-mode)))
+                   (display-buffer-reuse-window display-buffer-same-window)))
+    :general
+    (my/leader-def 'normal "v" 'vterm-toggle))
 #+end_src
