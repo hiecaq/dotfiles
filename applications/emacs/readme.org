@@ -420,7 +420,8 @@ Emacs has its own =bookmark= system built-in:
   (use-package recentf
     :defer t
     :init
-    (setq recentf-save-file (expand-file-name "emacs/recentf" (xdg-cache-home))))
+    (setq recentf-save-file (expand-file-name "emacs/recentf" (xdg-cache-home)))
+    (recentf-mode 1))
 #+end_src
 
 ** Editorconfig
@@ -681,6 +682,7 @@ Their bindings:
     (evil-collection-init 'dired)
     (evil-collection-init 'minibuffer)
     (evil-collection-init 'helm)
+    (evil-collection-init 'help)
     (evil-collection-init 'flycheck)
     (evil-collection-init 'xref)
     (evil-collection-init 'magit)
@@ -965,17 +967,14 @@ References:
   (use-package helm-config
     :demand t
     :general
-    ([remap find-file]                'helm-find-files)
-    ([remap occur]                    'helm-occur)
-    ([remap list-buffers]             'helm-buffers-list)
-    ([remap dabbrev-expand]           'helm-dabbrev)
-    ([remap execute-extended-command] 'helm-M-x)
-    ([remap imenu]                    'helm-imenu)
-    (general-nmap "gO" 'helm-semantic-or-imenu)
     :init
     (general-setq helm-display-function #'helm-display-buffer-in-own-frame)
     (general-setq helm-command-prefix-key "C-c h")
+    (general-setq helm-apropos-fuzzy-match t)
     (general-setq helm-ff-skip-boring-files t)
+    (general-setq helm-recentf-fuzzy-match t)
+    (general-setq helm-imenu-fuzzy-match t)
+    (general-setq helm-buffers-fuzzy-matching t)
     (unless (boundp 'completion-in-region-function)
       (general-def lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
       (general-def emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point)))
@@ -983,8 +982,21 @@ References:
 
 Turn on helm
 #+begin_src emacs-lisp
-  (use-package helm-mode
+  (use-package helm
+    :demand t
+    :general
+    ([remap find-file]                'helm-find-files)
+    ([remap occur]                    'helm-occur)
+    ([remap list-buffers]             'helm-buffers-list)
+    ([remap dabbrev-expand]           'helm-dabbrev)
+    ([remap execute-extended-command] 'helm-M-x)
+    ([remap imenu]                    'helm-imenu)
+    (my/leader-def '(normal insert) "h o" 'helm-occur)
+    (my/leader-def '(normal insert) "h M" 'helm-all-mark-rings)
+    (my/leader-def '(normal insert) "h P" 'helm-registers)
+    (general-nmap "gO" 'helm-semantic-or-imenu)
     :config
+    (add-to-list 'helm-sources-using-default-as-input 'helm-source-man-pages)
     (helm-mode 1))
 #+end_src
 
@@ -1030,9 +1042,10 @@ But, [[https://github.com/cosmicexplorer/helm-rg][helm-rg]] is used by =helm-pro
     :if (executable-find "rg")
     :ensure t
     :init
-    (progn
-      (general-setq helm-grep-ag-command "rg --color=always --colors 'match:fg:black' --colors 'match:bg:yellow' --smart-case --no-heading --line-number %s %s %s")
-      (general-setq helm-grep-ag-pipe-cmd-switches '("--colors 'match:fg:black'" "--colors 'match:bg:yellow'"))))
+    (general-setq helm-grep-ag-command "rg --color=always --colors 'match:fg:black' --colors 'match:bg:yellow' --smart-case --no-heading --line-number %s %s %s")
+    (general-setq helm-grep-ag-pipe-cmd-switches '("--colors 'match:fg:black'" "--colors 'match:bg:yellow'"))
+    (general-setq helm-grep-default-command         "rg --vimgrep --no-heading --color=always -z %p %f")
+    (general-setq helm-grep-default-recurse-command "rg --vimgrep --no-heading --color=always -z %p %f"))
 #+end_src
 
 and also fallback to [[https://github.com/syohex/emacs-helm-ag][helm-ag]] if =rg= is not available:
@@ -1041,9 +1054,10 @@ and also fallback to [[https://github.com/syohex/emacs-helm-ag][helm-ag]] if =rg
     :if (and (executable-find "ag") (not (executable-find "rg")))
     :ensure t
     :init
-    (progn
-      (general-setq helm-grep-ag-command "ag --line-numbers -S --hidden --color --color-match '31;43' --nogroup %s %s %s")
-      (general-setq helm-grep-ag-pipe-cmd-switches '("--color-match '31;43'"))))
+    (general-setq helm-grep-ag-command "ag --line-numbers -S --hidden --color --color-match '31;43' --nogroup %s %s %s")
+    (general-setq helm-grep-ag-pipe-cmd-switches '("--color-match '31;43'"))
+    (general-setq helm-grep-default-command         "ag --vimgrep --nogroup --nocolor -z %p %f")
+    (general-setq helm-grep-default-recurse-command "ag --vimgrep --nogroup --nocolor -z %p %f"))
 #+end_src
 ** Ivy
 :PROPERTIES:
