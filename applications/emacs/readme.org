@@ -1284,28 +1284,71 @@ By completion I mean general text/code autocompletion, as Vim's =deoplete=.
 :ID:       4a064f96-4f38-416a-ade5-95662c12afb5
 :END:
 [[https://company-mode.github.io/][company]] seems the most widely-used text completion framework among the Emacs ecosystem.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :noweb yes
   (use-package company
     :ensure t
     :demand t
     :init
-    (general-setq company-auto-complete t)
-    (general-setq company-auto-complete-chars '(32 40 41 46))
-    (general-setq company-require-match nil)
-    (general-setq company-idle-delay 0.6)
+    <<company-mode-init>>
     :general
-    (general-unbind company-active-map
-      "M-n"
-      "M-p")
-    (company-active-map "C-n" 'company-select-next
-                        "C-p" 'company-select-previous
-                        "C-h" 'company-quickhelp-manual-begin
-                        "ESC" 'company-abort)
-    (general-imap
-      "C-n" 'company-select-next
-      "C-p" 'company-select-previous)
+    <<company-mode-general>>
     :config
     (global-company-mode))
+#+end_src
+
+In addition to =TAB= and =RET=,  when press any of whitespace, parentheses and punctuation, complete the selection based on the currently selected item.
+#+begin_src emacs-lisp :tangle no :noweb-ref company-mode-init
+  (general-setq company-auto-complete t)
+  (general-setq company-auto-complete-chars '(32 40 41 46))
+#+end_src
+
+Allow just typing anything other than stuff in the matchings so that to exit selection immediately with a new character:
+#+begin_src emacs-lisp :tangle no :noweb-ref company-mode-init
+  (general-setq company-require-match nil)
+#+end_src
+
+Don't pop up completion unless I told company to do so or wait for as long as 1 second.
+#+begin_src emacs-lisp :tangle no :noweb-ref company-mode-init
+  (general-setq company-idle-delay 1.0)
+#+end_src
+
+
+Vim-like candidate selections. Also, when company menu is presented, just abort the selection when pressing =ESC=, but it keeps staying in insert state.
+Due to a problem with [[id:a5c838c2-f097-44e8-89fd-773c284348fe][Company-quickhelp]], we have to use override keymap to get around quickhelp ignoring =company-active-keymap=. Code grabbed from [[https://github.com/company-mode/company-quickhelp/issues/17][this GitHub issue]].
+#+begin_src emacs-lisp :tangle no :noweb-ref company-mode-init
+  (general-override-mode +1)
+  (add-hook 'company-completion-started-hook 'my/set-company-maps)
+  (add-hook 'company-completion-finished-hook 'my/unset-company-maps)
+  (add-hook 'company-completion-cancelled-hook 'my/unset-company-maps)
+
+  (defun my/unset-company-maps (&rest unused)
+    "Set default mappings (outside of company).
+  Arguments (UNUSED) are ignored."
+    (general-def
+      :states 'insert
+      :keymaps 'override
+      "C-n" nil
+      "C-p" nil
+      "C-h" nil
+      [escape] nil))
+
+  (defun my/set-company-maps (&rest unused)
+    "Set maps for when you're inside company completion.
+  Arguments (UNUSED) are ignored."
+    (general-def
+      :states 'insert
+      :keymaps 'override
+      "C-n" 'company-select-next
+      "C-p" 'company-select-previous
+      "C-h" 'company-quickhelp-manual-begin
+      [escape] 'company-abort))
+#+end_src
+
+Start a candidate selection immediately when pressing =C-n= or =C-p= in insert state.
+#+begin_src emacs-lisp :tangle no :noweb-ref company-mode-general
+  (general-imap
+    "C-n" 'company-complete
+    "C-p" 'company-complete)
 #+end_src
 
 ** Company-quickhelp
