@@ -230,6 +230,7 @@ Said to be a way to make Emacs faster on windows (by running GC less often)
   (when (eq system-type 'windows-nt)
     (setq gc-cons-threshold (* 512 1024 1024))
     (setq gc-cons-percentage 0.5)
+    (setq w32-pipe-read-delay 0)
     (run-with-idle-timer 5 t #'garbage-collect))
 #+end_src
 
