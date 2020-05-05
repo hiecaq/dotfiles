@@ -47,10 +47,12 @@ This file might be out of sync. The newest version is available [[https://github
 - [[#key-bindings][Key Bindings]]
   - [[#which-key][Which-key]]
   - [[#general][General]]
+  - [[#hydra][Hydra]]
   - [[#hercules][Hercules]]
   - [[#evil][Evil]]
 - [[#spell-checking][Spell Checking]]
 - [[#ui-enhance][UI Enhance]]
+  - [[#eldoc][Eldoc]]
   - [[#helm][Helm]]
   - [[#ivy][Ivy]]
   - [[#highlight-indent-guides][highlight-indent-guides]]
@@ -245,6 +247,11 @@ Always prefer msys2 libraries:
 #+begin_src emacs-lisp
   (when (eq window-system 'w32)
     (setenv "PATH" (concat "C:\\msys64\\mingw64\\bin;" (getenv "PATH"))))
+#+end_src
+
+I don't want Emacs to auto-recenter when scrolling off-the-screen:
+#+begin_src emacs-lisp
+  (setq scroll-conservatively 100)
 #+end_src
 
 ** Linux
@@ -509,6 +516,16 @@ There is not much config for general yet, besides enable it I simply turn on its
     )
 #+end_src
 
+** Hydra
+:PROPERTIES:
+:ID:       3a14b87d-e66c-4e43-91d5-92772118ef68
+:END:
+[[https://github.com/abo-abo/hydra][Hydra]] requires more settings than Hercules, but it works better in the most time.
+#+begin_src emacs-lisp
+  (use-package hydra
+    :straight t)
+#+end_src
+
 ** Hercules
 :PROPERTIES:
 :ID:       a33f4f15-14c0-49b8-b77f-cf5b516ec7e2
@@ -631,6 +648,48 @@ I use =<leader>o= and =<leader>O= for them because they are close to =o= and =O=
     "O" '(my/insert-line-above :which-key t))
 #+end_src
 
+=C-w= hydra!
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-init
+  (defhydra hydra-evil-window (:foreign-keys nil :hint nil)
+    "
+    Move: _b_ottom right _t_op left _r_otate downwards _R_oate upwards
+    Resize: _+_ increase height _-_ decrease height _<_ decrease width _>_ increase width
+    "
+    ("h" evil-window-left)
+    ("l" evil-window-right)
+    ("j" evil-window-down)
+    ("k" evil-window-up)
+    ("b" evil-window-bottom-right :color blue)
+    ("t" evil-window-top-left :color blue)
+    ("r" evil-window-rotate-downwards)
+    ("R" evil-window-rotate-upwards)
+    ("q" evil-quit :color blue)
+    ("c" evil-window-delete)
+    ("+" evil-window-increase-height)
+    ("-" evil-window-decrease-height)
+    (">" evil-window-increase-width)
+    ("<" evil-window-decrease-width)
+    ("=" balance-windows :color blue)
+    ("H" evil-window-move-far-left)
+    ("L" evil-window-move-far-right)
+    ("J" evil-window-move-very-bottom)
+    ("K" evil-window-move-very-top)
+    ("s" evil-window-split :color blue)
+    ("C-s" evil-window-split :color blue)
+    ("v" evil-window-vsplit :color blue)
+    ("C-v" evil-window-vsplit :color blue)
+    ("o" delete-other-windows :color blue)
+    ("C-o" delete-other-windows :color blue)
+    ("]" xref-find-definitions-other-window :color blue)
+    ("C-]" xref-find-definitions-other-window :color blue)
+    ("RET" nil "quit" :color blue)
+    ("ESC" nil "quit" :color blue))
+#+end_src
+
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-general
+  (general-nmap "C-w" 'hydra-evil-window/body)
+#+end_src
+
 Use =C-d= as frame key, mimics =C-w= as window key. =d= stands for =display=. Hope this could persuade people and myself. I choose =C-d= because =C-u= is (heavily) used by Emacs itself by default and Evil as a result did not bind =C-u= by default, so it's reasonable to not have Vim's =C-d= functionality alone.
 #+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-general
   (general-nmap "C-d" (general-simulate-key "C-x 5"))
@@ -693,7 +752,6 @@ Their bindings:
     (evil-collection-init 'help)
     (evil-collection-init 'flycheck)
     (evil-collection-init 'xref)
-    (evil-collection-init 'magit)
     (evil-collection-init 'which-key))
 #+end_src
 
@@ -937,6 +995,7 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
     (evil-inner-text-objects-map "J" 'evil-indent-plus-i-indent-up-down)
     (evil-outer-text-objects-map "J" 'evil-indent-plus-a-indent-up-down))
 #+end_src
+
 * Spell Checking
 :PROPERTIES:
 :ID:       80c61feb-eaae-40e2-9093-8320d9142b7b
@@ -967,6 +1026,19 @@ For me Helm fits me better because:
 1. I'm new to Emacs anyway, there is no such Emacs UI that I'm used to.
 2. During my Vim era I use Shougo's wonderful plugins Unite/Denite, which mimics the logic of Helm, so switching to Emacs with Helm mostly does not require switching my mind model for how to find things.
 3. Ivy is new compared with Helm, so it does not have as many add-ons available as Helm.
+** Eldoc
+:PROPERTIES:
+:ID:       c322e203-1bcd-4301-9050-1e4a47107064
+:END:
+Eldoc is a little bit annoying when the doc is longer than one single line. [[https://github.com/casouri/eldoc-box][eldoc-box]] to the rescue by putting it in a top corner.
+#+begin_src emacs-lisp
+  (use-package eldoc-box
+    :straight t
+    :hook
+    (text-mode . (lambda () (when (display-graphic-p) (eldoc-box-hover-mode))))
+    (prog-mode . (lambda () (when (display-graphic-p) (eldoc-box-hover-mode)))))
+#+end_src
+
 ** Helm
 :PROPERTIES:
 :ID:       9894d186-0b49-42af-9688-c7a66aa0ad1c
@@ -1475,11 +1547,7 @@ This file provides a somewhat generic infrastructure for cross referencing comma
     :init
     (general-setq xref-prompt-for-identifier nil)
     :general
-    (general-nmap "gr" 'xref-find-references)
-    (general-nmap "C-w ]" 'xref-find-definitions-other-window)
-    (general-nmap "C-w C-]" 'xref-find-definitions-other-window)
-    (general-nmap "C-w g C-]" 'xref-find-definitions-other-window)
-    (general-nmap "C-w g ]" 'xref-find-definitions-other-window))
+    (general-nmap "gr" 'xref-find-references))
 #+end_src
 
 ** Projectile
@@ -2258,7 +2326,7 @@ A helper function that get a =c/cpp= file's corresponding conventional header fi
   (use-package rust-mode
     :straight t
     :init
-    (general-setq lsp-rust-server 'lsp))
+    (general-setq lsp-rust-server 'rust-analyzer))
 #+end_src
 
 ** beancount
@@ -2346,7 +2414,10 @@ Its Evil integration:
 #+begin_src emacs-lisp
   (use-package evil-magit
     :straight t
-    :after (evil magit))
+    :after (evil magit)
+    :init
+    (evil-collection-magit-setup)
+    (general-setq evil-magit-use-z-for-folds t))
 #+end_src
 
 Its =treemacs= integration that notifies =treemacs=' =filewatch-mode= of status changes:
