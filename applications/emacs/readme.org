@@ -1472,6 +1472,9 @@ Reference:
   (use-package yasnippet
     :straight t
     :demand t
+    :init
+    (general-setq yas-also-auto-indent-first-line t
+          yas-wrap-around-region t)
     :general
     <<yasnippet-mode-general>>
     :config
@@ -1500,17 +1503,38 @@ NOTE: I'm using =yankpad= now instead of directly using =yasnippet=, so I commen
 :ID:       f9d763bf-9f47-4b02-99bb-2bc8b8ecdee4
 :END:
 [[https://github.com/Kungsgeten/yankpad][yankpad]] is a cool package that expand snippets written in [[*Org Mode][org mode]] and optionally use [[*Yasnippet][yasnippet]] as the backend.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :noweb yes
   (use-package yankpad
     :straight t
     :demand t
     :init
-    (general-setq yankpad-file (no-littering-expand-etc-file-name "yankpad.org"))
+    <<yankpad-init>>
     :general
     (my/leader-def '(normal visual)
       "y" 'yankpad-insert)
     (my/leader-def 'insert
       "y" 'yankpad-expand))
+#+end_src
+
+Make use of the =no-littering= package.
+#+begin_src emacs-lisp :tangle no :noweb-ref yankpad-init
+  (general-setq yankpad-file (no-littering-expand-etc-file-name "yankpad.org"))
+#+end_src
+
+There seems to be a bug in evil's =evil-visual-newline-commands= implementation, as a result when I use =V= to select multiple lines and then insert a wrapping snippet, the last newline will be included inside the wrapped text, which is really annoying. Thus, I have this hook to fix the problem for me, which basically delete the newline after =$0= if being in visual line selection.
+#+begin_src emacs-lisp :tangle no :noweb-ref yankpad-init
+  (defun my/yankpad-evil-visual-line-selection-fix (snippet)
+    (when (and (evil-visual-state-p) (eq (evil-visual-type) 'line))
+      ;; (nth 3 snippet) is the snippet content
+      (let ((snip (nth 3 snippet)))
+        (setf (nth 3 snippet)
+              (string-join (mapcar '(lambda (x)
+                                      (if (string-match "$0" x)
+                                          x
+                                        (concat x "\n")))
+                                   (split-string snip "\n")))))))
+
+  (add-hook 'yankpad-before-snippet-hook 'my/yankpad-evil-visual-line-selection-fix)
 #+end_src
 
 ** Auto-insert
