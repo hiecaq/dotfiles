@@ -1804,11 +1804,16 @@ reference:
 + [[http://www.members.optusnet.com.au/~charles57/GTD/][Emacs, org-mode and Getting Things Done (GTD)]] by Charles Cave
 + [[http://doc.norang.ca/org-mode.html][Org Mode - Organize Your Life In Plain Text!]] by Bernt Hansen
 *** Tasks and log
+:PROPERTIES:
+:ID:       80e2fcc2-fd3a-4e7f-9bb6-a048065a6907
+:END:
 Todo state keywords. The todo state is simple:
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
   (general-setq org-todo-keywords
                 '((sequence "TODO(t!)" "ENGAGE(e!)" "WAIT(w@/@)" "|" "DONE(d@)")
-                  ("|" "CANCELED(c@)")))
+                  ("|" "CANCELED(c@)")
+                  ("|" "MEETING(m)")
+                  ("|" "PHONE(p)")))
 #+end_src
 
 Log into a =LOGBOOK= drawer so that things are folded when we want to read about outcome descriptions
@@ -1857,7 +1862,11 @@ Caputre templates that helps reduce boilerplate:
                   ("b" "Board" entry (file+headline "~/documents/board/board.org" "Uncategorized")
                    "* %?\n:PROPERTIES:\n:URL: %^C\n:END:\n:LOGBOOK:\n- Entered at %U\n:END:\n")
                   ("n" "Note" entry (file+headline "inbox.org.gpg" "Notes")
-                   "* %?\n:LOGBOOK:\n- Entered at %U\n:END:\n%x")))
+                   "* %?\n:LOGBOOK:\n- Entered at %U\n:END:\n%x")
+                  ("m" "Meeting" entry (file+headline "inbox.org.gpg" "Meetings")
+                   "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+                  ("p" "Phone call" entry (file+headline "inbox.org.gpg" "Phone Calls")
+                   "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
