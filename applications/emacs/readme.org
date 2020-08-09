@@ -102,6 +102,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#magit][Magit]]
   - [[#pdf-tools][Pdf Tools]]
   - [[#vterm][Vterm]]
+  - [[#telega][Telega]]
 
 * General Settings
 ** Coding and Languages
@@ -744,6 +745,7 @@ Their bindings:
     (evil-collection-setup-minibuffer t)
     :config
     (evil-collection-init 'compile)
+    (evil-collection-init 'comint)
     (evil-collection-init 'info)
     (evil-collection-init 'custom)
     (evil-collection-init 'dired)
@@ -2466,4 +2468,21 @@ Its =treemacs= integration that notifies =treemacs=' =filewatch-mode= of status 
                    (display-buffer-reuse-window display-buffer-same-window)))
     :general
     (my/leader-def 'normal "v" 'vterm-toggle))
+#+end_src
+
+** Telega
+:PROPERTIES:
+:ID:       3b085d59-9614-45e9-a3d6-8b99a25d0371
+:END:
+[[https://github.com/zevlg/telega.el][telega]] is a full featured unofficial client for Telegram, which depends on [[https://core.telegram.org/tdlib][tdlib]].
+#+begin_src emacs-lisp
+  (use-package telega
+    :straight t
+    :commands (telega)
+    :defer t
+    :init
+    (general-setq telega-proxies
+                  (list
+                   '(:server "127.0.0.1" :port 8118 :enable t
+                             :type (:@type "proxyTypeHttp")))))
 #+end_src
