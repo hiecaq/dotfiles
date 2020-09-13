@@ -1300,6 +1300,16 @@ Reference:
   (use-package telephone-line
     :straight t
     :init
+    (defun my/revert-telephone-line-height-for-27 ()
+      "there is a wield bug in emacs 27 where (frame-char-height) is doubled on Linux.
+      Consequently, telephone-line-height is too large."
+      (general-setq telephone-line-height (max 1 (/ (frame-char-height) 2))))
+    (if (and (>= emacs-major-version 27)
+             (not (eq system-type 'darwin)))
+        (progn
+          (my/revert-telephone-line-height-for-27)
+          (add-hook 'server-after-make-frame-hook #'my/revert-telephone-line-height-for-27)))
+
     (general-setq telephone-line-lhs
                   '((evil . (telephone-line-evil-tag-segment))
                     (accent . (telephone-line-vc-segment
