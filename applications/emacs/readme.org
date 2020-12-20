@@ -98,7 +98,11 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#latex][Latex]]
   - [[#textinfo][TextInfo]]
   - [[#yaml][Yaml]]
+  - [[#dhall][dhall]]
+  - [[#glsl][glsl]]
 - [[#tools][Tools]]
+  - [[#vc][vc]]
+  - [[#tramp][tramp]]
   - [[#magit][Magit]]
   - [[#pdf-tools][Pdf Tools]]
   - [[#vterm][Vterm]]
@@ -368,6 +372,14 @@ Also, I'd like to turn on =use-package='s statistic recording to see if my confi
 
 Note that at this point I can install packages with =use-package= by utilizing =straight.el='s integration.
 
+One extra thing: Emacs comes with a customization interface, which supports setting via function calls too (good!) and saves the results in a file (bad!). This snippet set the storage to =/dev/null=:
+#+begin_src emacs-lisp
+  (use-package cus-edit
+    :defer t
+    :custom
+    (custom-file null-device "Don't store customizations"))
+#+end_src
+
 ** No-littering
 :PROPERTIES:
 :ID:       050c2bd5-8bde-4389-9edb-f2d7846e123a
@@ -541,9 +553,9 @@ Kind of like =which-key=…
 #+end_quote
 Did you get the idea what [[https://gitlab.com/jjzmajic/hercules.el][hercules]] is used for? neither do I (at the first glance)! In short, by using the power of [[https://github.com/justbur/emacs-which-key][which-key]], =hercules= can build a =hydra= when given a keymap.
 #+begin_src emacs-lisp
-  (use-package hercules
-    :straight t
-    :after general)
+  ;;(use-package hercules
+  ;;  :straight t
+  ;;  :after general)
 #+end_src
 
 ** Evil
@@ -560,10 +572,17 @@ References:
     :demand t
     :init
     <<evil-mode-init>>
+    :custom
+    (evil-visual-newline-commands '(LaTeX-section TeX-font yankpad-expand yankpad-insert yas-insert-snippet))
     :general
     <<evil-mode-general>>
     :config
     (evil-mode 1))
+#+end_src
+
+Use good old =undo-tree= as the undo-redo system
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-init
+  (general-setq evil-undo-system 'undo-tree)
 #+end_src
 
 I don't want to use Vim's insert mode bindings in insert state:
@@ -1056,7 +1075,7 @@ References:
     :demand t
     :general
     :init
-    (general-setq helm-display-function #'helm-display-buffer-in-own-frame)
+    ;; (general-setq helm-display-function #'helm-display-buffer-in-own-frame)
     (general-setq helm-command-prefix-key "C-c h")
     (general-setq helm-apropos-fuzzy-match t)
     (general-setq helm-ff-skip-boring-files t)
@@ -1532,17 +1551,20 @@ Make use of the =no-littering= package.
 #+end_src
 
 There seems to be a bug in evil's =evil-visual-newline-commands= implementation, as a result when I use =V= to select multiple lines and then insert a wrapping snippet, the last newline will be included inside the wrapped text, which is really annoying. Thus, I have this hook to fix the problem for me, which basically delete the newline after =$0= if being in visual line selection.
-#+begin_src emacs-lisp :tangle no :noweb-ref yankpad-init
+# #+begin_src emacs-lisp :tangle no :noweb-ref yankpad-init
+#+begin_src emacs-lisp :tangle no
   (defun my/yankpad-evil-visual-line-selection-fix (snippet)
     (when (and (evil-visual-state-p) (eq (evil-visual-type) 'line))
       ;; (nth 3 snippet) is the snippet content
       (let ((snip (nth 3 snippet)))
         (setf (nth 3 snippet)
-              (string-join (mapcar '(lambda (x)
-                                      (if (string-match "$0" x)
-                                          x
-                                        (concat x "\n")))
-                                   (split-string snip "\n")))))))
+              (string-join (mapcar #'(lambda (x)
+                                       (if (string-match "$0" x)
+                                           x
+                                         (concat x "\n")))
+                                   (split-string snip "\n")))))
+
+      (message (nth 3 snippet))))
 
   (add-hook 'yankpad-before-snippet-hook 'my/yankpad-evil-visual-line-selection-fix)
 #+end_src
@@ -1649,12 +1671,13 @@ Its =treemacs= integration that provides a helper function to add =projectile= p
     :hook
     ((python-mode rust-mode) . lsp-deferred)
     :commands (lsp lsp-deferred)
-    :init
-    (general-setq lsp-enable-indentation nil)
-    (general-setq lsp-keymap-prefix "C-c L")
-    (general-setq lsp-prefer-flymake nil)
-    (general-setq lsp-keep-workspace-alive nil)
-    (general-setq lsp-auto-guess-root t))
+    :custom
+    (lsp-enable-indentation nil)
+    (lsp-keymap-prefix "C-c L")
+    (lsp-prefer-flymake nil)
+    (lsp-keep-workspace-alive nil)
+    (lsp-auto-guess-root t)
+    (lsp-modeline-code-actions-enable nil))
 #+end_src
 
 *** lsp-ui
@@ -1679,10 +1702,11 @@ Based on [[https://github.com/emacs-lsp/lsp-ui/pull/208][this]] PR, there is no 
 :PROPERTIES:
 :ID:       bf451a45-b616-46a3-a579-001fe0f8609a
 :END:
-[[https://github.com/tigersoldier/company-lsp][company-lsp]], as the name suggests, is the =company= backend for =lsp-mode=.
+[[https://github.com/tigersoldier/company-lsp][company-lsp]], as the name suggests, is the =company= backend for =lsp-mode=. Note that =company-lsp= is no longer supported by =lsp-mode=.
 #+begin_src emacs-lisp
   (use-package company-lsp
     :straight t
+    :disabled
     :after (lsp-mode company)
     :config
     (push 'company-lsp company-backends))
@@ -1995,14 +2019,14 @@ References:
 + [[https://howardism.org/Technical/Emacs/literate-programming-tutorial.html][Introduction to Literate Programming]] by Howard Abrams
 I declared a hydra for =org-babel= to make things easier:
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-config
-  (hercules-def
-   :show-funs #'org-babel-enter
-   :hide-funs '(org-babel-exit org-babel-tangle)
-   :keymap 'org-babel-map
-   :transient t)
-  (general-def org-mode-map "C-c C-v" #'org-babel-enter)
-  (general-def :prefix-map 'org-babel-map
-              "q" #'org-babel-exit)
+  ;;(hercules-def
+  ;; :show-funs #'org-babel-enter
+  ;; :hide-funs '(org-babel-exit org-babel-tangle)
+  ;; :keymap 'org-babel-map
+  ;; :transient t)
+  ;; (general-def org-mode-map "C-c C-v" #'org-babel-enter)
+  ;; (general-def :prefix-map 'org-babel-map
+  ;;            "q" #'org-babel-exit)
 #+end_src
 
 *** ob-dot
@@ -2444,7 +2468,43 @@ reference:
     :mode "\\.yml\\'")
 #+end_src
 
+** dhall
+:PROPERTIES:
+:ID:       f1ac93d4-ead7-4c11-8561-586223844572
+:END:
+#+begin_src emacs-lisp
+  (use-package dhall-mode
+    :straight t
+    :mode "\\.dhall\\'")
+#+end_src
+
+** glsl
+:PROPERTIES:
+:ID:       5c4cc144-1c59-4470-99b9-865349834b18
+:END:
+#+begin_src emacs-lisp
+  (use-package glsl-mode
+    :straight t
+    :mode "\\.glsl\\'")
+#+end_src
+
 * Tools
+** vc
+:PROPERTIES:
+:ID:       f3a49ee8-e806-4e2e-bd1a-03bfadcd7a3e
+:END:
+#+begin_src emacs-lisp
+  (general-setq vc-handled-backends '(Git))
+#+end_src
+** tramp
+:PROPERTIES:
+:ID:       4ea4d61b-0b26-47c8-ab76-ea53fd6b56e5
+:END:
+#+begin_src emacs-lisp
+  (use-package tramp
+    :init
+    (general-setq tramp-verbose 1))
+#+end_src
 ** Magit
 :PROPERTIES:
 :ID:       be8f32a7-b990-4a66-9a88-fc5d3f6c4c74
@@ -2452,18 +2512,14 @@ reference:
 [[https://github.com/magit/magit][magit]] is an Emacs interface to git, which provides not only commands to call but also a full GUI-like wrapper around git.
 #+begin_src emacs-lisp
   (use-package magit
-    :straight t)
+    :straight t
+    :custom
+    (evil-collection-magit-use-z-for-folds t)
+    :config
+    (evil-collection-magit-setup))
 #+end_src
 
-Its Evil integration:
-#+begin_src emacs-lisp
-  (use-package evil-magit
-    :straight t
-    :after (evil magit)
-    :init
-    (evil-collection-magit-setup)
-    (general-setq evil-magit-use-z-for-folds t))
-#+end_src
+Its Evil integration is now a part of evil-collection.
 
 Its =treemacs= integration that notifies =treemacs=' =filewatch-mode= of status changes:
 #+begin_src emacs-lisp
