@@ -251,50 +251,6 @@ $0
   }
 #+end_src
 
-** ifl: rust if let matching :src:wrap:
-#+begin_src rust
-  if let $1 = $2 {
-      $0
-  }
-#+end_src
-
-** ife: rust if else :src:wrap:
-#+begin_src rust
-  if $1 {
-      $2
-  } else {
-      $0
-  }
-#+end_src
-
-** match: rust pattern matching :src:wrap:
-#+begin_src rust
-  match $1 {
-      $0
-  }
-#+end_src
-
-** loop: rust loop :src:wrap:
-#+begin_src rust
-  loop {
-      $0
-  }
-#+end_src
-
-** for: rust for :src:wrap:
-#+begin_src rust
-  for $1 in $2 {
-      $0
-  }
-#+end_src
-
-** if: rust if :src:wrap:
-#+begin_src rust
-  if $1 {
-      $0
-  }
-#+end_src
-
 * Default :global:
 ** lorem: lorem ipsum
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
