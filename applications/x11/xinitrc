@@ -56,8 +56,10 @@ if [[ -f $usercomptonconfig ]] && (hash compton 2>/dev/null); then
     picom --config "$usercomptonconfig" -b
 fi
 
-if (hash fcitx 2>/dev/null); then
-    fcitx
+if (hash fcitx5 2>/dev/null); then
+    fcitx5 &
+elif (hash fcitx 2>/dev/null); then
+    fcitx &
 fi
 
 if (hash redshift 2>/dev/null); then
