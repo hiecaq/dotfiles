@@ -2,6 +2,6 @@
 
 cd "$QUINOA42_INSTALL_DIR"
 
-_=$(link $QUINOA42_INSTALL_DIR/applications/emacs ~/.emacs.d)
+_=$(link $QUINOA42_INSTALL_DIR/applications/emacs ~/.config/emacs)
 
 exit 0
