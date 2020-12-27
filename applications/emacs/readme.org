@@ -48,7 +48,6 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#which-key][Which-key]]
   - [[#general][General]]
   - [[#hydra][Hydra]]
-  - [[#hercules][Hercules]]
   - [[#evil][Evil]]
 - [[#spell-checking][Spell Checking]]
 - [[#ui-enhance][UI Enhance]]
@@ -81,12 +80,12 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#task-management][task management]]
   - [[#holidays-and-anniversaries][holidays and anniversaries]]
   - [[#babel][babel]]
-  - [[#org-brain][org-brain]]
+  - [[#org-id][org-id]]
   - [[#org-board][org-board]]
   - [[#org-noter][org-noter]]
-  - [[#deft][deft]]
   - [[#toc-org][toc-org]]
   - [[#ox-hugo][ox-hugo]]
+  - [[#org-roam][org-roam]]
   - [[#style-and-faces][style and faces]]
 - [[#language-specific][Language specific]]
   - [[#dot][dot]]
@@ -107,6 +106,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#pdf-tools][Pdf Tools]]
   - [[#vterm][Vterm]]
   - [[#telega][Telega]]
+  - [[#mpv][mpv]]
 
 * General Settings
 ** Coding and Languages
@@ -384,6 +384,7 @@ One extra thing: Emacs comes with a customization interface, which supports sett
 :PROPERTIES:
 :ID:       050c2bd5-8bde-4389-9edb-f2d7846e123a
 :END:
+[[https://github.com/emacscollective/no-littering][no-littering]] helps put emacs directory clean, sorting package-created files and directories into reasonable directories. One thing it misses is the distinguishing between permanent data and temporary data. Thus I forked it to provide such distinction.
 #+begin_src emacs-lisp
   (use-package no-littering
     :straight (no-littering :type git :host github :repo "emacscollective/no-littering"
@@ -537,25 +538,6 @@ There is not much config for general yet, besides enable it I simply turn on its
 #+begin_src emacs-lisp
   (use-package hydra
     :straight t)
-#+end_src
-
-** Hercules
-:PROPERTIES:
-:ID:       a33f4f15-14c0-49b8-b77f-cf5b516ec7e2
-:END:
-- Note taken on [2019-09-15 Sun 13:59] \\
-  It does not work too well with ~evil-window-map~, even if =which-key= is set to use minibuffer.
-#+begin_quote
-An auto-magical, =which-key= based =hydra= banisher.
-...
-If only there was a way to make a =hydra= without having to list all the bindings explicitly…
-Kind of like =which-key=…
-#+end_quote
-Did you get the idea what [[https://gitlab.com/jjzmajic/hercules.el][hercules]] is used for? neither do I (at the first glance)! In short, by using the power of [[https://github.com/justbur/emacs-which-key][which-key]], =hercules= can build a =hydra= when given a keymap.
-#+begin_src emacs-lisp
-  ;;(use-package hercules
-  ;;  :straight t
-  ;;  :after general)
 #+end_src
 
 ** Evil
@@ -1986,7 +1968,6 @@ Persistent clocking across Emacs sessions:
   (org-clock-persistence-insinuate)
 #+end_src
 
-
 ** holidays and anniversaries
 :PROPERTIES:
 :ID:       f19f0875-40c2-44bd-adb6-d7f41df0cd62
@@ -2091,20 +2072,24 @@ Ditaa basically use the built-in =artist= mode, which behave strangely in Evil i
     (my/leader-def 'normal 'artist-mode-map
       "SPC" (general-simulate-key "C-c C-a")))
 #+end_src
+** org-id
+:PROPERTIES:
+:ID:       3003950c-c50e-49cd-a885-34da2e98dd0c
+:END:
+Enable tracking org heading links using globally unique uids. This is a must-have even without =org-brain=, because org mode won't fix the broken links when you refile/archive some subtrees to a different file.
+#+begin_src emacs-lisp
+  (use-package org-id
+    :custom
+    (org-id-track-globally t)
+    (org-id-link-to-org-use-id t))
+#+end_src
 
-** org-brain
+** COMMENT org-brain
 :PROPERTIES:
 :ID:       b42b471f-b82d-4190-bd90-0c2dadcc5e05
 :END:
 [[https://github.com/Kungsgeten/org-brain][org-brain]] implements concept mapping for org mode, and is also a tool to build my own personal wiki.
-
-Enable tracking org heading links using globally unique uids. This is a must-have even without =org-brain=, because org mode won't fix the broken links when you refile/archive some subtrees to a different file.
-#+begin_src emacs-lisp
-  (use-package org-id
-    :init
-    (general-setq org-id-track-globally t)
-    (general-setq org-id-link-to-org-use-id t))
-#+end_src
+After trying =org-brain= for quite a long time, I personally felt that its interface is too incovenient to be useful, and I planned to switch to =org-roam=.
 
 Now load =org-brain=:
 #+begin_src emacs-lisp :noweb yes
@@ -2170,7 +2155,7 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
       "gp" 'org-noter-sync-current-page-or-chapter))
 #+end_src
 
-** deft
+** COMMENT deft
 :PROPERTIES:
 :ID:       f7e7fd0f-9577-40d4-a716-f018cc4b2036
 :END:
@@ -2210,6 +2195,31 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
   (use-package ox-hugo
     :straight t
     :after ox)
+#+end_src
+
+** org-roam
+:PROPERTIES:
+:ID:       240e78fc-531c-45f4-9863-754cccebb84f
+:END:
+[[https://www.orgroam.com/][org-roam]] is the final key to the Org ecosystem (hopefully)!
+#+begin_src emacs-lisp
+  (use-package org-roam
+    :straight t
+    :demand t
+    :custom
+    (org-roam-directory "~/documents")
+    (org-roam-db-location (no-littering-expand-var-file-name "roam.db"))
+    (org-roam-capture-templates
+     '(("d" "default" plain (function org-roam--capture-get-point)
+        "%?"
+        :file-name "inbox/${slug}"
+        :head "#+title: ${title}\n#+date: %(format-time-string \"%Y-%m-%dT%H:%M:%S%z\")\n#+roam_alias: \n#+roam_tags: \n"
+        :unnarrowed t)))
+    :general
+    (my/leader-def 'normal
+      "C"  'org-roam-capture)
+    :config
+    (org-roam-mode +1))
 #+end_src
 
 ** style and faces
@@ -2455,7 +2465,7 @@ reference:
 [[https://www.emacswiki.org/emacs/InfoPlus][Info+]] provides enhanced features for Info Mode. Stuff viewable in Info Mode including documentation of =glibc= , of Gnu coreutils, and of course of Emacs.
 #+begin_src emacs-lisp
   (use-package info+
-    :load-path "~/.emacs.d/elisp/")
+    :load-path "~/.config/emacs/elisp")
 #+end_src
 
 ** Yaml
@@ -2582,6 +2592,49 @@ Its =treemacs= integration that notifies =treemacs=' =filewatch-mode= of status 
     :init
     (general-setq telega-proxies
                   (list
-                   '(:server "127.0.0.1" :port 8118 :enable t
+                   '(:server "127.0.0.1" :port 8118 :enable :false
                              :type (:@type "proxyTypeHttp")))))
+#+end_src
+
+** mpv
+:PROPERTIES:
+:ID:       270f7cb8-aae4-4869-9313-6c62ed14373b
+:END:
+[[https://github.com/kljohann/mpv.el][mpv.el]] for easy note-taking with videos!
+
+With this package, we can talk to mpv via IPC, and most importantly, log down notes with =HH:MM:SS= within the video.
+#+begin_src emacs-lisp
+  (use-package mpv
+    :straight t
+    :demand t
+    :init
+    (org-add-link-type "mpv" #'mpv-play)
+    (defun org-mpv-complete-link (&optional arg)
+      (replace-regexp-in-string
+       "file:" "mpv:"
+       (org-file-complete-link arg)
+       t t))
+    (defun my/org-timer-item (&optional arg)
+      "When no org timer is running but mpv is alive, insert playback position."
+      (interactive)
+      (if (and
+           (not org-timer-start-time)
+           (mpv-live-p))
+          (mpv-insert-playback-position t)
+        (org-timer-item arg)))
+    (add-hook 'org-open-at-point-functions #'mpv-seek-to-position-at-point)
+    :general
+    (my/leader-def '(insert normal) 'org-mode-map
+      "m -" #'my/org-timer-item
+      "m SPC" #'mpv-pause
+      "m =" #'(lambda () (interactive) (mpv-speed-set 1))
+      "m 9" #'(lambda () (interactive) (mpv-speed-decrease 1))
+      "m (" #'(lambda () (interactive) (mpv-speed-decrease 5))
+      "m 0" #'(lambda () (interactive) (mpv-speed-increase 1))
+      "m )" #'(lambda () (interactive) (mpv-speed-increase 5))
+      "m h" #'(lambda () (interactive) (mpv-seek-backward 5))
+      "m H" #'(lambda () (interactive) (mpv-seek-backward 60))
+      "m l" #'(lambda () (interactive) (mpv-seek-forward 5))
+      "m L" #'(lambda () (interactive) (mpv-seek-forward 60))
+      "m u" #'mpv-revert-seek))
 #+end_src
