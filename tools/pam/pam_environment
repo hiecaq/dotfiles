@@ -13,8 +13,9 @@ CARGO_TARGET_DIR DEFAULT=@{HOME}/.cache/rust-targets
 TEXMFHOME DEFAULT=@{HOME}/.config/texmf
 
 # fcitx
-GTK_IM_MODULE=fcitx
-QT_IM_MODULE=fcitx
-XMODIFIERS=@im=fcitx
+GTK_IM_MODULE DEFAULT=fcitx
+QT_IM_MODULE  DEFAULT=fcitx
+XMODIFIERS    DEFAULT=\@im=fcitx
+SDL_IM_MODULE DEFAULT=fcitx
 
 # vim: ft=conf
