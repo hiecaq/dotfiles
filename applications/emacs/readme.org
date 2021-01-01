@@ -1889,6 +1889,17 @@ Caputre templates that helps reduce boilerplate:
   (general-setq org-agenda-compact-blocks t)
 #+end_src
 
+Update =#+last_modified= every time org file is saved.
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (defun my/org-last-modified-hook ()
+    (setq-local time-stamp-active t
+                time-stamp-start "#\\+last_modified:[ \t]*"
+                time-stamp-end "$"
+                time-stamp-format "\[%Y-%02m-%02d %3a %02H:%02M\]")
+    (add-hook 'before-save-hook 'time-stamp nil t))
+  (add-hook 'org-mode-hook #'my/org-last-modified-hook nil)
+#+end_src
+
 *** Agenda
 I schedule things in a sense that I don't want to think about it until that time. If something is "going to happen" at some time and I need to prepare for it, I directly use angle-braced timestamp. Thus this setting help me fulfill this need:
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
@@ -2207,19 +2218,58 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
     :straight t
     :demand t
     :custom
+    (org-roam-prefer-id-links nil)
+    (org-roam-protocol-store-links nil)
     (org-roam-directory "~/documents")
     (org-roam-db-location (no-littering-expand-var-file-name "roam.db"))
     (org-roam-capture-templates
      '(("d" "default" plain (function org-roam--capture-get-point)
         "%?"
         :file-name "inbox/${slug}"
-        :head "#+title: ${title}\n#+date: %(format-time-string \"%Y-%m-%dT%H:%M:%S%z\")\n#+roam_alias: \n#+roam_tags: \n"
+        :head "#+title: ${title}\n#+date: %U\n#+last_modified: %U\n#+roam_alias: \n#+roam_tags: \n"
         :unnarrowed t)))
     :general
     (my/leader-def 'normal
       "C"  'org-roam-capture)
     :config
     (org-roam-mode +1))
+#+end_src
+
+It comes with a complementary package =org-roam-protocol=.
+#+begin_src emacs-lisp
+  (use-package org-roam-protocol
+    :straight org-roam
+    :demand t
+    :init
+    (defun my/command-line-pandoc-filter (content)
+      "take an input html string, return a org mode string via pandoc"
+      (with-temp-buffer
+        (insert content)
+        (if (not (zerop (call-process-region
+                         (point-min) (point-max)
+                         "pandoc" t t nil "-f" "html" "-t" "org" "--wrap" "none")))
+            (message "Pandoc failed: %s" (buffer-string))
+          (buffer-string))))
+    (add-to-list 'org-roam-capture-ref-templates
+                 '("c" "Capture" plain (function org-roam-capture--get-point)
+                   "\n%(my/command-line-pandoc-filter (alist-get 'body org-roam-capture--info))\n"
+                   :file-name "notes/${slug}"
+                   :head "#+title: ${title}\n#+date: %U\n#+last_modified: %U\n#+roam_key: ${ref}\n#+roam_alias: \n#+roam_tags: \n"
+                   :unnarrowed t
+                   :immediate-finish t))
+    (add-to-list 'org-roam-capture-ref-templates
+                 '("p" "plain capture" plain (function org-roam-capture--get-point)
+                   "\n${body}\n"
+                   :file-name "notes/${slug}"
+                   :head "#+title: ${title}\n#+date: %U\n#+last_modified: %U\n#+roam_key: ${ref}\n#+roam_alias: \n#+roam_tags: \n"
+                   :unnarrowed t
+                   :immediate-finish t))
+    (add-to-list 'org-roam-capture-ref-templates
+                 '("m" "mark" plain (function org-roam-capture--get-point)
+                   "\n%?\n"
+                   :file-name "notes/${slug}"
+                   :head "#+title: ${title}\n#+date: %U\n#+last_modified: %U\n#+roam_key: ${ref}\n#+roam_alias: \n#+roam_tags: \n"
+                   :unnarrowed t)))
 #+end_src
 
 ** style and faces
@@ -2606,6 +2656,7 @@ With this package, we can talk to mpv via IPC, and most importantly, log down no
 #+begin_src emacs-lisp
   (use-package mpv
     :straight t
+    :if (executable-find "mpv")
     :demand t
     :init
     (org-add-link-type "mpv" #'mpv-play)
