@@ -58,7 +58,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#undo-tree][Undo-tree]]
   - [[#ggtags][ggtags]]
   - [[#treemacs][Treemacs]]
-  - [[#telephone-line][Telephone-line]]
+  - [[#awesome-tray][Awesome-tray]]
   - [[#with-editor][with-editor]]
   - [[#origami][Origami]]
 - [[#completion][Completion]]
@@ -560,6 +560,11 @@ References:
     <<evil-mode-general>>
     :config
     (evil-mode 1))
+#+end_src
+
+Don't echo the =<INSERT>= etc info in minibuffer.
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-init
+  (general-setq evil-echo-state nil)
 #+end_src
 
 Use good old =undo-tree= as the undo-redo system
@@ -1289,7 +1294,36 @@ Its evil integration:
     :after (treemacs evil))
 #+end_src
 
-** Telephone-line
+** Awesome-tray
+:PROPERTIES:
+:ID:       186c5ab3-fe3d-4182-bcf1-dd5a4f62377e
+:END:
+#+begin_src emacs-lisp
+  (use-package awesome-tray
+    :straight (awesome-tray :type git :host github :repo "manateelazycat/awesome-tray")
+    :demand t
+    :custom
+    (awesome-tray-active-modules '("location" "evil" "file-path" "buffer-read-only" "mode-name" "git"))
+    (awesome-tray-buffer-name-buffer-changed t)
+    (awesome-tray-file-path-show-filename t)
+    (awesome-tray-file-path-full-dirname-levels 1)
+    (awesome-tray-file-path-truncate-dirname-levels 2)
+    (awesome-tray-file-path-truncated-name-length 3)
+    (awesome-tray-mode-line-active-color "#928374")
+    (awesome-tray-mode-line-inactive-color "#504945")
+    :custom-face
+    (awesome-tray-module-git-face              ((t (:inherit awesome-tray-default-face :foreground "#b8bb26"))))
+    (awesome-tray-module-mode-name-face        ((t (:inherit awesome-tray-default-face :foreground "#d3869b"))))
+    (awesome-tray-module-location-face         ((t (:inherit awesome-tray-default-face :foreground "#fe8019"))))
+    (awesome-tray-module-last-command-face     ((t (:inherit awesome-tray-default-face :foreground "#7c6f64"))))
+    (awesome-tray-module-file-path-face        ((t (:inherit awesome-tray-default-face :foreground "#d5c4a1"))))
+    (awesome-tray-module-evil-face             ((t (:inherit awesome-tray-default-face :foreground "#d5c4a1"))))
+    (awesome-tray-module-buffer-read-only-face ((t (:inherit awesome-tray-default-face :foreground "#fb4933"))))
+    :config
+    (awesome-tray-mode +1))
+#+end_src
+
+** COMMENT Telephone-line
 :PROPERTIES:
 :ID:       624b928e-5bb1-4597-82da-361ed4919af9
 :END:
@@ -2643,7 +2677,9 @@ Its =treemacs= integration that notifies =treemacs=' =filewatch-mode= of status 
     (general-setq telega-proxies
                   (list
                    '(:server "127.0.0.1" :port 8118 :enable :false
-                             :type (:@type "proxyTypeHttp")))))
+                             :type (:@type "proxyTypeHttp"))
+                   '(:server "127.0.0.1" :port 1080 :enable t
+                             :type (:@type "proxyTypeSocks5")))))
 #+end_src
 
 ** mpv
