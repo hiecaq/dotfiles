@@ -26,7 +26,9 @@ bind --mode=ex          <C-p>   ex.prev_completion
 " bind ;c hint -c [class*="expand"],[class="togg"]
 
 bind ;d hint -W exclaim_quiet tmux new-window -d -n aria2c aria2c
-bind ;m composite hint -pipe * innerHTML | yank
+bind ;c composite hint -Jpipe :not(a):not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) innerHTML | js -p "org-protocol://roam-ref?template=c&ref=" + encodeURIComponent(document.location.href) + "&title=" + encodeURIComponent(document.title) + "&body=" + encodeURIComponent(JS_ARG) | js -p document.location.href = JS_ARG
+bind ;m composite hint -Jpipe :not(a):not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) textContent | js -p "org-protocol://roam-ref?template=p&ref=" + encodeURIComponent(document.location.href) + "&title=" + encodeURIComponent(document.title) + "&body=" + encodeURIComponent(JS_ARG) | js -p document.location.href = JS_ARG
+bind gm composite js "org-protocol://roam-ref?template=m&ref=" + encodeURIComponent(document.location.href) + "&title=" + encodeURIComponent(document.title) + "&body=" | js -p document.location.href = JS_ARG
 
 " right click
 command hint_focus hint -;
