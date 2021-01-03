@@ -1,3 +1,4 @@
+# -*- mode: sh; -*-
 # Run for interactive shells.
 
 zmodload zsh/regex 2>/dev/null && export _zsh_has_re=1 || export _zsh_has_re=0
@@ -15,24 +16,28 @@ zstyle ':completion:*:warnings' format '%Bno matches for: %d'
 
 ### }}}1
 
+### miscs {{{1
+
+export KEYTIMEOUT=10
+export GPG_TTY=$(tty)
+
+### }}}
+
 ### prompt {{{1
+
+[[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
 
 promptinit
 prompt quinoa
 
 ### }}}1
 
-### miscs {{{1
-
-export KEYTIMEOUT=10
-export CLICOLOR_FORCE=1
-export GPG_TTY=$(tty)
-
-### }}}
 
 ### config {{{1
 
 ###### Zsh-syntax-hightlighting {{{2
+
+export CLICOLOR_FORCE=1
 
 source ~/.dotfiles/shells/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
@@ -201,23 +206,15 @@ source ~/.aliases
 # give us access to ^Q
 stty -ixon
 
-# vi mode
-bindkey -v
+# emacs mode (but with my own keymap)
+bindkey -N quinoa emacs
+bindkey -A quinoa main
 
 # handy keybindings
-bindkey "^A" beginning-of-line
-bindkey "^E" end-of-line
-bindkey "^P" history-search-backward
-bindkey "^Y" accept-and-hold
-bindkey "^N" history-search-forward
-bindkey "^Q" push-line-or-edit
-bindkey "^U" backward-kill-line
-bindkey "^F" forward-char
-bindkey "^B" backward-char
 
 autoload -Uz edit-command-line
 zle -N edit-command-line
-bindkey -M vicmd 'V' edit-command-line
+bindkey '^V' edit-command-line
 
 [[ -f /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
 [[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
@@ -269,6 +266,33 @@ if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
     add-zle-hook-widget -Uz zle-line-finish zle_application_mode_stop
 fi
 ### }}}2
+
+if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
+    vterm_printf() {
+        if [ -n "$TMUX" ]; then
+            # Tell tmux to pass the escape sequences through
+            # (Source: http://permalink.gmane.org/gmane.comp.terminal-emulators.tmux.user/1324)
+            printf "\ePtmux;\e\e]%s\007\e\\" "$1"
+        elif [ "${TERM%%-*}" = "screen" ]; then
+            # GNU screen (screen, screen-256color, screen-256color-bce)
+            printf "\eP\e]%s\007\e\\" "$1"
+        else
+            printf "\e]%s\e\\" "$1"
+        fi
+    }
+
+    alias clear='vterm_printf "51;Evterm-clear-scrollback";tput clear'
+
+    autoload -U add-zsh-hook
+    add-zsh-hook -Uz chpwd (){ print -Pn "\e]2;%m:%2~\a" }
+
+    vterm_prompt_end() {
+        vterm_printf "51;A%n@%m:$(pwd)";
+    }
+
+    setopt PROMPT_SUBST
+    PROMPT=$PROMPT'%{$(vterm_prompt_end)%}'
+fi
 
 ## history
 HISTFILE=${XDG_DATA_HOME:-~/.local/share}/.histfile

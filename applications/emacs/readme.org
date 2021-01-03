@@ -43,6 +43,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#bookmark][Bookmark]]
   - [[#recentf][Recentf]]
   - [[#editorconfig][Editorconfig]]
+  - [[#alert][Alert]]
 - [[#colors][Colors]]
 - [[#key-bindings][Key Bindings]]
   - [[#which-key][Which-key]]
@@ -107,6 +108,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#vterm][Vterm]]
   - [[#telega][Telega]]
   - [[#mpv][mpv]]
+  - [[#emms][EMMS]]
 
 * General Settings
 ** Coding and Languages
@@ -467,6 +469,17 @@ Emacs has its own =bookmark= system built-in:
     (editorconfig-mode 1))
 #+end_src
 
+** Alert
+:PROPERTIES:
+:ID:       048aae48-7bec-4223-899f-f459680cde2e
+:END:
+[[https://github.com/jwiegley/alert][alert]] provides a much fancier utility than =message=. For example, it is possible to send notifications to D-Bus.
+#+begin_src emacs-lisp
+  (use-package alert
+    :straight t
+    :custom
+    (alert-default-style 'notifications))
+#+end_src
 * Colors
 :PROPERTIES:
 :ID:       e5d438ab-32ff-4055-91da-37c3452c13d2
@@ -753,10 +766,12 @@ Their bindings:
     (evil-collection-init 'compile)
     (evil-collection-init 'comint)
     (evil-collection-init 'info)
+    (evil-collection-init 'man)
     (evil-collection-init 'custom)
     (evil-collection-init 'dired)
     (evil-collection-init 'minibuffer)
     (evil-collection-init 'helm)
+    (evil-collection-init 'vterm)
     (evil-collection-init 'help)
     (evil-collection-init 'flycheck)
     (evil-collection-init 'xref)
@@ -1090,6 +1105,11 @@ Turn on helm
     (my/leader-def '(normal insert) "h M" 'helm-all-mark-rings)
     (my/leader-def '(normal insert) "h P" 'helm-registers)
     (general-nmap "gO" 'helm-semantic-or-imenu)
+    :init
+    (when (executable-find "plocate")
+      (general-setq helm-locate-command "plocate %s --regex %s"))
+    (when (executable-find "updatedb.plocate")
+      (general-setq helm-locate-create-db-command "updatedb.plocate -l 0 -o '%s' -U '%s'"))
     :config
     (add-to-list 'helm-sources-using-default-as-input 'helm-source-man-pages)
     (helm-mode 1))
@@ -1693,6 +1713,7 @@ Its =treemacs= integration that provides a helper function to add =projectile= p
     (lsp-prefer-flymake nil)
     (lsp-keep-workspace-alive nil)
     (lsp-auto-guess-root t)
+    (lsp-headerline-breadcrumb-enable nil)
     (lsp-modeline-code-actions-enable nil))
 #+end_src
 
@@ -2282,7 +2303,7 @@ It comes with a complementary package =org-roam-protocol=.
         (if (not (zerop (call-process-region
                          (point-min) (point-max)
                          "pandoc" t t nil "-f" "html" "-t" "org" "--wrap" "none")))
-            (message "Pandoc failed: %s" (buffer-string))
+            (alert (format "Pandoc failed: %s" (buffer-string)) :severity 'high)
           (buffer-string))))
     (add-to-list 'org-roam-capture-ref-templates
                  '("c" "Capture" plain (function org-roam-capture--get-point)
@@ -2645,9 +2666,11 @@ Its =treemacs= integration that notifies =treemacs=' =filewatch-mode= of status 
   (use-package vterm
     :straight t
     :init
-    (general-setq vterm-term-environment-variable "xterm-256color-italic")
+    :custom
+    (vterm-buffer-name-string "vterm %s")
+    (vterm-term-environment-variable "xterm-256color-italic")
     :config
-    (evil-collection-vterm-setup))
+    )
 #+end_src
 
 [[https://github.com/jixiuf/vterm-toggle][vterm-toggle]] provides handy commands to toggle between vterm buffers and previous buffers.
@@ -2724,4 +2747,58 @@ With this package, we can talk to mpv via IPC, and most importantly, log down no
       "m l" #'(lambda () (interactive) (mpv-seek-forward 5))
       "m L" #'(lambda () (interactive) (mpv-seek-forward 60))
       "m u" #'mpv-revert-seek))
+#+end_src
+
+** EMMS
+:PROPERTIES:
+:ID:       a7dc0c8d-8422-477d-8dc4-e80adb318158
+:END:
+#+begin_src emacs-lisp
+  (use-package emms
+    :straight t
+    :init
+    (evil-collection-emms-setup)
+    (add-to-list 'emms-track-initialize-functions #'emms-info-initialize-track)
+    (defun fg-emms-track-description (track)
+      "Return a somewhat nice track description. from https://www.emacswiki.org/emacs/EMMS#h5o-15"
+      (let ((artist (emms-track-get track 'info-artist))
+            (year (emms-track-get track 'info-year))
+            (album (emms-track-get track 'info-album))
+            (tracknumber (emms-track-get track 'info-tracknumber))
+            (title (emms-track-get track 'info-title)))
+        (cond
+         ((or artist title)
+          (concat (if (> (length artist) 0) artist "Unknown artist") " - "
+                  (if (> (length year) 0) year "XXXX") " - "
+                  (if (> (length album) 0) album "Unknown album") " - "
+                  (if (> (length tracknumber) 0)
+                      (format "%02d" (string-to-number tracknumber))
+                    "XX") " - "
+                  (if (> (length title) 0) title "Unknown title")))
+         (t
+          (emms-track-simple-description track)))))
+    :custom
+    (emms-cache-file (no-littering-expand-tmp-file-name "emms/cache"))
+    (emms-player-list '(emms-player-mpd emms-player-mpv))
+    (emms-source-file-default-directory "~/music/")
+    (emms-player-mpd-music-directory "~/music/")
+    (emms-source-file-directory-tree-function #'emms-source-file-directory-tree-find)
+    (emms-browser-covers #'emms-browser-cache-thumbnail)
+    (emms-info-functions '(emms-info-mpd))
+    (emms-volume-pulse-sink 1)
+    (emms-track-description-function 'fg-emms-track-description)
+    :config
+    (require 'emms-i18n)
+    (require 'emms-info)
+    (require 'emms-player-simple)
+    (require 'emms-player-mpv)
+    (require 'emms-player-mpd)
+    (require 'emms-volume)
+    (require 'emms-source-file)
+    (require 'emms-source-playlist)
+    (require 'emms-cache)
+    (require 'emms-browser)
+    (emms-cache 1)
+    (emms-player-mpd-connect))
+
 #+end_src
