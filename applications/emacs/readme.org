@@ -2507,11 +2507,14 @@ A helper function that get a =c/cpp= file's corresponding conventional header fi
 :ID:       401f698f-26ed-483f-955a-0798670e39c4
 :END:
 #+begin_src emacs-lisp
-  (use-package rust-mode
+  (use-package rustic
     :straight t
+    :custom
+    (rustic-display-spinner nil)
     :init
-    (general-setq lsp-rust-server 'rust-analyzer))
+    )
 #+end_src
+
 
 ** beancount
 :PROPERTIES:
