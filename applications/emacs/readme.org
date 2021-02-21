@@ -1714,7 +1714,8 @@ Its =treemacs= integration that provides a helper function to add =projectile= p
     (lsp-keep-workspace-alive nil)
     (lsp-auto-guess-root t)
     (lsp-headerline-breadcrumb-enable nil)
-    (lsp-modeline-code-actions-enable nil))
+    (lsp-modeline-code-actions-enable nil)
+    (lsp-progress-function 'ignore "showing progress in modeline breaks the layout"))
 #+end_src
 
 *** lsp-ui
