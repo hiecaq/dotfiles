@@ -87,12 +87,14 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#toc-org][toc-org]]
   - [[#ox-hugo][ox-hugo]]
   - [[#org-roam][org-roam]]
+  - [[#org-download][org-download]]
   - [[#style-and-faces][style and faces]]
 - [[#language-specific][Language specific]]
   - [[#dot][dot]]
   - [[#c-and-c][C and C++]]
   - [[#plantuml][plantuml]]
   - [[#rust][rust]]
+  - [[#haskell][Haskell]]
   - [[#beancount][beancount]]
   - [[#cmake][CMake]]
   - [[#latex][Latex]]
@@ -351,7 +353,7 @@ And also, set package archive to include ELPA, MELPA and org's, with TUNA's mirr
 There is a =broken-as-intended= feature with =straight= that built-in version of packages might get loaded before their latest alternatives, especially this is the case for Org mode. To fix this, simply register it as fast as possible:
 #+begin_src emacs-lisp
   (straight-use-package 'org)
-  (straight-use-package 'org-plus-contrib)
+  (straight-use-package 'org-contrib)
 #+end_src
 ** Use-package
 :PROPERTIES:
@@ -1490,7 +1492,11 @@ Due to a problem with [[id:a5c838c2-f097-44e8-89fd-773c284348fe][Company-quickhe
 
 Start a candidate selection immediately when pressing =C-n= or =C-p= in insert state.
 #+begin_src emacs-lisp :tangle no :noweb-ref company-mode-general
-  (general-imap
+  (general-imap prog-mode-map
+    "C-n" 'company-complete
+    "C-p" 'company-complete)
+
+  (general-imap text-mode-map
     "C-n" 'company-complete
     "C-p" 'company-complete)
 #+end_src
@@ -2328,6 +2334,23 @@ It comes with a complementary package =org-roam-protocol=.
                    :unnarrowed t)))
 #+end_src
 
+** org-download
+:PROPERTIES:
+:ID:       85289fee-4517-46c3-b57e-83959520f9a4
+:END:
+[[https://github.com/abo-abo/org-download][org-download]] is a helper utility that download and insert images which can be either an image dragged into Emacs from web or in file system.
+#+begin_src emacs-lisp
+  (use-package org-download
+    :straight t
+    :hook (org-mode . org-download-enable)
+    :custom
+    (org-download-image-dir "~/pictures/web")
+    (org-download-backend (cond
+                           ((executable-find "wget") "wget \"%s\" -O \"%s\"")
+                           ((executable-find "curl") "curl \"%s\" -o \"%s\"")
+                           (t t))))
+#+end_src
+
 ** style and faces
 :PROPERTIES:
 :ID:       036849c5-9cf8-407a-a65f-dfa103a0b826
@@ -2516,6 +2539,25 @@ A helper function that get a =c/cpp= file's corresponding conventional header fi
     )
 #+end_src
 
+** Haskell
+:PROPERTIES:
+:ID:       44e2f676-da64-4181-9c65-528b9cfa1b2e
+:END:
+#+begin_src emacs-lisp
+  (use-package haskell-mode
+    :straight t
+    :init
+    )
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package lsp-haskell
+    :straight t
+    :hook ((haskell-mode haskell-literate-mode) .
+           (lambda () (lsp-deferred)))
+    :init
+    )
+#+end_src
 
 ** beancount
 :PROPERTIES:
