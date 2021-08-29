@@ -2280,21 +2280,21 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
     :straight t
     :demand t
     :custom
-    (org-roam-prefer-id-links nil)
     (org-roam-protocol-store-links nil)
     (org-roam-directory "~/documents")
     (org-roam-db-location (no-littering-expand-var-file-name "roam.db"))
     (org-roam-capture-templates
-     '(("d" "default" plain (function org-roam--capture-get-point)
-        "%?"
-        :file-name "inbox/${slug}"
-        :head "#+title: ${title}\n#+date: %U\n#+last_modified: %U\n#+roam_alias: \n#+roam_tags: \n"
+     '(("d" "default" plain "%?"
+        :target (file+head  "inbox/${slug}.org"
+                            "#+title: ${title}\n#+date: %U\n#+last_modified: %U\n")
         :unnarrowed t)))
     :general
     (my/leader-def 'normal
       "C"  'org-roam-capture)
+    :init
+    (general-setq org-roam-v2-ack t)
     :config
-    (org-roam-mode +1))
+    (org-roam-setup))
 #+end_src
 
 It comes with a complementary package =org-roam-protocol=.
@@ -2312,25 +2312,25 @@ It comes with a complementary package =org-roam-protocol=.
                          "pandoc" t t nil "-f" "html" "-t" "org" "--wrap" "none")))
             (alert (format "Pandoc failed: %s" (buffer-string)) :severity 'high)
           (buffer-string))))
+    :config
     (add-to-list 'org-roam-capture-ref-templates
-                 '("c" "Capture" plain (function org-roam-capture--get-point)
-                   "\n%(my/command-line-pandoc-filter (alist-get 'body org-roam-capture--info))\n"
-                   :file-name "notes/${slug}"
-                   :head "#+title: ${title}\n#+date: %U\n#+last_modified: %U\n#+roam_key: ${ref}\n#+roam_alias: \n#+roam_tags: \n"
+                 '("c" "Capture" plain "\n%(my/command-line-pandoc-filter (plist-get org-roam-capture--info :body))\n%?"
+                   :target (file+head  "notes/${slug}.org"
+                                       "#+title: ${title}\n#+date: %U\n#+last_modified: %U\n#+filetags: \n")
                    :unnarrowed t
+                   :empty-lines 1
                    :immediate-finish t))
     (add-to-list 'org-roam-capture-ref-templates
-                 '("p" "plain capture" plain (function org-roam-capture--get-point)
-                   "\n${body}\n"
-                   :file-name "notes/${slug}"
-                   :head "#+title: ${title}\n#+date: %U\n#+last_modified: %U\n#+roam_key: ${ref}\n#+roam_alias: \n#+roam_tags: \n"
+                 '("p" "plain capture" plain "${body}%?"
+                   :target (file+head  "notes/${slug}.org"
+                                       "#+title: ${title}\n#+date: %U\n#+last_modified: %U\n#+filetags: \n")
                    :unnarrowed t
+                   :empty-lines 1
                    :immediate-finish t))
     (add-to-list 'org-roam-capture-ref-templates
-                 '("m" "mark" plain (function org-roam-capture--get-point)
-                   "\n%?\n"
-                   :file-name "notes/${slug}"
-                   :head "#+title: ${title}\n#+date: %U\n#+last_modified: %U\n#+roam_key: ${ref}\n#+roam_alias: \n#+roam_tags: \n"
+                 '("m" "mark" plain "%?"
+                   :target (file+head  "notes/${slug}.org"
+                                       "#+title: ${title}\n#+date: %U\n#+last_modified: %U\n#+filetags: \n")
                    :unnarrowed t)))
 #+end_src
 
