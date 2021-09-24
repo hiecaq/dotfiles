@@ -1663,11 +1663,15 @@ This file provides a somewhat generic infrastructure for cross referencing comma
     :defer 10
     :straight t
     :commands (projectile-mode projectile-command-map)
+    :custom
+    (projectile-switch-project-action #'projectile-commander)
     :general
     (my/leader-def 'normal
       "p" 'projectile-command-map)
     :init
     :config
+    (add-to-list 'projectile-commander-methods '(?S "Helm ripgrep." helm-projectile-rg))
+    (add-to-list 'projectile-commander-methods '(?h "Helm." helm-projectile))
     (projectile-mode +1))
 #+end_src
 
