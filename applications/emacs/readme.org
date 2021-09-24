@@ -2676,6 +2676,8 @@ reference:
     :straight t
     :custom
     (evil-collection-magit-use-z-for-folds t)
+    :init
+    (general-setq magit-bind-magit-project-status nil)
     :config
     (evil-collection-magit-setup))
 #+end_src
