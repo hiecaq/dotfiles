@@ -74,6 +74,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#xref][xref]]
   - [[#projectile][Projectile]]
   - [[#flycheck][flycheck]]
+  - [[#tree-sitter][tree-sitter]]
   - [[#lsp-mode][lsp-mode]]
 - [[#org-mode][Org Mode]]
   - [[#general-settings-1][general settings]]
@@ -302,7 +303,8 @@ Setting faces. Technically this should be done in the =TRUE= branch for all case
       (when (eq system-type 'windows-nt)
         (set-face-attribute 'default nil :font "Consolas")
         (set-face-attribute 'variable-pitch nil :family "Microsoft Yahei"))))
-  (set-face-attribute 'fixed-pitch nil :inherit 'default)
+
+  (set-face-attribute 'fixed-pitch nil    :family  (internal-get-lisp-face-attribute 'default :family))
 #+end_src
 
 ** TUI
@@ -490,6 +492,8 @@ I'm currently using the emacs port of my vim era favorite, gruvbox:
 #+begin_src emacs-lisp
   (use-package gruvbox-theme
     :straight t
+    :custom-face
+    (font-lock-constant-face ((t (:foreground "#d5c4a1"))))
     :config
     (load-theme 'gruvbox t))
 #+end_src
@@ -1703,6 +1707,29 @@ Its =treemacs= integration that provides a helper function to add =projectile= p
     (flycheck-keymap-prefix (kbd "C-c *"))
     :config
     (global-flycheck-mode +1))
+#+end_src
+
+** tree-sitter
+[[https://tree-sitter.github.io/tree-sitter/][tree-sitter]] is an incremental parsing library and [[https://emacs-tree-sitter.github.io/][emacs-tree-sitter]] is its Emacs binding, which is aimed to be "the foundation for a new breed of Emacs packages that understand code structurally".
+#+begin_src emacs-lisp
+  (use-package tree-sitter
+    :straight t
+    :custom-face
+    (tree-sitter-hl-face:property ((t (:inherit font-lock-variable-name-face))))
+    (tree-sitter-hl-face:property.definition ((t (:inherit tree-sitter-hl-face:property))))
+    (tree-sitter-hl-face:function.call ((t (:inherit tree-sitter-hl-face:function))))
+    (tree-sitter-hl-face:variable ((t (:inherit default))))
+    (tree-sitter-hl-face:type.builtin ((t (:inherit tree-sitter-hl-face:type))))
+    (tree-sitter-hl-face:type.argument ((t (:inherit tree-sitter-hl-face:type.parameter))))
+    (tree-sitter-hl-face:constant.builtin ((t (:inherit tree-sitter-hl-face:constant))))
+    :config
+    (global-tree-sitter-mode 1)
+    (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+    )
+
+  (use-package tree-sitter-langs
+    :straight t
+    )
 #+end_src
 
 ** lsp-mode
