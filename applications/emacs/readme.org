@@ -768,6 +768,8 @@ Their bindings:
     :straight t
     :custom
     (evil-collection-setup-minibuffer t)
+    :general
+    (general-unbind 'normal 'evil-collection-unimpaired-mode-map "[b" "]b")
     :config
     (evil-collection-init 'compile)
     (evil-collection-init 'comint)
@@ -821,8 +823,8 @@ Their bindings:
       "W" '(evilem-motion-forward-WORD-begin :which-key t)
       "b" '(evilem-motion-backward-word-begin :which-key t)
       "B" '(evilem-motion-backward-WORD-begin :which-key t)
-      "n" '(evilem-motion-search-next :which-key t)
-      "N" '(evilem-motion-search-previous :which-key t)
+      "n" '(evilem-motion-search-previous :which-key t)
+      "N" '(evilem-motion-search-next :which-key t)
       "g" '(:ignore t :which-key t)))
 #+end_src
 
@@ -1726,9 +1728,134 @@ Its =treemacs= integration that provides a helper function to add =projectile= p
     (global-tree-sitter-mode 1)
     (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
     )
+#+end_src
 
-  (use-package tree-sitter-langs
+*** tree-sitter-langs
+Basically a various language bindings maintained by =emacs-tree-sitter= group.
+#+begin_src emacs-lisp
+  (use-package tree-sitter-langs :straight t)
+#+end_src
+
+*** evil-textobj-tree-sitter
+An [[https://github.com/meain/evil-textobj-tree-sitter][emacs port]] of [[https://github.com/nvim-treesitter/nvim-treesitter-textobjects][nvim-treesitter-textobjects]]
+#+begin_src emacs-lisp
+  (use-package evil-textobj-tree-sitter
     :straight t
+    :general
+    ;; [b]lock
+    ('evil-inner-text-objects-map "b" (evil-textobj-tree-sitter-get-textobj "block.inner"))
+    ('evil-outer-text-objects-map "b" (evil-textobj-tree-sitter-get-textobj "block.outer"))
+    ;; [c]all
+    ('evil-inner-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "call.inner"))
+    ('evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "call.outer"))
+    ;; [C]lass
+    ('evil-inner-text-objects-map "C" (evil-textobj-tree-sitter-get-textobj "class.inner"))
+    ('evil-outer-text-objects-map "C" (evil-textobj-tree-sitter-get-textobj "class.outer"))
+    ;; comment [/]
+    ('evil-inner-text-objects-map "/" (evil-textobj-tree-sitter-get-textobj "comment.outer")) ;; no inner yet
+    ('evil-outer-text-objects-map "/" (evil-textobj-tree-sitter-get-textobj "comment.outer"))
+    ;; conditional ([h]ow)
+    ('evil-inner-text-objects-map "h" (evil-textobj-tree-sitter-get-textobj "conditional.inner"))
+    ('evil-outer-text-objects-map "h" (evil-textobj-tree-sitter-get-textobj "conditional.outer"))
+    ;; [f]unction
+    ('evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
+    ('evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
+    ;; [a]rgument
+    ('evil-inner-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj "parameter.inner"))
+    ('evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj "parameter.outer"))
+    ;; [s]tatement
+    ('evil-inner-text-objects-map ";" (evil-textobj-tree-sitter-get-textobj "statement.outer")) ;; no inner yet
+    ('evil-outer-text-objects-map ";" (evil-textobj-tree-sitter-get-textobj "statement.outer"))
+    ;; Goto start of next function
+    ('(motion normal visual) "]f" (lambda ()
+                        (interactive)
+                        (evil-textobj-tree-sitter-goto-textobj "function.outer")))
+    ;; Goto start of previous function
+    ('(motion normal visual) "[f" (lambda ()
+                         (interactive)
+                         (evil-textobj-tree-sitter-goto-textobj "function.outer" t)))
+    ;; Goto end of next function
+    ('(motion normal visual) "]F" (lambda ()
+                         (interactive)
+                         (evil-textobj-tree-sitter-goto-textobj "function.outer" nil t)))
+    ;; Goto end of previous function
+    ('(motion normal visual) "[F" (lambda ()
+                         (interactive)
+                         (evil-textobj-tree-sitter-goto-textobj "function.outer" t t)))
+    ;; Goto start of next class
+    ('(motion normal visual) "]c" (lambda ()
+                        (interactive)
+                        (evil-textobj-tree-sitter-goto-textobj "class.outer")))
+    ;; Goto start of previous class
+    ('(motion normal visual) "[c" (lambda ()
+                         (interactive)
+                         (evil-textobj-tree-sitter-goto-textobj "class.outer" t)))
+    ;; Goto end of next class
+    ('(motion normal visual) "]C" (lambda ()
+                         (interactive)
+                         (evil-textobj-tree-sitter-goto-textobj "class.outer" nil t)))
+    ;; Goto end of previous class
+    ('(motion normal visual) "[C" (lambda ()
+                                    (interactive)
+                                    (evil-textobj-tree-sitter-goto-textobj "class.outer" t t)))
+    ;; Goto start of next comment
+    ('(motion normal visual) "]/" (lambda ()
+                                    (interactive)
+                                    (evil-textobj-tree-sitter-goto-textobj "comment.outer")))
+    ;; Goto start of previous comment
+    ('(motion normal visual) "[/" (lambda ()
+                                    (interactive)
+                                    (evil-textobj-tree-sitter-goto-textobj "comment.outer" t)))
+    ;; Goto start of next block
+    ('(motion normal visual) "]b" (lambda ()
+                                    (interactive)
+                                    (evil-textobj-tree-sitter-goto-textobj "block.outer")))
+    ;; Goto start of previous block
+    ('(motion normal visual) "[b" (lambda ()
+                                    (interactive)
+                                    (evil-textobj-tree-sitter-goto-textobj "block.outer" t)))
+    ;; Goto end of next block
+    ('(motion normal visual) "]B" (lambda ()
+                                    (interactive)
+                                    (evil-textobj-tree-sitter-goto-textobj "block.outer" nil t)))
+    ;; Goto end of previous block
+    ('(motion normal visual) "[B" (lambda ()
+                                    (interactive)
+                                    (evil-textobj-tree-sitter-goto-textobj "block.outer" t t)))
+    ;; Goto start of next conditional
+    ('(motion normal visual) "]h" (lambda ()
+                                    (interactive)
+                                    (evil-textobj-tree-sitter-goto-textobj "conditional.outer")))
+    ;; Goto start of previous conditional
+    ('(motion normal visual) "[h" (lambda ()
+                                    (interactive)
+                                    (evil-textobj-tree-sitter-goto-textobj "conditional.outer" t)))
+    ;; Goto end of next conditional
+    ('(motion normal visual) "]H" (lambda ()
+                                    (interactive)
+                                    (evil-textobj-tree-sitter-goto-textobj "conditional.outer" nil t)))
+    ;; Goto end of previous conditional
+    ('(motion normal visual) "[H" (lambda ()
+                                    (interactive)
+                                    (evil-textobj-tree-sitter-goto-textobj "conditional.outer" t t)))
+    ;; Goto start of next parameter
+    ('(motion normal visual) "]a" (lambda ()
+                                    (interactive)
+                                    (evil-textobj-tree-sitter-goto-textobj "parameter.inner")))
+    ;; Goto start of previous parameter
+    ('(motion normal visual) "[a" (lambda ()
+                                    (interactive)
+                                    (evil-textobj-tree-sitter-goto-textobj "parameter.inner" t)))
+    ;; Goto end of next parameter
+    ('(motion normal visual) "]A" (lambda ()
+                                    (interactive)
+                                    (evil-textobj-tree-sitter-goto-textobj "parameter.inner" nil t)))
+    ;; Goto end of previous parameter
+    ('(motion normal visual) "[A" (lambda ()
+                                    (interactive)
+                                    (evil-textobj-tree-sitter-goto-textobj "parameter.inner" t t)))
+    :config
+    ;; (add-hook 'tree-sitter-after-on-hook #'my/evil-textobj-tree-sitter-hook)
     )
 #+end_src
 
