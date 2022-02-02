@@ -16,6 +16,7 @@ Here is a list of blogs / configurations that I've grabbed code from or absorbed
 + [[https://jamiecollinson.com/blog/my-emacs-config/][Jamie Collinson's Emacs Config]]
 + [[https://github.com/munen/emacs.d/blob/master/configuration.org][munen's Emacs configuration]]
 + [[https://karl-voit.at/2017/06/03/emacs-org/][Karl Voit's Emacs Configuration In Org-mode]] and the [[https://github.com/novoid/dot-emacs][repo]]
++ [[https://rgoswami.me/posts/org-note-workflow/][An Orgmode Note Workflow by Rohit Goswami]] (somewhat outdated, based on =org-roam= v1 and =org-ref= v2, but still a useful overview on the ecosystem around =org-roam= and =bibtex-completion=).
 
 This file might be out of sync. The newest version is available [[https://github.com/quinoa42/dotfiles/tree/master/applications/emacs][here]].
 
@@ -87,6 +88,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#org-noter][org-noter]]
   - [[#toc-org][toc-org]]
   - [[#ox-hugo][ox-hugo]]
+  - [[#org-ref][org-ref]]
   - [[#org-roam][org-roam]]
   - [[#org-download][org-download]]
   - [[#style-and-faces][style and faces]]
@@ -1111,7 +1113,7 @@ Turn on helm
     ([remap imenu]                    'helm-imenu)
     (my/leader-def '(normal insert) "h o" 'helm-occur)
     (my/leader-def '(normal insert) "h M" 'helm-all-mark-rings)
-    (my/leader-def '(normal insert) "h P" 'helm-registers)
+    (my/leader-def '(normal insert) "h P" 'helm-register)
     (general-nmap "gO" 'helm-semantic-or-imenu)
     :init
     (when (executable-find "plocate")
@@ -1182,6 +1184,21 @@ and also fallback to [[https://github.com/syohex/emacs-helm-ag][helm-ag]] if =rg
     (general-setq helm-grep-default-command         "ag --vimgrep --nogroup --nocolor -z %p %f")
     (general-setq helm-grep-default-recurse-command "ag --vimgrep --nogroup --nocolor -z %p %f"))
 #+end_src
+
+*** helm-bibtex
+[[https://github.com/tmalsburg/helm-bibtex][helm-bibtex]] is a bibliography manager & search utility based on Helm.
+#+begin_src emacs-lisp
+  (use-package helm-bibtex
+    :straight t
+    :general
+    (my/leader-def '(normal insert) "h B" 'helm-bibtex)
+    :custom
+    (bibtex-completion-bibliography "~/documents/calibre.bib")
+    (bibtex-completion-pdf-field "file")
+    (bibtex-completion-notes-path "~/documents/notes")
+    )
+#+end_src
+
 ** Ivy
 :PROPERTIES:
 :ID:       cf83b9a0-533b-4f4a-962a-3ce8de95a2af
@@ -2360,8 +2377,7 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
     :init
     (general-setq org-board-wget-switches
                   '("--page-requisites" "--adjust-extension" "--convert-links"))
-    (general-setq org-board-archive-date-format 'hyphenate)
-    :straight t)
+    (general-setq org-board-archive-date-format 'hyphenate))
 #+end_src
 
 ** org-noter
@@ -2372,7 +2388,11 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
 #+begin_src emacs-lisp
   (use-package org-noter
     :straight t
-    :demand t
+    :after (:any org pdf-view)
+    :custom
+    (org-noter-notes-window-location 'other-frame)
+    (org-noter-always-create-frame nil)
+    (org-noter-notes-search-path "~/documents/notes")
     :general
     (general-nmap org-noter-doc-mode-map
       "i" 'org-noter-insert-note
@@ -2428,6 +2448,13 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
     :after ox)
 #+end_src
 
+** org-ref
+[[https://github.com/jkitchin/org-ref][org-ref]] is the "citations, cross-references, indexes, glossaries and bibtex utilities for org-mode".
+#+begin_src emacs-lisp
+  (use-package org-ref
+    :straight t)
+#+end_src
+
 ** org-roam
 :PROPERTIES:
 :ID:       240e78fc-531c-45f4-9863-754cccebb84f
@@ -2445,16 +2472,26 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
      '(("d" "default" plain "%?"
         :target (file+head  "inbox/${slug}.org"
                             "#+title: ${title}\n#+date: %U\n#+last_modified: %U\n")
-        :unnarrowed t)))
+        :unnarrowed t)
+       ("r" "bibliography reference" plain
+        (file "~/.config/emacs/templates/bibref.org")
+        :target
+        (file+head "notes/${citekey}.org" "#+title: ${title}\n#+date: %U\n#+last_modified: %U\n"))))
+    (org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
     :general
-    (my/leader-def 'normal
-      "C"  'org-roam-capture)
-    :init
-    (general-setq org-roam-v2-ack t)
+    (my/leader-def 'normal "C" #'org-roam-capture)
+    (my/leader-def 'normal "h n" #'org-roam-node-find)
+    (my/leader-def 'normal 'org-mode-map "r b" #'org-roam-buffer-toggle)
+    (my/leader-def 'normal 'org-mode-map "r g" #'org-roam-graph)
+    (my/leader-def 'normal 'org-mode-map "r a t" #'org-roam-tag-add)
+    (my/leader-def 'normal 'org-mode-map "r a r" #'org-roam-ref-add)
+    (my/leader-def 'normal 'org-mode-map "r a a" #'org-roam-alias-add)
+    (my/leader-def '(normal insert) 'org-mode-map "r i" #'org-roam-node-insert)
     :config
-    (org-roam-setup))
+    (org-roam-db-autosync-mode))
 #+end_src
 
+*** org-roam-protocol
 It comes with a complementary package =org-roam-protocol=.
 #+begin_src emacs-lisp
   (use-package org-roam-protocol
@@ -2490,6 +2527,27 @@ It comes with a complementary package =org-roam-protocol=.
                    :target (file+head  "notes/${slug}.org"
                                        "#+title: ${title}\n#+date: %U\n#+last_modified: %U\n#+filetags: \n")
                    :unnarrowed t)))
+#+end_src
+
+*** org-roam-bibtex
+[[https://github.com/org-roam/org-roam-bibtex][orb]] is "an extension to org-roam that integrates it with bibliography/citation management software", which includes =org-ref=, =helm-bibtex= =org-noter= and many others.
+It will modify =helm-bibtex= to use  =orb-edit-note= instead of their default note-management commands for example (which, as a result, will invoke =org-roam-capture-template=)
+#+begin_src emacs-lisp
+  (use-package org-roam-bibtex
+    :straight t
+    :custom
+    (orb-roam-ref-format 'org-ref-v3)
+    (orb-preformat-keywords '("citekey" "title" "url" "author-or-editor" "keywords" "file"))
+    (orb-process-file-keyword t)
+    (orb-attached-file-extensions '("pdf"))
+    (orb-insert-interface 'helm-bibtex)
+    (orb-insert-link-description 'citation-org-ref-3)
+    (orb-note-actions-interface 'hydra)
+    :general
+    (my/leader-def '(normal insert) 'org-mode-map "r r" #'orb-insert-link)
+    :config
+    (require 'org-ref)
+    (org-roam-bibtex-mode 1))
 #+end_src
 
 ** org-download
