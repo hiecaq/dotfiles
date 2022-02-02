@@ -1465,12 +1465,6 @@ By completion I mean general text/code autocompletion, as Vim's =deoplete=.
     (global-company-mode))
 #+end_src
 
-In addition to =TAB= and =RET=,  when press any of whitespace, parentheses and punctuation, complete the selection based on the currently selected item.
-#+begin_src emacs-lisp :tangle no :noweb-ref company-mode-init
-  (general-setq company-auto-complete t)
-  (general-setq company-auto-complete-chars '(32 40 41 46))
-#+end_src
-
 Allow just typing anything other than stuff in the matchings so that to exit selection immediately with a new character:
 #+begin_src emacs-lisp :tangle no :noweb-ref company-mode-init
   (general-setq company-require-match nil)
@@ -1896,6 +1890,7 @@ An [[https://github.com/meain/evil-textobj-tree-sitter][emacs port]] of [[https:
     (lsp-auto-guess-root t)
     (lsp-headerline-breadcrumb-enable nil)
     (lsp-modeline-code-actions-enable nil)
+    (lsp-rust-analyzer-cargo-watch-command "clippy" "clippy seems to call check")
     (lsp-progress-function 'ignore "showing progress in modeline breaks the layout"))
 #+end_src
 
@@ -2873,6 +2868,7 @@ reference:
 #+begin_src emacs-lisp
   (general-setq vc-handled-backends '(Git))
 #+end_src
+
 ** tramp
 :PROPERTIES:
 :ID:       4ea4d61b-0b26-47c8-ab76-ea53fd6b56e5
@@ -2882,6 +2878,7 @@ reference:
     :init
     (general-setq tramp-verbose 1))
 #+end_src
+
 ** Magit
 :PROPERTIES:
 :ID:       be8f32a7-b990-4a66-9a88-fc5d3f6c4c74
