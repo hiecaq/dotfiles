@@ -1731,7 +1731,7 @@ Its =treemacs= integration that provides a helper function to add =projectile= p
     (tree-sitter-hl-face:property ((t (:inherit font-lock-variable-name-face))))
     (tree-sitter-hl-face:property.definition ((t (:inherit tree-sitter-hl-face:property))))
     (tree-sitter-hl-face:function.call ((t (:inherit tree-sitter-hl-face:function))))
-    (tree-sitter-hl-face:variable ((t (:inherit default))))
+    (tree-sitter-hl-face:variable ((t (:inherit fixed-pitch))))
     (tree-sitter-hl-face:type.builtin ((t (:inherit tree-sitter-hl-face:type))))
     (tree-sitter-hl-face:type.argument ((t (:inherit tree-sitter-hl-face:type.parameter))))
     (tree-sitter-hl-face:constant.builtin ((t (:inherit tree-sitter-hl-face:constant))))
