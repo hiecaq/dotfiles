@@ -2530,6 +2530,7 @@ It will modify =helm-bibtex= to use  =orb-edit-note= instead of their default no
 #+begin_src emacs-lisp
   (use-package org-roam-bibtex
     :straight t
+    :demand t
     :custom
     (orb-roam-ref-format 'org-ref-v3)
     (orb-preformat-keywords '("citekey" "title" "url" "author-or-editor" "keywords" "file"))
