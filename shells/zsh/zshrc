@@ -267,11 +267,26 @@ if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
 fi
 ### }}}2
 
+
+is_inside_git() {
+    if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
+        true
+    else
+        false
+    fi
+}
+
+# Some of the most useful features in emacs-libvterm require shell-side
+# configurations.
+# code here are from https://github.com/akermu/emacs-libvterm/blob/master/etc/emacs-vterm-zsh.sh
+# with some personal modification.
 if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
-    vterm_printf() {
-        if [ -n "$TMUX" ]; then
+    # The main goal of these additional functions is to enable the
+    # shell to send information to `vterm` via properly escaped sequences. A
+    # function that helps in this task, `vterm_printf`, is defined below.
+    function vterm_printf(){
+        if [ -n "$TMUX" ] && ([ "${TERM%%-*}" = "tmux" ] || [ "${TERM%%-*}" = "screen" ] ); then
             # Tell tmux to pass the escape sequences through
-            # (Source: http://permalink.gmane.org/gmane.comp.terminal-emulators.tmux.user/1324)
             printf "\ePtmux;\e\e]%s\007\e\\" "$1"
         elif [ "${TERM%%-*}" = "screen" ]; then
             # GNU screen (screen, screen-256color, screen-256color-bce)
@@ -281,17 +296,56 @@ if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
         fi
     }
 
+    # wrapper around `vterm_printf` to automate the substitution and escaping
+    vterm_cmd() {
+        local vterm_elisp
+        vterm_elisp=""
+        while [ $# -gt 0 ]; do
+            vterm_elisp="$vterm_elisp""$(printf '"%s" ' "$(printf "%s" "$1" | sed -e 's|\\|\\\\|g' -e 's|"|\\"|g')")"
+            shift
+        done
+        vterm_printf "51;E$vterm_elisp"
+    }
+
+    # Completely clear the buffer. With this, everything that is not on screen
+    # is erased.
     alias clear='vterm_printf "51;Evterm-clear-scrollback";tput clear'
 
+    # This is to change the title of the buffer based on information provided by the
+    # shell. See, http://tldp.org/HOWTO/Xterm-Title-4.html, for the meaning of the
+    # various symbols.
     autoload -U add-zsh-hook
     add-zsh-hook -Uz chpwd (){ print -Pn "\e]2;%m:%2~\a" }
 
+    # Sync directory and host in the shell with Emacs's current directory.
+    # You may need to manually specify the hostname instead of $(hostname) in case
+    # $(hostname) does not return the correct string to connect to the server.
+    #
+    # The escape sequence "51;A" has also the role of identifying the end of the
+    # prompt
     vterm_prompt_end() {
         vterm_printf "51;A%n@%m:$(pwd)";
     }
 
     setopt PROMPT_SUBST
     PROMPT=$PROMPT'%{$(vterm_prompt_end)%}'
+
+    # now, defines some utility that vterm can call back into Emacs
+    function ff() {
+        vterm_cmd find-file "$(realpath "${@:-.}")"
+    }
+
+    function mgit() {
+        if is_inside_git; then
+            vterm_cmd magit-status "$(realpath "${@:-.}")"
+        fi
+    }
+else
+    function mgit() {
+        if is_inside_git; then
+            e -e '(magit-status)'
+        fi
+    }
 fi
 
 ## history

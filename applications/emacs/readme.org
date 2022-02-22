@@ -2942,15 +2942,15 @@ Its =treemacs= integration that notifies =treemacs=' =filewatch-mode= of status 
 :END:
 [[https://github.com/akermu/emacs-libvterm][emacs-libvterm]] is, guess what, a [[https://github.com/neovim/libvterm][libvterm]] binding for Emacs!
 #+begin_src emacs-lisp
-  (general-setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=yes")
   (use-package vterm
     :straight t
     :init
     :custom
+    (vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=yes")
     (vterm-buffer-name-string "vterm %s")
     (vterm-term-environment-variable "xterm-256color-italic")
     :config
-    )
+    (push (list "magit-status" #'magit-status) vterm-eval-cmds))
 #+end_src
 
 [[https://github.com/jixiuf/vterm-toggle][vterm-toggle]] provides handy commands to toggle between vterm buffers and previous buffers.
