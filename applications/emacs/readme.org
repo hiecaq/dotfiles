@@ -63,6 +63,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#awesome-tray][Awesome-tray]]
   - [[#with-editor][with-editor]]
   - [[#origami][Origami]]
+  - [[#separedit][Separedit]]
 - [[#completion][Completion]]
   - [[#company][Company]]
   - [[#company-quickhelp][Company-quickhelp]]
@@ -1446,6 +1447,23 @@ Reference:
     :hook (prog-mode . origami-mode))
 #+end_src
 
+** Separedit
+[[https://github.com/twlz0ne/separedit.el][separedit]] use a similar ideas as =org-mode= =C-c '= to edit program comments, escaped string, etc.
+#+begin_src emacs-lisp
+  (use-package separedit
+    :straight t
+    :general
+    (my/leader-def 'normal 'prog-mode-map "'" #'separedit)
+    :custom
+    (separedit-remove-trailing-spaces-in-comment t)
+    (separedit-default-mode 'markdown-mode)
+    (separedit-continue-fill-column t)
+    (separedit-buffer-creation-hook #'auto-fill-mode)
+    :init
+    :config
+    (push 'tree-sitter-hl-face:comment separedit-comment-faces)
+    )
+#+end_src
 * Completion
 By completion I mean general text/code autocompletion, as Vim's =deoplete=.
 ** Company
