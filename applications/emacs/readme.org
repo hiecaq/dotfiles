@@ -1030,6 +1030,22 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
     (evil-outer-text-objects-map "J" 'evil-indent-plus-a-indent-up-down))
 #+end_src
 
+*** evil-owl
+[[https://github.com/mamapanda/evil-owl][evil-owl]] lets us preview registers and markers after normal mode =q=, =@=, ​="=​,  =m=, ​='=​, or =`= and insert mode =C-r=. This makes =m= much more useful than it was.
+#+begin_src emacs-lisp
+  (use-package evil-owl
+    :straight t
+    :after evil
+    :custom
+    (evil-owl-display-method 'posframe)
+    (evil-owl-extra-posframe-args '(:width 50 :height 20))
+    (evil-owl-max-string-length 50)
+    (evil-owl-local-mark-format " %m: [%l:%c] %s")
+    (evil-owl-global-mark-format " %m: [%l:%c] %s")
+    :config
+    (evil-owl-mode 1))
+#+end_src
+
 * Spell Checking
 :PROPERTIES:
 :ID:       80c61feb-eaae-40e2-9093-8320d9142b7b
