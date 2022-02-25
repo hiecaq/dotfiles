@@ -1340,7 +1340,7 @@ gtags --gtagslabel=new-ctags
       "C-l" 'evil-window-right)
     :config
     (treemacs-filewatch-mode +1)
-    (treemacs-follow-mode 0)
+    (treemacs-follow-mode +1)
     (pcase (cons (not (null (executable-find "git")))
                  (not (null treemacs-python-executable)))
       (`(t . t)
