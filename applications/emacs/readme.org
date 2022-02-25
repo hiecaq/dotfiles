@@ -2358,7 +2358,7 @@ Enable tracking org heading links using globally unique uids. This is a must-hav
   (use-package org-id
     :custom
     (org-id-track-globally t)
-    (org-id-link-to-org-use-id t))
+    (org-id-link-to-org-use-id 'create-if-interactive))
 #+end_src
 
 ** COMMENT org-brain
@@ -2495,17 +2495,17 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
     :demand t
     :custom
     (org-roam-protocol-store-links nil)
-    (org-roam-directory "~/documents")
+    (org-roam-directory "~/documents/notes")
     (org-roam-db-location (no-littering-expand-var-file-name "roam.db"))
     (org-roam-capture-templates
      '(("d" "default" plain "%?"
-        :target (file+head  "inbox/${slug}.org"
+        :target (file+head  "${slug}.org"
                             "#+title: ${title}\n#+date: %U\n#+last_modified: %U\n")
         :unnarrowed t)
        ("r" "bibliography reference" plain
         (file "~/.config/emacs/templates/bibref.org")
         :target
-        (file+head "notes/${citekey}.org" "#+title: ${title}\n#+date: %U\n#+last_modified: %U\n"))))
+        (file+head "${citekey}.org" "#+title: ${title}\n#+filetags: :notes:\n#+date: %U\n#+last_modified: %U\n"))))
     (org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
     :general
     (my/leader-def 'normal "C" #'org-roam-capture)
@@ -2539,22 +2539,22 @@ It comes with a complementary package =org-roam-protocol=.
     :config
     (add-to-list 'org-roam-capture-ref-templates
                  '("c" "Capture" plain "\n%(my/command-line-pandoc-filter (plist-get org-roam-capture--info :body))\n%?"
-                   :target (file+head  "notes/${slug}.org"
-                                       "#+title: ${title}\n#+date: %U\n#+last_modified: %U\n#+filetags: \n")
+                   :target (file+head  "${slug}.org"
+                                       "#+title: ${title}\n#+filetags: :clip:\n#+date: %U\n#+last_modified: %U\n")
                    :unnarrowed t
                    :empty-lines 1
                    :immediate-finish t))
     (add-to-list 'org-roam-capture-ref-templates
                  '("p" "plain capture" plain "${body}%?"
-                   :target (file+head  "notes/${slug}.org"
-                                       "#+title: ${title}\n#+date: %U\n#+last_modified: %U\n#+filetags: \n")
+                   :target (file+head  "${slug}.org"
+                                       "#+title: ${title}\n#+filetags: :clip:\n#+date: %U\n#+last_modified: %U\n")
                    :unnarrowed t
                    :empty-lines 1
                    :immediate-finish t))
     (add-to-list 'org-roam-capture-ref-templates
                  '("m" "mark" plain "%?"
-                   :target (file+head  "notes/${slug}.org"
-                                       "#+title: ${title}\n#+date: %U\n#+last_modified: %U\n#+filetags: \n")
+                   :target (file+head  "${slug}.org"
+                                       "#+title: ${title}\n#+filetags: :clip:\n#+date: %U\n#+last_modified: %U\n")
                    :unnarrowed t)))
 #+end_src
 
