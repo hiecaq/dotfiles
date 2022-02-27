@@ -24,6 +24,7 @@ This file might be out of sync. The newest version is available [[https://github
 
 * Table of Contents :TOC:noexport:
 - [[#general-settings][General Settings]]
+  - [[#tangled-initel-file-local-variables][Tangled =init.el= file local variables]]
   - [[#coding-and-languages][Coding and Languages]]
   - [[#tangle-initel][Tangle =init.el=]]
   - [[#some-helpful-defaults][Some helpful defaults]]
@@ -117,6 +118,11 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#emms][EMMS]]
 
 * General Settings
+See [[https://www.emacswiki.org/emacs/DynamicBindingVsLexicalBinding][EmacsWiki]]. AFAIK Elisp's lexical/dynamic binding only affects the =let= family. I didn't know that Elisp is dynamic binding by default until recently, so all my configs are written with lexical binding in mind. As a result, turn on lexical binding should just work.
+** Tangled =init.el= file local variables
+#+begin_src emacs-lisp :comments no
+  ;; -*- lexical-binding: t -*-
+#+end_src
 ** Coding and Languages
 :PROPERTIES:
 :ID:       14ff9134-235e-4869-a707-321c4fcde890
