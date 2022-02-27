@@ -781,19 +781,7 @@ Their bindings:
     :general
     (general-unbind 'normal 'evil-collection-unimpaired-mode-map "[b" "]b")
     :config
-    (evil-collection-init 'compile)
-    (evil-collection-init 'comint)
-    (evil-collection-init 'info)
-    (evil-collection-init 'man)
-    (evil-collection-init 'custom)
-    (evil-collection-init 'dired)
-    (evil-collection-init 'minibuffer)
-    (evil-collection-init 'helm)
-    (evil-collection-init 'vterm)
-    (evil-collection-init 'help)
-    (evil-collection-init 'flycheck)
-    (evil-collection-init 'xref)
-    (evil-collection-init 'which-key))
+    (evil-collection-init))
 #+end_src
 
 #+begin_quote
@@ -2099,6 +2087,15 @@ Here are some evil-specific bindings:
 #+begin_src emacs-lisp :tangle no :noweb-ref evil-org-general
   (org-src-mode-map [remap evil-write] 'org-edit-src-save)
 #+end_src
+
+Some evil configurations changed my =C-j= =C-k=, which I bound to switching upper/lower window. So I clear them.
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-org-general
+    (general-unbind 'normal 'org-mode-map  "C-j")
+    (general-unbind 'org-mode-map  "C-j")
+    (general-unbind 'normal 'org-mode-map  "C-k")
+    (general-unbind 'org-mode-map  "C-k")
+#+end_src
+
 ** task management
 I generally follow the GTD way as my task management system.
 reference:
@@ -2944,10 +2941,7 @@ reference:
     :straight t
     :custom
     (evil-collection-magit-use-z-for-folds t)
-    :init
-    (general-setq magit-bind-magit-project-status nil)
-    :config
-    (evil-collection-magit-setup))
+    (magit-bind-magit-project-status nil))
 #+end_src
 
 Its Evil integration is now a part of evil-collection.
@@ -2968,8 +2962,7 @@ Its =treemacs= integration that notifies =treemacs=' =filewatch-mode= of status 
   (use-package pdf-tools
     :straight t
     :config
-    (pdf-loader-install)
-    (evil-collection-pdf-setup))
+    (pdf-loader-install))
 #+end_src
 
 ** Vterm
@@ -3073,8 +3066,6 @@ With this package, we can talk to mpv via IPC, and most importantly, log down no
   (use-package emms
     :straight t
     :init
-    (evil-collection-emms-setup)
-    (add-to-list 'emms-track-initialize-functions #'emms-info-initialize-track)
     (defun fg-emms-track-description (track)
       "Return a somewhat nice track description. from https://www.emacswiki.org/emacs/EMMS#h5o-15"
       (let ((artist (emms-track-get track 'info-artist))
@@ -3104,6 +3095,7 @@ With this package, we can talk to mpv via IPC, and most importantly, log down no
     (emms-volume-pulse-sink 1)
     (emms-track-description-function 'fg-emms-track-description)
     :config
+    (add-to-list 'emms-track-initialize-functions #'emms-info-initialize-track)
     (require 'emms-i18n)
     (require 'emms-info)
     (require 'emms-player-simple)
