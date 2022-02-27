@@ -65,6 +65,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#with-editor][with-editor]]
   - [[#origami][Origami]]
   - [[#separedit][Separedit]]
+  - [[#shackle][shackle]]
 - [[#completion][Completion]]
   - [[#company][Company]]
   - [[#company-quickhelp][Company-quickhelp]]
@@ -1109,8 +1110,9 @@ References:
     :straight helm
     :demand t
     :general
+    :custom
+    (helm-display-function #'pop-to-buffer)
     :init
-    ;; (general-setq helm-display-function #'helm-display-buffer-in-own-frame)
     (general-setq helm-command-prefix-key "C-c h")
     (general-setq helm-apropos-fuzzy-match t)
     (general-setq helm-ff-skip-boring-files t)
@@ -1483,8 +1485,20 @@ Reference:
     (separedit-buffer-creation-hook #'auto-fill-mode)
     :init
     :config
-    (push 'tree-sitter-hl-face:comment separedit-comment-faces)
-    )
+    (push 'tree-sitter-hl-face:comment separedit-comment-faces))
+#+end_src
+
+** shackle
+[[https://depp.brause.cc/shackle/][shackle]] enforces rules for pop-up windows, making buffer-switching more predictable.
+#+begin_src emacs-lisp
+  (use-package shackle
+    :straight t
+    :custom
+    (shackle-rules '(("\\`\\*helm.*\\*\\'" :regexp t :align t :size 0.4)
+                     ("\\`\\*vterm\\*\\'" :regexp t :align t :size 0.4)
+                     ("\\`magit:.*\\'" :regexp t :same t)))
+    :config
+    (shackle-mode +1))
 #+end_src
 * Completion
 By completion I mean general text/code autocompletion, as Vim's =deoplete=.
