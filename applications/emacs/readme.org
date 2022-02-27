@@ -2597,6 +2597,19 @@ It will modify =helm-bibtex= to use  =orb-edit-note= instead of their default no
     (org-roam-bibtex-mode 1))
 #+end_src
 
+*** org-roam-ui
+[[https://github.com/org-roam/org-roam-ui][org-roam-ui]] is the successor to =org-roam-server=, which supports =org-roam= v2.
+#+begin_src emacs-lisp
+  (use-package org-roam-ui
+    :straight t
+    :after org-roam
+    :custom
+    (org-roam-ui-sync-theme t)
+    (org-roam-ui-follow t)
+    (org-roam-ui-update-on-save t)
+    (org-roam-ui-open-on-start t))
+#+end_src
+
 ** org-download
 :PROPERTIES:
 :ID:       85289fee-4517-46c3-b57e-83959520f9a4
