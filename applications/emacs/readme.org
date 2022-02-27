@@ -91,7 +91,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#org-noter][org-noter]]
   - [[#toc-org][toc-org]]
   - [[#ox-hugo][ox-hugo]]
-  - [[#org-ref][org-ref]]
+  - [[#citar][citar]]
   - [[#org-roam][org-roam]]
   - [[#org-download][org-download]]
   - [[#style-and-faces][style and faces]]
@@ -416,8 +416,7 @@ One extra thing: Emacs comes with a customization interface, which supports sett
     (let ((autosave-dir (no-littering-expand-tmp-file-name "auto-save/")))
       (mkdir autosave-dir t)
       (setq auto-save-file-name-transforms
-            `((".*" ,autosave-dir t))))
-    (setq custom-file (no-littering-expand-etc-file-name "custom.el")))
+            `((".*" ,autosave-dir t)))))
 #+end_src
 
 * Miscs
@@ -2494,11 +2493,26 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
     :after ox)
 #+end_src
 
-** org-ref
+** COMMENT org-ref
 [[https://github.com/jkitchin/org-ref][org-ref]] is the "citations, cross-references, indexes, glossaries and bibtex utilities for org-mode".
 #+begin_src emacs-lisp
   (use-package org-ref
     :straight t)
+#+end_src
+
+I decide to switch to the org built-in =org-cite=, because I don't need most of the =org-ref= functions (including the most compelling cross reference feature), and just in preparation to switch away from =helm=.
+
+** citar
+[[https://github.com/bdarcus/citar][citar]] is basically an alternative to =helm-bibtex=, and it supports the built-in =org-cite=.
+#+begin_src emacs-lisp
+  (use-package citar
+    :straight t
+    :custom
+    (org-cite-global-bibliography '("~/documents/calibre.bib"))
+    (org-cite-insert-processor 'citar)
+    (org-cite-follow-processor 'citar)
+    (org-cite-activate-processor 'citar)
+    (citar-bibliography org-cite-global-bibliography))
 #+end_src
 
 ** org-roam
@@ -2513,7 +2527,6 @@ Inherit ~org-brain-title~ face from inner-most org-mode heading (so that it won'
     :custom
     (org-roam-protocol-store-links nil)
     (org-roam-directory "~/documents/notes")
-    (org-roam-db-location (no-littering-expand-var-file-name "roam.db"))
     (org-roam-capture-templates
      '(("d" "default" plain "%?"
         :target (file+head  "${slug}.org"
@@ -2583,17 +2596,17 @@ It will modify =helm-bibtex= to use  =orb-edit-note= instead of their default no
     :straight t
     :demand t
     :custom
-    (orb-roam-ref-format 'org-ref-v3)
+    (orb-roam-ref-format 'org-cite)
     (orb-preformat-keywords '("citekey" "title" "url" "author-or-editor" "keywords" "file"))
     (orb-process-file-keyword t)
     (orb-attached-file-extensions '("pdf"))
     (orb-insert-interface 'helm-bibtex)
-    (orb-insert-link-description 'citation-org-ref-3)
+    (orb-insert-link-description 'citation-org-cite)
     (orb-note-actions-interface 'hydra)
     :general
     (my/leader-def '(normal insert) 'org-mode-map "r r" #'orb-insert-link)
     :config
-    (require 'org-ref)
+    ;; (require 'org-ref)
     (org-roam-bibtex-mode 1))
 #+end_src
 
