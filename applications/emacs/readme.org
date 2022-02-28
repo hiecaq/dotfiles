@@ -1482,8 +1482,11 @@ Reference:
     :straight t
     :custom
     (shackle-rules '(("\\`\\*helm.*\\*\\'" :regexp t :align t :size 0.4)
+                     ("\\`\\*vertico\\*\\'" :regexp t :align t :size 0.4)
                      ("\\`\\*vterm\\*\\'" :regexp t :align t :size 0.4)
-                     ("\\`magit:.*\\'" :regexp t :same t)))
+                     ("\\`vterm .*\\'" :regexp t :align t :size 0.4)
+                     ("*Async Shell Command*" :select nil :align t :size 0.4)
+                     (magit-status-mode :select t :inhibit-window-quit t :same t)))
     :config
     (shackle-mode +1))
 #+end_src
@@ -2966,6 +2969,7 @@ reference:
   (use-package magit
     :straight t
     :custom
+    (magit-bury-buffer-function #'quit-window) ;; play nice with shackle
     (evil-collection-magit-use-z-for-folds t)
     (magit-bind-magit-project-status nil))
 #+end_src
