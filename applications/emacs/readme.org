@@ -2623,12 +2623,29 @@ I decide to switch to the org built-in =org-cite=, because I don't need most of 
 #+begin_src emacs-lisp
   (use-package citar
     :straight t
+    :general
+    (my/leader-def '(normal insert) 'org-mode-map "r r" #'citar-insert-citation)
     :custom
+    (citar-notes-paths '("~/documents/notes"))
     (org-cite-global-bibliography '("~/documents/calibre.bib"))
+    (citar-file-parser-functions '(citar-file-parser-triplet))
     (org-cite-insert-processor 'citar)
     (org-cite-follow-processor 'citar)
     (org-cite-activate-processor 'citar)
+    (citar-at-point-function #'embark-act)
     (citar-bibliography org-cite-global-bibliography))
+#+end_src
+
+** bibtex-completion
+[[https://github.com/tmalsburg/helm-bibtex][bibtex-completion]] is required by =orb=. It is the backend for =helm-bibtex= and =ivy-bibtex=, but can be installed as stand alone.
+#+begin_src emacs-lisp
+  (use-package bibtex-completion
+    :straight t
+    :custom
+    (bibtex-completion-bibliography "~/documents/calibre.bib")
+    (bibtex-completion-pdf-field "file")
+    (bibtex-completion-notes-path "~/documents/notes")
+    )
 #+end_src
 
 ** org-roam
@@ -2716,11 +2733,10 @@ It will modify =helm-bibtex= to use  =orb-edit-note= instead of their default no
     (orb-preformat-keywords '("citekey" "title" "url" "author-or-editor" "keywords" "file"))
     (orb-process-file-keyword t)
     (orb-attached-file-extensions '("pdf"))
-    (orb-insert-interface 'helm-bibtex)
+    (orb-insert-interface 'generic)
     (orb-insert-link-description 'citation-org-cite)
     (orb-note-actions-interface 'hydra)
-    :general
-    (my/leader-def '(normal insert) 'org-mode-map "r r" #'orb-insert-link)
+    ;; (citar-open-note-function 'orb-citar-edit-note)
     :config
     ;; (require 'org-ref)
     (org-roam-bibtex-mode 1))
