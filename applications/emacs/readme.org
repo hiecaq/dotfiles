@@ -55,13 +55,15 @@ This file might be out of sync. The newest version is available [[https://github
 - [[#spell-checking][Spell Checking]]
 - [[#ui-enhance][UI Enhance]]
   - [[#eldoc][Eldoc]]
-  - [[#helm][Helm]]
-  - [[#ivy][Ivy]]
+  - [[#orderless][Orderless]]
+  - [[#vertico][Vertico]]
+  - [[#marginalia][Marginalia]]
+  - [[#consult][Consult]]
+  - [[#embark][Embark]]
   - [[#highlight-indent-guides][highlight-indent-guides]]
   - [[#undo-tree][Undo-tree]]
   - [[#ggtags][ggtags]]
   - [[#treemacs][Treemacs]]
-  - [[#awesome-tray][Awesome-tray]]
   - [[#with-editor][with-editor]]
   - [[#origami][Origami]]
   - [[#separedit][Separedit]]
@@ -76,7 +78,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#auto-insert][Auto-insert]]
 - [[#code][Code]]
   - [[#xref][xref]]
-  - [[#projectile][Projectile]]
+  - [[#project][Project]]
   - [[#flycheck][flycheck]]
   - [[#tree-sitter][tree-sitter]]
   - [[#lsp-mode][lsp-mode]]
@@ -92,6 +94,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#toc-org][toc-org]]
   - [[#ox-hugo][ox-hugo]]
   - [[#citar][citar]]
+  - [[#bibtex-completion][bibtex-completion]]
   - [[#org-roam][org-roam]]
   - [[#org-download][org-download]]
   - [[#style-and-faces][style and faces]]
@@ -491,7 +494,11 @@ Emacs has its own =bookmark= system built-in:
   (use-package alert
     :straight t
     :custom
-    (alert-default-style 'notifications))
+    (alert-default-style 'notifications)
+    :init
+    (defun my/info (str)
+      (interactive "M")
+      (alert str :severity 'normal)))
 #+end_src
 * Colors
 :PROPERTIES:
@@ -1296,7 +1303,7 @@ and also fallback to [[https://github.com/syohex/emacs-helm-ag][helm-ag]] if =rg
     )
 #+end_src
 
-** Ivy
+** COMMENT Ivy
 :PROPERTIES:
 :ID:       cf83b9a0-533b-4f4a-962a-3ce8de95a2af
 :END:
@@ -1436,7 +1443,7 @@ Its evil integration:
     :after (treemacs evil))
 #+end_src
 
-** Awesome-tray
+** COMMENT Awesome-tray
 :PROPERTIES:
 :ID:       186c5ab3-fe3d-4182-bcf1-dd5a4f62377e
 :END:
@@ -3138,7 +3145,8 @@ Its =treemacs= integration that notifies =treemacs=' =filewatch-mode= of status 
     (vterm-buffer-name-string "vterm %s")
     (vterm-term-environment-variable "xterm-256color-italic")
     :config
-    (push (list "magit-status" #'magit-status) vterm-eval-cmds))
+    (push (list "magit-status" #'magit-status) vterm-eval-cmds)
+    (push (list "enotify" #'my/info) vterm-eval-cmds))
 #+end_src
 
 [[https://github.com/jixiuf/vterm-toggle][vterm-toggle]] provides handy commands to toggle between vterm buffers and previous buffers.
