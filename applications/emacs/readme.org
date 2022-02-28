@@ -1083,7 +1083,92 @@ Eldoc is a little bit annoying when the doc is longer than one single line. [[ht
     (prog-mode . (lambda () (when (display-graphic-p) (eldoc-box-hover-mode)))))
 #+end_src
 
-** Helm
+** Orderless
+=orderless= add space-separated component (which then matches against several matching styles) completion style to minibuffer and other completion UI.
+#+begin_src emacs-lisp
+  (use-package orderless
+    :straight t
+    :custom (completion-styles '(orderless)))
+#+end_src
+
+** Vertico
+This basically set =completing-read-function= to be =vertico= itself, a vertical UI to choose from the candidates.
+#+begin_src emacs-lisp
+  (use-package vertico
+    :straight t
+    ;; :straight (vertico :includes vertico-buffer
+    ;;                    :files (:defaults "extensions/vertico-buffer.el"))
+    :general
+    (general-unbind vertico-map "C-j")
+    :init
+    (vertico-mode))
+#+end_src
+
+** Marginalia
+[[https://github.com/minad/marginalia][marginalia]] adds info to the right of completion candidates, thus the name margin-alia.
+#+begin_src emacs-lisp
+  ;; Enable richer annotations using the Marginalia package
+  (use-package marginalia
+    :straight t
+    :demand t
+    ;; :general (:map minibuffer-local-map ("M-A" . marginalia-cycle))
+    :config
+    (marginalia-mode))
+#+end_src
+
+** Consult
+[[https://github.com/minad/consult][consult]] provides practical commands based on the Emacs completion function =completing-read=. What this means is that basically =consult= pop up candidates when calling its commands into =comleting-read=.
+#+begin_src emacs-lisp
+  (use-package consult
+    :straight t
+    :custom
+    (consult-preview-key "\C-j")
+    (xref-show-definitions-function #'consult-xref)
+    (xref-show-xrefs-function #'consult-xref)
+    :general
+    (my/leader-def 'normal "h b" #'consult-buffer
+      "h s" (lambda ()
+              (interactive)
+              (let ((current-prefix-arg '(4)))
+                (call-interactively #'consult-ripgrep)))
+      "h l" #'consult-line
+      "h f" #'consult-find
+      "h F" #'consult-locate
+      "h i" #'consult-imenu
+      "h m" #'consult-minor-mode-menu
+      "h a" #'consult-apropos
+      "h k" #'consult-man)
+    :init
+    ;; Optionally replace `completing-read-multiple' with an enhanced version.
+    (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple))
+#+end_src
+
+** Embark
+[[https://github.com/oantolin/embark][embark]] is probably the most world-changing package in Emacs recently. It basically provides a just-in-time context-aware action list (quite like no-repeating hydra or which-key) in minibuffer on the =complete-read= candidate or on anything in the editing file.
+#+begin_src emacs-lisp
+  (use-package embark
+    :straight t
+    :general
+    ("C-;"  'embark-act)         ;; pick some comfortable binding
+    ("C-:"  'embark-dwim)        ;; good alternative: M-.
+    ("C-h B"  'embark-bindings) ;; alternative for `describe-bindings'
+
+    :init
+
+    ;; Optionally replace the key help with a completing-read interface
+    (general-setq prefix-help-command #'embark-prefix-help-command)
+
+    :config
+    )
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package embark-consult
+    :straight t
+    :after (embark consult))
+#+end_src
+
+** COMMENT Helm
 :PROPERTIES:
 :ID:       9894d186-0b49-42af-9688-c7a66aa0ad1c
 :END:
@@ -1711,7 +1796,7 @@ This file provides a somewhat generic infrastructure for cross referencing comma
     (general-nmap "gr" 'xref-find-references))
 #+end_src
 
-** Projectile
+** COMMENT Projectile
 :PROPERTIES:
 :ID:       888fabc8-1499-4960-8b5c-8575d4cbc4f5
 :END:
@@ -1750,6 +1835,34 @@ Its =treemacs= integration that provides a helper function to add =projectile= p
   (use-package treemacs-projectile
     :straight t
     :after treemacs projectile)
+#+end_src
+
+** Project
+Replace =projectile= with the emacs built-in project (since I'm still using emacs27, I'll install the elpa one)
+#+begin_src emacs-lisp
+  (use-package project
+    :straight t
+    :init
+    (defun my/project-vterm (cmd &optional pop-to-buf-fun)
+      (interactive)
+      (let* ((default-directory (project-root (project-current t)))
+             (pop-to-buf-func (if pop-to-buf-fun pop-to-buf-fun #'pop-to-buffer))
+             (vterm-buffer (vterm--internal pop-to-buf-func (concat "vterm " default-directory))))
+        (with-current-buffer vterm-buffer
+          (when (stringp cmd)
+            (vterm-send-string (concat cmd "\n"))))))
+    :general
+    (my/leader-def 'normal
+      "p b" #'consult-project-buffer
+      "p f" #'project-find-file
+      "p m" #'magit-project-status
+      "p !" (lambda (cmd) (interactive "M") (my/project-vterm cmd))
+      "p &" (lambda (cmd) (interactive "M") (my/project-vterm (format "%s\nenotify '%s finished with '$?" cmd cmd) #'identity))
+      "p v" (lambda () (interactive) (my/project-vterm nil))
+      "p l" #'consult-line-multi
+      "p s" #'consult-ripgrep
+      "p i" #'consult-imenu-multi
+      "p p" #'project-switch-project))
 #+end_src
 
 ** flycheck
@@ -1981,7 +2094,7 @@ Based on [[https://github.com/emacs-lsp/lsp-ui/pull/208][this]] PR, there is no 
     :after (lsp-mode treemacs))
 #+end_src
 
-*** helm-lsp
+*** COMMENT helm-lsp
 :PROPERTIES:
 :ID:       ad1b7b16-5d75-45d0-9e4e-4fcf32570fd8
 :END:
