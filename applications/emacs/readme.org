@@ -202,7 +202,6 @@ Turn off lockfiles. They cannot be moved to a different directory, and they cons
   (setq create-lockfiles nil)
 #+end_src
 
-hello
 A helper function that create a filename from basename and extension:
 #+begin_src emacs-lisp
   (defun my/filename-with-extension (base ext)
@@ -787,6 +786,11 @@ Their bindings:
     :general
     (general-unbind 'normal 'evil-collection-unimpaired-mode-map "[b" "]b")
     :config
+    ;; don't bind SPC
+    (defun my/prefix-translations (_mode mode-keymaps &rest _rest)
+      (evil-collection-translate-key 'normal mode-keymaps
+        (kbd "SPC") nil))
+    (add-hook 'evil-collection-setup-hook #'my/prefix-translations)
     (evil-collection-init))
 #+end_src
 
