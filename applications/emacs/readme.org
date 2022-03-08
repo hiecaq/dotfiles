@@ -54,6 +54,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#evil][Evil]]
 - [[#spell-checking][Spell Checking]]
 - [[#ui-enhance][UI Enhance]]
+  - [[#modeline][modeline]]
   - [[#ace-window][ace-window]]
   - [[#eldoc][Eldoc]]
   - [[#orderless][Orderless]]
@@ -690,48 +691,6 @@ I use =<leader>o= and =<leader>O= for them because they are close to =o= and =O=
     "O" '(my/insert-line-above :which-key t))
 #+end_src
 
-=C-w= hydra!
-#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-init
-  (defhydra hydra-evil-window (:foreign-keys nil :hint nil)
-    "
-    Move: _b_ottom right _t_op left _r_otate downwards _R_oate upwards
-    Resize: _+_ increase height _-_ decrease height _<_ decrease width _>_ increase width
-    "
-    ("h" evil-window-left)
-    ("l" evil-window-right)
-    ("j" evil-window-down)
-    ("k" evil-window-up)
-    ("b" evil-window-bottom-right :color blue)
-    ("t" evil-window-top-left :color blue)
-    ("r" evil-window-rotate-downwards)
-    ("R" evil-window-rotate-upwards)
-    ("q" evil-quit :color blue)
-    ("c" evil-window-delete)
-    ("+" evil-window-increase-height)
-    ("-" evil-window-decrease-height)
-    (">" evil-window-increase-width)
-    ("<" evil-window-decrease-width)
-    ("=" balance-windows :color blue)
-    ("H" evil-window-move-far-left)
-    ("L" evil-window-move-far-right)
-    ("J" evil-window-move-very-bottom)
-    ("K" evil-window-move-very-top)
-    ("s" evil-window-split :color blue)
-    ("C-s" evil-window-split :color blue)
-    ("v" evil-window-vsplit :color blue)
-    ("C-v" evil-window-vsplit :color blue)
-    ("o" delete-other-windows :color blue)
-    ("C-o" delete-other-windows :color blue)
-    ("]" xref-find-definitions-other-window :color blue)
-    ("C-]" xref-find-definitions-other-window :color blue)
-    ("RET" nil "quit" :color blue)
-    ("ESC" nil "quit" :color blue))
-#+end_src
-
-#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-general
-  (general-nmap "C-w" 'hydra-evil-window/body)
-#+end_src
-
 Use =C-d= as frame key, mimics =C-w= as window key. =d= stands for =display=. Hope this could persuade people and myself. I choose =C-d= because =C-u= is (heavily) used by Emacs itself by default and Evil as a result did not bind =C-u= by default, so it's reasonable to not have Vim's =C-d= functionality alone.
 #+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-general
   (general-nmap "C-d" (general-simulate-key "C-x 5"))
@@ -1084,6 +1043,36 @@ For me Helm fits me better because:
 1. I'm new to Emacs anyway, there is no such Emacs UI that I'm used to.
 2. During my Vim era I use Shougo's wonderful plugins Unite/Denite, which mimics the logic of Helm, so switching to Emacs with Helm mostly does not require switching my mind model for how to find things.
 3. Ivy is new compared with Helm, so it does not have as many add-ons available as Helm.
+
+** modeline
+Modified from [[https://github.com/DogLooksGood/dogEmacs/blob/master/elisp/init-modeline.el][DogLooksGood]]'s config.
+#+begin_src emacs-lisp
+  (defun +format-mode-line ()
+    (let* ((lhs '((:eval evil-mode-line-tag)
+                  (:eval "(%4l:%3C) ")
+                  (:eval mode-line-mule-info)
+                  (:eval mode-line-modified)
+                  (:eval mode-line-remote)
+                  (:eval (when (bound-and-true-p flycheck-mode) flycheck-mode-line))))
+           (rhs '((:eval (propertize "%b" 'face 'mode-line-buffer-id))
+                  " "
+                  (:eval (when-let ((project (project-current nil)))
+                           (file-name-base (directory-file-name (project-root project)))))
+                  " "
+                  (:eval mode-name)
+                  (:eval mode-line-process)))
+           (ww (window-width))
+           (lhs-str (format-mode-line lhs))
+           (rhs-str (format-mode-line rhs))
+           (rhs-w (string-width rhs-str)))
+      (format "%s%s%s"
+              lhs-str
+              (propertize " " 'display `((space :align-to (- (+ right right-fringe right-margin) (+ 1 ,rhs-w)))))
+              rhs-str)))
+
+  (setq-default mode-line-format '((:eval (+format-mode-line))))
+#+end_src
+
 ** ace-window
 [[https://github.com/abo-abo/ace-window][ace-window]] is helpful to do things the "embark" way: pick a window, then decide what to do with it.
 #+begin_src emacs-lisp
@@ -1499,6 +1488,7 @@ Its evil integration:
 :PROPERTIES:
 :ID:       186c5ab3-fe3d-4182-bcf1-dd5a4f62377e
 :END:
+awesome-tray config; it plays badly under emacs-as-a-server, so I switched to the built-in mode-line.
 #+begin_src emacs-lisp
   (use-package awesome-tray
     :straight (awesome-tray :type git :host github :repo "manateelazycat/awesome-tray")
@@ -1536,16 +1526,6 @@ Reference:
   (use-package telephone-line
     :straight t
     :init
-    (defun my/revert-telephone-line-height-for-27 ()
-      "there is a wield bug in emacs 27 where (frame-char-height) is doubled on Linux.
-      Consequently, telephone-line-height is too large."
-      (general-setq telephone-line-height (max 1 (/ (frame-char-height) 2))))
-    (if (and (>= emacs-major-version 27)
-             (not (eq system-type 'darwin)))
-        (progn
-          (my/revert-telephone-line-height-for-27)
-          (add-hook 'server-after-make-frame-hook #'my/revert-telephone-line-height-for-27)))
-
     (general-setq telephone-line-lhs
                   '((evil . (telephone-line-evil-tag-segment))
                     (accent . (telephone-line-vc-segment
@@ -1945,6 +1925,7 @@ Replace =projectile= with the emacs built-in project (since I'm still using emac
   (use-package flycheck
     :straight t
     :custom
+    (flycheck-mode-line-prefix "E")
     (flycheck-keymap-prefix (kbd "C-c *"))
     :config
     (global-flycheck-mode +1))
