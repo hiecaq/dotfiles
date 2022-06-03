@@ -984,35 +984,6 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
     (evil-commentary-mode))
 #+end_src
 
-*** evil-textobj-line
-:PROPERTIES:
-:ID:       6dade961-46b7-4570-a083-c5629b1e1e4b
-:END:
-[[https://github.com/syohex/evil-textobj-line][evil-textobj-line]] defines text objects for a single line.
-#+begin_src emacs-lisp
-  (use-package evil-textobj-line
-    :straight t
-    :after evil)
-#+end_src
-
-*** evil-textobj-indent
-:PROPERTIES:
-:ID:       0b53353f-2ebf-4171-b30f-71bb7a71bc2b
-:END:
-[[https://github.com/TheBB/evil-indent-plus][evil-indent-plus]] defines text objects for block of code that has same/higher indentation.
-#+begin_src emacs-lisp
-  (use-package evil-indent-plus
-    :straight t
-    :after evil
-    :general
-    (evil-inner-text-objects-map "i" 'evil-indent-plus-i-indent)
-    (evil-outer-text-objects-map "i" 'evil-indent-plus-a-indent)
-    (evil-inner-text-objects-map "I" 'evil-indent-plus-i-indent-up)
-    (evil-outer-text-objects-map "I" 'evil-indent-plus-a-indent-up)
-    (evil-inner-text-objects-map "J" 'evil-indent-plus-i-indent-up-down)
-    (evil-outer-text-objects-map "J" 'evil-indent-plus-a-indent-up-down))
-#+end_src
-
 *** evil-owl
 [[https://github.com/mamapanda/evil-owl][evil-owl]] lets us preview registers and markers after normal mode =q=, =@=, ​="=​,  =m=, ​='=​, or =`= and insert mode =C-r=. This makes =m= much more useful than it was.
 #+begin_src emacs-lisp
@@ -2036,6 +2007,9 @@ An [[https://github.com/meain/evil-textobj-tree-sitter][emacs port]] of [[https:
     ;; comment [/]
     ('evil-inner-text-objects-map "/" (evil-textobj-tree-sitter-get-textobj "comment.outer")) ;; no inner yet
     ('evil-outer-text-objects-map "/" (evil-textobj-tree-sitter-get-textobj "comment.outer"))
+    ;; loop ([i]ter)
+    ('evil-inner-text-objects-map "i" (evil-textobj-tree-sitter-get-textobj "loop.inner"))
+    ('evil-outer-text-objects-map "i" (evil-textobj-tree-sitter-get-textobj "loop.outer"))
     ;; conditional ([h]ow)
     ('evil-inner-text-objects-map "h" (evil-textobj-tree-sitter-get-textobj "conditional.inner"))
     ('evil-outer-text-objects-map "h" (evil-textobj-tree-sitter-get-textobj "conditional.outer"))
@@ -2104,6 +2078,22 @@ An [[https://github.com/meain/evil-textobj-tree-sitter][emacs port]] of [[https:
     ('(motion normal visual) "[B" (lambda ()
                                     (interactive)
                                     (evil-textobj-tree-sitter-goto-textobj "block.outer" t t)))
+    ;; Goto start of next loop
+    ('(motion normal visual) "]i" (lambda ()
+                                    (interactive)
+                                    (evil-textobj-tree-sitter-goto-textobj "loop.outer")))
+    ;; Goto start of previous loop
+    ('(motion normal visual) "[i" (lambda ()
+                                    (interactive)
+                                    (evil-textobj-tree-sitter-goto-textobj "loop.outer" t)))
+    ;; Goto end of next loop
+    ('(motion normal visual) "]I" (lambda ()
+                                    (interactive)
+                                    (evil-textobj-tree-sitter-goto-textobj "loop.outer" nil t)))
+    ;; Goto end of previous loop
+    ('(motion normal visual) "[I" (lambda ()
+                                    (interactive)
+                                    evil-textobj-tree-sitter-goto-textobj "loop.outer" t t))
     ;; Goto start of next conditional
     ('(motion normal visual) "]h" (lambda ()
                                     (interactive)
