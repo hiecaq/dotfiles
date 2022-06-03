@@ -66,7 +66,6 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#embark][Embark]]
   - [[#highlight-indent-guides][highlight-indent-guides]]
   - [[#vundo][Vundo]]
-  - [[#ggtags][ggtags]]
   - [[#treemacs][Treemacs]]
   - [[#with-editor][with-editor]]
   - [[#origami][Origami]]
@@ -750,6 +749,18 @@ Their bindings:
   (general-nmap "]p" (my/indented-paste evil-paste-after))
 #+end_src
 
+I remap =m= to =gm= because I don't use it that often. This core single key should be bind to something more important.
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-general
+  (general-unbind :states 'normal "m")
+  (general-unbind :states 'normal "gm")
+  (general-nmap "gm" #'evil-set-marker)
+#+end_src
+
+=M=, =H=, =L= are useless.
+#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-general
+  (general-unbind :states 'motion "M" "H" "L")
+#+end_src
+
 *** evil-collection
 :PROPERTIES:
 :ID:       d27d2449-c4b8-402f-9cc7-14d841c8310f
@@ -825,8 +836,17 @@ Their bindings:
     :demand t
     :after evil
     :general
-    (general-vmap evil-snipe-local-mode-map "z" 'evil-snipe-s)
-    (general-vmap 'visual evil-snipe-local-mode-map "Z" 'evil-snipe-S)
+    (general-unbind :keymaps 'evil-snipe-local-mode-map
+      :states '(normal motion operator visual)
+      "s" "S" "z" "Z" "x" "X")
+    (:keymaps 'evil-snipe-local-mode-map
+      :states '(normal motion operator visual)
+      "s" #'evil-snipe-s
+      "S" #'evil-snipe-S)
+    (:keymaps 'evil-snipe-local-mode-map
+      :states '(operator visual)
+      "gs" #'evil-snipe-x
+      "gS" #'evil-snipe-X)
     :hook (magit-mode . turn-off-evil-snipe-override-mode)
     :custom
     (evil-snipe-scope 'visible)
@@ -942,10 +962,21 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
 :ID:       09674316-521a-4b52-8dcc-c652e5f1449a
 :END:
 [[https://github.com/emacs-evil/evil-surround][evil-surround]] defines operators that change/add/delete delimiters around a text object.
+I found that its key bindings conflict with =evil-snipe= a lot, so I remap them to =m=, which stands for markers.
 #+begin_src emacs-lisp
   (use-package evil-surround
     :straight t
     :after evil
+    :demand t
+    :general
+    (general-unbind :keymaps 'evil-surround-mode-map :states '(operator visual)
+      "s" "S" "gS")
+    (:keymaps 'evil-surround-mode-map :states '(normal operator)
+              "m" #'evil-surround-edit
+              "M" #'evil-Surround-edit)
+    (:keymaps 'evil-surround-mode-map :states 'visual
+              "m" #'evil-surround-region
+              "M" #'evil-Surround-region)
     :init
     (add-hook 'org-mode-hook
               (lambda ()
@@ -1433,7 +1464,7 @@ I don't use heavily on ivy anymore, but I still have it because its the dependen
     (global-undo-tree-mode +1))
 #+end_src
 
-** ggtags
+** COMMENT ggtags
 :PROPERTIES:
 :ID:       4464070d-964e-44c9-a85d-ec311986b6e9
 :END:
