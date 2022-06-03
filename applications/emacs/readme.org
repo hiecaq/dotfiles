@@ -72,9 +72,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#separedit][Separedit]]
   - [[#shackle][shackle]]
 - [[#completion][Completion]]
-  - [[#company][Company]]
-  - [[#company-quickhelp][Company-quickhelp]]
-  - [[#company-box][Company-box]]
+  - [[#corfu][Corfu]]
 - [[#templates][Templates]]
   - [[#yasnippet][Yasnippet]]
   - [[#yankpad][Yankpad]]
@@ -1127,7 +1125,9 @@ Eldoc is a little bit annoying when the doc is longer than one single line. [[ht
 #+begin_src emacs-lisp
   (use-package orderless
     :straight t
-    :custom (completion-styles '(orderless)))
+    :custom
+    (completion-styles '(orderless basic))
+    (completion-category-defaults nil))
 #+end_src
 
 ** Vertico
@@ -1627,7 +1627,31 @@ Reference:
 #+end_src
 * Completion
 By completion I mean general text/code autocompletion, as Vim's =deoplete=.
-** Company
+
+I've switched from =company= to =corfu=, but I'll keep the commented configs here just for reference.
+** Corfu
+[[https://github.com/minad/corfu][corfu]] is a ~completion-at-point~ implementation that is much more concise than =company=.
+#+begin_src emacs-lisp :noweb yes
+  (use-package corfu
+    :straight t
+    :demand t
+    :custom
+    (corfu-preview-current nil)
+    :bind
+    (:map corfu-map ("SPC" . corfu-insert-separator))
+    :init
+    (defun corfu-enable-always-in-minibuffer ()
+      "Enable Corfu in the minibuffer if Vertico/Mct are not active."
+      (unless (or (bound-and-true-p mct--active)
+                  (bound-and-true-p vertico--input))
+        ;; (setq-local corfu-auto nil) Enable/disable auto completion
+        (corfu-mode 1)))
+    (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
+    (general-setq tab-always-indent 'complete)
+    (global-corfu-mode +1))
+
+#+end_src
+** COMMENT Company
 :PROPERTIES:
 :ID:       4a064f96-4f38-416a-ade5-95662c12afb5
 :END:
@@ -1697,7 +1721,7 @@ Start a candidate selection immediately when pressing =C-n= or =C-p= in insert s
     "C-p" 'company-complete)
 #+end_src
 
-** Company-quickhelp
+** COMMENT Company-quickhelp
 :PROPERTIES:
 :ID:       a5c838c2-f097-44e8-89fd-773c284348fe
 :END:
@@ -1713,7 +1737,7 @@ Start a candidate selection immediately when pressing =C-n= or =C-p= in insert s
     (company-quickhelp-mode))
 #+end_src
 
-** Company-box
+** COMMENT Company-box
 :PROPERTIES:
 :ID:       9c4212fa-ad1b-423f-bac6-2161e8b989ba
 :END:
@@ -2132,7 +2156,7 @@ Based on [[https://github.com/emacs-lsp/lsp-ui/pull/208][this]] PR, there is no 
                 (general-setq-local evil-lookup-func #'lsp-ui-doc-glance))))
 #+end_src
 
-*** company-lsp
+*** COMMENT company-lsp
 :PROPERTIES:
 :ID:       bf451a45-b616-46a3-a579-001fe0f8609a
 :END:
