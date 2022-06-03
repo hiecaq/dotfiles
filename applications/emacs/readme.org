@@ -55,6 +55,7 @@ This file might be out of sync. The newest version is available [[https://github
 - [[#spell-checking][Spell Checking]]
 - [[#ui-enhance][UI Enhance]]
   - [[#modeline][modeline]]
+  - [[#wgrep][Wgrep]]
   - [[#ace-window][ace-window]]
   - [[#eldoc][Eldoc]]
   - [[#orderless][Orderless]]
@@ -1071,6 +1072,16 @@ Modified from [[https://github.com/DogLooksGood/dogEmacs/blob/master/elisp/init-
               rhs-str)))
 
   (setq-default mode-line-format '((:eval (+format-mode-line))))
+#+end_src
+
+** Wgrep
+[[https://github.com/mhayashi1120/Emacs-wgrep][wgrep]] provides a Dired-like interface for grep results, in buffer of which result candidates are editable, working as a =sed= alternative.
+#+begin_src emacs-lisp
+  (use-package wgrep
+    :straight t
+    :custom
+    (wgrep-auto-save-buffer t)
+    )
 #+end_src
 
 ** ace-window
