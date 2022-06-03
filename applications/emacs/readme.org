@@ -504,32 +504,24 @@ Emacs has its own =bookmark= system built-in:
 :PROPERTIES:
 :ID:       e5d438ab-32ff-4055-91da-37c3452c13d2
 :END:
-I'm currently using the emacs port of my vim era favorite, gruvbox:
+I've switched away from gruvbox to modus.
 #+begin_src emacs-lisp
-  (use-package gruvbox-theme
+  ;;; For packaged versions which must use `require':
+  (use-package modus-themes
     :straight t
-    :custom-face
-    (font-lock-constant-face ((t (:foreground "#d5c4a1"))))
-    :config
-    (load-theme 'gruvbox t))
-#+end_src
-
-Add / custom the =hi-lock-faces= ('cause =#000000= is too hard to read on my screen):
-#+begin_src emacs-lisp
-  (use-package hi-lock
-    :commands hi-lock-mode
-    :custom-face
-    (hi-black-b               ((t (:background "#fdf4c1"))))
-    (hi-black-hb              ((t (:background "#fabd2f" :height 1.0))))
     :init
-    (defface hi-purple-b
-      '((t (:foreground "#d3869b" :weight bold)))
-      "Face for hi-lock mode"
-      :group 'hi-lock-faces)
-    :config
-    (push "hi-purple-b" hi-lock-face-defaults))
-#+end_src
+    ;; Add all your customizations prior to loading the themes
+    (setq modus-themes-mixed-fonts t)
 
+    ;; Load the theme files before enabling a theme
+    (modus-themes-load-themes)
+    :config
+    ;; Load the theme of your choice:
+    ;; (modus-themes-load-operandi)
+    (modus-themes-load-vivendi)
+    :bind ("<f5>" . modus-themes-toggle))
+
+#+end_src
 * Key Bindings
 References:
 1. [[https://sam217pa.github.io/2016/09/23/keybindings-strategies-in-emacs/][Keybindings strategies in Emacs]] by Samuel Barreto.
@@ -2892,61 +2884,7 @@ Use =org-bullets= to replace =*= with some cool unicode symbol. This seems super
     (org-mode . (lambda () (org-bullets-mode 1))))
 #+end_src
 
-Use different font-size for headers, use sans-serif for non-code-like parts (powered by Emacs!), while still keeping code-like part using monospace font.
-#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-face
-  (org-level-8               ((t (:inherit variable-pitch :weight bold))))
-  (org-level-7               ((t (:inherit org-level-8))))
-  (org-level-6               ((t (:inherit org-level-8))))
-  (org-level-5               ((t (:inherit org-level-8))))
-  (org-level-4               ((t (:inherit org-level-8 :height 1.1))))
-  (org-level-3               ((t (:inherit org-level-8 :height 1.25))))
-  (org-level-2               ((t (:inherit org-level-8 :height 1.5))))
-  (org-level-1               ((t (:inherit org-level-8 :height 1.75))))
-  (org-document-title        ((t (:inherit org-level-8 :height 2.0 :underline nil))))
-  (org-block                 ((t (:inherit fixed-pitch))))
-  (org-document-info         ((t (:foreground "dark orange"))))
-  (org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
-  (org-link                  ((t (:underline t))))
-  (org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-  (org-property-value        ((t (:inherit fixed-pitch))))
-  (org-table                 ((t (:inherit fixed-pitch))))
-  (org-block-begin-line      ((t (:inherit fixed-pitch :weight bold))))
-  (org-block-end-line        ((t (:inherit fixed-pitch :weight bold))))
-  (org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-  (org-drawer                ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-  (org-tag                   ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
-  (org-checkbox              ((t (:inherit fixed-pitch :weight bold))))
-  (org-verbatim              ((t (:inherit (shadow fixed-pitch)))))
-  (org-code                  ((t (:inherit (shadow fixed-pitch)))))
-  (org-indent                ((t (:inherit (org-hide fixed-pitch)))))
-#+end_src
-
-8 levels of headings are sometimes not enough for me, thus I define several more levels:
-#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
-  (defface org-level-9
-        '((t (:inherit org-level-8 :height 1.0 :foreground "#83a598")))
-        "Face used for level 9 headlines."
-        :group 'org-faces)
-  (defface org-level-10
-        '((t (:inherit org-level-8 :height 1.0 :foreground "#fabd2f")))
-        "Face used for level 10 headlines."
-        :group 'org-faces)
-  (defface org-level-11
-        '((t (:inherit org-level-8 :height 1.0 :foreground "#d3869b")))
-        "Face used for level 11 headlines."
-        :group 'org-faces)
-  (defface org-level-12
-        '((t (:inherit org-level-8 :height 1.0 :foreground "#fb4933")))
-        "Face used for level 12 headlines."
-        :group 'org-faces)
-#+end_src
-
-#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-config
-  (general-setq org-level-faces (append org-level-faces (list 'org-level-9 'org-level-10 'org-level-11 'org-level-12)))
-  (general-setq org-n-level-faces (length org-level-faces))
-#+end_src
-
-The main reason I add more level faces is that I don't want the large first levels to show up again at level more than 8. Thus it is also reasonable to turn of level cycling:
+I don't want the large first levels to show up again at level more than 8. Thus it is also reasonable to turn of level cycling:
 #+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
   (general-setq org-cycle-level-faces nil)
 #+end_src
