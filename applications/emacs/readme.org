@@ -64,7 +64,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#consult][Consult]]
   - [[#embark][Embark]]
   - [[#highlight-indent-guides][highlight-indent-guides]]
-  - [[#undo-tree][Undo-tree]]
+  - [[#vundo][Vundo]]
   - [[#ggtags][ggtags]]
   - [[#treemacs][Treemacs]]
   - [[#with-editor][with-editor]]
@@ -594,9 +594,9 @@ Don't echo the =<INSERT>= etc info in minibuffer.
   (general-setq evil-echo-state nil)
 #+end_src
 
-Use good old =undo-tree= as the undo-redo system
+Use Emacs 28 new ~undo-redo~ as the undo-redo system
 #+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-init
-  (general-setq evil-undo-system 'undo-tree)
+  (general-setq evil-undo-system 'undo-redo)
 #+end_src
 
 I don't want to use Vim's insert mode bindings in insert state:
@@ -1404,20 +1404,28 @@ I don't use heavily on ivy anymore, but I still have it because its the dependen
     (general-setq highlight-indent-guides-method 'character)
     (general-setq highlight-indent-guides-character ?│))
 #+end_src
-
-** Undo-tree
+** Vundo
+#+begin_src emacs-lisp
+  (use-package vundo
+    :straight t
+    :general
+    (my/leader-def 'normal
+      "u" 'vundo))
+#+end_src
+** COMMENT Undo-tree
 :PROPERTIES:
 :ID:       20ad2920-90c2-49e0-9d8b-575cf7b1b4b6
 :END:
-[[https://www.emacswiki.org/emacs/UndoTree][undo-tree]] provides a visualization for the undo history. It is a prereq for [[*Evil][Evil]].
+[[https://www.emacswiki.org/emacs/UndoTree][undo-tree]] provides a visualization for the undo history. It is a prereq for [[*Evil][Evil]]. I switched to Emacs 28 built-in ~undo-redo~ with ~vundo~ because it is too buggy.
 #+begin_src emacs-lisp
   (use-package undo-tree
     :straight t
     :demand t
-    :init
-    (general-setq undo-tree-visualizer-timestamps nil)
-    (general-setq undo-tree-visualizer-lazy-drawing t)
-    (general-setq undo-tree-visualizer-relative-timestamps nil)
+    :custom
+    (undo-tree-auto-save-history nil "don't save to file")
+    (undo-tree-visualizer-timestamps nil)
+    (undo-tree-visualizer-lazy-drawing t)
+    (undo-tree-visualizer-relative-timestamps nil)
     :general
     (general-mmap undo-tree-visualizer-mode-map
       "t" 'undo-tree-visualizer-toggle-timestamps)
