@@ -80,9 +80,9 @@ This file might be out of sync. The newest version is available [[https://github
 - [[#code][Code]]
   - [[#xref][xref]]
   - [[#project][Project]]
-  - [[#flycheck][flycheck]]
+  - [[#flymake][flymake]]
   - [[#tree-sitter][tree-sitter]]
-  - [[#lsp-mode][lsp-mode]]
+  - [[#eglot][eglot]]
 - [[#org-mode][Org Mode]]
   - [[#general-settings-1][general settings]]
   - [[#general-keybindings][general keybindings]]
@@ -1980,11 +1980,22 @@ Replace =projectile= with the emacs built-in project (since I'm still using emac
     (project-switch-use-entire-map t))
 #+end_src
 
-** flycheck
+** flymake
+#+begin_src emacs-lisp
+  (use-package flymake
+    :straight t
+    :custom
+    (flymake-no-changes-timeout 3.0)
+    :hook
+    (prog-mode . flymake-mode)
+    (text-mode . flymake-mode))
+#+end_src
+
+** COMMENT flycheck
 :PROPERTIES:
 :ID:       9e77c0ef-f36c-4db9-af00-e7fd0056e4c8
 :END:
-[[https://github.com/flycheck/flycheck][flycheck]] is a async syntax checking framework for Emacs, as =ALE= for Vim.
+[[https://github.com/flycheck/flycheck][flycheck]] is a async syntax checking framework for Emacs, as =ALE= for Vim. I switched to use built-in =flymake=, but I'll keep the config here for later reference. I might need [[https://github.com/purcell/flymake-flycheck][flymake-flycheck]] anyway.
 #+begin_src emacs-lisp
   (use-package flycheck
     :straight t
@@ -2162,11 +2173,18 @@ An [[https://github.com/meain/evil-textobj-tree-sitter][emacs port]] of [[https:
     )
 #+end_src
 
-** lsp-mode
+** eglot
+[[https://github.com/joaotavora/eglot][eglot]] is a client for Language Server Protocol servers for Emacs. It integrates with the Emacs built-ins heavily. For example it only supports =flymake= rather than =flycheck=.
+#+begin_src emacs-lisp
+  (use-package eglot
+    :straight t)
+#+end_src
+
+** COMMENT lsp-mode
 :PROPERTIES:
 :ID:       c122cb12-cd67-4a5b-936d-b9e1264d45da
 :END:
-[[https://github.com/emacs-lsp/lsp-mode][lsp-mode]] is Emacs' client/library for the Language Server Protocol. It integrates with Emacs' ecosystem heavily.
+[[https://github.com/emacs-lsp/lsp-mode][lsp-mode]] is Emacs' client/library for the Language Server Protocol. It integrates with Emacs' ecosystem heavily. I've switched to its lightweight alternative =eglot=, but I'll keep the config here just for reference.
 
 #+begin_src emacs-lisp
   (use-package lsp-mode
@@ -2186,7 +2204,7 @@ An [[https://github.com/meain/evil-textobj-tree-sitter][emacs port]] of [[https:
     (lsp-progress-function 'ignore "showing progress in modeline breaks the layout"))
 #+end_src
 
-*** lsp-ui
+*** COMMENT lsp-ui
 :PROPERTIES:
 :ID:       49e5d348-b9e1-4a30-8d58-e10207e5ee8f
 :END:
@@ -2218,7 +2236,7 @@ Based on [[https://github.com/emacs-lsp/lsp-ui/pull/208][this]] PR, there is no 
     (push 'company-lsp company-backends))
 #+end_src
 
-*** lsp-treemacs
+*** COMMENT lsp-treemacs
 :PROPERTIES:
 :ID:       362ac97c-0fc6-44b9-a21f-f928d61d1982
 :END:
@@ -2240,7 +2258,7 @@ Based on [[https://github.com/emacs-lsp/lsp-ui/pull/208][this]] PR, there is no 
     :after lsp-mode)
 #+end_src
 
-*** lsp-origami
+*** COMMENT lsp-origami
 :PROPERTIES:
 :ID:       a8723ecd-3fc5-4170-90d4-b1995825ccd9
 :END:
@@ -2998,7 +3016,7 @@ A helper function that get a =c/cpp= file's corresponding conventional header fi
       (my/filename-with-extension basename "h")))
 #+end_src
 
-*** ccls
+*** COMMENT ccls
 :PROPERTIES:
 :ID:       10cfbc64-de37-4a40-9f44-738fb936b596
 :END:
@@ -3011,6 +3029,7 @@ A helper function that get a =c/cpp= file's corresponding conventional header fi
     :init
     (general-setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc)))
 #+end_src
+Note that this only works with lsp-mode, so I also commented this out.
 
 ** plantuml
 :PROPERTIES:
@@ -3037,6 +3056,7 @@ A helper function that get a =c/cpp= file's corresponding conventional header fi
     :straight t
     :custom
     (rustic-display-spinner nil)
+    (rustic-lsp-client 'eglot)
     :init
     )
 #+end_src
@@ -3048,15 +3068,6 @@ A helper function that get a =c/cpp= file's corresponding conventional header fi
 #+begin_src emacs-lisp
   (use-package haskell-mode
     :straight t
-    :init
-    )
-#+end_src
-
-#+begin_src emacs-lisp
-  (use-package lsp-haskell
-    :straight t
-    :hook ((haskell-mode haskell-literate-mode) .
-           (lambda () (lsp-deferred)))
     :init
     )
 #+end_src
