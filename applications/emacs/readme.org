@@ -633,12 +633,6 @@ Then, given that I'm using emacs' bindings in insert state, there is no point to
 #+end_src
 It's okay to rebind =C-h= because =<F1>= basically does the same thing.
 
-=swiper= has a nice evil integration such that =/= =?= can be replaced with ~'swiper~ ~'swiper-backward~ respectively:
-#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-general
-  ([remap evil-ex-search-forward] 'swiper)
-  ([remap evil-ex-search-backward] 'swiper-backward)
-#+end_src
-
 My UHK's keybinding is designed for using with Vim, so my Alt is really far far away from where I would normally position my fingers. Since I did not bind =S-s= =S-x= in my =xmonad= config, it's reasonable to bind these to their Meta relatives:
 #+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-general
   (when (eq system-type 'gnu/linux)
@@ -1185,22 +1179,45 @@ This basically set =completing-read-function= to be =vertico= itself, a vertical
     (consult-preview-key "\C-j")
     (xref-show-definitions-function #'consult-xref)
     (xref-show-xrefs-function #'consult-xref)
+    :init
+    ;; based on noctuid's tweak from https://github.com/minad/consult/issues/318#issuecomment-882067919
+    (defun my/consult-line-evil-history (&rest _)
+      "Add latest `consult-line' search pattern to the evil search history ring.
+  This only works with orderless and for the first component of the search."
+      (when (and (bound-and-true-p evil-mode)
+                 (eq evil-search-module 'evil-search))
+        (let ((pattern (car (orderless-pattern-compiler (car consult--line-history)))))
+          ;; (add-to-history 'evil-ex-search-history pattern)
+          (evil-push-search-history pattern (eq evil-ex-search-direction 'forward))
+          (setq evil-ex-search-pattern (list pattern t t))
+          (when evil-ex-search-persistent-highlight
+            (evil-ex-search-activate-highlight evil-ex-search-pattern)))))
+
+    (advice-add #'consult-line :after #'my/consult-line-evil-history)
     :general
     (my/leader-def 'normal "h b" #'consult-buffer
       "h s" (lambda ()
               (interactive)
               (let ((current-prefix-arg '(4)))
                 (call-interactively #'consult-ripgrep)))
-      "h l" #'consult-line
+      "h l" #'consult-flymake
       "h f" #'consult-find
       "h F" #'consult-locate
       "h i" #'consult-imenu
+      "h o" #'consult-outline
       "h m" #'consult-minor-mode-menu
       "h a" #'consult-apropos
       "h k" #'consult-man)
-    :init
-    ;; Optionally replace `completing-read-multiple' with an enhanced version.
-    (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple))
+    ([remap evil-ex-search-forward]
+     (lambda ()
+       (interactive)
+       (setq evil-ex-search-direction 'forward)
+       (consult-line)))
+    ([remap evil-ex-search-backward]
+     (lambda ()
+       (interactive)
+       (setq evil-ex-search-direction 'backward)
+       (consult-line))))
 #+end_src
 
 ** Embark
