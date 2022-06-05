@@ -1170,6 +1170,42 @@ Modified from [[https://github.com/DogLooksGood/dogEmacs/blob/master/elisp/init-
 :PROPERTIES:
 :ID:       c322e203-1bcd-4301-9050-1e4a47107064
 :END:
+
+=eldoc= is Emacs' built-in documentation-at-point viewer.
+#+begin_src emacs-lisp
+  (use-package eldoc
+    :straight t
+    :custom
+    (global-eldoc-mode nil "too annoying")
+    (eldoc-documentation-strategy #'eldoc-documentation-compose)
+    :init
+    (defun my/eldoc-posframe-hide ()
+      (posframe-hide eldoc--doc-buffer))
+    (defun my/eldoc-posframe-auto-hide-hook ()
+      (when (not (memq real-this-command '(eldoc
+                                           eldoc-doc-buffer
+                                           my/eldoc-doc-posframe-show)))
+        (my/eldoc-posframe-hide)
+        (remove-hook 'post-command-hook #'my/eldoc-posframe-auto-hide-hook t)))
+    (defun my/eldoc-doc-posframe-show ()
+      "Display ElDoc documentation buffer in posframe."
+      (interactive)
+      (unless (buffer-live-p eldoc--doc-buffer)
+        (user-error (format
+                     "ElDoc buffer doesn't exist, maybe `%s' to produce one."
+                     (substitute-command-keys "\\[eldoc]"))))
+      (with-current-buffer eldoc--doc-buffer
+        (rename-buffer (replace-regexp-in-string "^ *" ""
+                                                 (buffer-name)))
+        (posframe-show (current-buffer)
+                       :position (point)
+                       :border-width 1))
+      (add-hook 'post-command-hook #'my/eldoc-posframe-auto-hide-hook 0 t))
+    (advice-add #'eldoc-doc-buffer :override #'my/eldoc-doc-posframe-show)
+    (defun my/eldoc-posframe-show-or-refresh (interactive-p)
+      (list (and interactive-p (not (get-buffer-window eldoc--doc-buffer)))))
+    (advice-add #'eldoc :filter-args #'my/eldoc-posframe-show-or-refresh))
+#+end_src
 *** COMMENT eldoc-box
 Eldoc is a little bit annoying when the doc is longer than one single line. [[https://github.com/casouri/eldoc-box][eldoc-box]] to the rescue by putting it in a top corner. I don't use this package any more, but I got many inspirations from it on writing my own config.
 #+begin_src emacs-lisp
@@ -2054,15 +2090,9 @@ Replace =projectile= with the emacs built-in project (since I'm still using emac
     :init
 
     (defvar my/flymake-posframe--buffer "*flymake-posframe*")
-    (defvar my/flymake-posframe--frame nil)
-
-    (defun my/flymake-posframe--p ()
-      (and (frame-live-p my/flymake-posframe--frame)
-           (frame-visible-p my/flymake-posframe--frame)))
 
     (defun my/flymake-posframe-hide ()
-      (posframe-hide my/flymake-posframe--buffer)
-      (setq my/flymake-posframe--frame nil))
+      (posframe-hide my/flymake-posframe--buffer))
 
     (defun my/flymake-posframe-auto-hide-hook ()
       (when (not (eq this-command #'my/flymake-posframe-show))
@@ -2083,11 +2113,10 @@ Replace =projectile= with the emacs built-in project (since I'm still using emac
         (with-current-buffer buffer
           (erase-buffer)
           (insert diags))
-        (setq my/flymake-posframe--frame
-              (when (posframe-workable-p)
-                (posframe-show buffer
-                               :position (point)
-                               :border-width 1)))
+        (when (posframe-workable-p)
+          (posframe-show buffer
+                         :position (point)
+                         :border-width 1))
         (add-hook 'post-command-hook #'my/flymake-posframe-auto-hide-hook 0 t)))
     :general
     (general-nmap "L" #'my/flymake-posframe-show))
@@ -2276,10 +2305,27 @@ An [[https://github.com/meain/evil-textobj-tree-sitter][emacs port]] of [[https:
 #+end_src
 
 ** eglot
+:PROPERTIES:
+:ID:       7d3033ee-8e99-45bd-8e48-4b44cc0c8375
+:END:
 [[https://github.com/joaotavora/eglot][eglot]] is a client for Language Server Protocol servers for Emacs. It integrates with the Emacs built-ins heavily. For example it only supports =flymake= rather than =flycheck=.
 #+begin_src emacs-lisp
   (use-package eglot
-    :straight t)
+    :straight t
+    :init
+    (general-setq eglot-stay-out-of '(eldoc))
+    (defmacro my/eglot--setq-saving (symbol binding)
+      `(when (boundp ',symbol)
+         (push (cons ',symbol (symbol-value ',symbol)) eglot--saved-bindings)
+         (setq-local ,symbol ,binding)))
+    (defun my/eglot-hook ()
+      (when (eglot-managed-p)
+        (my/eglot--setq-saving eldoc-documentation-functions
+                               '(eglot-signature-eldoc-function
+                                 eglot-hover-eldoc-function))))
+    (add-hook 'eglot-managed-mode-hook #'my/eglot-hook)
+    :general
+    (general-unbind :states 'normal :keymaps 'eglot-mode-map "K"))
 #+end_src
 
 ** COMMENT lsp-mode
