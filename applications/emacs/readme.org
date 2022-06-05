@@ -46,6 +46,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#recentf][Recentf]]
   - [[#editorconfig][Editorconfig]]
   - [[#alert][Alert]]
+  - [[#subword][subword]]
 - [[#colors][Colors]]
 - [[#key-bindings][Key Bindings]]
   - [[#which-key][Which-key]]
@@ -122,12 +123,15 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#telega][Telega]]
   - [[#mpv][mpv]]
   - [[#emms][EMMS]]
+  - [[#wanderlust][Wanderlust]]
 
 * General Settings
-See [[https://www.emacswiki.org/emacs/DynamicBindingVsLexicalBinding][EmacsWiki]]. AFAIK Elisp's lexical/dynamic binding only affects the =let= family. I didn't know that Elisp is dynamic binding by default until recently, so all my configs are written with lexical binding in mind. As a result, turn on lexical binding should just work.
 ** Tangled =init.el= file local variables
+1. Turn on lexical binding. See [[https://www.emacswiki.org/emacs/DynamicBindingVsLexicalBinding][EmacsWiki]]. AFAIK Elisp's lexical/dynamic binding only affects the =let= family. I didn't know that Elisp is dynamic binding by default until recently, so all my configs are written with lexical binding in mind. As a result, turn on lexical binding should just work.
+2. Set the buffer to be read-only when visited. Modifications should be done in =readme.org=.
+3. Set the buffer to automatically revert itself when it is lived. This is useful to see if the tangled result is correct.
 #+begin_src emacs-lisp :comments no
-  ;; -*- lexical-binding: t -*-
+  ;; -*- lexical-binding: t; buffer-read-only: t; eval: (auto-revert-mode 1) -*-
 #+end_src
 ** Coding and Languages
 :PROPERTIES:
@@ -501,6 +505,15 @@ Emacs has its own =bookmark= system built-in:
       (interactive "M")
       (alert str :severity 'normal)))
 #+end_src
+
+** subword
+=subword-mode= is an Emacs built-in that makes =CamelCase= be considered as 2 separate words =Camel= and =Case=. Evil also respects this minor mode. I've found that to turn on this mode is almost always positive for Evil usages, because the =io= =ao= text objects select the whole symbol anyway, pretty much covers the non-subword usage. There is also =superword-mode= BTW.
+#+begin_src emacs-lisp
+  (use-package subword
+    :hook
+    (text-mode . subword-mode)
+    (prog-mode . subword-mode))
+#+end_src
 * Colors
 :PROPERTIES:
 :ID:       e5d438ab-32ff-4055-91da-37c3452c13d2
@@ -807,14 +820,6 @@ I remap =m= to =gm= because I don't use it that often. This core single key shou
       "j" '(:ignore t :which-key t)
       "k" (evilem-create 'previous-line)
       "k" '(:ignore t :which-key t)
-      "e" '(evilem-motion-forward-word-end :which-key t)
-      "E" '(evilem-motion-forward-WORD-end :which-key t)
-      "g e" '(evilem-motion-backward-word-end :which-key t)
-      "g E" '(evilem-motion-backward-WORD-end :which-key t)
-      "w" '(evilem-motion-forward-word-begin :which-key t)
-      "W" '(evilem-motion-forward-WORD-begin :which-key t)
-      "b" '(evilem-motion-backward-word-begin :which-key t)
-      "B" '(evilem-motion-backward-WORD-begin :which-key t)
       "n" '(evilem-motion-search-previous :which-key t)
       "N" '(evilem-motion-search-next :which-key t)
       "g" '(:ignore t :which-key t)))
@@ -1287,7 +1292,7 @@ Reference:
     (my/embark-ace-action switch-to-buffer)
     (my/embark-ace-action bookmark-jump)
     :general
-    (minibuffer-local-map "C-a"  'embark-act)
+    (minibuffer-local-map "C-'"  'embark-act)
     ("C-h B"  'embark-bindings) ;; alternative for `describe-bindings'
     ;; evil-bindings
     (general-nvmap "ga" 'embark-act)
@@ -2419,6 +2424,17 @@ Put newer note at the top:
   (general-setq org-reverse-note-order t)
 #+end_src
 
+When the cursor is on the headline, =c-a= =c-e= will stop after the leading stars and before the tags, respectively. Likewise, =c-k= will only delete up to the tags. Moreover, =evil-org= respects these settings.
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-special-ctrl-a/e t)
+  (general-setq org-special-ctrl-k t)
+#+end_src
+
+Prevent =M-RET= from splitting the line if the line is a headline or an item.
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (general-setq org-M-RET-may-split-line '((default . nil)))
+#+end_src
+
 ** general keybindings
 :PROPERTIES:
 :ID:       76ee1d2e-fd76-4462-97e6-645d000c3b97
@@ -2740,7 +2756,7 @@ Enable tracking org heading links using globally unique uids. This is a must-hav
   (use-package org-id
     :custom
     (org-id-track-globally t)
-    (org-id-link-to-org-use-id 'create-if-interactive))
+    (org-id-link-to-org-use-id t))
 #+end_src
 
 ** COMMENT org-brain
