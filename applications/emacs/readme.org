@@ -1088,6 +1088,13 @@ Modified from [[https://github.com/DogLooksGood/dogEmacs/blob/master/elisp/init-
   (setq-default mode-line-format '((:eval (+format-mode-line))))
 #+end_src
 
+** Posframe
+[[https://github.com/tumashu/posframe][posframe]] pops a child-frame at point, connected to its root window's buffer.
+#+begin_src emacs-lisp
+  (use-package posframe
+    :straight t)
+#+end_src
+
 ** Wgrep
 [[https://github.com/mhayashi1120/Emacs-wgrep][wgrep]] provides a Dired-like interface for grep results, in buffer of which result candidates are editable, working as a =sed= alternative.
 #+begin_src emacs-lisp
@@ -1158,7 +1165,8 @@ Modified from [[https://github.com/DogLooksGood/dogEmacs/blob/master/elisp/init-
 :PROPERTIES:
 :ID:       c322e203-1bcd-4301-9050-1e4a47107064
 :END:
-Eldoc is a little bit annoying when the doc is longer than one single line. [[https://github.com/casouri/eldoc-box][eldoc-box]] to the rescue by putting it in a top corner.
+*** COMMENT eldoc-box
+Eldoc is a little bit annoying when the doc is longer than one single line. [[https://github.com/casouri/eldoc-box][eldoc-box]] to the rescue by putting it in a top corner. I don't use this package any more, but I got many inspirations from it on writing my own config.
 #+begin_src emacs-lisp
   (use-package eldoc-box
     :straight t
@@ -2034,10 +2042,50 @@ Replace =projectile= with the emacs built-in project (since I'm still using emac
   (use-package flymake
     :straight t
     :custom
-    (flymake-no-changes-timeout 3.0)
+    (flymake-no-changes-timeout 1.0)
     :hook
     (prog-mode . flymake-mode)
-    (text-mode . flymake-mode))
+    (text-mode . flymake-mode)
+    :init
+
+    (defvar my/flymake-posframe--buffer "*flymake-posframe*")
+    (defvar my/flymake-posframe--frame nil)
+
+    (defun my/flymake-posframe--p ()
+      (and (frame-live-p my/flymake-posframe--frame)
+           (frame-visible-p my/flymake-posframe--frame)))
+
+    (defun my/flymake-posframe-hide ()
+      (posframe-hide my/flymake-posframe--buffer)
+      (setq my/flymake-posframe--frame nil))
+
+    (defun my/flymake-posframe-auto-hide-hook ()
+      (when (not (eq this-command #'my/flymake-posframe-show))
+        (my/flymake-posframe-hide)
+        (remove-hook 'post-command-hook #'my/flymake-posframe-auto-hide-hook t)))
+
+    (defun my/flymake-posframe--format (diag)
+      (let* ((type (flymake-diagnostic-type diag))
+             (face (flymake--lookup-type-property type 'mode-line-face 'flymake-error))
+             (text (flymake-diagnostic-text diag)))
+        (propertize text 'face face)))
+
+    (defun my/flymake-posframe-show ()
+      (interactive)
+      (when-let* ((diags (flymake-diagnostics (point)))
+                  (diags (mapconcat #'my/flymake-posframe--format diags "\n"))
+                  (buffer (get-buffer-create my/flymake-posframe--buffer)))
+        (with-current-buffer buffer
+          (erase-buffer)
+          (insert diags))
+        (setq my/flymake-posframe--frame
+              (when (posframe-workable-p)
+                (posframe-show buffer
+                               :position (point)
+                               :border-width 1)))
+        (add-hook 'post-command-hook #'my/flymake-posframe-auto-hide-hook 0 t)))
+    :general
+    (general-nmap "L" #'my/flymake-posframe-show))
 #+end_src
 
 ** COMMENT flycheck
