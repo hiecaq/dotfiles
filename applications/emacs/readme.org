@@ -55,8 +55,9 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#evil][Evil]]
 - [[#spell-checking][Spell Checking]]
 - [[#ui-enhance][UI Enhance]]
-  - [[#modeline][modeline]]
+  - [[#posframe][Posframe]]
   - [[#wgrep][Wgrep]]
+  - [[#avy][avy]]
   - [[#ace-window][ace-window]]
   - [[#eldoc][Eldoc]]
   - [[#orderless][Orderless]]
@@ -1058,7 +1059,7 @@ For me Helm fits me better because:
 2. During my Vim era I use Shougo's wonderful plugins Unite/Denite, which mimics the logic of Helm, so switching to Emacs with Helm mostly does not require switching my mind model for how to find things.
 3. Ivy is new compared with Helm, so it does not have as many add-ons available as Helm.
 
-** modeline
+** COMMENT modeline
 Modified from [[https://github.com/DogLooksGood/dogEmacs/blob/master/elisp/init-modeline.el][DogLooksGood]]'s config.
 #+begin_src emacs-lisp
   (defun +format-mode-line ()
@@ -1097,20 +1098,51 @@ Modified from [[https://github.com/DogLooksGood/dogEmacs/blob/master/elisp/init-
     )
 #+end_src
 
+** avy
+[[https://github.com/abo-abo/avy][avy]] is "a GNU Emacs package for jumping to visible text using a char-based decision tree", and it is the magic behind =ace-window=, =evil-eazymotion= etc.
+#+begin_src emacs-lisp
+  (use-package avy
+    :straight t
+    :custom
+    (avy-keys '(?a ?o ?e ?u ?i ?d ?h ?t ?n ?s) "dvorak home row"))
+#+end_src
+
 ** ace-window
+:PROPERTIES:
+:ID:       6840d90b-7b2a-4250-abf0-34649ce6cfee
+:END:
 [[https://github.com/abo-abo/ace-window][ace-window]] is helpful to do things the "embark" way: pick a window, then decide what to do with it.
 #+begin_src emacs-lisp
   (use-package ace-window
     :straight t
+    :custom
+    (aw-keys '(?1 ?2 ?3 ?4 ?9 ?0 ?5 ?6 ?7 ?8))
+    (aw-translate-char-function (lambda (c)
+                                  (pcase c
+                                    (?\[ ?7)
+                                    (?\{ ?5)
+                                    (?\} ?3)
+                                    (?\( ?1)
+                                    (?= ?9)
+                                    (?* ?0)
+                                    (?\) ?2)
+                                    (?+ ?4)
+                                    (?\] ?6)
+                                    (?! ?8)
+                                    (_ c))))
+
+
     :general
-    (general-nmap "C-w a" #'ace-window)
+    ([remap evil-window-next] #'ace-window)
+    ([remap other-window] #'ace-window)
     :init
     (general-setq aw-dispatch-alist
-                  '((?d aw-delete-window "Delete Window")
+                  '((?q aw-delete-window "Delete Window")
                     (?m aw-swap-window "Swap Windows")
                     (?M aw-move-window "Move Window")
                     (?c aw-copy-window "Copy Window")
                     (?j aw-switch-buffer-in-window "Select Buffer")
+                    (?d aw-use-frame "Make frame for window")
                     (?n aw-flip-window)
                     (?u aw-switch-buffer-other-window "Switch Buffer Other Window")
                     (?e aw-execute-command-other-window "Execute Command Other Window")
