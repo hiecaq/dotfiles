@@ -1217,13 +1217,43 @@ Eldoc is a little bit annoying when the doc is longer than one single line. [[ht
 #+end_src
 
 ** Orderless
+:PROPERTIES:
+:ID:       f8cd6aef-c95c-4a2e-8685-1280267f67ec
+:END:
 =orderless= add space-separated component (which then matches against several matching styles) completion style to minibuffer and other completion UI.
 #+begin_src emacs-lisp
   (use-package orderless
     :straight t
+    :init
+    (general-setq completion-category-defaults nil)
+    ;; see https://www.reddit.com/r/emacs/comments/ns5jfu/defmacro_and_nested_backquotes_confusion/
+    (defmacro my/orderless--dispatch-prefix-def (prefix style)
+      `(defun ,(intern (format "my/%s-prefix" (symbol-name (eval style)))) (pattern _index _total)
+         (cond
+          ((equal ,prefix pattern)
+           '(orderless-literal . ""))
+          ((string-prefix-p ,prefix pattern)
+           (cons ,style  (substring pattern 1))))))
+    (my/orderless--dispatch-prefix-def "$" 'orderless-regexp)
+    (my/orderless--dispatch-prefix-def "=" 'orderless-literal)
+    (my/orderless--dispatch-prefix-def "!" 'orderless-without-literal)
+    (my/orderless--dispatch-prefix-def "-" 'orderless-prefixes)
+    (my/orderless--dispatch-prefix-def "'" 'orderless-initialism)
+    (my/orderless--dispatch-prefix-def ";" 'orderless-flex)
     :custom
+    (orderless-component-separator 'orderless-escapable-split-on-space "use =\ = to escape")
     (completion-styles '(orderless basic))
-    (completion-category-defaults nil))
+    (completion-category-overrides '((file (styles basic partial-completion))))
+    (orderless-matching-styles '(orderless-regexp))
+    (orderless-style-dispatchers '(my/orderless-regexp-prefix
+                                   my/orderless-literal-prefix
+                                   my/orderless-without-literal-prefix
+                                   my/orderless-prefixes-prefix
+                                   my/orderless-initialism-prefix
+                                   my/orderless-flex-prefix
+                                   )))
+
+
 #+end_src
 
 ** Vertico
@@ -1764,8 +1794,12 @@ I've switched from =company= to =corfu=, but I'll keep the commented configs her
     :demand t
     :custom
     (corfu-preview-current nil)
-    :bind
-    (:map corfu-map ("SPC" . corfu-insert-separator))
+    (corfu-quit-at-boundary nil)
+    :general
+    (:keymaps 'corfu-map :states '(insert emacs)
+              "<escape>" #'corfu-reset
+              "SPC" #'corfu-insert-separator)
+    (:states 'insert "<backtab>" #'completion-at-point)
     :init
     (defun corfu-enable-always-in-minibuffer ()
       "Enable Corfu in the minibuffer if Vertico/Mct are not active."
