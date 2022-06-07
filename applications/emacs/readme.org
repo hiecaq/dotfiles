@@ -1176,8 +1176,8 @@ Modified from [[https://github.com/DogLooksGood/dogEmacs/blob/master/elisp/init-
   (use-package eldoc
     :straight t
     :custom
-    (global-eldoc-mode nil "too annoying")
     (eldoc-documentation-strategy #'eldoc-documentation-compose)
+    (eldoc-echo-area-use-multiline-p nil)
     :init
     (defun my/eldoc-posframe-hide ()
       (posframe-hide eldoc--doc-buffer))
@@ -1366,7 +1366,8 @@ Reference:
     ('embark-file-map     "o" #'my/embark-ace-find-file)
     ('embark-buffer-map   "o" #'my/embark-ace-switch-to-buffer)
     ('embark-bookmark-map "o" #'my/embark-ace--bookmark-jump)
-    :config
+    :custom
+    (embark-cycle-key (kbd "C-'"))
     )
 #+end_src
 
@@ -2113,49 +2114,80 @@ Replace =projectile= with the emacs built-in project (since I'm still using emac
 #+end_src
 
 ** flymake
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :noweb yes
   (use-package flymake
     :straight t
     :custom
-    (flymake-no-changes-timeout 1.0)
+    <<flymake-custom>>
     :hook
     (prog-mode . flymake-mode)
     (text-mode . flymake-mode)
     :init
-
-    (defvar my/flymake-posframe--buffer "*flymake-posframe*")
-
-    (defun my/flymake-posframe-hide ()
-      (posframe-hide my/flymake-posframe--buffer))
-
-    (defun my/flymake-posframe-auto-hide-hook ()
-      (when (not (eq this-command #'my/flymake-posframe-show))
-        (my/flymake-posframe-hide)
-        (remove-hook 'post-command-hook #'my/flymake-posframe-auto-hide-hook t)))
-
-    (defun my/flymake-posframe--format (diag)
-      (let* ((type (flymake-diagnostic-type diag))
-             (face (flymake--lookup-type-property type 'mode-line-face 'flymake-error))
-             (text (flymake-diagnostic-text diag)))
-        (propertize text 'face face)))
-
-    (defun my/flymake-posframe-show ()
-      (interactive)
-      (when-let* ((diags (flymake-diagnostics (point)))
-                  (diags (mapconcat #'my/flymake-posframe--format diags "\n"))
-                  (buffer (get-buffer-create my/flymake-posframe--buffer)))
-        (with-current-buffer buffer
-          (erase-buffer)
-          (insert diags))
-        (when (posframe-workable-p)
-          (posframe-show buffer
-                         :position (point)
-                         :border-width 1))
-        (add-hook 'post-command-hook #'my/flymake-posframe-auto-hide-hook 0 t)))
+    <<flymake-init>>
     :general
-    (general-nmap "L" #'my/flymake-posframe-show))
+    <<flymake-general>>
+    )
 #+end_src
 
+Use a =posframe= at point to show flymake diagnostics. This is mostly the same like the built-in tooltip version, but I haven't found a good way to show that with keyboard mappings rather than mouse hovering.
+#+begin_src emacs-lisp :tangle no :noweb-ref flymake-init
+  (defvar my/flymake-posframe--buffer "*flymake-posframe*")
+
+  (defun my/flymake-posframe-hide ()
+    (posframe-hide my/flymake-posframe--buffer))
+
+  (defun my/flymake-posframe-auto-hide-hook ()
+    (when (not (eq this-command #'my/flymake-posframe-show))
+      (my/flymake-posframe-hide)
+      (remove-hook 'post-command-hook #'my/flymake-posframe-auto-hide-hook t)))
+
+  (defun my/flymake-posframe--format (diag)
+    (let* ((type (flymake-diagnostic-type diag))
+           (face (flymake--lookup-type-property type 'mode-line-face 'flymake-error))
+           (text (flymake-diagnostic-text diag)))
+      (propertize text 'face face)))
+
+  (defun my/flymake-posframe-show ()
+    (interactive)
+    (when-let* ((diags (flymake-diagnostics (point)))
+                (diags (mapconcat #'my/flymake-posframe--format diags "\n"))
+                (buffer (get-buffer-create my/flymake-posframe--buffer)))
+      (with-current-buffer buffer
+        (erase-buffer)
+        (insert diags))
+      (when (posframe-workable-p)
+        (posframe-show buffer
+                       :position (point)
+                       :border-width 1))
+      (add-hook 'post-command-hook #'my/flymake-posframe-auto-hide-hook 0 t)))
+#+end_src
+
+I bound this to normal state =L=, since Vim and Evil use =[l=, =]l= to jump between warnings, where =L= stands for linting I believe. Besides, the old function bound on =L= is to go to the bottom of window, which is useless from my point of view.
+#+begin_src emacs-lisp :tangle no :noweb-ref flymake-general
+  (general-nmap "L" #'my/flymake-posframe-show)
+#+end_src
+
+Also, I don't want flymake to automatically run linting when idle: if the timeout is too short, it is noticeably slow with LSP, especially when typing; if it is too long, I have to wait for centuries before the results showing up. Instead, Evil's modal editing seems perfect to fit in this workflow, because every time I quit to normal state marks an end of a batched changes.
+#+begin_src emacs-lisp :tangle no :noweb-ref flymake-init
+  (defun my/flymake-after-evil-state-change-hook ()
+    (when flymake--recent-changes
+      (flymake-log :debug "starting syntax check as evil state was changed")
+      (flymake-start t)))
+  (defun my/flymake-mode-hook ()
+    (cond (flymake-mode
+           (remove-hook 'eldoc-documentation-functions 'flymake-eldoc-function t)
+           (add-hook 'evil-normal-state-entry-hook #'my/flymake-after-evil-state-change-hook nil t))
+          (t
+           (remove-hook 'evil-normal-state-entry-hook 'my/flymake-after-evil-state-change-hook t)
+           )))
+  (add-hook 'flymake-mode-hook #'my/flymake-mode-hook)
+#+end_src
+I also turned off Eldoc integration here, because I've implemented a dedicated =posframe= for it, making this feature useless.
+
+Turn off the idle linting as clarified above. Note that we should not remove the ~flymake-after-change-function~ hook totally, because ~flymake--recent-changes~ relies on it, and I use it to speed up the Evil state changing hook.
+#+begin_src emacs-lisp :tangle no :noweb-ref flymake-custom
+    (flymake-no-changes-timeout nil)
+#+end_src
 ** COMMENT flycheck
 :PROPERTIES:
 :ID:       9e77c0ef-f36c-4db9-af00-e7fd0056e4c8
