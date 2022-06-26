@@ -114,6 +114,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#yaml][Yaml]]
   - [[#dhall][dhall]]
   - [[#glsl][glsl]]
+  - [[#english][English]]
 - [[#tools][Tools]]
   - [[#vc][vc]]
   - [[#tramp][tramp]]
@@ -3438,6 +3439,20 @@ reference:
     :straight t
     :mode "\\.glsl\\'")
 #+end_src
+
+** English
+:PROPERTIES:
+:ID:       b0711db9-d3d2-4092-b47e-96517164eb06
+:END:
+[[https://github.com/duckwork/titlecase.el][titlecase]] solves one of the hardest problem in (English) writing: capitalizing titles. its most impressing feature is that it supports many standard styles, like [[https://www.chicagomanualofstyle.org/book/ed17/part2/ch08/toc.html][Chicago]] and [[https://blog.apastyle.org/apastyle/capitalization/][APA]]. I mainly use it with embark.
+#+begin_src emacs-lisp
+  (use-package titlecase
+    :straight t
+    :general
+    ('embark-heading-map "T" #'titlecase-line)
+    ('embark-region-map "T" #'titlecase-region))
+#+end_src
+
 
 * Tools
 ** vc
