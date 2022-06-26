@@ -681,9 +681,9 @@ In non-inserting modes, enter transient god mode when a single =SPC= is typed.
     (:states '(normal visual motion) "SPC" #'god-execute-with-current-bindings)
 #+end_src
 
-In inserting modes, enter transient god mode when =C-ESC= is typed. On my programmable keyboard that's the two split space bars typed together.
+In inserting modes (and motion for org-agenda etc), enter transient god mode when =C-ESC= is typed. On my programmable keyboard that's the two split space bars typed together.
 #+begin_src emacs-lisp :tangle no :noweb-ref god-mode-general
-    (:states '(insert emacs) "C-<escape>" #'god-execute-with-current-bindings)
+    (:states '(insert emacs motion) "C-<escape>" #'god-execute-with-current-bindings)
 #+end_src
 
 A following "godish" =SPC= triggers the leader key:
@@ -2573,7 +2573,10 @@ And of course, =org-mode='s Evil integration:
     :config
     (evil-org-set-key-theme)
     (require 'evil-org-agenda)
-    (evil-org-agenda-set-keys))
+    (evil-org-agenda-set-keys)
+    (general-unbind 'motion 'org-agenda-mode-map "SPC")
+    (general-unbind 'org-agenda-mode-map "SPC")
+    )
 #+end_src
 
 Here are some evil-specific bindings:
@@ -3050,7 +3053,7 @@ I decide to switch to the org built-in =org-cite=, because I don't need most of 
     (org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
     :general
     (my/leader-def 'normal "C" #'org-roam-capture)
-    (my/leader-def 'normal "h n" #'org-roam-node-find)
+    (my/leader-def 'normal "r n" #'org-roam-node-find)
     (my/leader-def 'normal 'org-mode-map "r b" #'org-roam-buffer-toggle)
     (my/leader-def 'normal 'org-mode-map "r g" #'org-roam-graph)
     (my/leader-def 'normal 'org-mode-map "r a t" #'org-roam-tag-add)
@@ -3059,6 +3062,55 @@ I decide to switch to the org built-in =org-cite=, because I don't need most of 
     (my/leader-def '(normal insert) 'org-mode-map "r i" #'org-roam-node-insert)
     :config
     (org-roam-db-autosync-mode))
+#+end_src
+
+*** org-roam-dailies
+:PROPERTIES:
+:ID:       f38a6715-7ad6-426e-a011-e825beaaa12b
+:END:
+=org-roam-dailies= is =org-roam='s lightweight implementation of a subset of features from [[https://github.com/bastibe/org-journal][org-journal]]. I plan on building on top of this with some elisp code to fit into my need.
+#+begin_src emacs-lisp
+  (use-package org-roam-dailies
+    :straight org-roam
+    :custom
+    (org-roam-dailies-capture-templates
+     '(("d" "default" entry
+        "* %?"
+        :target (file+head "%<%Y-%m-%d>.org"
+                           "#+title: %<%Y-%m-%d>\n"))
+       ("l" "log" item
+        "- %U %?"
+        :target (file+head+olp "%<%Y-%m-%d>.org"
+                               "#+title: %<%Y-%m-%d>\n"
+                               ("Log")))
+       ("L" "log with context" item
+        "- %U at %a %?"
+        :target (file+head+olp "%<%Y-%m-%d>.org"
+                               "#+title: %<%Y-%m-%d>\n"
+                               ("Log")))
+       ))
+    :init
+    (defun my/org-roam-dailies-goto-default-template (r)
+      (append r (list "d")))
+    (defun my/org-roam-dailies-goto-date-default-template (r)
+      (append r (list nil "d")))
+    (advice-add #'org-roam-dailies-goto-yesterday :filter-args #'my/org-roam-dailies-goto-default-template)
+    (advice-add #'org-roam-dailies-goto-today :filter-args #'my/org-roam-dailies-goto-default-template)
+    (advice-add #'org-roam-dailies-goto-tomorrow :filter-args #'my/org-roam-dailies-goto-default-template)
+    (advice-add #'org-roam-dailies-goto-date :filter-args #'my/org-roam-dailies-goto-date-default-template)
+    (defun my/org-roam-dailies-log-today ()
+      (interactive)
+      (org-roam-dailies-capture-today nil "l"))
+    (defun my/org-roam-dailies-log-today-with-context ()
+      (interactive)
+      (org-roam-dailies-capture-today nil "L"))
+    :general
+    (my/leader-def '(normal motion) "d" 'org-roam-dailies-map)
+    (org-roam-dailies-map "v" #'org-roam-dailies-goto-date)
+    (org-roam-dailies-map "c" #'org-roam-dailies-capture-date)
+    (org-roam-dailies-map "l" #'my/org-roam-dailies-log-today)
+    (org-roam-dailies-map "L" #'my/org-roam-dailies-log-today-with-context)
+    )
 #+end_src
 
 *** org-roam-protocol
