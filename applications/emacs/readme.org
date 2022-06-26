@@ -70,7 +70,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#vundo][Vundo]]
   - [[#treemacs][Treemacs]]
   - [[#with-editor][with-editor]]
-  - [[#origami][Origami]]
+  - [[#hideshow][Hideshow]]
   - [[#separedit][Separedit]]
   - [[#shackle][shackle]]
 - [[#completion][Completion]]
@@ -1741,11 +1741,18 @@ Reference:
     (eshell-mode . with-editor-export-editor))
 #+end_src
 
-** Origami
+** Hideshow
+=hideshow= is Emacs' built-in code folding package.
+#+begin_src emacs-lisp
+  (use-package hideshow
+    :hook (prog-mode . hs-minor-mode))
+#+end_src
+
+** COMMENT Origami
 :PROPERTIES:
 :ID:       33d8fc1a-c433-41fc-b9e5-a2b4571dc68b
 :END:
-[[https://github.com/gregsexton/origami.el][origami]] provides code folding for Emacs, and is also an optional dependencies for Evil's =zo=-ish family.
+[[https://github.com/gregsexton/origami.el][origami]] provides code folding for Emacs, and is also an optional dependencies for Evil's =zo=-ish family. It seems unmaintained, so I switched to the built-in hide-show mode.
 #+begin_src emacs-lisp
   (use-package origami
     :straight t
