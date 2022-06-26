@@ -413,7 +413,7 @@ One extra thing: Emacs comes with a customization interface, which supports sett
 #+begin_src emacs-lisp
   (use-package no-littering
     :straight (no-littering :type git :host github :repo "emacscollective/no-littering"
-                            :fork (:host github :repo "quinoa42/no-littering"))
+                            :fork (:host github :repo "hiecaq/no-littering"))
     :init
     (setq no-littering-etc-directory
         (expand-file-name "config/" user-emacs-directory))
@@ -899,10 +899,14 @@ This plugin actually works for native Evil's =f/F/t/T=, but I use it mainly for 
 [[https://github.com/bling/evil-visualstar][evil-visualstar]] allow using =*= =#= on all visual selection.
 #+begin_src emacs-lisp
   (use-package evil-visualstar
-    :straight t
+    :straight (evil-visualstar :type git :host github :repo "bling/evil-visualstar"
+                               :fork (:host github :repo "hiecaq/evil-visualstar"))
     :after evil
-    :config
-    (global-evil-visualstar-mode))
+    :general
+    ('normal [remap evil-ex-search-word-forward] #'evil-visualstar-operator-forward-symbol)
+    ('normal [remap evil-ex-search-word-backward] #'evil-visualstar-operator-backward-symbol)
+    ('visual [remap evil-ex-search-word-forward] #'evil-visualstar-operator-forward)
+    ('visual [remap evil-ex-search-word-backward] #'evil-visualstar-operator-backward))
 #+end_src
 
 *** evil-matchit
