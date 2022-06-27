@@ -1296,6 +1296,8 @@ This basically set =completing-read-function= to be =vertico= itself, a vertical
     (xref-show-definitions-function #'consult-xref)
     (xref-show-xrefs-function #'consult-xref)
     :init
+    (when (executable-find "plocate")
+      (general-setq consult-locate-args "plocate --ignore-case --existing"))
     ;; based on noctuid's tweak from https://github.com/minad/consult/issues/318#issuecomment-882067919
     (defun my/consult-line-evil-history (&rest _)
       "Add latest `consult-line' search pattern to the evil search history ring.
@@ -2737,6 +2739,42 @@ To use GTD styles in my org-mode workflow, it's necessary to have those agenda v
                     ((org-agenda-span 14))))
            ((org-agenda-sorting-strategy '(priority-down tag-up))
             (org-agenda-entry-types '(org-agenda-entry-types '(:deadline :timestamp :sexp)))))))
+#+end_src
+
+*** custom links
+Based on [[https://karl-voit.at/2022/02/10/lfile/][blog post]] from [[https://github.com/novoid][Karl Voit]].
+#+begin_src emacs-lisp :tangle no :noweb-ref org-mode-init
+  (defun my/handle-lfile-link (opener querystring)
+    ;; get a list of hits
+    (let ((queryresults (split-string
+                         (s-trim
+                          (shell-command-to-string
+                           (concat
+                            "plocate --existing \""
+                            querystring
+                            "\" "
+                            )))
+                         "\n" t)))
+      ;; check length of list (number of lines)
+      (cond
+       ((= 0 (length queryresults))
+        ;; edge case: empty query result
+        (message "Sorry, no results found for query: %s" querystring))
+       ((= 1 (length queryresults))
+        ;; exactly one hit:
+        (funcall opener (car queryresults))
+        )
+       (t
+        ;; in any other case:
+        (alert (format "Sorry, multiple results found for query: %s" querystring))
+        ;; FIXXME: ask user to select among multiple hits.
+        )
+       )))
+  (org-link-set-parameters
+   "lfile"
+   :follow (lambda (filename) (my/handle-lfile-link #'consult-file-externally filename))
+   :help-echo "Opens the file located via \"locate\" with your default application"
+   )
 #+end_src
 
 *** Effort measurement / time cost estimates
