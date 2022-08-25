@@ -55,6 +55,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#god-mode][God mode]]
   - [[#evil][Evil]]
 - [[#spell-checking][Spell Checking]]
+  - [[#flyspell-correct][flyspell-correct]]
 - [[#ui-enhance][UI Enhance]]
   - [[#posframe][Posframe]]
   - [[#wgrep][Wgrep]]
@@ -515,6 +516,7 @@ Emacs has its own =bookmark= system built-in:
     (text-mode . subword-mode)
     (prog-mode . subword-mode))
 #+end_src
+
 * Colors
 :PROPERTIES:
 :ID:       e5d438ab-32ff-4055-91da-37c3452c13d2
@@ -1057,6 +1059,17 @@ Emacs comes with its own spell checking mode (=ispell.el=)...
     :hook
     (text-mode . flyspell-mode)
     (prog-mode . flyspell-prog-mode))
+#+end_src
+
+** flyspell-correct
+The default UI for =ispell= is quite hard to use, and there is a package [[https://github.com/d12frosted/flyspell-correct][flyspell-correct]] that makes use of the ~complete-read~ interface to make things much more usable.
+#+begin_src emacs-lisp
+  (use-package flyspell-correct
+    :straight t
+    :if (eq system-type 'gnu/linux)
+    :after flyspell
+    :general
+    ([remap ispell-word] #'flyspell-correct-wrapper))
 #+end_src
 
 * UI Enhance
@@ -1825,7 +1838,6 @@ I've switched from =company= to =corfu=, but I'll keep the commented configs her
     (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
     (general-setq tab-always-indent 'complete)
     (global-corfu-mode +1))
-
 #+end_src
 ** COMMENT Company
 :PROPERTIES:
