@@ -3104,22 +3104,15 @@ I decide to switch to the org built-in =org-cite=, because I don't need most of 
 :END:
 [[https://www.orgroam.com/][org-roam]] is the final key to the Org ecosystem (hopefully)!
 #+begin_src emacs-lisp
+  (use-package emacsql-sqlite-builtin
+    :straight t)
+
   (use-package org-roam
     :straight t
     :demand t
-    :init
-    ;; from https://github.com/org-roam/org-roam/issues/1565
-    (cl-defmethod org-roam-node-hierarchy ((node org-roam-node))
-      "Return the hierarchy for the node."
-      (let ((title (org-roam-node-title node))
-            (olp (org-roam-node-olp node))
-            (level (org-roam-node-level node))
-            (filetitle (org-roam-node-file-title node)))
-        (concat
-         (if (> level 0) (concat filetitle " > "))
-         (if (> level 1) (concat (string-join olp " > ") " > "))
-         title)))
+    :after emacsql-sqlite-builtin
     :custom
+    (org-roam-database-connector 'sqlite-builtin)
     (org-roam-protocol-store-links nil)
     (org-roam-directory "~/documents/notes")
     (org-roam-capture-templates
@@ -3142,6 +3135,17 @@ I decide to switch to the org built-in =org-cite=, because I don't need most of 
     (my/leader-def 'normal 'org-mode-map "r a a" #'org-roam-alias-add)
     (my/leader-def '(normal insert) 'org-mode-map "r i" #'org-roam-node-insert)
     :config
+    ;; from https://github.com/org-roam/org-roam/issues/1565
+    (cl-defmethod org-roam-node-hierarchy ((node org-roam-node))
+      "Return the hierarchy for the node."
+      (let ((title (org-roam-node-title node))
+            (olp (org-roam-node-olp node))
+            (level (org-roam-node-level node))
+            (filetitle (org-roam-node-file-title node)))
+        (concat
+         (if (> level 0) (concat filetitle " > "))
+         (if (> level 1) (concat (string-join olp " > ") " > "))
+         title)))
     (org-roam-db-autosync-mode))
 #+end_src
 
