@@ -67,7 +67,6 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#marginalia][Marginalia]]
   - [[#consult][Consult]]
   - [[#embark][Embark]]
-  - [[#highlight-indent-guides][highlight-indent-guides]]
   - [[#vundo][Vundo]]
   - [[#treemacs][Treemacs]]
   - [[#with-editor][with-editor]]
@@ -1576,11 +1575,11 @@ I don't use heavily on ivy anymore, but I still have it because its the dependen
     (general-imap ivy-minibuffer-map "C-n" 'ivy-next-line)
     :commands (swiper swiper-backward))
 #+end_src
-** highlight-indent-guides
+** COMMENT highlight-indent-guides
 :PROPERTIES:
 :ID:       62d5d35d-9049-45bf-b9c7-fb1318e65765
 :END:
-[[https://github.com/DarthFennec/highlight-indent-guides][highlight-indent-guides]] shows indent guides (with =font lock=)!
+[[https://github.com/DarthFennec/highlight-indent-guides][highlight-indent-guides]] shows indent guides (with =font lock=)! I found it too ugly when using languages from the Lisp and ML families, so I've turn it off.
 #+begin_src emacs-lisp
   (use-package highlight-indent-guides
     :straight t
