@@ -640,15 +640,6 @@ Then, given that I'm using emacs' bindings in insert state, there is no point to
   ([remap evil-emacs-state] 'evil-normal-state)
 #+end_src
 
-[[https://github.com/christoomey/vim-tmux-navigator][vim-tmux-navigator]]-like window control:
-#+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-general
-  (general-nmap "C-j" 'evil-window-down)
-  (general-nmap "C-k" 'evil-window-up)
-  (general-nmap "C-h" 'evil-window-left)
-  (general-nmap "C-l" 'evil-window-right)
-#+end_src
-It's okay to rebind =C-h= because =<F1>= basically does the same thing.
-
 My UHK's keybinding is designed for using with Vim, so my Alt is really far far away from where I would normally position my fingers. Since I did not bind =S-s= =S-x= in my =xmonad= config, it's reasonable to bind these to their Meta relatives:
 #+begin_src emacs-lisp :tangle no :noweb-ref evil-mode-general
   (when (eq system-type 'gnu/linux)
@@ -1657,11 +1648,6 @@ gtags --gtagslabel=new-ctags
       "t b" 'treemacs-bookmark
       "t f" 'treemacs-find-file
       "t t" 'treemacs-find-tag)
-    (evil-treemacs-state-map
-      "C-j" 'evil-window-down
-      "C-k" 'evil-window-up
-      "C-h" 'evil-window-left
-      "C-l" 'evil-window-right)
     :config
     (treemacs-filewatch-mode +1)
     (treemacs-follow-mode +1)
