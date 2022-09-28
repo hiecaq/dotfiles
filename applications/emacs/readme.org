@@ -236,6 +236,11 @@ Load =xdg= helper methods:
   (require 'xdg)
 #+end_src
 
+Always use =y-or-p= over =yes-or-no=:
+#+begin_src emacs-lisp
+  (setq use-short-answers t)
+#+end_src
+
 * Emacs as a server
 :PROPERTIES:
 :ID:       61824a41-57c9-48ac-bae6-cedbc44da756
