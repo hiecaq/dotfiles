@@ -2206,7 +2206,7 @@ Also, I don't want flymake to automatically run linting when idle: if the timeou
   (defun my/flymake-after-evil-state-change-hook ()
     (when flymake--recent-changes
       (flymake-log :debug "starting syntax check as evil state was changed")
-      (flymake-start t)))
+      (flymake-start nil)))
   (defun my/flymake-mode-hook ()
     (cond (flymake-mode
            (remove-hook 'eldoc-documentation-functions 'flymake-eldoc-function t)
