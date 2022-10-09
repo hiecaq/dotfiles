@@ -57,6 +57,7 @@ This file might be out of sync. The newest version is available [[https://github
 - [[#spell-checking][Spell Checking]]
   - [[#flyspell-correct][flyspell-correct]]
 - [[#ui-enhance][UI Enhance]]
+  - [[#show-paren-mode][show-paren-mode]]
   - [[#posframe][Posframe]]
   - [[#wgrep][Wgrep]]
   - [[#avy][avy]]
@@ -1078,6 +1079,14 @@ For me Helm fits me better because:
 2. During my Vim era I use Shougo's wonderful plugins Unite/Denite, which mimics the logic of Helm, so switching to Emacs with Helm mostly does not require switching my mind model for how to find things.
 3. Ivy is new compared with Helm, so it does not have as many add-ons available as Helm.
 
+** show-paren-mode
+show-paren-mode is an Emacs built-in that highlight the paired parentheses when the cursor is at certain positions. It is default on.
+#+begin_src elisp
+  (use-package paren
+    :custom
+    (show-paren-when-point-in-periphery t)
+    (show-paren-when-point-inside-paren t))
+#+end_src
 ** COMMENT modeline
 Modified from [[https://github.com/DogLooksGood/dogEmacs/blob/master/elisp/init-modeline.el][DogLooksGood]]'s config.
 #+begin_src emacs-lisp
