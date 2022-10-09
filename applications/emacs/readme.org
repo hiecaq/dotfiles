@@ -85,6 +85,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#flymake][flymake]]
   - [[#tree-sitter][tree-sitter]]
   - [[#eglot][eglot]]
+  - [[#aggressive-indent-mode][aggressive-indent-mode]]
 - [[#org-mode][Org Mode]]
   - [[#general-settings-1][general settings]]
   - [[#general-keybindings][general keybindings]]
@@ -2509,6 +2510,23 @@ Based on [[https://github.com/emacs-lsp/lsp-ui/pull/208][this]] PR, there is no 
     :hook ((c-mode c++-mode asm-mode) . lsp-origami-mode))
 #+end_src
 
+** aggressive-indent-mode
+[[https://github.com/Malabarba/aggressive-indent-mode][aggressize-indent-mode]] basically reindents what you have changed after every change you made.
+#+begin_src emacs-lisp
+  (use-package aggressive-indent
+    :straight t
+    :hook (emacs-lisp-mode scheme-mode)
+    :custom
+    (aggressive-indent-dont-indent-if
+     '((evil-insert-state-p) (evil-replace-state-p)))
+    :init
+    (defun my/aggressive-indent-after-change ()
+      (cond (aggressive-indent-mode
+             (add-hook 'evil-normal-state-entry-hook #'aggressive-indent--process-changed-list-and-indent nil t))
+            (t
+             (remove-hook 'evil-normal-state-entry-hook #'aggressive-indent--process-changed-list-and-indent nil t))))
+    (add-hook 'aggressive-indent-mode-hook #'my/aggressive-indent-after-change))
+#+end_src
 * Org Mode
 :PROPERTIES:
 :ID:       80ced8bb-ea09-4aa0-95f7-7058430a4593
