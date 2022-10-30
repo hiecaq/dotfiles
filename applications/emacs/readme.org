@@ -86,6 +86,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#flymake][flymake]]
   - [[#tree-sitter][tree-sitter]]
   - [[#eglot][eglot]]
+  - [[#electric-pair-mode][electric-pair-mode]]
   - [[#aggressive-indent-mode][aggressive-indent-mode]]
 - [[#org-mode][Org Mode]]
   - [[#general-settings-1][general settings]]
@@ -104,6 +105,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#org-download][org-download]]
   - [[#style-and-faces][style and faces]]
 - [[#language-specific][Language specific]]
+  - [[#lisp-and-its-dialects][Lisp and its dialects]]
   - [[#dot][dot]]
   - [[#c-and-c][C and C++]]
   - [[#plantuml][plantuml]]
@@ -2519,6 +2521,13 @@ Based on [[https://github.com/emacs-lsp/lsp-ui/pull/208][this]] PR, there is no 
     :hook ((c-mode c++-mode asm-mode) . lsp-origami-mode))
 #+end_src
 
+** electric-pair-mode
+=electric-pair-mode= is a built-in package that auto insert the left bracket/parentheses when we type the left one. It also skip the right bracket/parentheses if we type it. This behavior might be familiar to many IDE users.
+#+begin_src emacs-lisp
+  (use-package elec-pair
+    :hook ((emacs-lisp-mode scheme-mode) . electric-pair-local-mode))
+#+end_src
+
 ** aggressive-indent-mode
 [[https://github.com/Malabarba/aggressive-indent-mode][aggressize-indent-mode]] basically reindents what you have changed after every change you made.
 #+begin_src emacs-lisp
@@ -3344,6 +3353,17 @@ I don't want the large first levels to show up again at level more than 8. Thus 
 #+end_src
 
 * Language specific
+** Lisp and its dialects
+*** Scheme and its dialects
+#+begin_src emacs-lisp
+  (use-package geiser
+    :straight t)
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package geiser-guile
+    :straight t)
+#+end_src
 ** dot
 :PROPERTIES:
 :ID:       79a32e59-ef93-43bd-a677-01b01f6af39c
