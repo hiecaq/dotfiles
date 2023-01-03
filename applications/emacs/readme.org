@@ -535,16 +535,13 @@ I've switched away from gruvbox to modus.
   ;;; For packaged versions which must use `require':
   (use-package modus-themes
     :straight t
+    :demand t
     :init
     ;; Add all your customizations prior to loading the themes
     (setq modus-themes-mixed-fonts t)
-
-    ;; Load the theme files before enabling a theme
-    (modus-themes-load-themes)
     :config
     ;; Load the theme of your choice:
-    ;; (modus-themes-load-operandi)
-    (modus-themes-load-vivendi)
+    (load-theme 'modus-vivendi :no-confirm)
     :bind ("<f5>" . modus-themes-toggle))
 
 #+end_src
