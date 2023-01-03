@@ -58,6 +58,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#flyspell-correct][flyspell-correct]]
 - [[#ui-enhance][UI Enhance]]
   - [[#show-paren-mode][show-paren-mode]]
+  - [[#highlight-parentheses][highlight-parentheses]]
   - [[#posframe][Posframe]]
   - [[#wgrep][Wgrep]]
   - [[#avy][avy]]
@@ -1086,6 +1087,44 @@ show-paren-mode is an Emacs built-in that highlight the paired parentheses when 
     :custom
     (show-paren-when-point-in-periphery t)
     (show-paren-when-point-inside-paren t))
+#+end_src
+
+** highlight-parentheses
+#+begin_src emacs-lisp
+  (use-package highlight-parentheses
+    :straight t
+    :after modus-themes
+    :init
+    (defvar my-highlight-parentheses-use-background t
+      "Prefer `highlight-parentheses-background-colors'.")
+
+    (setq my-highlight-parentheses-use-background nil) ; Set to nil to disable backgrounds
+    (modus-themes-with-colors
+      ;; Our preference for setting either background or foreground
+      ;; styles, depending on `my-highlight-parentheses-use-background'.
+      (if my-highlight-parentheses-use-background
+
+          ;; Here we set color combinations that involve both a background
+          ;; and a foreground value.
+          (setq highlight-parentheses-background-colors (list bg-cyan-intense
+                                                              bg-magenta-intense
+                                                              bg-green-intense
+                                                              bg-yellow-intense)
+                highlight-parentheses-colors (list cyan
+                                                   magenta
+                                                   green
+                                                   yellow))
+
+        ;; And here we pass only foreground colors while disabling any
+        ;; backgrounds.
+        (setq highlight-parentheses-colors (list green-intense
+                                                 magenta-intense
+                                                 blue-intense
+                                                 red-intense)
+              highlight-parentheses-background-colors nil)))
+    :hook
+    (prog-mode . highlight-parentheses-mode)
+    (minibuffer-setup . highlight-parentheses-minibuffer-setup))
 #+end_src
 ** COMMENT modeline
 Modified from [[https://github.com/DogLooksGood/dogEmacs/blob/master/elisp/init-modeline.el][DogLooksGood]]'s config.
