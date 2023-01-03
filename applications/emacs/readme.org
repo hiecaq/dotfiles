@@ -73,8 +73,8 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#with-editor][with-editor]]
   - [[#hideshow][Hideshow]]
   - [[#separedit][Separedit]]
-  - [[#shackle][shackle]]
   - [[#topsy][Topsy]]
+  - [[#enforcing-display-buffer-rules][Enforcing display buffer rules]]
 - [[#completion][Completion]]
   - [[#corfu][Corfu]]
 - [[#templates][Templates]]
@@ -1810,8 +1810,9 @@ Reference:
     :hook (prog-mode . topsy-mode))
 #+end_src
 
-** shackle
+** COMMENT shackle
 [[https://depp.brause.cc/shackle/][shackle]] enforces rules for pop-up windows, making buffer-switching more predictable.
+I switched to use Emacs' built-in facilities directly.
 #+begin_src emacs-lisp
   (use-package shackle
     :straight t
@@ -1824,6 +1825,14 @@ Reference:
                      (magit-status-mode :select t :inhibit-window-quit t :same t)))
     :config
     (shackle-mode +1))
+#+end_src
+
+** Enforcing display buffer rules
+see [[https://www.masteringemacs.org/article/demystifying-emacs-window-manager][Demystifying Emacs’s Window Manager]]
+#+begin_src emacs-lisp
+  (use-package window
+    :custom
+    (switch-to-buffer-obey-display-actions t))
 #+end_src
 * Completion
 By completion I mean general text/code autocompletion, as Vim's =deoplete=.
