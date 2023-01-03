@@ -74,6 +74,7 @@ This file might be out of sync. The newest version is available [[https://github
   - [[#hideshow][Hideshow]]
   - [[#separedit][Separedit]]
   - [[#shackle][shackle]]
+  - [[#topsy][Topsy]]
 - [[#completion][Completion]]
   - [[#corfu][Corfu]]
 - [[#templates][Templates]]
@@ -1803,6 +1804,13 @@ Reference:
     :init
     :config
     (push 'tree-sitter-hl-face:comment separedit-comment-faces))
+#+end_src
+** Topsy
+[[https://github.com/alphapapa/topsy.el][topsy]] shows a sticky header at the top of the window, displaying which function is the one that extends to the lines before the top of the displayed buffer.
+#+begin_src emacs-lisp
+  (use-package topsy
+    :straight t
+    :hook (prog-mode . topsy-mode))
 #+end_src
 
 ** shackle
