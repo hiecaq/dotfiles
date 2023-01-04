@@ -544,8 +544,8 @@ I've switched away from gruvbox to modus.
     ;; Load the theme of your choice:
     (load-theme 'modus-vivendi :no-confirm)
     :bind ("<f5>" . modus-themes-toggle))
-
 #+end_src
+
 * Key Bindings
 References:
 1. [[https://sam217pa.github.io/2016/09/23/keybindings-strategies-in-emacs/][Keybindings strategies in Emacs]] by Samuel Barreto.
@@ -1378,7 +1378,8 @@ This basically set =completing-read-function= to be =vertico= itself, a vertical
 
     (advice-add #'consult-line :after #'my/consult-line-evil-history)
     :general
-    (my/leader-def 'normal "h b" #'consult-buffer
+    (my/leader-def 'normal
+      "h b" #'consult-buffer
       "h s" (lambda ()
               (interactive)
               (let ((current-prefix-arg '(4)))
@@ -1389,7 +1390,7 @@ This basically set =completing-read-function= to be =vertico= itself, a vertical
       "h i" #'consult-imenu
       "h o" #'consult-outline
       "h m" #'consult-minor-mode-menu
-      "h a" #'consult-apropos
+      "h x" #'consult-mode-command
       "h k" #'consult-man)
     ([remap evil-ex-search-forward]
      (lambda ()
