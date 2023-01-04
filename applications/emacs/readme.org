@@ -1098,7 +1098,7 @@ show-paren-mode is an Emacs built-in that highlight the paired parentheses when 
     (defvar my-highlight-parentheses-use-background t
       "Prefer `highlight-parentheses-background-colors'.")
 
-    (setq my-highlight-parentheses-use-background nil) ; Set to nil to disable backgrounds
+    (setq my-highlight-parentheses-use-background t) ; Set to nil to disable backgrounds
     (modus-themes-with-colors
       ;; Our preference for setting either background or foreground
       ;; styles, depending on `my-highlight-parentheses-use-background'.
